@@ -215,30 +215,35 @@ def generate_brochure_wrapper(data: CourseData) -> BrochureResponse:
 
 def authenticate():
     creds = None
-    # Load credentials from Streamlit secrets
-    google_api_creds_json = st.secrets["GOOGLE_API_CREDS"]
+    # Load credentials JSON from Streamlit secrets
+    google_api_creds_json = st.secrets["GOOGLE_API_CREDS"]["installed"]
     
-    # Write the credentials JSON to a temporary file
-    with open('google_api_creds.json', 'w') as temp_creds_file:
-        temp_creds_file.write(google_api_creds_json)
+    # Parse the JSON string into a dictionary
+    creds_dict = json.loads(google_api_creds_json)
     
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
-    if not creds or not creds.valid:
-        if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
-        else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                'google_api_creds.json', SCOPES  # Use the temporary file
-            )
-            creds = flow.run_local_server(port=0)
-        # Save the token for later use
-        with open('token.json', 'w') as token:
-            token.write(creds.to_json())
+    # Write the parsed credentials to a temporary file
+    temp_file = 'google_api_creds.json'
+    with open(temp_file, 'w') as file:
+        json.dump(creds_dict, file)
     
-    # Cleanup the temporary file after use
-    os.remove('google_api_creds.json')
-    
+    try:
+        if os.path.exists('token.json'):
+            creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+        if not creds or not creds.valid:
+            if creds and creds.expired and creds.refresh_token:
+                creds.refresh(Request())
+            else:
+                flow = InstalledAppFlow.from_client_secrets_file(temp_file, SCOPES)
+                creds = flow.run_local_server(port=0)
+            
+            # Save the token for future use
+            with open('token.json', 'w') as token_file:
+                token_file.write(creds.to_json())
+    finally:
+        # Cleanup: Remove the temporary credentials file
+        if os.path.exists(temp_file):
+            os.remove(temp_file)
+
     return creds
 
 
