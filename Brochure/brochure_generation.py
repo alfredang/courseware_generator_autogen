@@ -540,12 +540,13 @@ def app():
             except Exception as e:
                 st.error(f"An error occurred: {e}")
 
-        # Check if session state has a generated brochure link
-        if st.session_state['file_url']:
+        # Safely check if file_url exists in session state
+        file_url = st.session_state.get('file_url')
+        if file_url:
             # Display link button for the brochure
             st.link_button(
                 label="View Brochure",
-                url=st.session_state['file_url'],
+                url=file_url,
                 icon=":material/description:"
             )
 
