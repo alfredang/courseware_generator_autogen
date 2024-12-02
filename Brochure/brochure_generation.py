@@ -187,8 +187,8 @@ doc_writer_agent = autogen.AssistantAgent(
     llm_config={
         "config_list": [
             {
-                'model': st.secrets("REPLACEMENT_MODEL"),
-                'api_key': st.secrets("OPENAI_API_KEY"),
+                'model': st.secrets["REPLACEMENT_MODEL"],
+                'api_key': st.secrets["OPENAI_API_KEY"],
                 'tags': ['tool'],
             },
         ],
