@@ -236,8 +236,14 @@ def authenticate():
 
                 # Use the console-based OAuth flow for environments without a local browser
                 flow = InstalledAppFlow.from_client_secrets_file('client_secrets.json', SCOPES)
-                creds = flow.run_console()  # Outputs a URL to the Streamlit logs
+                auth_url, _ = flow.authorization_url(prompt='consent')
+                st.write("Please visit the following URL to authorize the app:")
+                st.write(auth_url)
 
+                auth_code = st.text_input("Enter the authorization code:")
+                if auth_code:
+                    creds = flow.fetch_token(code=auth_code)
+                    st.success("Authentication successful!")
                 # Remove the temporary file after use
                 os.remove('client_secrets.json')
 
