@@ -212,40 +212,44 @@ def generate_brochure_wrapper(data: CourseData) -> BrochureResponse:
     shareable_link = brochure_info.get("shareable_link")
     return BrochureResponse(course_title=course_title, file_url=shareable_link)
 
-def load_google_creds():
-    # Access the escaped JSON string from Streamlit secrets
-    google_creds_str = st.secrets["GOOGLE_API_CREDS"]["installed"]
-    # Parse the JSON string back into a dictionary
-    google_creds_dict = json.loads(google_creds_str)
-    return google_creds_dict
 
 def authenticate():
     creds = None
-    google_creds = load_google_creds()
+    google_creds = dict(st.secrets["GOOGLE_API_CREDS"])  # Convert AttrDict to a standard dictionary
 
-    # Save the credentials to a temporary file for Google API compatibility
-    temp_creds_file = 'google_api_creds.json'
-    with open(temp_creds_file, 'w') as temp_file:
-        json.dump(google_creds, temp_file)
-    
     try:
+        # Check if the token.json file exists for saved credentials
         if os.path.exists('token.json'):
             creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+
+        # If there are no credentials or they are invalid, generate new ones
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(temp_creds_file, SCOPES)
+                # Wrap the dictionary under the "installed" key to match the expected structure
+                wrapped_creds = {"installed": google_creds}
+
+                # Write the wrapped credentials dictionary to a temporary JSON file
+                with open('client_secrets.json', 'w') as temp_file:
+                    json.dump(wrapped_creds, temp_file)
+
+                # Use the temporary JSON file for the OAuth flow
+                flow = InstalledAppFlow.from_client_secrets_file('client_secrets.json', SCOPES)
                 creds = flow.run_local_server(port=0)
-            
-            with open('token.json', 'w') as token:
-                token.write(creds.to_json())
-    finally:
-        if os.path.exists(temp_creds_file):
-            os.remove(temp_creds_file)
 
-    return creds
+                # Remove the temporary file after use
+                os.remove('client_secrets.json')
 
+            # Save the credentials for the next run
+            with open('token.json', 'w') as token_file:
+                token_file.write(creds.to_json())
+
+        return creds
+
+    except Exception as e:
+        st.error(f"An error occurred during authentication: {e}")
+        return None
 
 def copy_template(drive_service, template_id, new_title):
     try:
