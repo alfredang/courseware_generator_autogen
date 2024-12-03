@@ -17,6 +17,8 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from google.oauth2 import service_account
+
 import json
 import time
 
@@ -212,19 +214,6 @@ def generate_brochure_wrapper(data: CourseData) -> BrochureResponse:
     shareable_link = brochure_info.get("shareable_link")
     return BrochureResponse(course_title=course_title, file_url=shareable_link)
 
-
-def authenticate():
-    from google.oauth2 import service_account
-    creds = None
-    try:
-        creds = service_account.Credentials.from_service_account_info(
-        st.secrets["GOOGLE_API_CREDS"]
-        )
-        return creds
-
-    except Exception as e:
-        st.error(f"An error occurred during authentication: {e}")
-        return None
 
 def copy_template(drive_service, template_id, new_title):
     try:
@@ -481,10 +470,17 @@ def app():
                     course_data = scrape_course_data(course_url)
                     st.success("Course data scraped successfully!")
                     st.session_state['course_data'] = course_data.to_dict()  # Save scraped data to session state
-
+                creds = None
+                try:
+                    with st.spinner("Authenticating with Google..."):
+                        creds = service_account.Credentials.from_service_account_info(
+                        st.secrets["GOOGLE_API_CREDS"]
+                        )    
+                except Exception as e:
+                    st.error(f"An error occurred during authentication: {e}")
+                
                 # Check if a brochure for the course already exists
                 with st.spinner("Checking for existing brochure in Google Drive..."):
-                    creds = authenticate()
                     drive_service = build('drive', 'v3', credentials=creds)
                     
                     existing_title = f"{course_data.course_title} Brochure"
