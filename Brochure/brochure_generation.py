@@ -108,11 +108,14 @@ def scrape_course_data(url: str) -> CourseData:
         # Extract WSQ Funding table
         try:
             wsq_funding_table = short_description.find_element(By.TAG_NAME, "table")
-            headers = ['Full Fee', 'GST', 'Baseline', 'MCES / SME']
             funding_rows = wsq_funding_table.find_elements(By.TAG_NAME, "tr")
+
+            headers = ['Full Fee', 'GST', 'Baseline', 'MCES / SME']
             data_row = funding_rows[-1]
             data_cells = data_row.find_elements(By.TAG_NAME, "td")
             wsq_funding = {headers[i]: data_cells[i].text.strip() for i in range(len(headers))}
+            effective_date_text = funding_rows[0].text.strip()
+            wsq_funding['Effective Date'] = effective_date_text if effective_date_text else 'Not Available'
         except:
             wsq_funding = {"Effective Date": "Not Available", "Full Fee": "Not Available", "GST": "Not Available", "Baseline": "Not Available", "MCES / SME": "Not Available"}
 
@@ -488,7 +491,7 @@ def app():
                     course_data = scrape_course_data(course_url)
                     st.success("Course data scraped successfully!")
                     st.session_state['course_data'] = course_data.to_dict()  # Save scraped data to session state
-                
+                    print(course_data)
                 creds = None
                 with st.spinner("Authenticating with Google Drive..."):
                     creds = authenticate()
