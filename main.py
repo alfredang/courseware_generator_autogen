@@ -627,18 +627,18 @@ Format your response in the given JSON structure under "Background Information".
 """
 
 performance_gap_message = f"""
-You are responsible for identifying the performance gaps that the course will address.
+You are responsible for identifying the performance gaps and post-training benefits to learners that the course will address.
 Based on the extracted data, answer the following question:
 (ii) Performance gaps that the course will address for the given course title and learning outcomes: {ensemble_output.get('Course Information', {}).get('Course Title', [])}, {ensemble_output.get('Learning Outcomes', {}).get('Learning Outcomes', [])}.
 Do not use any control characters such as newlines.
 
 Your task is to perform the following:
-1. For each Learning Outcome (LO), provide one unique performance gap and one corresponding attribute gained. Do not repeat performance gaps or attributes across different LOs.
+1. For each Learning Outcome (LO), provide one unique performance gap, one corresponding attribute gained, and one post-training benefit to learners. Do not repeat performance gaps or attributes across different LOs.
 2. However, in the event that there are only 2 Learning Outcomes, you are to provide 3 unique performance gaps and corresponding attributes gained.
 3. However, in the event that there are more than 5 Learning Outcomes, your answers are to be limited to 5 unique performance gaps and corresponding attributes gained.
 
 Format your response in the given JSON structure under "Performance Gaps".
-Your answer for (ii.) is to be given in a point format with two distinct sections, appended together as one list element with new line separators, this is an example with only 2 Learning Outcomes, hence 2 points each:
+Your answer for (ii.) is to be given in a point format with three distinct sections, appended together as one list element with new line separators, this is an example with only 3 Learning Outcomes, hence 3 points each:
 {{
 
 Performance gaps:
@@ -647,6 +647,9 @@ Learners struggle/are unclear with [specific skill or knowledge gap].
 
 Attributes gained:
 Ability/Proficiency to [specific skill or knowledge learned].
+(perform this analysis for the LOs)
+
+Post training benefits:
 (perform this analysis for the LOs)
 
 }}

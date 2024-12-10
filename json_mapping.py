@@ -138,6 +138,18 @@ def map_values(mapping_source, ensemble_output, research_output):
 
     mapping_source["#Placeholder[1]"] = [performance_analysis.strip()]
 
+    for key, value in research_output["Performance Analysis"].items():
+        if key == "Post training benefits":
+            performance_analysis += f"{key}:\n"
+            if isinstance(value, list):
+                for item in value:
+                    performance_analysis += f"•\t{item.strip()}\n"
+            else:
+                performance_analysis += f"•\t{value.strip()}\n"
+            performance_analysis += "\n"
+
+    mapping_source["#Placeholder[1]"] = [performance_analysis.strip()]    
+
     if "Sequencing Explanation" in research_output["Sequencing Analysis"]:
         mapping_source["#Rationale[0]"] = [research_output["Sequencing Analysis"]["Sequencing Explanation"]]
 
