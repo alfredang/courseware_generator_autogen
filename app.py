@@ -2,6 +2,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 import cp_generation as cp_generation
+import Assessment.assessment_generation as assessment_generation
 import Courseware.courseware_generation as courseware_generation
 import Brochure.brochure_generation as brochure_generation
 # import Slides.slide_generation as slide_generation
@@ -27,8 +28,7 @@ elif selected == "Generate Courseware":
     courseware_generation.app()  # Display Courseware Generation app
 
 elif selected == "Generate Assessment":
-    st.title("Generate Assessment")
-    st.write("This section allows you to create assessments.")
+    assessment_generation.app()
     # Add Assessment Generation-specific functionality here
 
 elif selected == "Generate Slides":
