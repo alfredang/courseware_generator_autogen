@@ -19,18 +19,6 @@ from Assessment.utils.agentic_PP import generate_pp
 from Assessment.utils.agentic_SAQ import generate_saq
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
 
-OPENAI_API_KEY = os.getenv('TERTIARY_INFOTECH_API_KEY') 
-LLAMA_API_KEY = os.getenv('LLAMA_CLOUD_API_KEY')
-
-llm_config={
-    "config_list": [
-        {
-            'model': "gpt-4o-mini",
-            'api_key': OPENAI_API_KEY,
-        },
-    ],
-    "timeout": 300,
-}
 if 'processing_done' not in st.session_state:
     st.session_state['processing_done'] = False
 
@@ -40,7 +28,7 @@ if 'index' not in st.session_state:
 if 'fg_data' not in st.session_state:
     st.session_state['fg_data'] = False
 
-def parse_fg(fg_path):
+def parse_fg(fg_path, OPENAI_API_KEY, LLAMA_API_KEY):
     client = OpenAI(api_key=OPENAI_API_KEY)
     parser = LlamaParse(
         api_key=LLAMA_API_KEY,
@@ -108,7 +96,7 @@ def parse_fg(fg_path):
     )
     return completion.choices[0].message.parsed
 
-def parse_slides(slides_path):
+def parse_slides(slides_path, OPENAI_API_KEY):
     nest_asyncio.apply()
     
     embed_model = OpenAIEmbedding(model="text-embedding-3-large", api_key=OPENAI_API_KEY)
@@ -205,7 +193,19 @@ def app():
     # File upload
     fg_doc_file = st.file_uploader("Upload Facilitator Guide (.docx)", type=["docx"])
     slide_deck_file = st.file_uploader("Upload Trainer Slide Deck (.pdf)", type=["pdf"])
+    
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+    LLAMA_API_KEY = st.secrets["LLAMA_CLOUD_API_KEY"]
 
+    llm_config={
+        "config_list": [
+            {
+                'model': "gpt-4o-mini",
+                'api_key': OPENAI_API_KEY,
+            },
+        ],
+        "timeout": 300,
+    }
     # Assessment type selection
     st.write("Select the type of assessment to generate:")
     saq = st.checkbox("Short Answer Questions (SAQ)")
@@ -239,7 +239,7 @@ def app():
             try:
                 with st.spinner("Parsing FG Document..."):
                     if not st.session_state['fg_data']:
-                        st.session_state['fg_data'] = parse_fg(fg_filepath)
+                        st.session_state['fg_data'] = parse_fg(fg_filepath, OPENAI_API_KEY, LLAMA_API_KEY)
                     parsed_fg = st.session_state['fg_data']
                     st.json(parsed_fg)
                     st.success("✅ Successfully parsed the Facilitator Guide.")
@@ -249,7 +249,7 @@ def app():
             try:
                 with st.spinner("Parsing Slide Deck..."):
                     if not st.session_state['index']:
-                        st.session_state['index'] = parse_slides(slides_filepath)
+                        st.session_state['index'] = parse_slides(slides_filepath, OPENAI_API_KEY)
                     index = st.session_state['index']
                     st.success("✅ Successfully parsed the Slide Deck.")
             except Exception as e:
