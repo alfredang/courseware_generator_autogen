@@ -31,6 +31,14 @@ llm_config={
     ],
     "timeout": 300,
 }
+if 'processing_done' not in st.session_state:
+    st.session_state['processing_done'] = False
+
+if 'index' not in st.session_state:
+    st.session_state['index'] = False
+
+if 'fg_data' not in st.session_state:
+    st.session_state['fg_data'] = False
 
 def parse_fg(fg_path):
     client = OpenAI(api_key=OPENAI_API_KEY)
@@ -144,7 +152,7 @@ def generate_documents(context: dict, assessment_type: str, output_dir: str) -> 
 
     Parameters:
     - context (dict): The data for the assessment (course title, type, questions, etc.).
-    - type (int): The assessment type (1 for Ability-based, 2 for Knowledge-based).
+    - assessment_type (str): The assessment type (e.g., 'Ability-based', 'Knowledge-based').
     - output_dir (str): Directory where the generated documents will be saved.
 
     Returns:
@@ -168,13 +176,10 @@ def generate_documents(context: dict, assessment_type: str, output_dir: str) -> 
     question_context = {
         **context,
         "questions": [
-            {
-                **question,
-                "answer": None,  # Remove answers for the question document
-            }
-            for question in context.get("questions", [])
+            {**question, "answer": None} for question in context.get("questions", [])
         ]
     }
+
 
     # Render both templates
     answer_doc.render(context)  # Render with answers
@@ -233,15 +238,19 @@ def app():
 
             try:
                 with st.spinner("Parsing FG Document..."):
-                    parsed_fg = parse_fg(fg_filepath)
+                    if not st.session_state['fg_data']:
+                        st.session_state['fg_data'] = parse_fg(fg_filepath)
+                    parsed_fg = st.session_state['fg_data']
                     st.json(parsed_fg)
                     st.success("✅ Successfully parsed the Facilitator Guide.")
             except Exception as e:
-                st.error(f"Error extracting Course Proposal: {e}")
+                st.error(f"Error extracting FG Document: {e}")
             
             try:
                 with st.spinner("Parsing Slide Deck..."):
-                    index = parse_slides(slides_filepath)
+                    if not st.session_state['index']:
+                        st.session_state['index'] = parse_slides(slides_filepath)
+                    index = st.session_state['index']
                     st.success("✅ Successfully parsed the Slide Deck.")
             except Exception as e:
                 st.error(f"Error parsing slides: {e}")
@@ -251,27 +260,25 @@ def app():
                     generated_files = {}
                     for assessment_type in selected_types:
                         if assessment_type == "WA (SAQ)":
-                            st.info("Short Answer Questions (SAQ) assessment type is not yet supported.")
-                            context = generate_saq(parsed_fg, index, llm_config)
+                            saq_context = generate_saq(parsed_fg, index, llm_config)
                             files = generate_documents(
-                                context=context, 
+                                context=saq_context, 
                                 assessment_type=assessment_type,
                                 output_dir="output"
                             )
                             generated_files[assessment_type] = files
                         elif assessment_type == "PP":
-                            st.info("Practical Performance (PP) assessment type is not yet supported.")
-                            # context = generate_pp(parsed_fg, index, llm_config)
-                            # files = generate_documents(
-                            #     context=context, 
-                            #     assessment_type=assessment_type,
-                            #     output_dir="output"
-                            # )
-                            # generated_files[assessment_type] = files
-                        elif assessment_type == "CS":
-                            context = generate_cs(parsed_fg, index, llm_config)
+                            pp_context = generate_pp(parsed_fg, index, llm_config)
                             files = generate_documents(
-                                context=context, 
+                                context=pp_context, 
+                                assessment_type=assessment_type,
+                                output_dir="output"
+                            )
+                            generated_files[assessment_type] = files
+                        elif assessment_type == "CS":
+                            cs_context = generate_cs(parsed_fg, index, llm_config)
+                            files = generate_documents(
+                                context=cs_context, 
                                 assessment_type=assessment_type,
                                 output_dir="output"
                             )
