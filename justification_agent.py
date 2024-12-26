@@ -203,12 +203,15 @@ def main():
                     for lo, evidence in method_data['evidence'].items():
                         phrasing += f"•\tFor {lo}: {evidence}\n"
                 else:
-                    phrasing += f"•\t{method_data['evidence']}\n"
+                    phrasing += f"\t{method_data['evidence']}\n"
                 
                 # Manner of Submission
                 phrasing += "Manner of Submission:\n"
-                for submission in method_data['submission']:
-                    phrasing += f"•\t{submission}\n"
+                if method_key == "role_play":
+                    phrasing += f"{method_data['submission']}\n"
+                else:
+                    for submission in method_data['submission']:
+                        phrasing += f"•\t{submission}\n"
                 
                 # Marking Process
                 phrasing += "Marking Process: \n"
