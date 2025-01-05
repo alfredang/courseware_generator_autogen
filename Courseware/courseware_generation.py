@@ -610,9 +610,9 @@ def app():
                 file_bytes = f.read()
             # Check if 'TGS_Ref_No' is in context
             if 'TGS_Ref_No' in context and context['TGS_Ref_No']:
-                file_name = f"LG_{context['TGS_Ref_No']}_{context['Course_Title']}.docx"
+                file_name = f"LG_{context['TGS_Ref_No']}_{context['Course_Title']}_v1.docx"
             else:
-                file_name = f"LG_{context['Course_Title']}.docx"
+                file_name = f"LG_{context['Course_Title']}_v1.docx"
             st.download_button(
                 label="Download Learning Guide",
                 data=file_bytes,
@@ -627,9 +627,9 @@ def app():
                 file_bytes = f.read()
             # Check if 'TGS_Ref_No' is in context
             if 'TGS_Ref_No' in context and context['TGS_Ref_No']:
-                file_name = f"AP_{context['TGS_Ref_No']}_{context['Course_Title']}.docx"
+                file_name = f"Assessment Plan_{context['TGS_Ref_No']}_{context['Course_Title']}_v1.docx"
             else:
-                file_name = f"AP_{context['Course_Title']}.docx"
+                file_name = f"Assessment Plan_{context['Course_Title']}_v1.docx"
             st.download_button(
                 label="Download Assessment Plan",
                 data=file_bytes,
@@ -644,9 +644,9 @@ def app():
                 file_bytes = f.read()
             # Check if 'TGS_Ref_No' is in context
             if 'TGS_Ref_No' in context and context['TGS_Ref_No']:
-                file_name = f"LP_{context['TGS_Ref_No']}_{context['Course_Title']}.docx"
+                file_name = f"LP_{context['TGS_Ref_No']}_{context['Course_Title']}_v1.docx"
             else:
-                file_name = f"LP_{context['Course_Title']}.docx"
+                file_name = f"LP_{context['Course_Title']}_v1.docx"
             st.download_button(
                 label="Download Lesson Plan",
                 data=file_bytes,
@@ -661,9 +661,9 @@ def app():
                 file_bytes = f.read()
             # Check if 'TGS_Ref_No' is in context
             if 'TGS_Ref_No' in context and context['TGS_Ref_No']:
-                file_name = f"FG_{context['TGS_Ref_No']}_{context['Course_Title']}.docx"
+                file_name = f"FG_{context['TGS_Ref_No']}_{context['Course_Title']}_v1.docx"
             else:
-                file_name = f"FG_{context['Course_Title']}.docx"
+                file_name = f"FG_{context['Course_Title']}_v1.docx"
             st.download_button(
                 label="Download Facilitator's Guide",
                 data=file_bytes,
