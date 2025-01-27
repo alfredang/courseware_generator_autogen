@@ -64,7 +64,7 @@ def app():
         - Demonstration <br>
         - Practical <br>
         - Peer Sharing <br>
-        - Role play <br>
+        - Role Play <br>
         - Group Discussion <br>
         - Case Study <br>
         """, unsafe_allow_html=True)
@@ -76,6 +76,7 @@ def app():
         - Practical Performance <br>
         - Case Study <br>
         - Oral Questioning <br>
+        - Role Play <br>
         """, unsafe_allow_html=True)
 
     st.markdown("""

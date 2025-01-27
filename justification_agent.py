@@ -108,7 +108,8 @@ def main():
     •	For LO2: Candidates will conduct a problem-framing exercise using stakeholder inputs, create a persona mapping based on user insights, and submit a report.
     •	For LO3: Candidates will lead an innovation project using Agile and design thinking approaches.
     •	For LO4: Candidates will submit a strategic plan detailing how they developed and scaled design thinking methodologies across the organization.
-    Manner of Submission: Candidates will submit their case study reports and any additional supporting documents to the assessors electronically via the designated learning management system.
+    Manner of Submission: 
+    •	Candidates will submit their case study reports and any additional supporting documents to the assessors electronically via the designated learning management system.
     Marking Process:
     •	Integration of Methodologies.
     •	Stakeholder Analysis.
@@ -119,7 +120,8 @@ def main():
     Role Play assessments allow learners to demonstrate their ability to apply learned concepts in simulated real-world interactions, focusing on the practical application of sales closure skills.
 
     Type of Evidence: Role Play
-    Manner of Submission: Assessor will evaluate the candidate using an observation checklist for the role play.
+    Manner of Submission: 
+    •	Assessor will evaluate the candidate using an observation checklist for the role play.
     Marking Process:
     •	Effectiveness of sales recommendations.
     •	Application of sales techniques.
@@ -223,15 +225,15 @@ def main():
                     for lo, evidence in method_data['evidence'].items():
                         phrasing += f"•\tFor {lo}: {evidence}\n"
                 else:
-                    phrasing += f"\t{method_data['evidence']}\n"
+                    phrasing += f"•\t{method_data['evidence']}\n"
                 
                 # Manner of Submission
                 phrasing += "Manner of Submission:\n"
-                if method_key == "role_play":
-                    phrasing += f"{method_data['submission']}\n"
-                else:
+                if isinstance(method_data['submission'], list):
                     for submission in method_data['submission']:
                         phrasing += f"•\t{submission}\n"
+                else:
+                    phrasing += f"{method_data['submission']}\n"
                 
                 # Marking Process
                 phrasing += "Marking Process: \n"
@@ -281,6 +283,7 @@ def main():
     # Save the updated research_output.json
     with open('research_output.json', 'w', encoding='utf-8') as f:
         json.dump(research_output, f, indent=4)
+
 
 if __name__ == "__main__":
     main()
