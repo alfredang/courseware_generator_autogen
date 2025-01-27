@@ -92,9 +92,24 @@ config_list = [
     }
 ]
 
+more_compute_config_list = [
+    {
+        "model": "gpt-4o-mini",
+        "api_key": OPENAI_API_KEY,
+        "response_format": {"type": "json_object"},
+    }
+]
+
 llm_config = {
     "temperature": 0.5,
     "config_list": config_list,
+    "timeout": 120,  # in seconds
+    "cache_seed": None,
+}
+
+more_compute_llm_config = {
+    "temperature": 0.5,
+    "config_list": more_compute_config_list,
     "timeout": 120,  # in seconds
     "cache_seed": None,
 }

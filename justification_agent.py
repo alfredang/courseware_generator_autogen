@@ -179,16 +179,13 @@ def main():
     "assessment_methods": {{
         "oral_questioning": {{
         "name": "Oral Questioning (OQ)",
-        "description": "Oral Questioning assessments allow candidates to demonstrate their understanding of concepts through verbal responses, focusing on the practical application of sales closure skills.",
+        "description": "Oral Questioning assessments allow candidates to demonstrate their understanding of concepts through verbal responses, focusing on the practical application of [skills].",
         "evidence": {{
-            "LO1": "Candidates will discuss methods for maintaining accurate records and monitoring client satisfaction.",
-            "LO2": "Candidates will respond to questions demonstrating their understanding of customer communication techniques and preferences.",
+            "LO1": "",
+            "LO2": "",
         }},
-        "submission": "Candidates will verbally respond to assessors during a structured questioning session.",
+        "submission": ["Candidates will verbally respond to assessors during a structured questioning session."],
         "marking_process": [
-            "Effectiveness of sales recommendations.",
-            "Application of sales techniques.",
-            "Presentation of follow-up steps and metrics."
         ],
         "retention_period": "All oral questioning recordings and assessment notes will be retained for 2 years for compliance and auditing.",
         }}
@@ -232,7 +229,7 @@ def main():
                     for submission in method_data['submission']:
                         phrasing += f"•\t{submission}\n"
                 else:
-                    phrasing += f"{method_data['submission']}\n"
+                    phrasing += f"{method_data['submission']}\n\n"
                 
                 # Marking Process
                 phrasing += "Marking Process: \n"
