@@ -370,7 +370,7 @@ You are to extract the following variables from {data}:
     1) TSC Title
     2) TSC Code
     3) Topic (include the FULL string, including any K's and A's, only include items starting with "Topic" and not "LU" for this particular point)
-    4) Learning Units (do NOT include Topics under this point, do NOT include any brackets consisting of A's or K's), if there are no Learning Units (LUs) found, summarize a LU from each Topics and name them sequentially.
+    4) Learning Units (do NOT include Topics under this point, do NOT include any brackets consisting of A's or K's), if there are no Learning Units (LUs) found, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics.
 
     An example output is as follows:
     "TSC Title": "Financial Analysis",
