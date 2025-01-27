@@ -18,7 +18,7 @@ def main():
     # Manually create the config list with JSON response format
     config_list = [
         {
-            "model": "gpt-4o-mini",
+            "model": "gpt-4o",
             "api_key": OPENAI_API_KEY,
             "response_format": {"type": "json_object"},
         }
@@ -172,6 +172,26 @@ def main():
         "no_of_scripts": "To ensure fairness among learners, a minimum of two distinct role-play scripts or scenarios will be pre-pared for this assessment"
         }}
     }}
+
+    However, in the case of Oral Questioning assessment, you are to format it as follows:
+    "assessment_methods": {{
+        "oral_questioning": {{
+        "name": "Oral Questioning (OQ)",
+        "description": "Role Play assessments allow learners to demonstrate their ability to apply learned concepts in simulated real-world interactions, focusing on the practical application of sales closure skills.",
+        "focus": "Role Play assessments allow learners to demonstrate their ability to apply learned concepts in simulated real-world interactions, focusing on the practical application of sales closure skills.",
+        "evidence": {{
+            "LO1": "Candidates will discuss methods for maintaining accurate records and monitoring client satisfaction.",
+            "LO2": "For LO1: Candidates will respond to questions demonstrating their understanding of customer communication techniques and preferences.",
+        }},
+        "submission": "Candidates will verbally respond to assessors during a structured questioning session.",
+        "marking_process": [
+            "Effectiveness of sales recommendations.",
+            "Application of sales techniques.",
+            "Presentation of follow-up steps and metrics."
+        ],
+        "retention_period": "All oral questioning recordings and assessment notes will be retained for 2 years for compliance and auditing.",
+        }}
+    }}    
 
     """
 
