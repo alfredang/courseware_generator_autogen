@@ -12,13 +12,13 @@
             "LO6: Implement modifications to software products and processes for improved functionality.",
             "Couse Duration: 2 days (16 hrs)",
             "Instructional Methods:",
-            "Classroom (14 hrs),",
-            "Peer Sharing",
-            "Group Discussion,",
-            "Case Study",
+            "Classroom (7hrs),",
+            "Didactic Questioning",
+            "Demonstration",
+            "Practice (7 hrs)",
             "Assessment Methods:",
             "Written Assessment (1 hr)",
-            "Case Study (1 hr)",
+            "Practical Performance (1 hr)",
             "TSC Mapping:",
             "TSC Title: Software Configuration",
             "TSC Code: ICT-DIT-3014-1.1",
@@ -39,7 +39,7 @@
             "A8 Implement modifications to platform-specific software products and processes",
             "Learning Units"
         ],
-        "LU1: Introduction to Git and GitHub": [
+        "LU1: Introduction to Git and GitHub (A1, A2)": [
             "Topic 1: Introduction to Git and GitHub (A1, A2)",
             "What is vesion control",
             "Basic Git commands",
@@ -48,7 +48,7 @@
             "GitHub is a collaborative platform",
             "GitHub platform management"
         ],
-        "LU2: Working with GitHub Repository": [
+        "LU2: Working with GitHub Repository (K1, A3)": [
             "Topic 2:  Working with GitHub Repository (K1, A3)",
             "Repository management",
             "Create a new GitHub Repository",
@@ -58,7 +58,7 @@
             "Manage repository changes by using pull requests on GitHub",
             "View repository insights"
         ],
-        "LU3: Collaboration Features": [
+        "LU3: Collaboration Features (K2, K3, A4, A5)": [
             "Topic 3: Collaboration Features (K2, K3, A4, A5)",
             "Managing issues and discussions",
             "Forking and pull requests",
@@ -68,13 +68,13 @@
             "Identify how to assign Issues.",
             "Code reviews"
         ],
-        "LU4: Modern Development": [
+        "LU4: Modern Development  (K4, A6)": [
             "Topic 4: Modern Development  (K4, A6)",
             "GitHub Actions",
             "GitHub Copilot",
             "GitHub Codespaces"
         ],
-        "LU5: GitHub Project": [
+        "LU5: GitHub Project (K5, A7)": [
             "Topic 5: GitHub Project (K5, A7)",
             "Projects versus Projects Classic",
             "How to create a project",
@@ -82,7 +82,7 @@
             "How to organize and automate your project",
             "Insight and automation with projects"
         ],
-        "LU6: Privacy, Security and Administration": [
+        "LU6: Privacy, Security and Administration (A8)": [
             "Topic 6: Privacy, Security and Administration (A8)",
             "Introduction to GitHub administration",
             "Authenticate and authorize user identities on GitHub",
