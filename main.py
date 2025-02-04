@@ -82,15 +82,38 @@ def check_and_save_json(response, output_filename, agent_name):
 # Load API key from environment
 # OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
+openrouter_api_key = st.secrets["openrouter_api_key"]
 
-# Manually create the config list with JSON response format
-config_list = [
+config_list_deepseek ={
+    "config_list":[
+        {
+            "model": "deepseek/deepseek-r1",
+            "base_url": "https://openrouter.ai/api/v1",
+            "api_key": os.getenv("openrouter_api_key"),  # or omit if set in environment
+            "price": [0.00055, 0.00219],
+        },
+    ],
+    "cache_seed": None,  # Disable caching.
+}
+
+config_list_openai = [
     {
         "model": "gpt-4o-mini",
         "api_key": OPENAI_API_KEY,
         "response_format": {"type": "json_object"},
     }
 ]
+
+
+# Manually create the config list with JSON response format
+config_list = [
+        {
+            "model": "deepseek/deepseek-r1",
+            "base_url": "https://openrouter.ai/api/v1",
+            "api_key": os.getenv("openrouter_api_key"),  # or omit if set in environment
+            "price": [0.00055, 0.00219],
+        },
+    ]
 
 more_compute_config_list = [
     {
