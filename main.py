@@ -87,14 +87,18 @@ openrouter_api_key = st.secrets["openrouter_api_key"]
 config_list_deepseek ={
     "config_list":[
         {
-            "model": "deepseek/deepseek-r1",
+            "model": "deepseek/deepseek-chat",
             "base_url": "https://openrouter.ai/api/v1",
             "api_key": os.getenv("openrouter_api_key"),  # or omit if set in environment
-            "price": [0.00055, 0.00219],
+            # "price": [0.00055, 0.00219],
+            "price": [0.00014, 0.00028],
         },
     ],
     "cache_seed": None,  # Disable caching.
 }
+
+# "model": "deepseek/deepseek-chat",
+# "model": "deepseek/deepseek-r1",
 
 config_list_openai = [
     {
