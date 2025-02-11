@@ -2,6 +2,7 @@ import streamlit as st
 import nest_asyncio
 import os
 import json
+import shutil
 import tempfile
 from copy import deepcopy
 from llama_index.llms.openai import OpenAI as llama_openai
@@ -23,6 +24,7 @@ from Assessment.utils.agentic_CS import generate_cs
 from Assessment.utils.agentic_PP import generate_pp
 from Assessment.utils.agentic_SAQ import generate_saq
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
+from autogen_ext.models.openai import OpenAIChatCompletionClient
 
 ################################################################################
 # 1. Initialize all required session_state keys at the very top of the script.
@@ -76,33 +78,6 @@ def parse_fg(fg_path, OPENAI_API_KEY, LLAMA_API_KEY):
                           {"code": "PP", "duration": "0.5 hr"}
                           {"code": "CS", "duration": "30 mins"}
                         * Interpret abbreviations of assessment methods to their correct types (e.g., "WA-SAQ," "PP," "CS").
-
-                    Return the output in a JSON format that matches the schema provided:
-                    {
-                        "course_title": "string",
-                        "tsc_proficiency_level": "string",
-                        "learning_units": [
-                            {
-                                "name": "string",
-                                "topics": [
-                                    {
-                                        "name": "string",
-                                        "subtopics": ["string"],
-                                        "tsc_knowledges": [
-                                            {"id": "string", "text": "string"}
-                                        ],
-                                        "tsc_abilities": [
-                                            {"id": "string", "text": "string"}
-                                        ]
-                                    }
-                                ],
-                                "learning_outcome": "string"
-                            }
-                        ],
-                        "assessments": [
-                            {"code": "string", "duration": "string"}
-                        ]
-                    }
                     """
                 ),
             },
@@ -139,16 +114,19 @@ def parse_slides(slides_path, LLAMA_CLOUD_API_KEY, OPENAI_API_KEY, is_multimodal
 
         if not os.path.exists("storage_nodes_summary"):
             index = SummaryIndex(text_nodes)
-            # save index to disk
             index.set_index_id("summary_index")
             index.storage_context.persist("./storage_nodes_summary")
-            return index
         else:
-            # rebuild storage context
             storage_context = StorageContext.from_defaults(persist_dir="storage_nodes_summary")
-            # load index
             index = load_index_from_storage(storage_context, index_id="summary_index")
-            return index        
+        
+        # Cleanup multimodal directories
+        if os.path.exists("data_images"):
+            shutil.rmtree("data_images")
+        if os.path.exists("storage_nodes_summary"):
+            shutil.rmtree("storage_nodes_summary")
+        return index
+  
     else:
         documents = LlamaParse(result_type="markdown").load_data(slides_path)
         
@@ -281,15 +259,11 @@ def app():
     OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
     LLAMA_API_KEY = st.secrets["LLAMA_CLOUD_API_KEY"]
 
-    llm_config = {
-        "config_list": [
-            {
-                'model': "gpt-4o-mini",
-                'api_key': OPENAI_API_KEY,
-            },
-        ],
-        "timeout": 300,
-    }
+    model_client = OpenAIChatCompletionClient(
+        model=st.secrets["REPLACEMENT_MODEL_NAME"],
+        temperature=0,
+        api_key=OPENAI_API_KEY
+    )
 
     # Assessment type selection
     st.write("Select the type of assessment to generate:")
@@ -371,7 +345,7 @@ def app():
                     for assessment_type in selected_types:
                         if assessment_type == "WA (SAQ)":
                             print("### GENERATING SAQ ASSESSMENT ###")
-                            saq_context = generate_saq(parsed_fg, index, llm_config)
+                            saq_context = generate_saq(parsed_fg, index, model_client)
                             files = generate_documents(
                                 context=saq_context,
                                 assessment_type=assessment_type,
@@ -381,7 +355,7 @@ def app():
 
                         elif assessment_type == "PP":
                             print("### GENERATING PP ASSESSMENT ###")
-                            pp_context = generate_pp(parsed_fg, index, llm_config)
+                            pp_context = generate_pp(parsed_fg, index, model_client)
                             files = generate_documents(
                                 context=pp_context,
                                 assessment_type=assessment_type,
@@ -391,7 +365,7 @@ def app():
 
                         elif assessment_type == "CS":
                             print("### GENERATING CS ASSESSMENT ###")
-                            cs_context = generate_cs(parsed_fg, index, llm_config)
+                            cs_context = generate_cs(parsed_fg, index, model_client)
                             files = generate_documents(
                                 context=cs_context,
                                 assessment_type=assessment_type,
