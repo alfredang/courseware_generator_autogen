@@ -11,7 +11,6 @@ from PIL import Image
 from docx.shared import Inches
 from docxtpl import DocxTemplate, InlineImage
 
-
 async def generate_lesson_plan(context, name_of_organisation, model_client):
     """
     Generate a Lesson Plan document based on the provided Course Proposal (CP) document.
@@ -118,13 +117,14 @@ async def generate_lesson_plan(context, name_of_organisation, model_client):
     response = await lp_assistant.on_messages(
         [TextMessage(content=agent_task, source="user")], CancellationToken()
     )
-
-    print(response.chat_message.content)
-
-    # # Extract the output path from the last agent
-    # lp_output_path = None
-
-    # if lp_output_path:
-    #         return lp_output_path
-    # else:
-    #     raise Exception("Lesson Plan generation failed.")
+      # Extract the output path from the last agent
+    lp_output_path = None
+    
+    try:
+        lp_output_path = response.chat_message.content
+    except Exception as e:
+        raise Exception(f"Error: Lesson Plan chat content missing.")
+    if lp_output_path:
+            return lp_output_path
+    else:
+        raise Exception("Lesson Plan generation failed.")

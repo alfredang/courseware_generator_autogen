@@ -172,8 +172,6 @@ async def generate_facilitators_guide(context, name_of_organisation, model_clien
         generate_document(context=json context)
         ```
         3. Ensure that you only pass 'context' as arguments.
-        4. After the function call, include the output path returned by the function in your final message, starting with `Output Path: ` followed by the path.
-        5. Return 'TERMINATE' when the task is done.
         """
 
     text_termination = TextMentionTermination("TERMINATE") | MaxMessageTermination(10)

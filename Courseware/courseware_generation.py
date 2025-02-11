@@ -421,12 +421,14 @@ def app():
                 temperature=0,
                 api_key=OPENAI_API_KEY
             )
-
-            context = asyncio.run(interpret_cp(raw_data=raw_data, model_clent=openai_struct_model_client))
+            try:
+                with st.spinner('Extracting Information from Course Proposal...'):
+                    context = asyncio.run(interpret_cp(raw_data=raw_data, model_clent=openai_struct_model_client))
+            except Exception as e:
+                st.error(f"Error extracting Course Proposal: {e}")
 
             # After obtaining the context
             if context:
-                st.json(context)
                 # Run web_scrape function to get TGS Ref No and UEN
                 try:
                     with st.spinner('Retrieving TGS Ref No and UEN...'):
