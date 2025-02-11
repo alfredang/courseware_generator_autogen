@@ -402,7 +402,7 @@ def app():
                     if match:
                         verification_df = run_dataset_verifications(person, match, similarity_threshold=80)
                         # Keep only desired columns:
-                        verification_df = verification_df[["Verification Type", "Input Value", "Dataset", "Dataset Value"]]
+                        verification_df = verification_df[["Verification Type", "Input Value", "Dataset Value"]]
                         verification_dfs.append(verification_df)
                 if verification_dfs:
                     df_combined = pd.concat(verification_dfs, ignore_index=True)
