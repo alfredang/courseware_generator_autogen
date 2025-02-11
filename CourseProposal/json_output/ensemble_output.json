@@ -1,0 +1,125 @@
+{
+    "Course Information": {
+        "Course Title": "Basic Urban Farming with Hydroponics",
+        "Name of Organisation": "Tertiary Infotech Pte. Ltd.",
+        "Classroom Hours": 5,
+        "Number of Assessment Hours": 1,
+        "Course Duration (Number of Hours)": 8,
+        "Industry": "Agriculture"
+    },
+    "Learning Outcomes": {
+        "Learning Outcomes": [
+            "LO1: Perform farming activities and equipment operations according to standard operating procedures.",
+            "LO2: Execute farming operations work in accordance to regulations, WSH practices and housekeeping rules."
+        ],
+        "Knowledge": [
+            "K1: Types, purpose and functions of farming equipment and machinery",
+            "K2: Farming operation Standard Operating Procedures (SOPs)",
+            "K3: Good Agriculture Practices (GAPs), prevailing regulations on food safety and Workplace Safety and Health (WSH) practices",
+            "K4: Equipment cleaning and maintenance techniques"
+        ],
+        "Ability": [
+            "A1: Prepare farming materials, equipment and machinery for daily operation",
+            "A2: Perform farming activities in accordance with standard operating procedures to meet production schedule and targets",
+            "A3: Executes farming operations work in compliance with prevailing regulations on agricultural practices and food safety standards, and WSH practices",
+            "A4: Perform housekeeping of farm premises, cleaning of workstations, farming equipment, machinery and tools"
+        ],
+        "Knowledge and Ability Mapping": {
+            "KA1": [
+                "K1",
+                "K2",
+                "A1",
+                "A2"
+            ],
+            "KA2": [
+                "K3",
+                "K4",
+                "A3",
+                "A4"
+            ]
+        }
+    },
+    "TSC and Topics": {
+        "TSC Title": [
+            "Urban Farming Implementation and Management Control"
+        ],
+        "TSC Code": [
+            "AGR-FOP-2002-1.1"
+        ],
+        "Topics": [
+            "Topic 1: Introduction to Hydroponics and Systems (A1, K1)",
+            "Topic 2: Growing Media, Plant Nutrition, and Practical Application (A2, K2)",
+            "Topic 3: Basic Techniques of Hydroponics Farming (A3, K3)",
+            "Topic 4: Urban Farming Practices in Singapore (A4, K4)"
+        ],
+        "Learning Units": [
+            "LU1 Urban Farming and Hydroponics Foundations",
+            "LU2 Urban Farming and Hydroponics Techniques and Practices"
+        ]
+    },
+    "Assessment Methods": {
+        "Assessment Methods": [
+            "WA-SAQ",
+            "Oral Questioning"
+        ],
+        "Amount of Practice Hours": "2",
+        "Course Outline": {
+            "Learning Units": {
+                "LU1": {
+                    "Description": [
+                        {
+                            "Topic": "Topic 1: Introduction to Hydroponics and Systems (A1, K1)",
+                            "Details": [
+                                "Definition and history of hydroponics",
+                                "Advantages and disadvantages of hydroponics",
+                                "Basic components of a hydroponic system",
+                                "Different types of hydroponic systems (e.g., NFT, DWC, Ebb and Flow)",
+                                "Selecting the right system for specific crops",
+                                "Setting up and maintaining hydroponic systems"
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 2: Growing Media, Plant Nutrition, and Practical Application (A2, K2)",
+                            "Details": [
+                                "Types of growing media used in hydroponics",
+                                "Nutrient solutions and their preparation",
+                                "Monitoring and adjusting pH and EC levels",
+                                "Assembling a basic hydroponic system",
+                                "Planting and caring for crops in a hydroponic system",
+                                "Maintenance and troubleshooting of hydroponic setups"
+                            ]
+                        }
+                    ]
+                },
+                "LU2": {
+                    "Description": [
+                        {
+                            "Topic": "Topic 3: Basic Techniques of Hydroponics Farming (A3, K3)",
+                            "Details": [
+                                "Principles of indoor farming",
+                                "Lighting, temperature, and humidity control",
+                                "Integration of hydroponics into indoor farming setups",
+                                "Guided hydroponics farm tour at Kok Fah Farm",
+                                "Real-world application of hydroponic techniques",
+                                "Observation of commercial hydroponic operations",
+                                "Understanding farm management and maintenance practices"
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 4: Urban Farming Practices in Singapore (A4, K4)",
+                            "Details": [
+                                "Basics of aquaponics and its benefits",
+                                "Setting up an aquaponics system",
+                                "Regulatory considerations and best practices for urban farming in Singapore",
+                                "Performing farming activities in compliance with prevailing regulations",
+                                "Good Agriculture Practices (GAPs) and Workplace Safety and Health (WSH) practices",
+                                "Equipment cleaning and maintenance techniques"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
+        "Instructional Methods": "Lecture (5 hrs), Didactic Questioning, Demonstration, Practice (2 hrs)"
+    }
+}
