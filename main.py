@@ -108,10 +108,9 @@ config_list_openai = [
 # Manually create the config list with JSON response format
 config_list = [
         {
-            "model": "deepseek/deepseek-r1",
-            "base_url": "https://openrouter.ai/api/v1",
-            "api_key": os.getenv("openrouter_api_key"),  # or omit if set in environment
-            "price": [0.00055, 0.00219],
+        "model": "gpt-4o-mini",
+        "api_key": OPENAI_API_KEY,
+        "response_format": {"type": "json_object"},
         },
     ]
 
