@@ -1,7 +1,6 @@
 # app.py
 import streamlit as st
 from streamlit_option_menu import option_menu
-import cp_generation as cp_generation
 import Assessment.assessment_generation as assessment_generation
 import Courseware.courseware_generation  as courseware_generation
 import Brochure.brochure_generation as brochure_generation
