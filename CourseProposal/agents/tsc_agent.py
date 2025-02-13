@@ -6,6 +6,7 @@ import asyncio
 import os
 from dotenv import load_dotenv
 from utils.document_parser import parse_document
+import sys
 
 load_dotenv()
 
@@ -22,8 +23,11 @@ config = {
     }
 }
 
+
+
 model_client = ChatCompletionClient.load_component(config)
-parse_document("TSC Mapping-tertiary-ckad.docx", "json_output/output_TSC.json")
+# parse_document("TSC Mapping-tertiary-ckad.docx", "json_output/output_TSC.json")
+
 input_json = "json_output/output_TSC.json"
 # Load the JSON file into a Python variable
 with open(input_json, 'r', encoding='utf-8') as file:

@@ -21,8 +21,11 @@ import json
 import asyncio
 import sys
 from cv_main import create_course_validation
+from utils.helpers import parse_document
 
-async def main() -> None:
+async def main(input_tsc) -> None:
+    # Parse document
+    parse_document(input_tsc, "json_output/output_TSC.json")
     # TSC Agent Process
     tsc_agent = create_tsc_agent()
     stream = tsc_agent.run_stream(task=tsc_task)
