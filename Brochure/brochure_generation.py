@@ -47,6 +47,7 @@ class CourseData(BaseModel):
     learning_outcomes: List[str]
     tsc_title: str
     tsc_code: str
+    tsc_framework: str
     wsq_funding: Dict[str, str]
     tgs_reference_no: str
     gst_exclusive_price: str
@@ -104,8 +105,11 @@ def scrape_course_data(url: str) -> CourseData:
             match = re.search(r"guideline of\s+(.*?)\s+(\S+)\s+under", skills_framework_text)
             tsc_title = match.group(1).strip() if match else "Not Applicable"
             tsc_code = match.group(2).strip() if match else "Not Applicable"
+            # Now extract the framework (e.g., "Human Resource" from "under Human Resource Skills Framework")
+            framework_match = re.search(r"under\s+(.+?)\s+Skills\s+Framework", skills_framework_text, re.IGNORECASE)
+            tsc_framework = framework_match.group(1).strip() if framework_match else "Not Applicable"
         except:
-            tsc_title, tsc_code = "Not Applicable", "Not Applicable"
+            tsc_title, tsc_code, tsc_framework = "Not Applicable", "Not Applicable", "Not Applicable"
 
         # Extract WSQ Funding table
         try:
@@ -174,6 +178,7 @@ def scrape_course_data(url: str) -> CourseData:
             learning_outcomes=learning_outcomes,
             tsc_title=tsc_title,
             tsc_code=tsc_code,
+            tsc_framework=tsc_framework,
             wsq_funding=wsq_funding,
             tgs_reference_no=tgs_reference_no,
             gst_exclusive_price=gst_exclusive_price,
@@ -349,6 +354,7 @@ def generate_brochure(data: CourseData):
         'TGS_Ref_No': data_dict.get('tgs_reference_no', 'Not Applicable'),
         'TSC_Title': data_dict.get('tsc_title', 'Not Applicable'),
         'TSC_Code': data_dict.get('tsc_code', 'Not Applicable'),
+        'TSC_Framework': data_dict.get('tsc_framework', 'Not Applicable'),
         'GST_Excl_Price': data_dict.get('gst_exclusive_price', 'Not Applicable'),
         'GST_Incl_Price': data_dict.get('gst_inclusive_price', 'Not Applicable'),
         'Duration_Hrs': data_dict.get('duration_has', 'Not Applicable'),
@@ -456,7 +462,7 @@ def app():
     # Enable wide mode for the layout
     st.title("📄 Brochure Generator with Autogen")
     model_client = OpenAIChatCompletionClient(
-        model=st.secrets["REPLACEMENT_MODEL_NAME"],
+        model=st.secrets["REPLACEMENT_MODEL"],
         temperature=0,
         api_key=st.secrets["OPENAI_API_KEY"]
     )

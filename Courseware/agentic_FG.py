@@ -116,11 +116,11 @@ async def generate_facilitators_guide(context, name_of_organisation, model_clien
         tools=[retrieve_excel_data],
         system_message="""
         You are an expert in data retrieval from Excel files. Your task is to:
-        1. Extract the TSC_Code from the provided course information JSON dictionary.
-        2. Call the `retrieve_excel_data` function with only the TSC_Code to get the relevant data.
-        3. Add the retrieved data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the original JSON dictionary.
-        4. **Return the updated dictionary with all original information plus the new Excel data. Do not truncate or omit any parts of the data. Include all fields and data in full. Do not replace any content with '...' or '[ ... ]'.**
-        Include the word 'json' in your response.
+        1. Extract the TSC_Code from the provided course information dictionary.
+        2. Call the `retrieve_excel_data` function with the TSC_Code.
+        3. Append the retrieved data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the original dictionary.
+        4. If the TSC Code cannot retrieve any data, or no data is found, return the original dictionary without modifications.
+        5. Return the dictionary to the next agent.
         """
     )
     
@@ -131,47 +131,45 @@ async def generate_facilitators_guide(context, name_of_organisation, model_clien
         tools=[generate_document],
         system_message="""
             You are responsible for generating the FG document using the collected data.
-            
-            **Key Responsibilities:**
-            1. **Document Generation:**
-                - **Receive the updated dictionary containing all the course information.**
-                - **Receive the timetable dictionary (lesson_plan).**
-                - **Combine the course information dictionary and the timetable dictionary into one final context dictionary.**
-                - **Include the timetable dictionary under the key 'lesson_plan' within the context dictionary.**
-                - **Ensure that the 'lesson_plan' is included inside the 'context' dictionary as a key.**
-                - **Call the `generate_document` function using only the `context` arguments. Do not pass any additional arguments.**
-                - **Verify the document was actually generated successfully.**
-                - **If generation fails, retry once with corrected parameters.**
-
-            **Important Notes:**
-            - **When combining dictionaries, make sure all necessary data is included in the `context` dictionary.**
-            - **Do not pass 'lesson_plan' or any other data as separate keyword arguments to `generate_document`.**
-
-            **Example function call:**
-            ```python
-            generate_document(context=context_dict)
-            ```
-
-            **Do not proceed until you have confirmed successful document generation.**
+            1. Receive the updated course information JSON dictionary from the previous agent.
+            2. Also receive the timetable dictionary under the key 'lesson_plan'.
+            3. Combine the course information dictionary and the timetable dictionary into one final context dictionary. (Ensure that the timetable is nested under the key 'lesson_plan'.)
+            4. Call the `generate_document` function using only the `context` argument.
+            5. Verify that the document is generated successfully. If the generation fails, retry once with corrected parameters.
+            6. Once the document is generated, output only the file path of the generated Facilitator's Guide document.
+            (Your final output must contain only this file path with no additional commentary.)
         """,
     )
 
     agent_tasks = f"""
-        ## Instructions for Excel Data Retriever agent:
-        1. Take the complete JSON dictionary provided: {context}
-        2. Extract the TSC_Code from the provided course information JSON dictionary.
-        3. Call the `retrieve_excel_data` function with only the TSC_Code to get the relevant data.
-        4. Add the retrieved data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the original JSON dictionary.
-        5. **Return the updated dictionary with all original information plus the new Excel data. Do not truncate or omit any parts of the data. Include all fields and data in full. Do not replace any content with '...' or '[ ... ]'.**
+        Course Information dictionary: {context}\n\n
+        Overall Task:
+        This multi-agent task involves two sequential steps:
 
-        ## Instructions for FG Assistant agent
-        1. You have received the course information JSON dictionary and the timetable JSON dictionary.
-        2. Call the `generate_document` function with the arguments: context=final_context_dictionary.
-        **Example function call:**
-        ```python
-        generate_document(context=json context)
-        ```
-        3. Ensure that you only pass 'context' as arguments.
+        Step 1: Excel Data Retrieval  
+        - Agent Role: Excel Data Retriever  
+        - Instructions:
+        1. Receive the complete course information JSON dictionary.
+        2. Extract the TSC_Code from the dictionary.
+        3. Call the function `retrieve_excel_data` using only the TSC_Code.
+        4. Append the retrieved Excel data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the original dictionary.
+        5. Return the updated dictionary with all original information plus the new Excel data.
+
+        Step 2: Document Generation  
+        - Agent Role: FG Assistant  
+        - Instructions:
+        1. Receive the updated dictionary from the Excel Data Retriever.
+        2. Combine this course information dictionary with the timetable dictionary (provided under the key 'lesson_plan') into one final context dictionary.
+        3. Call the `generate_document` function with the argument: context=<final_context_dictionary>.
+        4. Once the document is generated, output the termination keyword to halt further communication.
+
+        Important Guidelines:
+        - Each agent must strictly perform only its assigned tasks.
+        - The Excel Data Retriever should not call `generate_document`.
+        - The FG Assistant should not call `retrieve_excel_data`.
+        - The final message from the FG Assistant must include the termination keyword.
+
+        Please proceed step by step and provide clear, concise outputs.
         """
 
     text_termination = TextMentionTermination("TERMINATE") | MaxMessageTermination(10)

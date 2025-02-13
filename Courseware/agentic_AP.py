@@ -315,7 +315,7 @@ async def generate_assessment_plan(context, name_of_organisation, model_client, 
             # Add the logo to the context
             context['company_logo'] = logo_image
             context['Name_of_Organisation'] = name_of_organisation
-
+            print(f"##########\n\n{context}\n\n")
             doc.render(context)
 
             # Use a temporary file to save the document
@@ -377,10 +377,10 @@ async def generate_assessment_plan(context, name_of_organisation, model_client, 
             system_message="""
             You are an expert in data retrieval from Excel files. Your task is to:
             1. Extract the TSC_Code from the provided course information dictionary.
-            2. Use the TSC_Code to retrieve relevant data from the Excel file by calling the `retrieve_excel_data` function.
-            3. Add the retrieved data to the original dictionary.
+            2. Call the `retrieve_excel_data` function with the TSC_Code.
+            3. Append the retrieved data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the original dictionary.
             4. If the TSC Code cannot retrieve any data, or no data is found, return the original dictionary without modifications.
-            4. Return the dictionary to the next agent.
+            5. Return the dictionary to the next agent.
             """
         )
 
@@ -390,30 +390,43 @@ async def generate_assessment_plan(context, name_of_organisation, model_client, 
             tools=[generate_document],
             system_message="""
             You are responsible for generating the Assessment Plan document. Your tasks are:
-            1. Receive the updated dictionary containing all the course information from the previous agent.
+            1. Receive the updated course information dictionary from the previous agent.
             2. Use this dictionary as the context for the document template.
-            3. Call the `generate_document` function with the arguments: context=context_dictionary.
-            4. Return 'TERMINATE' when the task is done.
+            3. Call the `generate_document` function with the argument: context=<updated dictionary>.
+            4. After generating the document, output the document's file path followed by the termination keyword "TERMINATE" to signal completion.
             """,
         )
 
-        agent_tasks = f"""
-            ##  Instructions for Excel Data Retriever agent:
-            1. Take the complete dictionary provided: {context}
-            2. Extract the TSC_Code from the provided course information JSON dictionary.
-            3. Call the `retrieve_excel_data` function with only the TSC_Code to get the relevant data.
-            4. Add the retrieved data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the original JSON dictionary.
-            5. Return the updated JSON dictionary with all original information plus the new Excel data to the next agent.
+    agent_tasks = f"""
+        Course Information dictionary: {context}\n\n
+        Overall Task: 
+        This multi-agent task involves two sequential steps:
 
-            ##  Instructions for AP Assistant agent:
-            1. The AP Assistant will use the provided JSON dictionary, which includes all the course information, to create a context for the document template.
-            2. Call the `generate_document` function with the arguments: context= JSON dictionary.
-            **Example function call:**
-            ```python
-            generate_document(context=json context)
-            ```
-            3. Ensure that you only pass 'context' as arguments.
-            """
+        Step 1: Excel Data Retrieval  
+        - Agent Role: Excel Data Retriever  
+        - Instructions:  
+        1. Receive the complete course information dictionary.
+        2. Extract the TSC_Code from the dictionary.
+        3. Call the function `retrieve_excel_data` using the extracted TSC_Code.
+        4. Append the retrieved Excel data (TSC_Sector, TSC_Sector_Abbr, TSC_Category, Proficiency_Level, Proficiency_Description) to the dictionary.
+        5. Return the updated dictionary to the next agent.
+
+        Step 2: Document Generation  
+        - Agent Role: AP Assistant  
+        - Instructions:  
+        1. Receive the updated dictionary from the previous agent.
+        2. Use the updated dictionary as the context to generate the Assessment Plan document.
+        3. Call the function `generate_document` with the argument: context=<updated_dictionary>.
+        4. Once the document is generated, output the termination keyword to halt further communication.
+
+        Important Guidelines:  
+        - Each agent must strictly perform only its assigned tasks.  
+        - The Excel Data Retriever should not attempt to call `generate_document`.  
+        - The AP Assistant should not call `retrieve_excel_data`.  
+        - The final message from the AP Assistant must include the termination keyword.
+
+        Please proceed step by step and ensure clarity in the outputs.
+    """
 
     text_termination = TextMentionTermination("TERMINATE") | MaxMessageTermination(10)
 
@@ -425,7 +438,11 @@ async def generate_assessment_plan(context, name_of_organisation, model_client, 
     asr_doc_path = None
 
     for message in result.messages:
-        print(f"\n########## MESSAGE: {message}\n")
+        if isinstance(message, TaskResult):
+            print("Stop Reason:", message.stop_reason)
+        else:
+            print(f"\n########## MESSAGE: {message}\n")
+
         if message.source == "AP_Assistant" and message.type == "ToolCallSummaryMessage":
             ap_doc_path = message.content
 
