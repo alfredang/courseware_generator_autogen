@@ -1,18 +1,21 @@
 {
     "course_info": {
-        "Course Title": "Hands-on AI-Assisted Programming Made Simple with GitHub Copilot",
+        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
         "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency.",
-            "LO2: Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes."
+            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
+            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
+            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
+            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
+            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
         ],
-        "TSC Title": "Digital Technology Adoption and Innovation",
-        "TSC Code": "ACC-ICT-3004-1.1"
+        "TSC Title": "Solution Architecture",
+        "TSC Code": "ICT-DES-5006-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "Organizations often struggle with outdated coding practices and insufficient knowledge of emerging technologies, which can lead to suboptimal software development outcomes. This gap not only affects productivity but also limits the ability to innovate and adapt to new technological trends.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course provides a comprehensive introduction to GitHub Copilot, enabling participants to explore its capabilities in various programming languages. By applying these tools, they can enhance their coding processes and stay updated with the latest technological advancements, thus addressing the skills gap in the industry."
+            "What are the performance gaps in the industry?": "A significant gap in the industry is the misalignment between technical requirements and the actual implementation of Kubernetes solutions. Many teams lack the ability to effectively coordinate the various components of their applications, leading to integration issues and suboptimal performance. Furthermore, there is often insufficient emphasis on coding standards and best practices, which can hinder scalability and reusability of solutions.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes the importance of aligning technical and functional requirements within Kubernetes architectures, which directly addresses the misalignment issues faced by many organizations. By teaching participants how to articulate the value of their solutions and adhere to coding standards, the course fosters an environment where scalable and reusable applications can thrive."
         }
     ]
 }

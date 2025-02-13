@@ -6,7 +6,7 @@
         "Practical Performance (PP)"
     ],
     "A_0": [
-        "A1: Identify issues in the existing software and systems"
+        "A1: Establish high-level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components"
     ],
     "A_10": [],
     "A_11": [],
@@ -17,16 +17,20 @@
     "A_16": [],
     "A_17": [],
     "A_1": [
-        "A2: Seek potential IT solutions to resolve issues or for systems upgrading"
+        "A2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint"
     ],
     "A_2": [
-        "A3: Propose to management on suitable IT solutions for the organisation"
+        "A3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture"
     ],
     "A_3": [
-        "A4: Keep up to date with new technologies and systems"
+        "A4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework"
     ],
-    "A_4": [],
-    "A_5": [],
+    "A_4": [
+        "A5: Articulate value added by the solution to the business needs"
+    ],
+    "A_5": [
+        "A6: Establish processes to regularly monitor, test and review solution architecture against business requirements"
+    ],
     "A_6": [],
     "A_7": [],
     "A_8": [],
@@ -35,19 +39,19 @@
         "Tertiary Infotech Pte Ltd"
     ],
     "Conclusion_0": [
-        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the Infocomm Technology sector while equipping learners with the necessary attributes to excel in their roles as software developers and IT professionals."
+        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the industry while equipping learners with the necessary attributes to excel in their roles as Kubernetes application developers."
     ],
     "CourseTitle": [
-        "Hands-on AI-Assisted Programming Made Simple with GitHub Copilot"
+        "Certified Kubernetes Application Developer (CKAD) Training"
     ],
     "Hours_0": [
-        3
+        15
     ],
     "Hours_1": [
-        1
+        2
     ],
     "Hours_2": [
-        8
+        32
     ],
     "Hours_3": [
         "N.A."
@@ -60,16 +64,22 @@
         "Practical"
     ],
     "KA_0": [
-        "K1, K3, A1, A3"
+        "K1, K2, A1, A2"
     ],
     "KA_1": [
-        "K2, K4, A2, A4"
+        "K3, A3"
     ],
-    "KA_2": [],
-    "KA_3": [],
-    "KA_4": [],
+    "KA_2": [
+        "K4, K6, A4"
+    ],
+    "KA_3": [
+        "K5, A5"
+    ],
+    "KA_4": [
+        "K7, A6"
+    ],
     "K_0": [
-        "K1: Relevant systems and software"
+        "K1: Process for refining solution architecture"
     ],
     "K_10": [],
     "K_11": [],
@@ -80,58 +90,82 @@
     "K_16": [],
     "K_17": [],
     "K_1": [
-        "K2: Organisation's processes"
+        "K2: Applications of tools and modelling techniques for creation of solution architecture"
     ],
     "K_2": [
-        "K3: Strengths and weaknesses of existing software and systems"
+        "K3: Technical, functional and service considerations"
     ],
     "K_3": [
-        "K4: Emerging technological trends such as block chain, machine learning, artificial intelligence"
+        "K4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspects for the solution"
     ],
-    "K_4": [],
-    "K_5": [],
-    "K_6": [],
+    "K_4": [
+        "K5: Standards for coding, scalability, integration and reusability"
+    ],
+    "K_5": [
+        "K6: Compatibility among multiple solution architecture components and design activities"
+    ],
+    "K_6": [
+        "K7: Techniques to measure a solution's value-add"
+    ],
     "K_7": [],
     "K_8": [],
     "K_9": [],
     "LO_0": [
-        "LO1: Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency."
+        "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools."
     ],
     "LO_1": [
-        "LO2: Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes."
+        "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures."
     ],
-    "LO_2": [],
-    "LO_3": [],
-    "LO_4": [],
+    "LO_2": [
+        "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals."
+    ],
+    "LO_3": [
+        "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability."
+    ],
+    "LO_4": [
+        "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+    ],
     "LO_5": [],
     "LO_6": [],
     "LO_7": [],
     "LU_0": [
-        "LU1: Introduction to GitHub Copilot"
+        "LU1: Container Image Management"
     ],
     "LU_1": [
-        "LU2: Practical Applications of GitHub Copilot"
+        "LU2: Deployment Strategies"
     ],
-    "LU_2": [],
-    "LU_3": [],
-    "LU_4": [],
+    "LU_2": [
+        "LU3: Application Monitoring and Debugging"
+    ],
+    "LU_3": [
+        "LU4: Security and Configuration Management"
+    ],
+    "LU_4": [
+        "LU5: Networking and Access Management"
+    ],
     "LU_5": [],
     "LU_6": [],
     "LU_7": [],
     "LUex_0": [
-        "LU1 lays the foundational knowledge by introducing learners to GitHub Copilot and its role in enhancing software development efficiency. The facilitator will guide learners through the installation process and exploration of Copilot's features, setting the stage for understanding how to identify gaps in existing programming workflows. This unit addresses the performance gap of struggling to identify inefficiencies in current workflows, equipping learners with the ability to analyze and propose AI-assisted solutions."
+        "LU1 lays the foundational knowledge by introducing learners to the processes of defining, building, and modifying container images. This unit emphasizes the importance of choosing the right workload resources and understanding multi-container Pod design patterns. By establishing high-level structures and frameworks, learners gain the ability to guide the development of Kubernetes applications effectively. This foundational knowledge addresses the performance gap of struggling to establish frameworks."
     ],
     "LUex_1": [
-        "Building on the foundational knowledge, LU2 dives into the practical applications of GitHub Copilot across various programming languages and scenarios. Learners will engage in hands-on exercises to effectively integrate Copilot into their coding processes, addressing the performance gap of underutilization of AI tools. This unit enhances learners' ability to leverage GitHub Copilot and similar tools, fostering proficiency in utilizing emerging AI programming tools to innovate and streamline coding practices."
+        "Building on the foundational knowledge, LU2 dives into practical deployment strategies using Kubernetes primitives. Learners will explore how to align technical, functional, and service requirements within their deployment architectures. This unit enhances learners' proficiency in implementing effective deployment strategies, addressing the performance gap of operational inefficiencies in aligning requirements."
     ],
-    "LUex_2": [],
-    "LUex_3": [],
-    "LUex_4": [],
+    "LUex_2": [
+        "LU3 escalates to a higher level of complexity where learners delve into the coordination of multiple Kubernetes solution components. This unit focuses on ensuring compatibility and performance through observability techniques and maintenance practices. By understanding API deprecations and implementing health checks, learners develop the skills needed to address compatibility issues, thus bridging the performance gap in coordinating components."
+    ],
+    "LUex_3": [
+        "In LU4, learners articulate the value of Kubernetes solutions by exploring coding standards, security measures, and resource management. This unit empowers learners to effectively communicate the benefits of their solutions, addressing the performance gap of articulating value. By understanding application security and configuration, learners gain the capability to optimize their Kubernetes implementations."
+    ],
+    "LUex_4": [
+        "LU5 culminates the training by focusing on networking and service management within Kubernetes. Learners will establish monitoring and testing processes to validate their architectures against business requirements. This unit equips learners with the knowledge to implement effective monitoring strategies, addressing the performance gap of lacking validation processes."
+    ],
     "LUex_5": [],
     "LUex_6": [],
     "LUex_7": [],
     "Placeholder_0": [
-        "The Infocomm Technology sector is currently facing significant challenges in adapting to rapid technological advancements, particularly in the realm of artificial intelligence and automation. Many organizations struggle with integrating AI tools into their existing programming workflows, leading to inefficiencies and a lack of innovation. Developers often find themselves overwhelmed by the sheer volume of new technologies, which can create a performance gap where they are unable to leverage these tools effectively. Additionally, there is a noticeable gap in understanding how to identify and resolve issues within existing software systems, which can hinder productivity and lead to suboptimal coding practices. The inability to propose suitable IT solutions that align with organizational processes further exacerbates these challenges, as teams may miss out on opportunities for improvement and modernization. Furthermore, the lack of familiarity with emerging technologies such as machine learning and blockchain can leave organizations at a competitive disadvantage, as they may not be able to keep pace with industry standards or customer expectations.\n\nTo address the identified performance gaps, there is a pressing need for targeted training that focuses on the practical application of AI-assisted programming tools, specifically GitHub Copilot. Training programs should be designed to equip developers with the skills necessary to identify gaps in their current workflows and propose effective AI-driven solutions that enhance coding efficiency. This includes hands-on experience with GitHub Copilot, allowing participants to explore its features and understand how it can be integrated into their daily programming tasks. Additionally, training should cover the strengths and weaknesses of existing software systems, enabling developers to critically assess their tools and processes. Knowledge of emerging technological trends is also essential, as it empowers developers to stay informed about new advancements and apply them effectively within their organizations. Overall, a comprehensive training approach that combines theoretical knowledge with practical application will be crucial in bridging the performance gaps in the industry.\n\nSeveral job roles within the Infocomm Technology sector would significantly benefit from this training. Software developers and programmers are the primary beneficiaries, as they are directly involved in coding and software development processes. By enhancing their skills in AI-assisted programming, they can improve their efficiency and output quality. Additionally, IT project managers would gain valuable insights into how to implement AI tools within their teams, enabling them to drive innovation and streamline project workflows. System analysts and software architects would also find the training beneficial, as it would equip them with the knowledge to assess existing systems and propose suitable upgrades or replacements. Furthermore, technical leads and team leaders would be able to leverage the training to mentor their teams effectively, fostering a culture of continuous improvement and adaptation to new technologies. Overall, the training would create a ripple effect, enhancing the capabilities of individuals and teams across various roles within the industry."
+        "The Infocomm Technology sector is experiencing significant challenges in effectively implementing and managing Kubernetes solutions. One of the primary performance gaps is the lack of skilled professionals who can establish high-level structures and frameworks for Kubernetes applications. Many organizations struggle with aligning technical, functional, and service requirements within their Kubernetes-based architectures, leading to inefficient deployments and increased operational costs. Additionally, there is often a disconnect between the various components of Kubernetes solutions, resulting in compatibility issues that hinder the overall performance and scalability of applications. The rapid evolution of cloud-native technologies and the increasing complexity of application environments further exacerbate these challenges, as teams may not be adequately trained to handle the nuances of Kubernetes, such as multi-container Pod design patterns and the use of Helm for package management. Furthermore, organizations frequently face difficulties in articulating the value of their Kubernetes solutions, particularly in terms of coding standards, scalability, and reusability, which can lead to underutilization of resources and missed opportunities for optimization.\n\nTo address the identified performance gaps, there is a pressing need for targeted training programs that equip professionals with the necessary skills and knowledge to effectively design, deploy, and maintain Kubernetes applications. Training should focus on establishing high-level frameworks and structures that guide the development of IT solutions, incorporating various processes, hardware, and software components. Participants need to be trained in the application of tools and modeling techniques that are essential for creating robust solution architectures. Additionally, training must emphasize the importance of aligning the requirements of various stakeholders and ensuring compatibility among multiple solution architecture components. Practical training sessions that include hands-on experience with Kubernetes primitives, deployment strategies, and application observability techniques will be crucial in building confidence and competence among participants. Furthermore, establishing processes for regular monitoring, testing, and reviewing of solution architectures against business requirements will empower professionals to validate their Kubernetes implementations effectively. Overall, a comprehensive training approach that combines theoretical knowledge with practical application is essential to bridge the skills gap in the industry.\n\nSeveral job roles within the Infocomm Technology sector would significantly benefit from this training. Kubernetes application developers, who are responsible for designing and building applications that run on Kubernetes, would gain valuable insights into best practices for application design and deployment. Solution architects would also benefit, as they need to align technical and functional requirements within Kubernetes-based architectures and ensure compatibility among various components. DevOps engineers, who play a critical role in the continuous integration and deployment of applications, would find the training particularly beneficial in understanding how to implement effective deployment strategies and maintain application observability. Additionally, system administrators and IT operations personnel would enhance their skills in managing Kubernetes environments, focusing on security, configuration, and resource management. Finally, project managers overseeing cloud-native application development projects would gain a deeper understanding of the technical aspects of Kubernetes, enabling them to better coordinate teams and resources to achieve project goals."
     ],
     "Placeholder_1": [
         {
@@ -145,48 +179,26 @@
         {
             "type": "bullets",
             "content": [
-                "Learners struggle to identify inefficiencies in their current programming workflows, leading to missed opportunities for improvement.",
-                "Learners lack the skills to effectively integrate AI tools like GitHub Copilot into their coding processes, resulting in underutilization of available technology.",
-                "Learners are often unaware of emerging AI programming tools and their potential applications, which limits their ability to innovate and stay competitive."
+                "Learners struggle with establishing high-level structures and frameworks for Kubernetes solutions, leading to inefficient deployments.",
+                "Learners often find it challenging to align technical, functional, and service requirements within Kubernetes-based solution architectures, resulting in operational inefficiencies.",
+                "Learners have difficulty coordinating multiple Kubernetes solution components, which can lead to compatibility issues and hinder overall performance.",
+                "Learners are unclear on how to articulate the value of Kubernetes solutions, particularly regarding coding standards, scalability, and reusability.",
+                "Learners lack the knowledge to establish effective monitoring and testing processes to validate Kubernetes architectures against business requirements."
             ]
         },
         {
             "type": "paragraph",
             "content": "Through targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:"
-        },
-        {
-            "type": "bold_paragraph",
-            "content": "Attributes Gained:"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Proficiency in analyzing and identifying gaps in programming workflows to propose AI-assisted solutions.",
-                "Ability to effectively utilize GitHub Copilot and similar tools to enhance coding efficiency.",
-                "Knowledge of emerging AI programming tools and their practical applications in software development."
-            ]
-        },
-        {
-            "type": "bold_paragraph",
-            "content": "Post-Training Benefits to Learners:"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Increased efficiency in coding processes, leading to higher productivity and reduced time spent on tasks.",
-                "Enhanced capability to leverage AI tools, resulting in improved software quality and innovation.",
-                "Greater awareness of technological trends, enabling learners to keep pace with industry advancements and maintain a competitive edge."
-            ]
         }
     ],
     "Rationale_0": [
-        "For this course, the step-by-step sequencing is employed to scaffold the learners' comprehension and application of AI-assisted programming tools using GitHub Copilot. This methodology is crucial as it systematically breaks down the intricate facets of programming workflows and AI integration into digestible units. This aids in gradually building the learners' knowledge and skills from foundational concepts to practical applications, ensuring a solid understanding before advancing to more complex topics. The progression is designed to foster a deeper understanding and the ability to effectively apply the learned concepts in real-world programming scenarios."
+        "For this course, the step-by-step sequencing is employed to scaffold the learners' comprehension and application of Kubernetes solutions. This methodology is crucial as it systematically breaks down the intricate facets of Kubernetes application design, deployment, observability, security, and networking into digestible units. This aids in gradually building the learners' knowledge and skills from fundamental to more complex concepts, ensuring a solid foundation before advancing to the next topic. The progression is designed to foster a deeper understanding and the ability to effectively apply the learned concepts in real-world scenarios."
     ],
     "TCS_0": [
-        "Digital Technology Adoption and Innovation"
+        "Solution Architecture"
     ],
     "TCS_1": [
-        "ACC-ICT-3004-1.1"
+        "ICT-DES-5006-1.1"
     ],
     "TopicsEX_0": [],
     "TopicsEX_1": [],
@@ -197,88 +209,171 @@
     "Topics_0": [
         {
             "type": "paragraph",
-            "content": "Topic 1: Getting Started  with Github Copilot (K1, K3, A1, A3)"
+            "content": "Topic 1: Application Design and Build (K1, K2, A1, A2)"
         },
         {
             "type": "bullets",
             "content": [
-                "What is Github Copilot?",
-                "How Github Copilot enhances software development efficiency?",
-                "Install Github Copilot on Visual Studio Code",
-                "Explore Github Copilot features"
+                "Define, build and modify container images",
+                "Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)",
+                "Understand multi-container Pod design patterns (e.g. sidecar, init and others)",
+                "Utilize persistent and ephemeral volumes"
             ]
         },
         {
             "type": "paragraph",
-            "content": "LO1 \u2013 Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency."
+            "content": "LO1 \u2013 Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools."
         },
         {
             "type": "paragraph",
-            "content": "K1: Relevant systems and software"
+            "content": "K1: Process for refining solution architecture"
         },
         {
             "type": "paragraph",
-            "content": "K3: Strengths and weaknesses of existing software and systems"
+            "content": "K2: Applications of tools and modelling techniques for creation of solution architecture"
         },
         {
             "type": "paragraph",
-            "content": "A1: Identify issues in the existing software and systems"
+            "content": "A1: Establish high-level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components"
         },
         {
             "type": "paragraph",
-            "content": "A3: Propose to management on suitable IT solutions for the organisation"
+            "content": "A2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint"
         }
     ],
     "Topics_1": [
         {
             "type": "paragraph",
-            "content": "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)"
+            "content": "Topic 2: Application Deployment (K3, A3)"
         },
         {
             "type": "bullets",
             "content": [
-                "Github Copilot for HTML",
-                "Github Copilot for Python",
-                "Github Copilot for Javascript",
-                "Github Copilot for REST API",
-                "Other emerging AI tools for software development"
+                "Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)",
+                "Understand Deployments and how to perform rolling updates",
+                "Use the Helm package manager to deploy existing packages",
+                "Kustomize"
             ]
         },
         {
             "type": "paragraph",
-            "content": "LO2 \u2013 Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes."
+            "content": "LO2 \u2013 Align technical, functional, and service requirements within Kubernetes-based solution architectures."
         },
         {
             "type": "paragraph",
-            "content": "K2: Organisation's processes"
+            "content": "K3: Technical, functional and service considerations"
         },
         {
             "type": "paragraph",
-            "content": "K4: Emerging technological trends such as block chain, machine learning, artificial intelligence"
-        },
-        {
-            "type": "paragraph",
-            "content": "A2: Seek potential IT solutions to resolve issues or for systems upgrading"
-        },
-        {
-            "type": "paragraph",
-            "content": "A4: Keep up to date with new technologies and systems"
+            "content": "A3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture"
         }
     ],
-    "Topics_2": [],
-    "Topics_3": [],
-    "Topics_4": [],
+    "Topics_2": [
+        {
+            "type": "paragraph",
+            "content": "Topic 3: Application Observability and Maintenance (K4, K6, A4)"
+        },
+        {
+            "type": "bullets",
+            "content": [
+                "Understand API deprecations",
+                "Implement probes and health checks",
+                "Use built-in CLI tools to monitor Kubernetes applications",
+                "Utilize container logs",
+                "Debugging in Kubernetes"
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": "LO3 \u2013 Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals."
+        },
+        {
+            "type": "paragraph",
+            "content": "K4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspects for the solution"
+        },
+        {
+            "type": "paragraph",
+            "content": "K6: Compatibility among multiple solution architecture components and design activities"
+        },
+        {
+            "type": "paragraph",
+            "content": "A4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework"
+        }
+    ],
+    "Topics_3": [
+        {
+            "type": "paragraph",
+            "content": "Topic 4: Application Environment, Configuration and Security (K5, A5)"
+        },
+        {
+            "type": "bullets",
+            "content": [
+                "Discover and use resources that extend Kubernetes (CRD, Operators)",
+                "Understand authentication, authorization and admission control",
+                "Understand requests, limits, quotas",
+                "Understand ConfigMaps",
+                "Define resource requirements",
+                "Create & consume Secrets",
+                "Understand ServiceAccounts",
+                "Understand Application Security (SecurityContexts, Capabilities, etc.)"
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": "LO4 \u2013 Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability."
+        },
+        {
+            "type": "paragraph",
+            "content": "K5: Standards for coding, scalability, integration and reusability"
+        },
+        {
+            "type": "paragraph",
+            "content": "A5: Articulate value added by the solution to the business needs"
+        }
+    ],
+    "Topics_4": [
+        {
+            "type": "paragraph",
+            "content": "Topic 5: Services and Networking (K7, A6)"
+        },
+        {
+            "type": "bullets",
+            "content": [
+                "Demonstrate basic understanding of NetworkPolicies",
+                "Provide and troubleshoot access to applications via services",
+                "Use Ingress rules to expose applications"
+            ]
+        },
+        {
+            "type": "paragraph",
+            "content": "LO5 \u2013 Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+        },
+        {
+            "type": "paragraph",
+            "content": "K7: Techniques to measure a solution's value-add"
+        },
+        {
+            "type": "paragraph",
+            "content": "A6: Establish processes to regularly monitor, test and review solution architecture against business requirements"
+        }
+    ],
     "Topics_5": [],
     "TotalHours": [],
     "Assessment_0": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1, K3\n\nPractical Performance (PP) \u2013 A1, A3"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1, K2\n\nPractical Performance (PP) \u2013 A1, A2"
     ],
     "Assessment_1": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2, K4\n\nPractical Performance (PP) \u2013 A2, A4"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K3\n\nPractical Performance (PP) \u2013 A3"
     ],
-    "Assessment_2": [],
-    "Assessment_3": [],
-    "Assessment_4": [],
+    "Assessment_2": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K4, K6\n\nPractical Performance (PP) \u2013 A4"
+    ],
+    "Assessment_3": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5\n\nPractical Performance (PP) \u2013 A5"
+    ],
+    "Assessment_4": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K7\n\nPractical Performance (PP) \u2013 A6"
+    ],
     "AssessmentJustification": [
         {
             "type": "paragraph",
@@ -286,7 +381,7 @@
         },
         {
             "type": "paragraph",
-            "content": "The Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to apply GitHub Copilot in programming tasks. Candidates will complete practical coding tasks using GitHub Copilot to demonstrate their ability to enhance programming workflows."
+            "content": "The Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to apply Kubernetes concepts in real-world scenarios. Candidates will complete practical tasks that demonstrate their ability to design, deploy, and manage Kubernetes applications effectively."
         },
         {
             "type": "paragraph",
@@ -295,8 +390,11 @@
         {
             "type": "bullets",
             "content": [
-                "For LO1: Candidates will identify gaps in existing workflows and propose AI-assisted solutions using GitHub Copilot.",
-                "For LO2: Candidates will apply GitHub Copilot to streamline coding processes in various programming languages."
+                "For LO1: Candidates will create a Kubernetes solution architecture that incorporates various processes and tools.",
+                "For LO2: Candidates will align technical and functional requirements within a Kubernetes deployment scenario.",
+                "For LO3: Candidates will coordinate multiple Kubernetes components to ensure compatibility and meet design goals.",
+                "For LO4: Candidates will articulate the value of their Kubernetes solutions by addressing coding standards and scalability.",
+                "For LO5: Candidates will establish monitoring and testing processes to validate their Kubernetes architectures."
             ]
         },
         {
@@ -306,8 +404,8 @@
         {
             "type": "bullets",
             "content": [
-                "Candidates will submit their code files and documentation detailing how they utilized GitHub Copilot to enhance their programming efficiency.",
-                "This includes annotated code snippets showing Copilot's contributions to task completion."
+                "Candidates will submit their completed Kubernetes configurations, deployment scripts, and any additional documentation that supports their practical tasks.",
+                "This includes annotated screenshots or logs demonstrating the functionality of their Kubernetes applications."
             ]
         },
         {
@@ -317,9 +415,9 @@
         {
             "type": "bullets",
             "content": [
-                "Effectiveness in Identifying Gaps.",
-                "Quality of Proposed Solutions.",
-                "Application of GitHub Copilot."
+                "Functionality of Kubernetes solutions.",
+                "Adherence to best practices.",
+                "Quality of documentation and submission."
             ]
         },
         {
@@ -329,39 +427,69 @@
         {
             "type": "bullets",
             "content": [
-                "All submitted evidence, including code files and assessment records, will be retained for 3 years to ensure compliance with institutional policies and for auditing purposes."
+                "All submitted evidence, including Kubernetes configurations and assessment records, will be retained for 3 years for compliance and auditing purposes."
             ]
         }
     ],
     "ADuration_0": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 15 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
     ],
     "ADuration_1": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 15 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
     ],
-    "ADuration_2": [],
-    "ADuration_3": [],
-    "ADuration_4": [],
+    "ADuration_2": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
+    ],
+    "ADuration_3": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
+    ],
+    "ADuration_4": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
+    ],
     "ADuration_5": [],
     "ADurationTotal": [
-        "WA-SAQ \u2013 0.5 hr\nPP \u2013 0.5 hr\nTotal \u2013 1 hr"
+        "WA-SAQ \u2013 1 hr\nPP \u2013 1 hr\nTotal \u2013 2 hr"
     ],
     "Sequencing": [
         {
             "type": "bold_paragraph",
-            "content": "LU1: Introduction to GitHub Copilot"
+            "content": "LU1: Container Image Management"
         },
         {
             "type": "paragraph",
-            "content": "LU1 lays the foundational knowledge by introducing learners to GitHub Copilot and its role in enhancing software development efficiency. The facilitator will guide learners through the installation process and exploration of Copilot's features, setting the stage for understanding how to identify gaps in existing programming workflows. This unit addresses the performance gap of struggling to identify inefficiencies in current workflows, equipping learners with the ability to analyze and propose AI-assisted solutions."
+            "content": "LU1 lays the foundational knowledge by introducing learners to the processes of defining, building, and modifying container images. This unit emphasizes the importance of choosing the right workload resources and understanding multi-container Pod design patterns. By establishing high-level structures and frameworks, learners gain the ability to guide the development of Kubernetes applications effectively. This foundational knowledge addresses the performance gap of struggling to establish frameworks."
         },
         {
             "type": "bold_paragraph",
-            "content": "LU2: Practical Applications of GitHub Copilot"
+            "content": "LU2: Deployment Strategies"
         },
         {
             "type": "paragraph",
-            "content": "Building on the foundational knowledge, LU2 dives into the practical applications of GitHub Copilot across various programming languages and scenarios. Learners will engage in hands-on exercises to effectively integrate Copilot into their coding processes, addressing the performance gap of underutilization of AI tools. This unit enhances learners' ability to leverage GitHub Copilot and similar tools, fostering proficiency in utilizing emerging AI programming tools to innovate and streamline coding practices."
+            "content": "Building on the foundational knowledge, LU2 dives into practical deployment strategies using Kubernetes primitives. Learners will explore how to align technical, functional, and service requirements within their deployment architectures. This unit enhances learners' proficiency in implementing effective deployment strategies, addressing the performance gap of operational inefficiencies in aligning requirements."
+        },
+        {
+            "type": "bold_paragraph",
+            "content": "LU3: Application Monitoring and Debugging"
+        },
+        {
+            "type": "paragraph",
+            "content": "LU3 escalates to a higher level of complexity where learners delve into the coordination of multiple Kubernetes solution components. This unit focuses on ensuring compatibility and performance through observability techniques and maintenance practices. By understanding API deprecations and implementing health checks, learners develop the skills needed to address compatibility issues, thus bridging the performance gap in coordinating components."
+        },
+        {
+            "type": "bold_paragraph",
+            "content": "LU4: Security and Configuration Management"
+        },
+        {
+            "type": "paragraph",
+            "content": "In LU4, learners articulate the value of Kubernetes solutions by exploring coding standards, security measures, and resource management. This unit empowers learners to effectively communicate the benefits of their solutions, addressing the performance gap of articulating value. By understanding application security and configuration, learners gain the capability to optimize their Kubernetes implementations."
+        },
+        {
+            "type": "bold_paragraph",
+            "content": "LU5: Networking and Access Management"
+        },
+        {
+            "type": "paragraph",
+            "content": "LU5 culminates the training by focusing on networking and service management within Kubernetes. Learners will establish monitoring and testing processes to validate their architectures against business requirements. This unit equips learners with the knowledge to implement effective monitoring strategies, addressing the performance gap of lacking validation processes."
         }
     ]
 }

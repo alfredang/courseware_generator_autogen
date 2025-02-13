@@ -2,6 +2,7 @@ from agents.extraction_team import create_extraction_team, extraction_task
 from agents.research_team import create_research_team, research_task
 from agents.justification_agent import run_assessment_justification_agent, recreate_assessment_phrasing_dynamic, justification_task
 from agents.course_validation_team import create_course_validation_team
+from agents.tsc_agent import create_tsc_agent, tsc_task
 from autogen_agentchat.ui import Console
 from utils.helpers import (
     extract_final_aggregator_json, 
@@ -12,6 +13,7 @@ from utils.helpers import (
     extract_final_agent_json,
     flatten_json,
     flatten_list,
+    extract_tsc_agent_json,
 )
 from utils.json_mapping import map_values
 from utils.jinja_docu_replace import replace_placeholders_with_docxtpl
@@ -21,6 +23,19 @@ import sys
 from cv_main import create_course_validation
 
 async def main() -> None:
+    # TSC Agent Process
+    tsc_agent = create_tsc_agent()
+    stream = tsc_agent.run_stream(task=tsc_task)
+    await Console(stream)
+    #TSC JSON management
+    state = await tsc_agent.save_state()
+    with open("json_output/tsc_agent_state.json", "w") as f:
+        json.dump(state, f)
+    tsc_data = extract_tsc_agent_json("json_output/tsc_agent_state.json")
+    with open("json_output/output_TSC.json", "w", encoding="utf-8") as out:
+        json.dump(tsc_data, out, indent=2)
+
+    # Extraction Process
     group_chat = create_extraction_team()
     stream = group_chat.run_stream(task=extraction_task)
     await Console(stream)

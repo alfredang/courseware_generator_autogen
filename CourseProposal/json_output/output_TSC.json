@@ -1,49 +1,81 @@
 {
-    "Course_Proposal_Form": {
-        "null": [
-            "Title: Hands-on AI-Assisted Programming Made Simple with GitHub Copilot",
-            "Organization: Tertiary Infotech Pte Ltd",
-            "Learning Outcomes:",
-            "LO1: Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency.",
-            "LO2: Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes.",
-            "Couse Duration: 1 days (8 hrs)",
-            "Instructional Methods:",
-            "Classroom (3 hrs),",
-            "Didactic Questioning",
-            "Demonstration",
-            "Practical (4 hrs)",
-            "Assessment Methods:",
-            "Written Assessment (0.5 hr)",
-            "Practical Performance (0.5 hr)",
-            "TSC Mapping:",
-            "TSC Title: Digital Technology Adoption and Innovation",
-            "TSC Code: ACC-ICT-3004-1.1",
-            "TSC Knowledge:",
-            "K1 Relevant systems and software",
-            "K2 Organisation's processes",
-            "K3 Strengths and weaknesses of existing software and systems",
-            "K4 Emerging technological trends such as block chain, machine learning, artificial intelligence,",
-            "TSC Abilities:",
-            "A1 Identify issues in the existing software and systems",
-            "A2 Seek potential IT solutions to resolve issues or for systems upgrading",
-            "A3 Propose to management on suitable IT solutions for the organisation",
-            "A4 Keep up to date with new technologies and systems",
-            "Learning Units"
-        ],
-        "LU1: Getting Started  with Github Copilot (K1, K3, A1, A3)": [
-            "Topic 1: Getting Started  with Github Copilot (K1, K3, A1, A3)",
-            "What is Github Copilot?",
-            "How Github Copilot enhances software development efficiency?",
-            "Install Github Copilot on Visual Studio Code",
-            "Explore Github Copilot features"
-        ],
-        "LU2: Software Development with Github Copilot (K2, K4, A2, A4)": [
-            "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)",
-            "Github Copilot for HTML",
-            "Github Copilot for Python",
-            "Github Copilot for Javascript",
-            "Github Copilot for REST API",
-            "Other emerging AI tools for software development"
-        ]
-    }
+  "Course_Proposal_Form": {
+    "null": [
+      "Title: Certified Kubernetes Application Developer (CKAD) Training",
+      "Organization: Tertiary Infotech Pte Ltd",
+      "Learning Outcomes:",
+      "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
+      "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
+      "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
+      "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
+      "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements.",
+      "Course Duration: 4 days (32 hrs)",
+      "Instructional Methods:",
+      "Classroom (15 hrs),",
+      "Didactic Questioning",
+      "Demonstration",
+      "Practical (15 hrs)",
+      "Assessment Methods:",
+      "Written Assessment (1 hr)",
+      "Practical Performance (1 hr)",
+      "TSC Mapping:",
+      "TSC Title: Solution Architecture",
+      "TSC Code: ICT-DES-5006-1.1",
+      "TSC Knowledge:",
+      "K1 Process for refining solution architecture",
+      "K2 Applications of tools and modelling techniques for creation of solution architecture",
+      "K3 Technical, functional and service considerations",
+      "K4 Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspects for the solution",
+      "K5 Standards for coding, scalability, integration and reusability",
+      "K6 Compatibility among multiple solution architecture components and design activities",
+      "K7 Techniques to measure a solution's value-add",
+      "TSC Abilities:",
+      "A1 Establish high level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components",
+      "A2 Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint",
+      "A3 Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture",
+      "A4 Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework",
+      "A5 Articulate value added by the solution to the business needs",
+      "A6 Establish processes to regularly monitor, test and review solution architecture against business requirements",
+      "Learning Units"
+    ],
+    "LU1: Container Management Fundamentals (K1, K2, A1, A2)": [
+      "Topic 1: Application Design and Build (K1, K2, A1, A2)",
+      "Define, build and modify container images",
+      "Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)",
+      "Understand multi-container Pod design patterns (e.g. sidecar, init and others)",
+      "Utilize persistent and ephemeral volumes"
+    ],
+    "LU2: Deployment Strategies (K3, A3)": [
+      "Topic 2: Application Deployment (K3, A3)",
+      "Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)",
+      "Understand Deployments and how to perform rolling updates",
+      "Use the Helm package manager to deploy existing packages",
+      "Kustomize"
+    ],
+    "LU3: Observability and Maintenance (K4, K6, A4)": [
+      "Topic 3: Application Observability and Maintenance (K4, K6, A4)",
+      "Understand API deprecations",
+      "Implement probes and health checks",
+      "Use built-in CLI tools to monitor Kubernetes applications",
+      "Utilize container logs",
+      "Debugging in Kubernetes"
+    ],
+    "LU4: Security and Configuration (K5, A5)": [
+      "Topic 4: Application Environment, Configuration and Security (K5, A5)",
+      "Discover and use resources that extend Kubernetes (CRD, Operators)",
+      "Understand authentication, authorization and admission control",
+      "Understand requests, limits, quotas",
+      "Understand ConfigMaps",
+      "Define resource requirements",
+      "Create & consume Secrets",
+      "Understand ServiceAccounts",
+      "Understand Application Security (SecurityContexts, Capabilities, etc.)"
+    ],
+    "LU5: Networking Essentials (K7, A6)": [
+      "Topic 5: Services and Networking (K7, A6)",
+      "Demonstrate basic understanding of NetworkPolicies",
+      "Provide and troubleshoot access to applications via services",
+      "Use Ingress rules to expose applications"
+    ]
+  }
 }

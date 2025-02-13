@@ -297,6 +297,59 @@ def extract_final_agent_json(file_path: str = "assessment_justification_agent_st
         print("Failed to parse editor content as valid JSON.")
         return None
 
+def extract_tsc_agent_json(file_path: str = "tsc_agent_state.json"):
+    """
+    Reads the specified JSON file (default: 'tsc_agent_state.json'),
+    finds the editor agent's final response, and extracts the
+    substring from the first '{' to the last '}'.
+    
+    Attempts to parse the extracted substring as JSON, returning
+    a Python dictionary. If parsing fails or if no final message
+    is found, returns None.
+    """
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # 1. Identify the aggregator key (usually starts with "aggregator/")
+    editor_key = None
+    for key in data["agent_states"]:
+        if key.startswith("tsc_agent/"):
+            editor_key = key
+            break
+
+    if not editor_key:
+        print("No editor key found in agent_states.")
+        return None
+
+    # 2. Get the aggregator agent state and retrieve the final message
+    aggregator_state = data["agent_states"][editor_key]
+    messages = aggregator_state["agent_state"]["llm_context"]["messages"]
+    if not messages:
+        print("No messages found under tsc_agent_state.")
+        return None
+
+    final_message = messages[-1].get("content", "")
+    if not final_message:
+        print("Final tsc_agent message is empty.")
+        return None
+
+    # 3. Extract the substring from the first '{' to the last '}'
+    start_index = final_message.find("{")
+    end_index = final_message.rfind("}")
+    if start_index == -1 or end_index == -1:
+        print("No JSON braces found in the final aggregator message.")
+        return None
+
+    json_str = final_message[start_index:end_index + 1].strip()
+
+    # 4. Parse the extracted substring as JSON
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError:
+        print("Failed to parse editor content as valid JSON.")
+        return None
+
+
 # Function to recursively flatten lists within the JSON structure
 def flatten_json(obj):
     if isinstance(obj, dict):
