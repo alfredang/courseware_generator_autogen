@@ -8,13 +8,6 @@ import json
 import re
 import pprint
 
-# import os
-# from llama_index.core.response.pprint_utils import pprint_response
-# from llama_index.postprocessor.cohere_rerank import CohereRerank
-
-# api_key = st.secrets["COHERE_API_KEY"]
-# cohere_rerank = CohereRerank(api_key=api_key, top_n=2)
-
 async def generate_saq(extracted_data, index, model_client):
     openai_api_key = st.secrets("OPENAI_API_KEY")
 

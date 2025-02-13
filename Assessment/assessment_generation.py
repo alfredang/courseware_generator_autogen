@@ -260,7 +260,7 @@ def app():
     LLAMA_API_KEY = st.secrets["LLAMA_CLOUD_API_KEY"]
 
     model_client = OpenAIChatCompletionClient(
-        model=st.secrets["REPLACEMENT_MODEL_NAME"],
+        model=st.secrets["REPLACEMENT_MODEL"],
         temperature=0,
         api_key=OPENAI_API_KEY
     )

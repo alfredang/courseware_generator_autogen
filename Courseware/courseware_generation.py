@@ -447,8 +447,9 @@ def app():
                     try:
                         with st.spinner('Generating Learning Guide...'):
                             lg_output = asyncio.run(generate_learning_guide(context, selected_org, openai_model_client))
-                        st.success(f"Learning Guide generated: {lg_output}")
-                        st.session_state['lg_output'] = lg_output  # Store output path in session state
+                        if lg_output:
+                            st.success(f"Learning Guide generated: {lg_output}")
+                            st.session_state['lg_output'] = lg_output  # Store output path in session state
                     except Exception as e:
                         st.error(f"Error generating Learning Guide: {e}")
 
@@ -457,11 +458,13 @@ def app():
                     try:
                         with st.spinner('Generating Assessment Plan and Assessment Summary Record...'):
                             ap_output, asr_output = asyncio.run(generate_assessment_plan(context, selected_org, openai_model_client))
-                        st.success(f"Assessment Plan generated: {ap_output}")
-                        st.success(f"Assessment Summary Record generated: {asr_output}")
+                        if ap_output:
+                            st.success(f"Assessment Plan generated: {ap_output}")
+                            st.session_state['ap_output'] = ap_output  # Store output path in session state
 
-                        st.session_state['ap_output'] = ap_output  # Store output path in session state
-                        st.session_state['asr_output'] = asr_output  # Store output path in session state
+                        if asr_output:
+                            st.success(f"Assessment Summary Record generated: {asr_output}")
+                            st.session_state['asr_output'] = asr_output  # Store output path in session state
 
                     except Exception as e:
                         st.error(f"Error generating Assessment Documents: {e}")
@@ -487,8 +490,9 @@ def app():
                     try:
                         with st.spinner("Generating Lesson Plan..."):
                             lp_output = asyncio.run(generate_lesson_plan(context, selected_org, openai_model_client))
-                        st.success(f"Lesson Plan generated: {lp_output}")
-                        st.session_state['lp_output'] = lp_output  # Store output path in session state
+                        if lp_output:
+                            st.success(f"Lesson Plan generated: {lp_output}")
+                            st.session_state['lp_output'] = lp_output  # Store output path in session state
                         # Read the file and provide a download button
      
                     except Exception as e:
@@ -499,8 +503,9 @@ def app():
                     try:
                         with st.spinner("Generating Facilitator's Guide..."):
                             fg_output = asyncio.run(generate_facilitators_guide(context, selected_org, openai_model_client))
-                        st.success(f"Facilitator's Guide generated: {fg_output}")
-                        st.session_state['fg_output'] = fg_output  # Store output path in session state
+                        if fg_output:
+                            st.success(f"Facilitator's Guide generated: {fg_output}")
+                            st.session_state['fg_output'] = fg_output  # Store output path in session state
 
                     except Exception as e:
                         st.error(f"Error generating Facilitator's Guide: {e}")
@@ -551,6 +556,23 @@ def app():
                 file_name = f"Assessment Plan_{context['Course_Title']}_v1.docx"
             st.download_button(
                 label="Download Assessment Plan",
+                data=file_bytes,
+                file_name=file_name,
+                mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
+
+        # Assessment Summary Record
+        asr_output = st.session_state.get('asr_output')
+        if asr_output and os.path.exists(asr_output):
+            with open(asr_output, "rb") as f:
+                file_bytes = f.read()
+            # Check if 'TGS_Ref_No' is in context
+            if 'TGS_Ref_No' in context and context['TGS_Ref_No']:
+                file_name = f"Assessment Summary Record_{context['TGS_Ref_No']}_{context['Course_Title']}_v1.docx"
+            else:
+                file_name = f"Assessment Summary Record_{context['Course_Title']}_v1.docx"
+            st.download_button(
+                label="Download Assessment Summary Record",
                 data=file_bytes,
                 file_name=file_name,
                 mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
