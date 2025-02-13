@@ -20,38 +20,47 @@ def app():
     st.title("📄 Course Proposal File Processor")
 
     # Add a description of the page with improved styling
-    st.markdown("""
-    <style>
-        .important-note {
-            background-color: #f0f8ff;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 6px solid #2196f3;
-            font-size: 15px;
-        }
-        .header {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-top: 20px;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <style>
+            .important-note {
+                background-color: #f0f8ff;
+                padding: 15px;
+                border-radius: 10px;
+                border-left: 6px solid #2196f3;
+                font-size: 15px;
+            }
+            .header {
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                margin-top: 20px;
+            }
+            .section-title {
+                font-size: 16px;
+                font-weight: bold;
+                margin-top: 10px;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
     # Descriptive section
-    st.markdown("""
-    <div class="important-note">
-        This tool uses Agentic Process Automation to generate Course Proposals and Course Validation forms for Tertiary Infotech.
-        The input TSC form must follow the below requirements, if not the generation might not work properly or might throw errors :(
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="important-note">
+            This tool uses Agentic Process Automation to generate Course Proposals and Course Validation forms for Tertiary Infotech.
+            The input TSC form must follow the below requirements, if not the generation might not work properly or might throw errors :(
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
-    st.markdown('<div class="header">📝 Important TSC Details to Look Out For:</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="header">📝 Important TSC Details to Look Out For:</div>',
+        unsafe_allow_html=True
+    )
 
     st.markdown("Instructional and Assessment method names in the TSC should be spelled out like the examples below (Case Sensitive)")
     st.markdown("Eg. Case studies ❌")
@@ -61,33 +70,42 @@ def app():
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("""
-        <div class="section-title">Instructional Methods:</div>
-        - Didactic Questioning <br>
-        - Demonstration <br>
-        - Practical <br>
-        - Peer Sharing <br>
-        - Role Play <br>
-        - Group Discussion <br>
-        - Case Study <br>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div class="section-title">Instructional Methods:</div>
+            - Didactic Questioning <br>
+            - Demonstration <br>
+            - Practical <br>
+            - Peer Sharing <br>
+            - Role Play <br>
+            - Group Discussion <br>
+            - Case Study <br>
+            """,
+            unsafe_allow_html=True
+        )
         
     with col2:
-        st.markdown("""
-        <div class="section-title">Assessment Methods:</div>
-        - Written Assessment <br>
-        - Practical Performance <br>
-        - Case Study <br>
-        - Oral Questioning <br>
-        - Role Play <br>
-        """, unsafe_allow_html=True)
+        st.markdown(
+            """
+            <div class="section-title">Assessment Methods:</div>
+            - Written Assessment <br>
+            - Practical Performance <br>
+            - Case Study <br>
+            - Oral Questioning <br>
+            - Role Play <br>
+            """,
+            unsafe_allow_html=True
+        )
 
-    st.markdown("""
-    <div class="header">💡 Tips:</div>
-    - Colons ( : ) should be included in every LU and Topic, e.g., LU1: xxx, Topic 1: xxx <br>
-    - Ensure LUs are properly formatted using the naming conventions mentioned above. <br>
-    - Double check the industry of the CV and background info of the CP, in case the wrong industry is mentioned!
-    """, unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="header">💡 Tips:</div>
+        - Colons ( : ) should be included in every LU and Topic, e.g., LU1: xxx, Topic 1: xxx <br>
+        - Ensure LUs are properly formatted using the naming conventions mentioned above. <br>
+        - Double check the industry of the CV and background info of the CP, in case the wrong industry is mentioned!
+        """,
+        unsafe_allow_html=True
+    )
 
     uploaded_file = st.file_uploader("Upload a TSC DOCX file", type="docx", key='uploaded_file')
 
@@ -101,6 +119,7 @@ def app():
 
         # 2) Process button
         if st.button("🚀 Process File"):
+            # Optional: parse_document before the main pipeline if you want:
             parse_document(input_tsc_path, "json_output/output_TSC_TEST.json")
             run_processing(input_tsc_path)
             st.session_state['processing_done'] = True
@@ -125,14 +144,15 @@ def app():
 
         # CV docs
         cv_docx_temps = st.session_state.get('cv_docx_temps', [])
-        for idx, temp_path in enumerate(cv_docx_temps, start=1):
+        # Now cv_docx_temps is a list of tuples: (temp_path, final_filename)
+        for idx, (temp_path, final_name) in enumerate(cv_docx_temps, start=1):
             if os.path.exists(temp_path):
                 with open(temp_path, 'rb') as f:
                     data = f.read()
                 st.download_button(
                     label=f"Download CV Output {idx}",
                     data=data,
-                    file_name=os.path.basename(temp_path),
+                    file_name=final_name,  # Show user the actual name we want
                     mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
                 )
             else:
@@ -145,8 +165,7 @@ def run_processing(input_file: str):
     """
     st.info("Running pipeline (this might take some time) ...")
 
-    # 1) Run the pipeline, passing the TSC doc path
-    #    If your main() uses sys.argv[1], ensure main() picks up `input_file`
+    # 1) Run the pipeline (async), passing the TSC doc path
     asyncio.run(main(input_file))
 
     # 2) Now copy the relevant docx files from 'output_docs' to NamedTemporaryFiles
@@ -169,7 +188,12 @@ def run_processing(input_file: str):
         if os.path.exists(doc_path):
             with open(doc_path, 'rb') as infile, tempfile.NamedTemporaryFile(delete=False, suffix=".docx") as outfile:
                 outfile.write(infile.read())
-                cv_temp_paths.append(outfile.name)
+                # The final file name we want to present to the user:
+                desired_name = os.path.basename(doc_path)  
+                # e.g. "CP_validation_template_bernard_updated.docx"
+
+                # Store tuple: (tempfile_path, final_file_name)
+                cv_temp_paths.append((outfile.name, desired_name))
 
     st.session_state['cv_docx_temps'] = cv_temp_paths
 

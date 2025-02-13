@@ -6,7 +6,7 @@
         "Practical Performance (PP)"
     ],
     "A_0": [
-        "A1: Initiate visual communication ideas through exploration"
+        "A1: Assess the performance of cloud solutions based on expected business needs, usage and traffic volume"
     ],
     "A_10": [],
     "A_11": [],
@@ -17,23 +17,19 @@
     "A_16": [],
     "A_17": [],
     "A_1": [
-        "A2: Develop visual communication outputs by integrating media, materials, processes and environment"
+        "A2: Draft specifications for cloud solutions to address usage, performance and security requirements"
     ],
     "A_2": [
-        "A3: Create storyboards and task flow designs to communicate visual intentions to team members"
+        "A3: Develop implementation plans for implementing cloud solutions"
     ],
     "A_3": [
-        "A4: Evaluate the design work of stakeholders"
+        "A4: Develop processes for the review of metrics associated with implementation of cloud solutions"
     ],
     "A_4": [
-        "A5: Propose suggestions to enhance the visual formats of designs"
+        "A5: Resolve escalated issues related to implementation of cloud solutions"
     ],
-    "A_5": [
-        "A6: Critique own work or work with others to enhance visual communication outputs"
-    ],
-    "A_6": [
-        "A7: Develop strategies to enhance the appeal of visual communication outputs"
-    ],
+    "A_5": [],
+    "A_6": [],
     "A_7": [],
     "A_8": [],
     "A_9": [],
@@ -41,10 +37,10 @@
         "INNOHAT TRAINING PTE. LTD."
     ],
     "Conclusion_0": [
-        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the design industry while equipping learners with the necessary attributes to excel in their roles as digital graphic designers."
+        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the Infocomm Technology sector while equipping learners with the necessary attributes to excel in their roles as cloud computing professionals."
     ],
     "CourseTitle": [
-        "Creating Stunning Digital Graphics with Canva"
+        "AZ-900 Microsoft Azure Fundamentals Certification"
     ],
     "Hours_0": [
         22
@@ -53,7 +49,7 @@
         2
     ],
     "Hours_2": [
-        16
+        24
     ],
     "Hours_3": [
         "N.A."
@@ -66,18 +62,18 @@
         "Practical"
     ],
     "KA_0": [
-        "K1, K3, K4, A1, A2"
+        "K1, K2, K3, A1, A2"
     ],
     "KA_1": [
-        "K5, A3, A4, A5"
+        "K4, K5, K6, A3"
     ],
     "KA_2": [
-        "K2, A6, A7"
+        "K7, K8, K9, A4, A5"
     ],
     "KA_3": [],
     "KA_4": [],
     "K_0": [
-        "K1: Elements of typography, logos, other visual communication design, and information design"
+        "K1: Requirements for implementation of cloud solutions"
     ],
     "K_10": [],
     "K_11": [],
@@ -88,30 +84,38 @@
     "K_16": [],
     "K_17": [],
     "K_1": [
-        "K2: Best practices in visual communication"
+        "K2: Impact analysis techniques for cloud solutions"
     ],
     "K_2": [
-        "K3: Uses of relevant design software packages"
+        "K3: Types of cloud platform integration tools and techniques"
     ],
     "K_3": [
-        "K4: Colour fundamentals and forms"
+        "K4: Range of installation tests and techniques for cloud solutions"
     ],
     "K_4": [
-        "K5: Techniques for analysing aesthetics"
+        "K5: Steps to align existing systems with cloud computing components"
     ],
-    "K_5": [],
-    "K_6": [],
-    "K_7": [],
-    "K_8": [],
+    "K_5": [
+        "K6: Elements and functioning of automated software deployment"
+    ],
+    "K_6": [
+        "K7: Scripting and programming languages"
+    ],
+    "K_7": [
+        "K8: Big data tools and techniques"
+    ],
+    "K_8": [
+        "K9: Range of cloud computing platforms, software and services"
+    ],
     "K_9": [],
     "LO_0": [
-        "LO1: Develop visual communication projects in Canva, blending typography with media elements."
+        "LO1: Assess cloud solutions and specifications for Azure cloud computing."
     ],
     "LO_1": [
-        "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements."
+        "LO2: Develop an implementation plan for implementing Azure cloud computing."
     ],
     "LO_2": [
-        "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
+        "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
     ],
     "LO_3": [],
     "LO_4": [],
@@ -119,13 +123,13 @@
     "LO_6": [],
     "LO_7": [],
     "LU_0": [
-        "LU1: Introduction to Canva Design"
+        "LU1: Introduction to Azure Cloud Computing"
     ],
     "LU_1": [
-        "LU2: Storyboarding and Flow Design"
+        "LU2: Implementation Planning for Azure Cloud"
     ],
     "LU_2": [
-        "LU3: Enhancing Visual Communication"
+        "LU3: Review Processes for Azure Cloud Implementation"
     ],
     "LU_3": [],
     "LU_4": [],
@@ -133,13 +137,13 @@
     "LU_6": [],
     "LU_7": [],
     "LUex_0": [
-        "LU1 lays the foundational knowledge by introducing learners to Canva's interface and basic design principles. The unit covers essential topics such as typography, color theory, and the creation of simple designs. This foundational knowledge addresses the performance gap of learners struggling with blending typography and media elements, equipping them with the skills to create more impactful visual communication."
+        "LU1 lays the foundational knowledge by introducing learners to the core concepts of cloud computing, including its benefits, types of services, and architectural components of Azure. This unit addresses the performance gap of learners struggling to assess cloud solutions by equipping them with the ability to critically evaluate and select appropriate cloud solutions based on organizational needs and specifications."
     ],
     "LUex_1": [
-        "Building on the foundational knowledge, LU2 focuses on storyboarding and flow design, teaching learners how to create effective storyboards that communicate visual intentions. This unit addresses the performance gap related to the lack of skills in creating comprehensive storyboards, allowing learners to develop detailed visual concepts that facilitate team collaboration and alignment during project execution."
+        "Building on the foundational knowledge, LU2 dives into the practical aspects of developing implementation plans for Azure cloud computing. Learners will explore Azure Virtual Machines, networking, and security services, which enhances their proficiency in creating detailed and actionable implementation plans that align with business objectives and security requirements. This unit addresses the performance gap related to the lack of ability to develop comprehensive implementation plans."
     ],
     "LUex_2": [
-        "LU3 escalates to a higher level of complexity where learners engage in critiquing and enhancing design work. This unit emphasizes best practices and collaborative skills, addressing the performance gap of learners finding it challenging to critique and collaborate on design projects. By participating in workshops and group activities, learners will enhance their ability to provide constructive feedback and improve the overall quality of visual communication outputs."
+        "LU3 escalates to a higher level of complexity where learners delve into the review processes necessary for monitoring Azure cloud implementations. This unit covers cost management, governance tools, and monitoring techniques, enabling learners to establish effective review processes to monitor Azure cloud implementations and address issues proactively. This directly addresses the performance gap of learners being unclear about the processes needed to review and resolve implementation issues."
     ],
     "LUex_3": [],
     "LUex_4": [],
@@ -147,7 +151,7 @@
     "LUex_6": [],
     "LUex_7": [],
     "Placeholder_0": [
-        "The design industry is currently facing significant challenges due to the rapid evolution of digital tools and platforms, which has created a performance gap among professionals who may not be fully equipped to leverage these advancements. Many designers struggle with integrating modern design software, such as Canva, into their workflows effectively. This gap is particularly evident in the areas of visual communication, where the ability to blend typography with media elements is crucial for creating compelling graphics. Additionally, there is a lack of understanding of best practices in visual communication, which can lead to ineffective designs that fail to engage audiences. The industry also sees a deficiency in skills related to critical analysis and enhancement of design work, as many professionals do not have the training necessary to evaluate and critique their own or others' work effectively. This lack of critical thinking and collaborative skills can hinder the overall quality of design outputs, making it essential for training programs to address these specific performance gaps.\n\nTo bridge the performance gaps identified in the design industry, targeted training is essential. Professionals need to develop a comprehensive understanding of visual communication principles, including typography, color theory, and the use of design software like Canva. Training should focus on practical applications, allowing participants to explore and experiment with Canva's features to create visually appealing designs. Furthermore, there is a need for training in storyboarding and flow design, which are critical for communicating visual intentions effectively to team members. Workshops that emphasize best practices in design and aesthetic analysis will equip designers with the tools to critique and enhance their work. Additionally, fostering collaboration and peer review through group activities will help build a culture of constructive feedback, ultimately leading to improved design outcomes. By addressing these training needs, professionals will be better prepared to meet the demands of the industry and produce high-quality visual communication projects.\n\nSeveral job roles within the design industry would greatly benefit from the training focused on enhancing digital graphic creation skills. Graphic designers, who are responsible for creating visual content for various media, would find the training invaluable as it equips them with the necessary skills to utilize Canva effectively. Marketing professionals, who often rely on visual communication to promote products and services, would also benefit from understanding how to create compelling graphics that resonate with their target audience. Additionally, content creators and social media managers, who need to produce engaging visuals for online platforms, would gain practical skills in designing eye-catching graphics that align with their brand's messaging. Furthermore, project managers in design-related fields would benefit from the training as it would enhance their ability to evaluate design work and provide constructive feedback to their teams. Overall, the training would serve a wide range of roles within the design sector, fostering a more skilled and capable workforce."
+        "The Infocomm Technology sector is currently facing significant challenges related to the rapid evolution of cloud computing technologies. One of the primary performance gaps is the lack of skilled professionals who can effectively assess, implement, and manage cloud solutions, particularly those related to Azure. Many organizations are transitioning to cloud-based infrastructures to enhance operational efficiency and scalability, yet they struggle with the complexities of cloud integration, security, and compliance. This gap is exacerbated by the fast-paced nature of technological advancements, which often leaves existing staff underprepared to handle new tools and methodologies. Furthermore, there is a notable shortage of professionals who possess a comprehensive understanding of Azure's specific functionalities, including its various services, deployment models, and management tools. This lack of expertise can lead to inefficient cloud implementations, increased operational costs, and potential security vulnerabilities, ultimately hindering an organization's ability to leverage cloud technology effectively.\n\nTo bridge the identified performance gaps, there is an urgent need for targeted training programs that focus on the foundational aspects of Azure cloud computing. Training should encompass a thorough understanding of cloud solutions, including their requirements, benefits, and the various types of services offered by Azure. Additionally, professionals need to be equipped with the skills to develop comprehensive implementation plans that align with their organization's specific business needs and security requirements. Training should also emphasize the importance of review processes to monitor and evaluate cloud implementations, ensuring that any issues are promptly addressed. Practical, hands-on experience with Azure tools and services is essential, as it allows participants to apply theoretical knowledge in real-world scenarios. Furthermore, training should incorporate the latest trends and best practices in cloud computing to ensure that professionals remain competitive and capable of adapting to ongoing technological changes.\n\nSeveral job roles within the Infocomm Technology sector would greatly benefit from this training. Cloud architects, who are responsible for designing cloud solutions, would gain valuable insights into assessing and implementing Azure services effectively. IT managers and system administrators would also find the training beneficial, as it would enhance their ability to manage cloud resources and resolve implementation issues. Additionally, software developers and engineers who work with cloud-based applications would benefit from understanding the integration of Azure services into their development processes. Data analysts and business intelligence professionals would also find value in the training, as it would equip them with the skills to utilize Azure's big data tools and techniques for data management and analysis. Overall, the training would empower a wide range of professionals to enhance their cloud computing capabilities, ultimately contributing to the organization's success in leveraging cloud technologies."
     ],
     "Placeholder_1": [
         {
@@ -161,9 +165,9 @@
         {
             "type": "bullets",
             "content": [
-                "Learners struggle with effectively blending typography with media elements in their designs, leading to less impactful visual communication.",
-                "Learners often lack the skills to create comprehensive storyboards that clearly communicate visual intentions to team members, resulting in misalignment during project execution.",
-                "Learners find it challenging to critique and collaborate on design projects, which limits their ability to enhance visual communication based on best practices."
+                "Learners struggle to assess cloud solutions and specifications for Azure cloud computing, leading to ineffective decision-making in cloud adoption.",
+                "Learners lack the ability to develop comprehensive implementation plans for Azure cloud computing, resulting in poorly executed cloud strategies.",
+                "Learners are unclear about the processes needed to review and resolve implementation issues related to Azure cloud computing, causing delays in project timelines."
             ]
         },
         {
@@ -172,13 +176,13 @@
         }
     ],
     "Rationale_0": [
-        "For this course, the step-by-step sequencing is employed to scaffold the learners' comprehension and application of digital graphic design using Canva. This methodology is crucial as it systematically breaks down the intricate facets of visual communication, storyboarding, and design enhancement into digestible units. This aids in gradually building the learners' knowledge and skills from fundamental to more complex concepts, ensuring a solid foundation before advancing to the next topic. The progression is designed to foster a deeper understanding and the ability to effectively apply the learned concepts in real-world design scenarios."
+        "For this course, the step-by-step sequencing is employed to scaffold the learners' comprehension and application of Azure cloud computing concepts. This methodology is crucial as it systematically breaks down the intricate facets of cloud solutions, implementation planning, and review processes into digestible units. This aids in gradually building the learners' knowledge and skills from fundamental to more complex concepts, ensuring a solid foundation before advancing to the next topic. The progression is designed to foster a deeper understanding and the ability to effectively apply the learned concepts in real-world cloud computing scenarios."
     ],
     "TCS_0": [
-        "Visual Communication"
+        "Cloud Computing"
     ],
     "TCS_1": [
-        "DSN-COM-4005-1.1"
+        "ICT-DIT-4020-1.1"
     ],
     "TopicsEX_0": [],
     "TopicsEX_1": [],
@@ -189,151 +193,114 @@
     "Topics_0": [
         {
             "type": "paragraph",
-            "content": "Topic 1: Introduction to Canva and Basic Design Principles (K1, K3, A1)"
+            "content": "Topic 1: Assess Azure Cloud Computing Solutions (K1, K2, K3, A1, A2)"
         },
         {
             "type": "bullets",
             "content": [
-                "Navigating Canva's interface and features",
-                "Principles of typography and logo design",
-                "Basics of visual communication design",
-                "Creating simple designs and layouts",
-                "Experimenting with Canva's text and image tools"
+                "Introduction to cloud computing",
+                "Benefits of using cloud services",
+                "Types of cloud service",
+                "Core architectural components of Azure"
             ]
         },
         {
             "type": "paragraph",
-            "content": "Topic 2: Colour and Form in Canva Design (K4, A2)"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Fundamentals of colour theory and application",
-                "Exploring colour schemes and palettes in Canva",
-                "The role of forms and shapes in design",
-                "Practical exercises on colour and form harmonization",
-                "Designing for different environments and contexts"
-            ]
+            "content": "LO1 \u2013 Assess cloud solutions and specifications for Azure cloud computing."
         },
         {
             "type": "paragraph",
-            "content": "LO1 \u2013 Develop visual communication projects in Canva, blending typography with media elements."
+            "content": "K1: Requirements for implementation of cloud solutions"
         },
         {
             "type": "paragraph",
-            "content": "K1: Elements of typography, logos, other visual communication design, and information design"
+            "content": "K2: Impact analysis techniques for cloud solutions"
         },
         {
             "type": "paragraph",
-            "content": "K3: Uses of relevant design software packages"
+            "content": "K3: Types of cloud platform integration tools and techniques"
         },
         {
             "type": "paragraph",
-            "content": "K4: Colour fundamentals and forms"
+            "content": "A1: Assess the performance of cloud solutions based on expected business needs, usage and traffic volume"
         },
         {
             "type": "paragraph",
-            "content": "A1: Initiate visual communication ideas through exploration"
-        },
-        {
-            "type": "paragraph",
-            "content": "A2: Develop visual communication outputs by integrating media, materials, processes and environment"
+            "content": "A2: Draft specifications for cloud solutions to address usage, performance and security requirements"
         }
     ],
     "Topics_1": [
         {
             "type": "paragraph",
-            "content": "Topic 3: Storyboarding and Flow Design in Canva (K5, A3)"
+            "content": "Topic 2: Develop an Implementation plan for Azure Cloud Computing (K4, K5, K6, A3)"
         },
         {
             "type": "bullets",
             "content": [
-                "Techniques for creating effective storyboards",
-                "Developing task flows for visual projects",
-                "Utilizing Canva for ideation and conceptualization",
-                "Case Study of effective storyboard designs",
-                "Hands-on exercises in storyboard creation"
+                "Azure Virtual Machines, Containers and Functions",
+                "Azure Virtual Networking and storage services",
+                "Azure identity, access, and security"
             ]
         },
         {
             "type": "paragraph",
-            "content": "Topic 4: Best Practices and Aesthetic Analysis in Canva (A4, A5)"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Understanding and applying design best practices",
-                "Techniques for aesthetic and functional analysis",
-                "Critiquing and improving Canva projects",
-                "Workshop on designing with user experience in mind",
-                "Group activities for peer review and feedback"
-            ]
+            "content": "LO2 \u2013 Develop an implementation plan for implementing Azure cloud computing."
         },
         {
             "type": "paragraph",
-            "content": "LO2 \u2013 Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements."
+            "content": "K4: Range of installation tests and techniques for cloud solutions"
         },
         {
             "type": "paragraph",
-            "content": "K5: Techniques for analysing aesthetics"
+            "content": "K5: Steps to align existing systems with cloud computing components"
         },
         {
             "type": "paragraph",
-            "content": "A3: Create storyboards and task flow designs to communicate visual intentions to team members"
+            "content": "K6: Elements and functioning of automated software deployment"
         },
         {
             "type": "paragraph",
-            "content": "A4: Evaluate the design work of stakeholders"
-        },
-        {
-            "type": "paragraph",
-            "content": "A5: Propose suggestions to enhance the visual formats of designs"
+            "content": "A3: Develop implementation plans for implementing cloud solutions"
         }
     ],
     "Topics_2": [
         {
             "type": "paragraph",
-            "content": "Topic 5: Critical Review and Enhancement Strategies in Canva (K2, A6)"
+            "content": "Topic 3: Develop Review Processes for Azure Cloud Computing Implementation (K7, K8, K9, A4, A5)"
         },
         {
             "type": "bullets",
             "content": [
-                "Methods for critiquing visual designs",
-                "Strategies for effective visual communication",
-                "Workshops on enhancing existing Canva designs",
-                "Collaborative exercises for peer-to-peer learning",
-                "Techniques for iterative design improvements"
+                "Cost management in Azure",
+                "Tools in Azure for governance and compliance",
+                "Tools for managing and deploying Azure resources",
+                "Monitoring tools in Azure",
+                "Azure Resource Manager"
             ]
         },
         {
             "type": "paragraph",
-            "content": "Topic 6: Innovative Approaches to Design in Canva (K2, A7)"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Developing innovative design strategies",
-                "Exploring advanced features and tools in Canva",
-                "Case Study of successful visual communication",
-                "Group projects for practical application",
-                "Presentations on innovative design solutions"
-            ]
+            "content": "LO3 \u2013 Develop review processes to resolve Azure cloud computing implementation issues."
         },
         {
             "type": "paragraph",
-            "content": "LO3 \u2013 Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
+            "content": "K7: Scripting and programming languages"
         },
         {
             "type": "paragraph",
-            "content": "K2: Best practices in visual communication"
+            "content": "K8: Big data tools and techniques"
         },
         {
             "type": "paragraph",
-            "content": "A6: Critique own work or work with others to enhance visual communication outputs"
+            "content": "K9: Range of cloud computing platforms, software and services"
         },
         {
             "type": "paragraph",
-            "content": "A7: Develop strategies to enhance the appeal of visual communication outputs"
+            "content": "A4: Develop processes for the review of metrics associated with implementation of cloud solutions"
+        },
+        {
+            "type": "paragraph",
+            "content": "A5: Resolve escalated issues related to implementation of cloud solutions"
         }
     ],
     "Topics_3": [],
@@ -341,13 +308,13 @@
     "Topics_5": [],
     "TotalHours": [],
     "Assessment_0": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1, K3, K4\n\nPractical Performance (PP) \u2013 A1, A2"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1, K2, K3\n\nPractical Performance (PP) \u2013 A1, A2"
     ],
     "Assessment_1": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5\n\nPractical Performance (PP) \u2013 A3, A4, A5"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K4, K5, K6\n\nPractical Performance (PP) \u2013 A3"
     ],
     "Assessment_2": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2\n\nPractical Performance (PP) \u2013 A6, A7"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K7, K8, K9\n\nPractical Performance (PP) \u2013 A4, A5"
     ],
     "Assessment_3": [],
     "Assessment_4": [],
@@ -358,7 +325,7 @@
         },
         {
             "type": "paragraph",
-            "content": "The Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to create and critique digital graphics using Canva. Candidates will complete practical tasks that demonstrate their ability to blend typography with media elements in Canva."
+            "content": "The Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to implement Azure cloud solutions effectively. Candidates will complete practical tasks that demonstrate their ability to configure Azure services and resolve implementation issues."
         },
         {
             "type": "paragraph",
@@ -367,9 +334,9 @@
         {
             "type": "bullets",
             "content": [
-                "For LO1: Candidates will develop a visual communication project in Canva, integrating typography and media elements effectively.",
-                "For LO2: Candidates will create a storyboard in Canva to communicate visual intentions and evaluate design enhancements.",
-                "For LO3: Candidates will collaborate in groups to critique and improve Canva designs based on best practices."
+                "For LO1: Candidates will assess cloud solutions by analyzing performance metrics and drafting specifications for Azure cloud computing.",
+                "For LO2: Candidates will develop a comprehensive implementation plan for deploying Azure services, including virtual machines and networking.",
+                "For LO3: Candidates will create review processes to monitor and resolve issues related to Azure cloud implementations."
             ]
         },
         {
@@ -379,7 +346,8 @@
         {
             "type": "bullets",
             "content": [
-                "Candidates will submit their completed Canva projects and storyboards along with a reflective document detailing their design choices and enhancements."
+                "Candidates will submit their implementation plans, assessment reports, and review process documentation electronically via the learning management system.",
+                "Submissions will include detailed descriptions of the tasks performed and the outcomes achieved."
             ]
         },
         {
@@ -389,9 +357,9 @@
         {
             "type": "bullets",
             "content": [
-                "Creativity and Originality.",
-                "Technical Execution.",
-                "Collaboration and Feedback Integration."
+                "Effectiveness of Implementation Plan.",
+                "Quality of Assessment Reports.",
+                "Clarity of Review Processes."
             ]
         },
         {
@@ -401,7 +369,7 @@
         {
             "type": "bullets",
             "content": [
-                "All submitted evidence, including Canva projects and reflective documents, will be retained for 3 years for compliance and auditing purposes."
+                "All submitted evidence, including implementation plans and assessment reports, will be retained for 3 years for compliance and auditing purposes."
             ]
         }
     ],
@@ -423,27 +391,27 @@
     "Sequencing": [
         {
             "type": "bold_paragraph",
-            "content": "LU1: Introduction to Canva Design"
+            "content": "LU1: Introduction to Azure Cloud Computing"
         },
         {
             "type": "paragraph",
-            "content": "LU1 lays the foundational knowledge by introducing learners to Canva's interface and basic design principles. The unit covers essential topics such as typography, color theory, and the creation of simple designs. This foundational knowledge addresses the performance gap of learners struggling with blending typography and media elements, equipping them with the skills to create more impactful visual communication."
+            "content": "LU1 lays the foundational knowledge by introducing learners to the core concepts of cloud computing, including its benefits, types of services, and architectural components of Azure. This unit addresses the performance gap of learners struggling to assess cloud solutions by equipping them with the ability to critically evaluate and select appropriate cloud solutions based on organizational needs and specifications."
         },
         {
             "type": "bold_paragraph",
-            "content": "LU2: Storyboarding and Flow Design"
+            "content": "LU2: Implementation Planning for Azure Cloud"
         },
         {
             "type": "paragraph",
-            "content": "Building on the foundational knowledge, LU2 focuses on storyboarding and flow design, teaching learners how to create effective storyboards that communicate visual intentions. This unit addresses the performance gap related to the lack of skills in creating comprehensive storyboards, allowing learners to develop detailed visual concepts that facilitate team collaboration and alignment during project execution."
+            "content": "Building on the foundational knowledge, LU2 dives into the practical aspects of developing implementation plans for Azure cloud computing. Learners will explore Azure Virtual Machines, networking, and security services, which enhances their proficiency in creating detailed and actionable implementation plans that align with business objectives and security requirements. This unit addresses the performance gap related to the lack of ability to develop comprehensive implementation plans."
         },
         {
             "type": "bold_paragraph",
-            "content": "LU3: Enhancing Visual Communication"
+            "content": "LU3: Review Processes for Azure Cloud Implementation"
         },
         {
             "type": "paragraph",
-            "content": "LU3 escalates to a higher level of complexity where learners engage in critiquing and enhancing design work. This unit emphasizes best practices and collaborative skills, addressing the performance gap of learners finding it challenging to critique and collaborate on design projects. By participating in workshops and group activities, learners will enhance their ability to provide constructive feedback and improve the overall quality of visual communication outputs."
+            "content": "LU3 escalates to a higher level of complexity where learners delve into the review processes necessary for monitoring Azure cloud implementations. This unit covers cost management, governance tools, and monitoring techniques, enabling learners to establish effective review processes to monitor Azure cloud implementations and address issues proactively. This directly addresses the performance gap of learners being unclear about the processes needed to review and resolve implementation issues."
         }
     ]
 }

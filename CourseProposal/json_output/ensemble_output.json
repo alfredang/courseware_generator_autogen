@@ -1,74 +1,75 @@
 {
     "Course Information": {
-        "Course Title": "Creating Stunning Digital Graphics with Canva",
+        "Course Title": "AZ-900 Microsoft Azure Fundamentals Certification",
         "Name of Organisation": "INNOHAT TRAINING PTE. LTD.",
         "Classroom Hours": 22,
         "Number of Assessment Hours": 2,
-        "Course Duration (Number of Hours)": 16,
-        "Industry": "Design"
+        "Course Duration (Number of Hours)": 24,
+        "Industry": "Infocomm Technology"
     },
     "Learning Outcomes": {
         "Learning Outcomes": [
-            "LO1: Develop visual communication projects in Canva, blending typography with media elements.",
-            "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.",
-            "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
+            "LO1: Assess cloud solutions and specifications for Azure cloud computing.",
+            "LO2: Develop an implementation plan for implementing Azure cloud computing.",
+            "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
         ],
         "Knowledge": [
-            "K1: Elements of typography, logos, other visual communication design, and information design",
-            "K2: Best practices in visual communication",
-            "K3: Uses of relevant design software packages",
-            "K4: Colour fundamentals and forms",
-            "K5: Techniques for analysing aesthetics"
+            "K1: Requirements for implementation of cloud solutions",
+            "K2: Impact analysis techniques for cloud solutions",
+            "K3: Types of cloud platform integration tools and techniques",
+            "K4: Range of installation tests and techniques for cloud solutions",
+            "K5: Steps to align existing systems with cloud computing components",
+            "K6: Elements and functioning of automated software deployment",
+            "K7: Scripting and programming languages",
+            "K8: Big data tools and techniques",
+            "K9: Range of cloud computing platforms, software and services"
         ],
         "Ability": [
-            "A1: Initiate visual communication ideas through exploration",
-            "A2: Develop visual communication outputs by integrating media, materials, processes and environment",
-            "A3: Create storyboards and task flow designs to communicate visual intentions to team members",
-            "A4: Evaluate the design work of stakeholders",
-            "A5: Propose suggestions to enhance the visual formats of designs",
-            "A6: Critique own work or work with others to enhance visual communication outputs",
-            "A7: Develop strategies to enhance the appeal of visual communication outputs"
+            "A1: Assess the performance of cloud solutions based on expected business needs, usage and traffic volume",
+            "A2: Draft specifications for cloud solutions to address usage, performance and security requirements",
+            "A3: Develop implementation plans for implementing cloud solutions",
+            "A4: Develop processes for the review of metrics associated with implementation of cloud solutions",
+            "A5: Resolve escalated issues related to implementation of cloud solutions"
         ],
         "Knowledge and Ability Mapping": {
             "KA1": [
-                "A1",
                 "K1",
+                "K2",
                 "K3",
-                "A2",
-                "K4"
+                "A1",
+                "A2"
             ],
             "KA2": [
-                "A3",
+                "K4",
                 "K5",
-                "A4",
-                "A5"
+                "K6",
+                "A3"
             ],
             "KA3": [
-                "A6",
-                "K2",
-                "A7"
+                "K7",
+                "K8",
+                "K9",
+                "A4",
+                "A5"
             ]
         }
     },
     "TSC and Topics": {
         "TSC Title": [
-            "Visual Communication"
+            "Cloud Computing"
         ],
         "TSC Code": [
-            "DSN-COM-4005-1.1"
+            "ICT-DIT-4020-1.1"
         ],
         "Topics": [
-            "Topic 1: Introduction to Canva and Basic Design Principles (A1, K1, K3)",
-            "Topic 2: Colour and Form in Canva Design (A2, K4)",
-            "Topic 3: Storyboarding and Flow Design in Canva (A3, K5)",
-            "Topic 4: Best Practices and Aesthetic Analysis in Canva (A4, A5)",
-            "Topic 5: Critical Review and Enhancement Strategies in Canva (A6, K2)",
-            "Topic 6: Innovative Approaches to Design in Canva (A7, K2)"
+            "Topic 1: Assess Azure Cloud Computing Solutions (K1, K2, K3, A1, A2)",
+            "Topic 2: Develop an Implementation plan for Azure Cloud Computing (K4, K5, K6, A3)",
+            "Topic 3: Develop Review Processes for Azure Cloud Computing Implementation (K7, K8, K9, A4, A5)"
         ],
         "Learning Units": [
-            "LU1: Introduction to Canva Design",
-            "LU2: Storyboarding and Flow Design",
-            "LU3: Enhancing Visual Communication"
+            "LU1: Introduction to Azure Cloud Computing",
+            "LU2: Implementation Planning for Azure Cloud",
+            "LU3: Review Processes for Azure Cloud Implementation"
         ]
     },
     "Assessment Methods": {
@@ -82,23 +83,12 @@
                 "LU1": {
                     "Description": [
                         {
-                            "Topic": "Topic 1: Introduction to Canva and Basic Design Principles (A1, K1, K3)",
+                            "Topic": "Topic 1: Assess Azure Cloud Computing Solutions (K1, K2, K3, A1, A2)",
                             "Details": [
-                                "Navigating Canva's interface and features",
-                                "Principles of typography and logo design",
-                                "Basics of visual communication design",
-                                "Creating simple designs and layouts",
-                                "Experimenting with Canva's text and image tools"
-                            ]
-                        },
-                        {
-                            "Topic": "Topic 2: Colour and Form in Canva Design (A2, K4)",
-                            "Details": [
-                                "Fundamentals of colour theory and application",
-                                "Exploring colour schemes and palettes in Canva",
-                                "The role of forms and shapes in design",
-                                "Practical exercises on colour and form harmonization",
-                                "Designing for different environments and contexts"
+                                "Introduction to cloud computing",
+                                "Benefits of using cloud services",
+                                "Types of cloud service",
+                                "Core architectural components of Azure"
                             ]
                         }
                     ]
@@ -106,23 +96,11 @@
                 "LU2": {
                     "Description": [
                         {
-                            "Topic": "Topic 3: Storyboarding and Flow Design in Canva (A3, K5)",
+                            "Topic": "Topic 2: Develop an Implementation plan for Azure Cloud Computing (K4, K5, K6, A3)",
                             "Details": [
-                                "Techniques for creating effective storyboards",
-                                "Developing task flows for visual projects",
-                                "Utilizing Canva for ideation and conceptualization",
-                                "Case Study of effective storyboard designs",
-                                "Hands-on exercises in storyboard creation"
-                            ]
-                        },
-                        {
-                            "Topic": "Topic 4: Best Practices and Aesthetic Analysis in Canva (A4, A5)",
-                            "Details": [
-                                "Understanding and applying design best practices",
-                                "Techniques for aesthetic and functional analysis",
-                                "Critiquing and improving Canva projects",
-                                "Workshop on designing with user experience in mind",
-                                "Group activities for peer review and feedback"
+                                "Azure Virtual Machines, Containers and Functions",
+                                "Azure Virtual Networking and storage services",
+                                "Azure identity, access, and security"
                             ]
                         }
                     ]
@@ -130,34 +108,24 @@
                 "LU3": {
                     "Description": [
                         {
-                            "Topic": "Topic 5: Critical Review and Enhancement Strategies in Canva (A6, K2)",
+                            "Topic": "Topic 3: Develop Review Processes for Azure Cloud Computing Implementation (K7, K8, K9, A4, A5)",
                             "Details": [
-                                "Methods for critiquing visual designs",
-                                "Strategies for effective visual communication",
-                                "Workshops on enhancing existing Canva designs",
-                                "Collaborative exercises for peer-to-peer learning",
-                                "Techniques for iterative design improvements"
-                            ]
-                        },
-                        {
-                            "Topic": "Topic 6: Innovative Approaches to Design in Canva (A7, K2)",
-                            "Details": [
-                                "Developing innovative design strategies",
-                                "Exploring advanced features and tools in Canva",
-                                "Case Study of successful visual communication",
-                                "Group projects for practical application",
-                                "Presentations on innovative design solutions"
+                                "Cost management in Azure",
+                                "Tools in Azure for governance and compliance",
+                                "Tools for managing and deploying Azure resources",
+                                "Monitoring tools in Azure",
+                                "Azure Resource Manager"
                             ]
                         }
                     ]
                 }
             }
-        },
-        "Instructional Methods": [
-            "Lecture",
-            "Didactic Questioning",
-            "Demonstration",
-            "Practical"
-        ]
-    }
+        }
+    },
+    "Instructional Methods": [
+        "Lecture",
+        "Didactic Questioning",
+        "Demonstration",
+        "Practical"
+    ]
 }

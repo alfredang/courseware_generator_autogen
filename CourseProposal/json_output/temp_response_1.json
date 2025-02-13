@@ -1,19 +1,19 @@
 {
     "course_info": {
-        "Course Title": "Creating Stunning Digital Graphics with Canva",
-        "Industry": "Design",
+        "Course Title": "AZ-900 Microsoft Azure Fundamentals Certification",
+        "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Develop visual communication projects in Canva, blending typography with media elements.",
-            "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.",
-            "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
+            "LO1: Assess cloud solutions and specifications for Azure cloud computing.",
+            "LO2: Develop an implementation plan for implementing Azure cloud computing.",
+            "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
         ],
-        "TSC Title": "Visual Communication",
-        "TSC Code": "DSN-COM-4005-1.1"
+        "TSC Title": "Cloud Computing",
+        "TSC Code": "ICT-DIT-4020-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "In the current landscape, many professionals struggle with effectively integrating typography and media elements in their designs. This often leads to visual communication that fails to engage the audience or convey the intended message. Additionally, there is a noticeable lack of understanding of best practices in design, which can result in inconsistent and unappealing outputs that do not meet industry standards.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course offers a comprehensive approach to visual communication, equipping participants with the skills to blend typography and media effectively. By focusing on practical design techniques and encouraging exploration, it prepares learners to create compelling visuals that resonate with their target audience."
+            "What are the performance gaps in the industry?": "The industry faces significant challenges in effectively leveraging cloud solutions, leading to inefficiencies and missed opportunities. Many organizations struggle with understanding the requirements for cloud implementation, resulting in poorly designed systems that do not meet business needs. Additionally, there is a lack of standardized processes for assessing cloud performance, which can lead to inconsistent results and increased operational costs.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course provides essential knowledge on assessing cloud solutions, enabling participants to identify and address performance issues effectively. By developing a structured implementation plan, organizations can align their cloud strategies with business objectives, ultimately enhancing operational efficiency and reducing costs."
         }
     ]
 }
