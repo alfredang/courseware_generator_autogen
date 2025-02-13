@@ -2,9 +2,11 @@
 
 import os
 import re
-import autogen
+import asyncio
+from autogen_agentchat.agents import AssistantAgent
+from autogen_core import CancellationToken
+from autogen_agentchat.messages import TextMessage
 import streamlit as st
-from autogen.cache import Cache
 from typing import List, Dict, Optional
 from pydantic import BaseModel
 from selenium import webdriver
@@ -184,45 +186,15 @@ def scrape_course_data(url: str) -> CourseData:
     finally:
         driver.quit()
 
-# Autogen setup
-doc_writer_agent = autogen.AssistantAgent(
-    name="doc_writer",
-    system_message="""
-        You are an assistant that generates brochures based on course data. 
+from autogen_ext.models.openai import OpenAIChatCompletionClient
+from autogen_agentchat.agents import AssistantAgent
+from autogen_core import CancellationToken
 
-        ### Instructions:
-        "When replacing placeholders for Learning Outcomes and Course Topics, check for prefixes like '-', '*', or 'LOx:' at the start of each line, and remove them before inserting the text into the document. 
-        Do not modify the contents otherwise; only remove the prefixes.
-        Ensure that all fields, including `wsq_funding`, remain within the `data` dictionary.
-    """,
-    llm_config={
-        "config_list": [
-            {
-                'model': st.secrets["REPLACEMENT_MODEL"],
-                'api_key': st.secrets["OPENAI_API_KEY"],
-                'tags': ['tool'],
-            },
-        ],
-        "timeout": 120,
-    },
-)
-
-user_proxy_agent = autogen.UserProxyAgent(
-    name="user_proxy",
-    human_input_mode="NEVER",
-    max_consecutive_auto_reply=5,
-    is_termination_msg=lambda msg: msg.get("content", "") and "TERMINATE" in msg["content"],
-    code_execution_config={"work_dir": "output", "use_docker": False}
-)
-
-@user_proxy_agent.register_for_execution()
-@doc_writer_agent.register_for_llm(description="Generate a structured brochure response.")
 def generate_brochure_wrapper(data: CourseData) -> BrochureResponse:
     brochure_info = generate_brochure(data)  # Now returns a dictionary
     course_title = brochure_info.get("course_title")
     shareable_link = brochure_info.get("shareable_link")
     return BrochureResponse(course_title=course_title, file_url=shareable_link)
-
 
 def authenticate():
     creds = None
@@ -274,7 +246,6 @@ def find_placeholders(docs_service, document_id):
                     placeholders.update(matches)
 
     return placeholders
-
 
 def find_text_range(docs_service, document_id, search_text):
     """
@@ -380,7 +351,7 @@ def generate_brochure(data: CourseData):
         'TSC_Code': data_dict.get('tsc_code', 'Not Applicable'),
         'GST_Excl_Price': data_dict.get('gst_exclusive_price', 'Not Applicable'),
         'GST_Incl_Price': data_dict.get('gst_inclusive_price', 'Not Applicable'),
-        'Duration_Hrs': data_dict.get('duration_hrs', 'Not Applicable'),
+        'Duration_Hrs': data_dict.get('duration_has', 'Not Applicable'),
         'Session_Days': data_dict.get('session_days', 'Not Applicable'),
         
         'Course_URL': data_dict.get('course_url', 'Not Applicable'),
@@ -430,43 +401,65 @@ def generate_brochure(data: CourseData):
         "shareable_link": shareable_link
     }
 
-def extract_tool_response(chat_result):
+def extract_tool_response(chat_content):
     """
     Extracts course title and file URL from the tool response.
     """
     try:
-        # Loop through the chat history to find the tool response
-        for message in chat_result.chat_history:
-            # Check if the message contains 'tool_responses'
-            if "tool_responses" in message:
-                for tool_response in message["tool_responses"]:
-                    # Extract the content of the tool response
-                    content = tool_response.get("content")
-                    
-                    # Skip empty or invalid content
-                    if not content:
-                        continue
-                    
-                    try:
-                        # Parse the JSON content
-                        parsed_content = json.loads(content)
-                        course_title = parsed_content.get("course_title", "Unknown Course Title")
-                        file_url = parsed_content.get("file_url", None)
-                        
-                        if course_title and file_url:
-                            return course_title, file_url
-                    except json.JSONDecodeError as json_error:
-                        print(f"JSON parsing error: {json_error}")
-                        continue
+        # Parse the JSON content
+        content = dict(chat_content)
+        parsed_content = json.loads(content)
+        course_title = parsed_content.get("course_title", "Unknown Course Title")
+        file_url = parsed_content.get("file_url", None)
+        
+        if course_title and file_url:
+            return course_title, file_url
+
     except Exception as e:
         print(f"Error extracting tool response: {e}")
     return None, None
 
 
+async def brochure_autogen(course_data, model_client):
+    doc_writer_agent = AssistantAgent(
+        name="doc_writer",
+        model_client=model_client,
+        tools=[generate_brochure_wrapper],
+        system_message="""
+            You are an assistant that generates brochures based on course data. 
+
+            ### Instructions:
+            "When replacing placeholders for Learning Outcomes and Course Topics, check for prefixes like '-', '*', or 'LOx:' at the start of each line, and remove them before inserting the text into the document. 
+            Do not modify the contents otherwise; only remove the prefixes.
+            Ensure that all fields, including `wsq_funding`, remain within the `data` dictionary.
+        """
+    )
+    agent_task = f"""
+        Please generate a brochure using the following course data: {course_data}
+        **Do not modify the data structure or move any fields outside of the `data` dictionary.**
+        Provide the shareable file link to the generated brochure.
+    """
+    # Process sample input
+    response = await doc_writer_agent.on_messages(
+        [TextMessage(content=agent_task, source="user")], CancellationToken()
+    )
+
+    output = response.chat_message.content
+    
+    if output:
+        return output 
+    else:
+        raise Exception(f"Error: Brochure chat content missing.")
+
 # Streamlit app
 def app():
     # Enable wide mode for the layout
     st.title("📄 Brochure Generator with Autogen")
+    model_client = OpenAIChatCompletionClient(
+        model=st.secrets["REPLACEMENT_MODEL_NAME"],
+        temperature=0,
+        api_key=st.secrets["OPENAI_API_KEY"]
+    )
 
     # Create two columns
     left_col, right_col = st.columns([1, 1])  # Adjust column ratio (e.g., 1:2 for a wider right column)
@@ -524,21 +517,12 @@ def app():
                 with right_col:
                     st.json(st.session_state['course_data'], expanded=1)
 
+                
                 # Step 3: Generate brochure
                 try:
                     with st.spinner("Generating brochure using Autogen..."):
-                        with Cache.disk() as cache:
-                            response = user_proxy_agent.initiate_chat(
-                                doc_writer_agent,
-                                message=f"""
-                                Please generate a brochure using the following course data: {json.dumps(st.session_state['course_data'])}
-                                **Do not modify the data structure or move any fields outside of the `data` dictionary.**
-                                Provide the shareable file link to the generated brochure.
-                                Return 'TERMINATE' once the brochure is generated.
-                                """,
-                                summary_method="reflection_with_llm",
-                                cache=cache,
-                            )
+                        response = asyncio.run(brochure_autogen(json.dumps(st.session_state['course_data'])), model_client)
+                    
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
 
@@ -563,6 +547,3 @@ def app():
                 url=file_url,
                 icon=":material/description:"
             )
-
-            
-# should we create a service account using alfred's account on GCP? seems like we need it to automate anything regarding google drives and its associated folders
