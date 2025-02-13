@@ -35,7 +35,7 @@ elif selected == "Generate Assessment":
 elif selected == "Generate Slides":
     # slide_generation.app()  # Display Courseware Generation app
     st.title("Generate Slides")
-    st.write("This section allows you to create slides.")
+    st.write("Slides Generation not available.")
 
 elif selected == "Generate Brochure":
     brochure_generation.app() # Display Brochure Generation app
