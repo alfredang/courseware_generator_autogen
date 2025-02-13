@@ -1,8 +1,9 @@
+from utils.document_parser import parse_document
 from agents.extraction_team import create_extraction_team, extraction_task
 from agents.research_team import create_research_team, research_task
 from agents.justification_agent import run_assessment_justification_agent, recreate_assessment_phrasing_dynamic, justification_task
 from agents.course_validation_team import create_course_validation_team
-from agents.tsc_agent import create_tsc_agent, tsc_task
+from agents.tsc_agent import create_tsc_agent, tsc_agent_task
 from autogen_agentchat.ui import Console
 from utils.helpers import (
     extract_final_aggregator_json, 
@@ -21,14 +22,17 @@ import json
 import asyncio
 import sys
 from cv_main import create_course_validation
-from utils.helpers import parse_document
 
 async def main(input_tsc) -> None:
     # Parse document
     parse_document(input_tsc, "json_output/output_TSC.json")
+    # load the json variables first then pass it in, if you pass it in within the agent scripts it will load the previous json states
+    # Load the JSON file into a Python variable
+    with open("json_output/output_TSC.json", 'r', encoding='utf-8') as file:
+        tsc_data = json.load(file)        
     # TSC Agent Process
-    tsc_agent = create_tsc_agent()
-    stream = tsc_agent.run_stream(task=tsc_task)
+    tsc_agent = create_tsc_agent(tsc_data=tsc_data)
+    stream = tsc_agent.run_stream(task=tsc_agent_task(tsc_data))
     await Console(stream)
     #TSC JSON management
     state = await tsc_agent.save_state()
@@ -39,8 +43,10 @@ async def main(input_tsc) -> None:
         json.dump(tsc_data, out, indent=2)
 
     # Extraction Process
-    group_chat = create_extraction_team()
-    stream = group_chat.run_stream(task=extraction_task)
+    with open("json_output/output_TSC.json", 'r', encoding='utf-8') as file:
+        tsc_data = json.load(file)    
+    group_chat = create_extraction_team(tsc_data)
+    stream = group_chat.run_stream(task=extraction_task(tsc_data))
     await Console(stream)
 
     # Extraction Team JSON management
@@ -59,8 +65,10 @@ async def main(input_tsc) -> None:
     validate_knowledge_and_ability()
 
     # Research Team Process
-    research_group_chat = create_research_team()
-    stream = research_group_chat.run_stream(task=research_task)
+    with open("json_output/ensemble_output.json", 'r', encoding='utf-8') as file:
+        ensemble_output = json.load(file)  
+    research_group_chat = create_research_team(ensemble_output)
+    stream = research_group_chat.run_stream(task=research_task(ensemble_output))
     await Console(stream)
 
     # Research Team JSON management
@@ -70,10 +78,12 @@ async def main(input_tsc) -> None:
     editor_data = extract_final_editor_json("json_output/research_group_chat_state.json")
     with open("json_output/research_output.json", "w", encoding="utf-8") as out:
         json.dump(editor_data, out, indent=2)
-    
+
+    with open("json_output/ensemble_output.json", 'r', encoding='utf-8') as file:
+        ensemble_output = json.load(file)      
     # Justification Agent Process
-    justification_agent = run_assessment_justification_agent()
-    stream = justification_agent.run_stream(task=justification_task)
+    justification_agent = run_assessment_justification_agent(ensemble_output)
+    stream = justification_agent.run_stream(task=justification_task(ensemble_output))
     await Console(stream)
 
     justification_state = await justification_agent.save_state()
@@ -128,18 +138,10 @@ async def main(input_tsc) -> None:
     except IOError as e:
         print(f"Error saving JSON to file: {e}")
 
-    # Parameters
-    # json_file = sys.argv[1]
-    # word_file = sys.argv[2]
-    # new_word_file = sys.argv[3]
     json_file = "json_output/generated_mapping.json"
     word_file = "templates/CP Template_jinja.docx"
     new_word_file = "output_docs/CP_output.docx"       
     replace_placeholders_with_docxtpl(json_file, word_file, new_word_file)
-
-    validation_group_chat = create_course_validation_team()
-    stream = research_group_chat.run_stream(task=research_task)
-    await Console(stream)
 
     # Research Team JSON management
     state = await research_group_chat.save_state()
@@ -153,5 +155,5 @@ async def main(input_tsc) -> None:
     await create_course_validation()
     
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# if __name__ == "__main__":
+#     asyncio.run(main())

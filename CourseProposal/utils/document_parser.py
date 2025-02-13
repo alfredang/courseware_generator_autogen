@@ -86,13 +86,13 @@ def parse_document(input_docx, output_json):
     with open(output_json, "w", encoding="utf-8") as json_file:
         json_file.write(json_output)
 
-    print(f"JSON output saved to {output_json}")
+    print(f"{input_docx} JSON output saved to {output_json}")
 
-if __name__ == "__main__":
-    # Get input and output file paths from command-line arguments
-    if len(sys.argv) != 3:
-        print("Usage: python document_parser.py <input_docx> <output_json>")
-        sys.exit(1)
-    input_docx = sys.argv[1]
-    output_json = sys.argv[2]
-    parse_document(input_docx, output_json)
+# if __name__ == "__main__":
+#     # Get input and output file paths from command-line arguments
+#     if len(sys.argv) != 3:
+#         print("Usage: python document_parser.py <input_docx> <output_json>")
+#         sys.exit(1)
+#     input_docx = sys.argv[1]
+#     output_json = sys.argv[2]
+#     parse_document(input_docx, output_json)

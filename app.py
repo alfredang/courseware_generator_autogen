@@ -6,6 +6,7 @@ import Assessment.assessment_generation as assessment_generation
 import Courseware.courseware_generation  as courseware_generation
 import Brochure.brochure_generation as brochure_generation
 import AnnexAssessment.annex_assessment as annex_assessment
+from CourseProposal.app import app as course_proposal_app
 # import Slides.slide_generation as slide_generation
 # from Slides.slide_generation import render_slide_generation_ui
 
@@ -23,7 +24,7 @@ with st.sidebar:
 
 # Display the selected app
 if selected == "Generate CP":
-    cp_generation.app()  # Display CP Generation app
+    course_proposal_app.app()  # Display CP Generation app
 
 elif selected == "Generate AP/FG/LG/LP":
     courseware_generation.app()  # Display Courseware Generation app

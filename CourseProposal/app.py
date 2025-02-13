@@ -5,6 +5,8 @@ import subprocess
 import sys
 import tempfile
 from main import main
+import asyncio
+from utils.document_parser import parse_document
 
 # Initialize session state variables
 if 'processing_done' not in st.session_state:
@@ -99,6 +101,7 @@ def app():
 
         # 2) Process button
         if st.button("🚀 Process File"):
+            parse_document(input_tsc_path, "json_output/output_TSC_TEST.json")
             run_processing(input_tsc_path)
             st.session_state['processing_done'] = True
 
@@ -144,7 +147,7 @@ def run_processing(input_file: str):
 
     # 1) Run the pipeline, passing the TSC doc path
     #    If your main() uses sys.argv[1], ensure main() picks up `input_file`
-    main(input_file)
+    asyncio.run(main(input_file))
 
     # 2) Now copy the relevant docx files from 'output_docs' to NamedTemporaryFiles
     cp_doc_path = "output_docs/CP_output.docx"
@@ -172,5 +175,5 @@ def run_processing(input_file: str):
 
     st.success("Processing complete. Download your files below!")
 
-# if __name__ == "__main__":
-#     app()
+if __name__ == "__main__":
+    app()

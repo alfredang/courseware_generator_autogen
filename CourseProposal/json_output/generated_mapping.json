@@ -6,7 +6,7 @@
         "Practical Performance (PP)"
     ],
     "#A[0]": [
-        "A1: Establish high-level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components"
+        "A1: Initiate visual communication ideas through exploration"
     ],
     "#A[10]": [],
     "#A[11]": [],
@@ -17,69 +17,67 @@
     "#A[16]": [],
     "#A[17]": [],
     "#A[1]": [
-        "A2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint"
+        "A2: Develop visual communication outputs by integrating media, materials, processes and environment"
     ],
     "#A[2]": [
-        "A3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture"
+        "A3: Create storyboards and task flow designs to communicate visual intentions to team members"
     ],
     "#A[3]": [
-        "A4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework"
+        "A4: Evaluate the design work of stakeholders"
     ],
     "#A[4]": [
-        "A5: Articulate value added by the solution to the business needs"
+        "A5: Propose suggestions to enhance the visual formats of designs"
     ],
     "#A[5]": [
-        "A6: Establish processes to regularly monitor, test and review solution architecture against business requirements"
+        "A6: Critique own work or work with others to enhance visual communication outputs"
     ],
-    "#A[6]": [],
+    "#A[6]": [
+        "A7: Develop strategies to enhance the appeal of visual communication outputs"
+    ],
     "#A[7]": [],
     "#A[8]": [],
     "#A[9]": [],
     "#Company": [
-        "Tertiary Infotech Pte Ltd"
+        "INNOHAT TRAINING PTE. LTD."
     ],
     "#Conclusion[0]": [
-        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the industry while equipping learners with the necessary attributes to excel in their roles as Kubernetes application developers."
+        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the design industry while equipping learners with the necessary attributes to excel in their roles as digital graphic designers."
     ],
     "#CourseTitle": [
-        "Certified Kubernetes Application Developer (CKAD) Training"
+        "Creating Stunning Digital Graphics with Canva"
     ],
     "#Hours[0]": [
-        15
+        22
     ],
     "#Hours[1]": [
         2
     ],
     "#Hours[2]": [
-        32
+        16
     ],
     "#Hours[3]": [
         "N.A."
     ],
     "#Hours[4]": [],
     "#IM": [
-        "Classroom",
+        "Lecture",
         "Didactic Questioning",
         "Demonstration",
         "Practical"
     ],
     "#KA[0]": [
-        "K1, K2, A1, A2"
+        "K1, K3, K4, A1, A2"
     ],
     "#KA[1]": [
-        "K3, A3"
+        "K5, A3, A4, A5"
     ],
     "#KA[2]": [
-        "K4, K6, A4"
+        "K2, A6, A7"
     ],
-    "#KA[3]": [
-        "K5, A5"
-    ],
-    "#KA[4]": [
-        "K7, A6"
-    ],
+    "#KA[3]": [],
+    "#KA[4]": [],
     "#K[0]": [
-        "K1: Process for refining solution architecture"
+        "K1: Elements of typography, logos, other visual communication design, and information design"
     ],
     "#K[10]": [],
     "#K[11]": [],
@@ -90,94 +88,78 @@
     "#K[16]": [],
     "#K[17]": [],
     "#K[1]": [
-        "K2: Applications of tools and modelling techniques for creation of solution architecture"
+        "K2: Best practices in visual communication"
     ],
     "#K[2]": [
-        "K3: Technical, functional and service considerations"
+        "K3: Uses of relevant design software packages"
     ],
     "#K[3]": [
-        "K4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspects for the solution"
+        "K4: Colour fundamentals and forms"
     ],
     "#K[4]": [
-        "K5: Standards for coding, scalability, integration and reusability"
+        "K5: Techniques for analysing aesthetics"
     ],
-    "#K[5]": [
-        "K6: Compatibility among multiple solution architecture components and design activities"
-    ],
-    "#K[6]": [
-        "K7: Techniques to measure a solution's value-add"
-    ],
+    "#K[5]": [],
+    "#K[6]": [],
     "#K[7]": [],
     "#K[8]": [],
     "#K[9]": [],
     "#LO[0]": [
-        "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools."
+        "LO1: Develop visual communication projects in Canva, blending typography with media elements."
     ],
     "#LO[1]": [
-        "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures."
+        "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements."
     ],
     "#LO[2]": [
-        "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals."
+        "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
     ],
-    "#LO[3]": [
-        "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability."
-    ],
-    "#LO[4]": [
-        "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
-    ],
+    "#LO[3]": [],
+    "#LO[4]": [],
     "#LO[5]": [],
     "#LO[6]": [],
     "#LO[7]": [],
     "#LU[0]": [
-        "LU1: Container Image Management"
+        "LU1: Introduction to Canva Design"
     ],
     "#LU[1]": [
-        "LU2: Deployment Strategies"
+        "LU2: Storyboarding and Flow Design"
     ],
     "#LU[2]": [
-        "LU3: Application Monitoring and Debugging"
+        "LU3: Enhancing Visual Communication"
     ],
-    "#LU[3]": [
-        "LU4: Security and Configuration Management"
-    ],
-    "#LU[4]": [
-        "LU5: Networking and Access Management"
-    ],
+    "#LU[3]": [],
+    "#LU[4]": [],
     "#LU[5]": [],
     "#LU[6]": [],
     "#LU[7]": [],
     "#LUex[0]": [
-        "LU1 lays the foundational knowledge by introducing learners to the processes of defining, building, and modifying container images. This unit emphasizes the importance of choosing the right workload resources and understanding multi-container Pod design patterns. By establishing high-level structures and frameworks, learners gain the ability to guide the development of Kubernetes applications effectively. This foundational knowledge addresses the performance gap of struggling to establish frameworks."
+        "LU1 lays the foundational knowledge by introducing learners to Canva's interface and basic design principles. The unit covers essential topics such as typography, color theory, and the creation of simple designs. This foundational knowledge addresses the performance gap of learners struggling with blending typography and media elements, equipping them with the skills to create more impactful visual communication."
     ],
     "#LUex[1]": [
-        "Building on the foundational knowledge, LU2 dives into practical deployment strategies using Kubernetes primitives. Learners will explore how to align technical, functional, and service requirements within their deployment architectures. This unit enhances learners' proficiency in implementing effective deployment strategies, addressing the performance gap of operational inefficiencies in aligning requirements."
+        "Building on the foundational knowledge, LU2 focuses on storyboarding and flow design, teaching learners how to create effective storyboards that communicate visual intentions. This unit addresses the performance gap related to the lack of skills in creating comprehensive storyboards, allowing learners to develop detailed visual concepts that facilitate team collaboration and alignment during project execution."
     ],
     "#LUex[2]": [
-        "LU3 escalates to a higher level of complexity where learners delve into the coordination of multiple Kubernetes solution components. This unit focuses on ensuring compatibility and performance through observability techniques and maintenance practices. By understanding API deprecations and implementing health checks, learners develop the skills needed to address compatibility issues, thus bridging the performance gap in coordinating components."
+        "LU3 escalates to a higher level of complexity where learners engage in critiquing and enhancing design work. This unit emphasizes best practices and collaborative skills, addressing the performance gap of learners finding it challenging to critique and collaborate on design projects. By participating in workshops and group activities, learners will enhance their ability to provide constructive feedback and improve the overall quality of visual communication outputs."
     ],
-    "#LUex[3]": [
-        "In LU4, learners articulate the value of Kubernetes solutions by exploring coding standards, security measures, and resource management. This unit empowers learners to effectively communicate the benefits of their solutions, addressing the performance gap of articulating value. By understanding application security and configuration, learners gain the capability to optimize their Kubernetes implementations."
-    ],
-    "#LUex[4]": [
-        "LU5 culminates the training by focusing on networking and service management within Kubernetes. Learners will establish monitoring and testing processes to validate their architectures against business requirements. This unit equips learners with the knowledge to implement effective monitoring strategies, addressing the performance gap of lacking validation processes."
-    ],
+    "#LUex[3]": [],
+    "#LUex[4]": [],
     "#LUex[5]": [],
     "#LUex[6]": [],
     "#LUex[7]": [],
     "#Placeholder[0]": [
-        "The Infocomm Technology sector is experiencing significant challenges in effectively implementing and managing Kubernetes solutions. One of the primary performance gaps is the lack of skilled professionals who can establish high-level structures and frameworks for Kubernetes applications. Many organizations struggle with aligning technical, functional, and service requirements within their Kubernetes-based architectures, leading to inefficient deployments and increased operational costs. Additionally, there is often a disconnect between the various components of Kubernetes solutions, resulting in compatibility issues that hinder the overall performance and scalability of applications. The rapid evolution of cloud-native technologies and the increasing complexity of application environments further exacerbate these challenges, as teams may not be adequately trained to handle the nuances of Kubernetes, such as multi-container Pod design patterns and the use of Helm for package management. Furthermore, organizations frequently face difficulties in articulating the value of their Kubernetes solutions, particularly in terms of coding standards, scalability, and reusability, which can lead to underutilization of resources and missed opportunities for optimization.\n\nTo address the identified performance gaps, there is a pressing need for targeted training programs that equip professionals with the necessary skills and knowledge to effectively design, deploy, and maintain Kubernetes applications. Training should focus on establishing high-level frameworks and structures that guide the development of IT solutions, incorporating various processes, hardware, and software components. Participants need to be trained in the application of tools and modeling techniques that are essential for creating robust solution architectures. Additionally, training must emphasize the importance of aligning the requirements of various stakeholders and ensuring compatibility among multiple solution architecture components. Practical training sessions that include hands-on experience with Kubernetes primitives, deployment strategies, and application observability techniques will be crucial in building confidence and competence among participants. Furthermore, establishing processes for regular monitoring, testing, and reviewing of solution architectures against business requirements will empower professionals to validate their Kubernetes implementations effectively. Overall, a comprehensive training approach that combines theoretical knowledge with practical application is essential to bridge the skills gap in the industry.\n\nSeveral job roles within the Infocomm Technology sector would significantly benefit from this training. Kubernetes application developers, who are responsible for designing and building applications that run on Kubernetes, would gain valuable insights into best practices for application design and deployment. Solution architects would also benefit, as they need to align technical and functional requirements within Kubernetes-based architectures and ensure compatibility among various components. DevOps engineers, who play a critical role in the continuous integration and deployment of applications, would find the training particularly beneficial in understanding how to implement effective deployment strategies and maintain application observability. Additionally, system administrators and IT operations personnel would enhance their skills in managing Kubernetes environments, focusing on security, configuration, and resource management. Finally, project managers overseeing cloud-native application development projects would gain a deeper understanding of the technical aspects of Kubernetes, enabling them to better coordinate teams and resources to achieve project goals."
+        "The design industry is currently facing significant challenges due to the rapid evolution of digital tools and platforms, which has created a performance gap among professionals who may not be fully equipped to leverage these advancements. Many designers struggle with integrating modern design software, such as Canva, into their workflows effectively. This gap is particularly evident in the areas of visual communication, where the ability to blend typography with media elements is crucial for creating compelling graphics. Additionally, there is a lack of understanding of best practices in visual communication, which can lead to ineffective designs that fail to engage audiences. The industry also sees a deficiency in skills related to critical analysis and enhancement of design work, as many professionals do not have the training necessary to evaluate and critique their own or others' work effectively. This lack of critical thinking and collaborative skills can hinder the overall quality of design outputs, making it essential for training programs to address these specific performance gaps.\n\nTo bridge the performance gaps identified in the design industry, targeted training is essential. Professionals need to develop a comprehensive understanding of visual communication principles, including typography, color theory, and the use of design software like Canva. Training should focus on practical applications, allowing participants to explore and experiment with Canva's features to create visually appealing designs. Furthermore, there is a need for training in storyboarding and flow design, which are critical for communicating visual intentions effectively to team members. Workshops that emphasize best practices in design and aesthetic analysis will equip designers with the tools to critique and enhance their work. Additionally, fostering collaboration and peer review through group activities will help build a culture of constructive feedback, ultimately leading to improved design outcomes. By addressing these training needs, professionals will be better prepared to meet the demands of the industry and produce high-quality visual communication projects.\n\nSeveral job roles within the design industry would greatly benefit from the training focused on enhancing digital graphic creation skills. Graphic designers, who are responsible for creating visual content for various media, would find the training invaluable as it equips them with the necessary skills to utilize Canva effectively. Marketing professionals, who often rely on visual communication to promote products and services, would also benefit from understanding how to create compelling graphics that resonate with their target audience. Additionally, content creators and social media managers, who need to produce engaging visuals for online platforms, would gain practical skills in designing eye-catching graphics that align with their brand's messaging. Furthermore, project managers in design-related fields would benefit from the training as it would enhance their ability to evaluate design work and provide constructive feedback to their teams. Overall, the training would serve a wide range of roles within the design sector, fostering a more skilled and capable workforce."
     ],
     "#Placeholder[1]": [
-        "Performance gaps were identified through survey forms distributed to external stakeholders:\n\nPerformance Gaps:\n\u2022\tLearners struggle with establishing high-level structures and frameworks for Kubernetes solutions, leading to inefficient deployments.\n\u2022\tLearners often find it challenging to align technical, functional, and service requirements within Kubernetes-based solution architectures, resulting in operational inefficiencies.\n\u2022\tLearners have difficulty coordinating multiple Kubernetes solution components, which can lead to compatibility issues and hinder overall performance.\n\u2022\tLearners are unclear on how to articulate the value of Kubernetes solutions, particularly regarding coding standards, scalability, and reusability.\n\u2022\tLearners lack the knowledge to establish effective monitoring and testing processes to validate Kubernetes architectures against business requirements.\n\nThrough targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:"
+        "Performance gaps were identified through survey forms distributed to external stakeholders:\n\nPerformance Gaps:\n\u2022\tLearners struggle with effectively blending typography with media elements in their designs, leading to less impactful visual communication.\n\u2022\tLearners often lack the skills to create comprehensive storyboards that clearly communicate visual intentions to team members, resulting in misalignment during project execution.\n\u2022\tLearners find it challenging to critique and collaborate on design projects, which limits their ability to enhance visual communication based on best practices.\n\nThrough targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:"
     ],
     "#Rationale[0]": [
-        "For this course, the step-by-step sequencing is employed to scaffold the learners' comprehension and application of Kubernetes solutions. This methodology is crucial as it systematically breaks down the intricate facets of Kubernetes application design, deployment, observability, security, and networking into digestible units. This aids in gradually building the learners' knowledge and skills from fundamental to more complex concepts, ensuring a solid foundation before advancing to the next topic. The progression is designed to foster a deeper understanding and the ability to effectively apply the learned concepts in real-world scenarios."
+        "For this course, the step-by-step sequencing is employed to scaffold the learners' comprehension and application of digital graphic design using Canva. This methodology is crucial as it systematically breaks down the intricate facets of visual communication, storyboarding, and design enhancement into digestible units. This aids in gradually building the learners' knowledge and skills from fundamental to more complex concepts, ensuring a solid foundation before advancing to the next topic. The progression is designed to foster a deeper understanding and the ability to effectively apply the learned concepts in real-world design scenarios."
     ],
     "#TCS[0]": [
-        "Solution Architecture"
+        "Visual Communication"
     ],
     "#TCS[1]": [
-        "ICT-DES-5006-1.1"
+        "DSN-COM-4005-1.1"
     ],
     "#TopicsEX[0]": [],
     "#TopicsEX[1]": [],
@@ -186,64 +168,50 @@
     "#TopicsEX[4]": [],
     "#TopicsEX[5]": [],
     "#Topics[0]": [
-        "Topic 1: Application Design and Build (K1, K2, A1, A2)\n\u2022\tDefine, build and modify container images\n\u2022\tChoose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)\n\u2022\tUnderstand multi-container Pod design patterns (e.g. sidecar, init and others)\n\u2022\tUtilize persistent and ephemeral volumes\n\nLO1 \u2013 Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.\n\n\nK1: Process for refining solution architecture\n\nK2: Applications of tools and modelling techniques for creation of solution architecture\n\nA1: Establish high-level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components\n\nA2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint\n\n"
+        "Topic 1: Introduction to Canva and Basic Design Principles (K1, K3, A1)\n\u2022\tNavigating Canva's interface and features\n\u2022\tPrinciples of typography and logo design\n\u2022\tBasics of visual communication design\n\u2022\tCreating simple designs and layouts\n\u2022\tExperimenting with Canva's text and image tools\n\nTopic 2: Colour and Form in Canva Design (K4, A2)\n\u2022\tFundamentals of colour theory and application\n\u2022\tExploring colour schemes and palettes in Canva\n\u2022\tThe role of forms and shapes in design\n\u2022\tPractical exercises on colour and form harmonization\n\u2022\tDesigning for different environments and contexts\n\nLO1 \u2013 Develop visual communication projects in Canva, blending typography with media elements.\n\n\nK1: Elements of typography, logos, other visual communication design, and information design\n\nK3: Uses of relevant design software packages\n\nK4: Colour fundamentals and forms\n\nA1: Initiate visual communication ideas through exploration\n\nA2: Develop visual communication outputs by integrating media, materials, processes and environment\n\n"
     ],
     "#Topics[1]": [
-        "Topic 2: Application Deployment (K3, A3)\n\u2022\tUse Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)\n\u2022\tUnderstand Deployments and how to perform rolling updates\n\u2022\tUse the Helm package manager to deploy existing packages\n\u2022\tKustomize\n\nLO2 \u2013 Align technical, functional, and service requirements within Kubernetes-based solution architectures.\n\n\nK3: Technical, functional and service considerations\n\nA3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture\n\n"
+        "Topic 3: Storyboarding and Flow Design in Canva (K5, A3)\n\u2022\tTechniques for creating effective storyboards\n\u2022\tDeveloping task flows for visual projects\n\u2022\tUtilizing Canva for ideation and conceptualization\n\u2022\tCase Study of effective storyboard designs\n\u2022\tHands-on exercises in storyboard creation\n\nTopic 4: Best Practices and Aesthetic Analysis in Canva (A4, A5)\n\u2022\tUnderstanding and applying design best practices\n\u2022\tTechniques for aesthetic and functional analysis\n\u2022\tCritiquing and improving Canva projects\n\u2022\tWorkshop on designing with user experience in mind\n\u2022\tGroup activities for peer review and feedback\n\nLO2 \u2013 Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.\n\n\nK5: Techniques for analysing aesthetics\n\nA3: Create storyboards and task flow designs to communicate visual intentions to team members\n\nA4: Evaluate the design work of stakeholders\n\nA5: Propose suggestions to enhance the visual formats of designs\n\n"
     ],
     "#Topics[2]": [
-        "Topic 3: Application Observability and Maintenance (K4, K6, A4)\n\u2022\tUnderstand API deprecations\n\u2022\tImplement probes and health checks\n\u2022\tUse built-in CLI tools to monitor Kubernetes applications\n\u2022\tUtilize container logs\n\u2022\tDebugging in Kubernetes\n\nLO3 \u2013 Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.\n\n\nK4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspects for the solution\n\nK6: Compatibility among multiple solution architecture components and design activities\n\nA4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework\n\n"
+        "Topic 5: Critical Review and Enhancement Strategies in Canva (K2, A6)\n\u2022\tMethods for critiquing visual designs\n\u2022\tStrategies for effective visual communication\n\u2022\tWorkshops on enhancing existing Canva designs\n\u2022\tCollaborative exercises for peer-to-peer learning\n\u2022\tTechniques for iterative design improvements\n\nTopic 6: Innovative Approaches to Design in Canva (K2, A7)\n\u2022\tDeveloping innovative design strategies\n\u2022\tExploring advanced features and tools in Canva\n\u2022\tCase Study of successful visual communication\n\u2022\tGroup projects for practical application\n\u2022\tPresentations on innovative design solutions\n\nLO3 \u2013 Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices.\n\n\nK2: Best practices in visual communication\n\nA6: Critique own work or work with others to enhance visual communication outputs\n\nA7: Develop strategies to enhance the appeal of visual communication outputs\n\n"
     ],
-    "#Topics[3]": [
-        "Topic 4: Application Environment, Configuration and Security (K5, A5)\n\u2022\tDiscover and use resources that extend Kubernetes (CRD, Operators)\n\u2022\tUnderstand authentication, authorization and admission control\n\u2022\tUnderstand requests, limits, quotas\n\u2022\tUnderstand ConfigMaps\n\u2022\tDefine resource requirements\n\u2022\tCreate & consume Secrets\n\u2022\tUnderstand ServiceAccounts\n\u2022\tUnderstand Application Security (SecurityContexts, Capabilities, etc.)\n\nLO4 \u2013 Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.\n\n\nK5: Standards for coding, scalability, integration and reusability\n\nA5: Articulate value added by the solution to the business needs\n\n"
-    ],
-    "#Topics[4]": [
-        "Topic 5: Services and Networking (K7, A6)\n\u2022\tDemonstrate basic understanding of NetworkPolicies\n\u2022\tProvide and troubleshoot access to applications via services\n\u2022\tUse Ingress rules to expose applications\n\nLO5 \u2013 Establish monitoring and testing processes to validate Kubernetes architectures against business requirements.\n\n\nK7: Techniques to measure a solution's value-add\n\nA6: Establish processes to regularly monitor, test and review solution architecture against business requirements\n\n"
-    ],
+    "#Topics[3]": [],
+    "#Topics[4]": [],
     "#Topics[5]": [],
     "#TotalHours": [],
     "#Assessment[0]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1, K2\n\nPractical Performance (PP) \u2013 A1, A2"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1, K3, K4\n\nPractical Performance (PP) \u2013 A1, A2"
     ],
     "#Assessment[1]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K3\n\nPractical Performance (PP) \u2013 A3"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5\n\nPractical Performance (PP) \u2013 A3, A4, A5"
     ],
     "#Assessment[2]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K4, K6\n\nPractical Performance (PP) \u2013 A4"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2\n\nPractical Performance (PP) \u2013 A6, A7"
     ],
-    "#Assessment[3]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5\n\nPractical Performance (PP) \u2013 A5"
-    ],
-    "#Assessment[4]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K7\n\nPractical Performance (PP) \u2013 A6"
-    ],
+    "#Assessment[3]": [],
+    "#Assessment[4]": [],
     "#AssessmentJustification": [
-        "Practical Performance (PP):\nA practical Performance (PP) assessment will provide direct evidence of whether candidates have acquired the competency for the ability statements by solving a scenario-based problem.\n\nThe Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to apply Kubernetes concepts in real-world scenarios.\nCandidates will complete practical tasks that demonstrate their ability to design, deploy, and manage Kubernetes applications effectively.\n\nType of Evidence:\n\u2022\tFor LO1: Candidates will create a Kubernetes solution architecture that incorporates various processes and tools.\n\u2022\tFor LO2: Candidates will align technical and functional requirements within a Kubernetes deployment scenario.\n\u2022\tFor LO3: Candidates will coordinate multiple Kubernetes components to ensure compatibility and meet design goals.\n\u2022\tFor LO4: Candidates will articulate the value of their Kubernetes solutions by addressing coding standards and scalability.\n\u2022\tFor LO5: Candidates will establish monitoring and testing processes to validate their Kubernetes architectures.\nManner of Submission:\n\u2022\tCandidates will submit their completed Kubernetes configurations, deployment scripts, and any additional documentation that supports their practical tasks.\n\u2022\tThis includes annotated screenshots or logs demonstrating the functionality of their Kubernetes applications.\nMarking Process: \n\u2022\tFunctionality of Kubernetes solutions.\n\u2022\tAdherence to best practices.\n\u2022\tQuality of documentation and submission.\nRetention Period:\n\u2022\tAll submitted evidence, including Kubernetes configurations and assessment records, will be retained for 3 years for compliance and auditing purposes.\n"
+        "Practical Performance (PP):\nA practical Performance (PP) assessment will provide direct evidence of whether candidates have acquired the competency for the ability statements by solving a scenario-based problem.\n\nThe Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to create and critique digital graphics using Canva.\nCandidates will complete practical tasks that demonstrate their ability to blend typography with media elements in Canva.\n\nType of Evidence:\n\u2022\tFor LO1: Candidates will develop a visual communication project in Canva, integrating typography and media elements effectively.\n\u2022\tFor LO2: Candidates will create a storyboard in Canva to communicate visual intentions and evaluate design enhancements.\n\u2022\tFor LO3: Candidates will collaborate in groups to critique and improve Canva designs based on best practices.\nManner of Submission:\n\u2022\tCandidates will submit their completed Canva projects and storyboards along with a reflective document detailing their design choices and enhancements.\nMarking Process: \n\u2022\tCreativity and Originality.\n\u2022\tTechnical Execution.\n\u2022\tCollaboration and Feedback Integration.\nRetention Period:\n\u2022\tAll submitted evidence, including Canva projects and reflective documents, will be retained for 3 years for compliance and auditing purposes.\n"
     ],
     "#ADuration[0]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 20 mins\n\nPractical Performance (PP) \u2013 20 mins"
     ],
     "#ADuration[1]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 20 mins\n\nPractical Performance (PP) \u2013 20 mins"
     ],
     "#ADuration[2]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 20 mins\n\nPractical Performance (PP) \u2013 20 mins"
     ],
-    "#ADuration[3]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
-    ],
-    "#ADuration[4]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 12 mins\n\nPractical Performance (PP) \u2013 12 mins"
-    ],
+    "#ADuration[3]": [],
+    "#ADuration[4]": [],
     "#ADuration[5]": [],
     "#ADurationTotal": [
         "WA-SAQ \u2013 1 hr\nPP \u2013 1 hr\nTotal \u2013 2 hr"
     ],
     "#Sequencing": [
-        "LU1: Container Image Management\nLU1 lays the foundational knowledge by introducing learners to the processes of defining, building, and modifying container images. This unit emphasizes the importance of choosing the right workload resources and understanding multi-container Pod design patterns. By establishing high-level structures and frameworks, learners gain the ability to guide the development of Kubernetes applications effectively. This foundational knowledge addresses the performance gap of struggling to establish frameworks.",
-        "LU2: Deployment Strategies\nBuilding on the foundational knowledge, LU2 dives into practical deployment strategies using Kubernetes primitives. Learners will explore how to align technical, functional, and service requirements within their deployment architectures. This unit enhances learners' proficiency in implementing effective deployment strategies, addressing the performance gap of operational inefficiencies in aligning requirements.",
-        "LU3: Application Monitoring and Debugging\nLU3 escalates to a higher level of complexity where learners delve into the coordination of multiple Kubernetes solution components. This unit focuses on ensuring compatibility and performance through observability techniques and maintenance practices. By understanding API deprecations and implementing health checks, learners develop the skills needed to address compatibility issues, thus bridging the performance gap in coordinating components.",
-        "LU4: Security and Configuration Management\nIn LU4, learners articulate the value of Kubernetes solutions by exploring coding standards, security measures, and resource management. This unit empowers learners to effectively communicate the benefits of their solutions, addressing the performance gap of articulating value. By understanding application security and configuration, learners gain the capability to optimize their Kubernetes implementations.",
-        "LU5: Networking and Access Management\nLU5 culminates the training by focusing on networking and service management within Kubernetes. Learners will establish monitoring and testing processes to validate their architectures against business requirements. This unit equips learners with the knowledge to implement effective monitoring strategies, addressing the performance gap of lacking validation processes."
+        "LU1: Introduction to Canva Design\nLU1 lays the foundational knowledge by introducing learners to Canva's interface and basic design principles. The unit covers essential topics such as typography, color theory, and the creation of simple designs. This foundational knowledge addresses the performance gap of learners struggling with blending typography and media elements, equipping them with the skills to create more impactful visual communication.",
+        "LU2: Storyboarding and Flow Design\nBuilding on the foundational knowledge, LU2 focuses on storyboarding and flow design, teaching learners how to create effective storyboards that communicate visual intentions. This unit addresses the performance gap related to the lack of skills in creating comprehensive storyboards, allowing learners to develop detailed visual concepts that facilitate team collaboration and alignment during project execution.",
+        "LU3: Enhancing Visual Communication\nLU3 escalates to a higher level of complexity where learners engage in critiquing and enhancing design work. This unit emphasizes best practices and collaborative skills, addressing the performance gap of learners finding it challenging to critique and collaborate on design projects. By participating in workshops and group activities, learners will enhance their ability to provide constructive feedback and improve the overall quality of visual communication outputs."
     ]
 }

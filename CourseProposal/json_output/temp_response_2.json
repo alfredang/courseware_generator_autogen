@@ -1,21 +1,19 @@
 {
     "course_info": {
-        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
-        "Industry": "Infocomm Technology",
+        "Course Title": "Creating Stunning Digital Graphics with Canva",
+        "Industry": "Design",
         "Learning Outcomes": [
-            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
-            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
-            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
-            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
-            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+            "LO1: Develop visual communication projects in Canva, blending typography with media elements.",
+            "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.",
+            "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
         ],
-        "TSC Title": "Solution Architecture",
-        "TSC Code": "ICT-DES-5006-1.1"
+        "TSC Title": "Visual Communication",
+        "TSC Code": "DSN-COM-4005-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "A significant gap in the industry is the misalignment between technical requirements and the actual implementation of Kubernetes solutions. Many teams lack the ability to effectively coordinate the various components of their applications, leading to integration issues and suboptimal performance. Furthermore, there is often insufficient emphasis on coding standards and best practices, which can hinder scalability and reusability of solutions.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes the importance of aligning technical and functional requirements within Kubernetes architectures, which directly addresses the misalignment issues faced by many organizations. By teaching participants how to articulate the value of their solutions and adhere to coding standards, the course fosters an environment where scalable and reusable applications can thrive."
+            "What are the performance gaps in the industry?": "A significant challenge in the field is the inability to create coherent storyboards that clearly communicate visual intentions. Many designers lack the skills to evaluate and enhance their designs, leading to missed opportunities for improvement. This gap can hinder collaboration among team members and affect the overall quality of visual projects.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "By emphasizing the creation of storyboards and task flows, this course addresses the need for clear visual communication. Participants will learn to evaluate their designs critically and suggest enhancements, fostering a collaborative environment that improves project outcomes."
         }
     ]
 }

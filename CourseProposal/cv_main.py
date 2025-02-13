@@ -1,31 +1,22 @@
-from agents.extraction_team import create_extraction_team, extraction_task
-from agents.research_team import create_research_team, research_task
-from agents.justification_agent import run_assessment_justification_agent, recreate_assessment_phrasing_dynamic, justification_task
 from agents.course_validation_team import create_course_validation_team, validation_task
 from autogen_agentchat.ui import Console
 from utils.helpers import (
-    extract_final_aggregator_json, 
-    rename_keys_in_json_file,
-    update_knowledge_ability_mapping,
-    validate_knowledge_and_ability,
     extract_final_editor_json,
-    extract_final_agent_json,
-    flatten_json,
-    flatten_list,
     append_validation_output,
 )
 from utils.json_docu_replace import replace_placeholders_in_doc
-from utils.json_mapping import map_values
-from utils.jinja_docu_replace import replace_placeholders_with_docxtpl
 import json
 import asyncio
 import sys
 import os
 
 async def create_course_validation() -> None:
+    # Load the JSON file into a Python variable
+    with open('json_output/ensemble_output.json', 'r', encoding="utf-8") as file:
+        ensemble_output = json.load(file)    
     # Course Validation Form Process
-    validation_group_chat = create_course_validation_team()
-    stream = validation_group_chat.run_stream(task=validation_task)
+    validation_group_chat = create_course_validation_team(ensemble_output)
+    stream = validation_group_chat.run_stream(task=validation_task(ensemble_output))
     await Console(stream)
 
     # Validation Team JSON management

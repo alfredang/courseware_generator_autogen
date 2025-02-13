@@ -1,21 +1,19 @@
 {
     "course_info": {
-        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
-        "Industry": "Infocomm Technology",
+        "Course Title": "Creating Stunning Digital Graphics with Canva",
+        "Industry": "Design",
         "Learning Outcomes": [
-            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
-            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
-            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
-            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
-            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+            "LO1: Develop visual communication projects in Canva, blending typography with media elements.",
+            "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.",
+            "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
         ],
-        "TSC Title": "Solution Architecture",
-        "TSC Code": "ICT-DES-5006-1.1"
+        "TSC Title": "Visual Communication",
+        "TSC Code": "DSN-COM-4005-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "The industry faces challenges in effectively managing and deploying containerized applications, leading to inefficiencies in resource utilization and application performance. Many organizations struggle with the complexities of Kubernetes, resulting in inconsistent application behavior and difficulties in scaling solutions to meet demand. Additionally, there is often a lack of standardized processes for monitoring and maintaining application health, which can lead to increased downtime and reduced service quality.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course provides essential training on establishing robust frameworks for Kubernetes solutions, enabling participants to develop a structured approach to application design and deployment. By focusing on the integration of various components and ensuring compatibility, the course equips learners with the skills needed to enhance application performance and reliability."
+            "What are the performance gaps in the industry?": "In the current landscape, many professionals struggle with effectively integrating typography and media elements in their designs. This often leads to visual communication that fails to engage the audience or convey the intended message. Additionally, there is a noticeable lack of understanding of best practices in design, which can result in inconsistent and unappealing outputs that do not meet industry standards.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course offers a comprehensive approach to visual communication, equipping participants with the skills to blend typography and media effectively. By focusing on practical design techniques and encouraging exploration, it prepares learners to create compelling visuals that resonate with their target audience."
         }
     ]
 }

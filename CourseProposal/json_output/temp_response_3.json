@@ -1,21 +1,19 @@
 {
     "course_info": {
-        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
-        "Industry": "Infocomm Technology",
+        "Course Title": "Creating Stunning Digital Graphics with Canva",
+        "Industry": "Design",
         "Learning Outcomes": [
-            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
-            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
-            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
-            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
-            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+            "LO1: Develop visual communication projects in Canva, blending typography with media elements.",
+            "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.",
+            "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
         ],
-        "TSC Title": "Solution Architecture",
-        "TSC Code": "ICT-DES-5006-1.1"
+        "TSC Title": "Visual Communication",
+        "TSC Code": "DSN-COM-4005-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "The industry is currently experiencing difficulties in monitoring and validating Kubernetes architectures against business requirements. Many organizations lack effective processes for testing and reviewing their solutions, which can lead to performance bottlenecks and unmet business objectives. Additionally, there is often a gap in understanding the security implications of Kubernetes configurations, resulting in vulnerabilities that can be exploited.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course focuses on establishing monitoring and testing processes that are crucial for validating Kubernetes architectures. By equipping participants with the knowledge to implement effective monitoring strategies and understand security best practices, the course helps organizations mitigate risks and ensure their solutions meet business needs."
+            "What are the performance gaps in the industry?": "The industry faces challenges with the application of innovative design strategies and the effective use of design software. Many professionals are not familiar with the advanced features available in design tools, which limits their ability to create visually appealing and impactful designs. This lack of knowledge can stifle creativity and hinder the development of unique visual solutions.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course focuses on innovative approaches to design, encouraging participants to explore advanced features in Canva. By developing strategies to enhance visual communication, learners will be better equipped to create distinctive designs that stand out in a competitive market."
         }
     ]
 }

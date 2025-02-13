@@ -1,83 +1,74 @@
 {
     "Course Information": {
-        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
-        "Name of Organisation": "Tertiary Infotech Pte Ltd",
-        "Classroom Hours": 15,
+        "Course Title": "Creating Stunning Digital Graphics with Canva",
+        "Name of Organisation": "INNOHAT TRAINING PTE. LTD.",
+        "Classroom Hours": 22,
         "Number of Assessment Hours": 2,
-        "Course Duration (Number of Hours)": 32,
-        "Industry": "Infocomm Technology"
+        "Course Duration (Number of Hours)": 16,
+        "Industry": "Design"
     },
     "Learning Outcomes": {
         "Learning Outcomes": [
-            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
-            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
-            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
-            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
-            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+            "LO1: Develop visual communication projects in Canva, blending typography with media elements.",
+            "LO2: Create Canva storyboards to communicate visual intention to team members and evaluate designs to suggest visual enhancements.",
+            "LO3: Develop strategies for Canva designs, critiquing and collaborating to improve visual communication based on best practices."
         ],
         "Knowledge": [
-            "K1: Process for refining solution architecture",
-            "K2: Applications of tools and modelling techniques for creation of solution architecture",
-            "K3: Technical, functional and service considerations",
-            "K4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspects for the solution",
-            "K5: Standards for coding, scalability, integration and reusability",
-            "K6: Compatibility among multiple solution architecture components and design activities",
-            "K7: Techniques to measure a solution's value-add"
+            "K1: Elements of typography, logos, other visual communication design, and information design",
+            "K2: Best practices in visual communication",
+            "K3: Uses of relevant design software packages",
+            "K4: Colour fundamentals and forms",
+            "K5: Techniques for analysing aesthetics"
         ],
         "Ability": [
-            "A1: Establish high-level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components",
-            "A2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint",
-            "A3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture",
-            "A4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework",
-            "A5: Articulate value added by the solution to the business needs",
-            "A6: Establish processes to regularly monitor, test and review solution architecture against business requirements"
+            "A1: Initiate visual communication ideas through exploration",
+            "A2: Develop visual communication outputs by integrating media, materials, processes and environment",
+            "A3: Create storyboards and task flow designs to communicate visual intentions to team members",
+            "A4: Evaluate the design work of stakeholders",
+            "A5: Propose suggestions to enhance the visual formats of designs",
+            "A6: Critique own work or work with others to enhance visual communication outputs",
+            "A7: Develop strategies to enhance the appeal of visual communication outputs"
         ],
         "Knowledge and Ability Mapping": {
             "KA1": [
-                "K1",
-                "K2",
                 "A1",
-                "A2"
+                "K1",
+                "K3",
+                "A2",
+                "K4"
             ],
             "KA2": [
-                "K3",
-                "A3"
-            ],
-            "KA3": [
-                "K4",
-                "K6",
-                "A4"
-            ],
-            "KA4": [
+                "A3",
                 "K5",
+                "A4",
                 "A5"
             ],
-            "KA5": [
-                "K7",
-                "A6"
+            "KA3": [
+                "A6",
+                "K2",
+                "A7"
             ]
         }
     },
     "TSC and Topics": {
         "TSC Title": [
-            "Solution Architecture"
+            "Visual Communication"
         ],
         "TSC Code": [
-            "ICT-DES-5006-1.1"
+            "DSN-COM-4005-1.1"
         ],
         "Topics": [
-            "Topic 1: Application Design and Build (K1, K2, A1, A2)",
-            "Topic 2: Application Deployment (K3, A3)",
-            "Topic 3: Application Observability and Maintenance (K4, K6, A4)",
-            "Topic 4: Application Environment, Configuration and Security (K5, A5)",
-            "Topic 5: Services and Networking (K7, A6)"
+            "Topic 1: Introduction to Canva and Basic Design Principles (A1, K1, K3)",
+            "Topic 2: Colour and Form in Canva Design (A2, K4)",
+            "Topic 3: Storyboarding and Flow Design in Canva (A3, K5)",
+            "Topic 4: Best Practices and Aesthetic Analysis in Canva (A4, A5)",
+            "Topic 5: Critical Review and Enhancement Strategies in Canva (A6, K2)",
+            "Topic 6: Innovative Approaches to Design in Canva (A7, K2)"
         ],
         "Learning Units": [
-            "LU1: Container Image Management",
-            "LU2: Deployment Strategies",
-            "LU3: Application Monitoring and Debugging",
-            "LU4: Security and Configuration Management",
-            "LU5: Networking and Access Management"
+            "LU1: Introduction to Canva Design",
+            "LU2: Storyboarding and Flow Design",
+            "LU3: Enhancing Visual Communication"
         ]
     },
     "Assessment Methods": {
@@ -91,12 +82,23 @@
                 "LU1": {
                     "Description": [
                         {
-                            "Topic": "Topic 1: Application Design and Build (K1, K2, A1, A2)",
+                            "Topic": "Topic 1: Introduction to Canva and Basic Design Principles (A1, K1, K3)",
                             "Details": [
-                                "Define, build and modify container images",
-                                "Choose and use the right workload resource (Deployment, DaemonSet, CronJob, etc.)",
-                                "Understand multi-container Pod design patterns (e.g. sidecar, init and others)",
-                                "Utilize persistent and ephemeral volumes"
+                                "Navigating Canva's interface and features",
+                                "Principles of typography and logo design",
+                                "Basics of visual communication design",
+                                "Creating simple designs and layouts",
+                                "Experimenting with Canva's text and image tools"
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 2: Colour and Form in Canva Design (A2, K4)",
+                            "Details": [
+                                "Fundamentals of colour theory and application",
+                                "Exploring colour schemes and palettes in Canva",
+                                "The role of forms and shapes in design",
+                                "Practical exercises on colour and form harmonization",
+                                "Designing for different environments and contexts"
                             ]
                         }
                     ]
@@ -104,12 +106,23 @@
                 "LU2": {
                     "Description": [
                         {
-                            "Topic": "Topic 2: Application Deployment (K3, A3)",
+                            "Topic": "Topic 3: Storyboarding and Flow Design in Canva (A3, K5)",
                             "Details": [
-                                "Use Kubernetes primitives to implement common deployment strategies (e.g. blue/green or canary)",
-                                "Understand Deployments and how to perform rolling updates",
-                                "Use the Helm package manager to deploy existing packages",
-                                "Kustomize"
+                                "Techniques for creating effective storyboards",
+                                "Developing task flows for visual projects",
+                                "Utilizing Canva for ideation and conceptualization",
+                                "Case Study of effective storyboard designs",
+                                "Hands-on exercises in storyboard creation"
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 4: Best Practices and Aesthetic Analysis in Canva (A4, A5)",
+                            "Details": [
+                                "Understanding and applying design best practices",
+                                "Techniques for aesthetic and functional analysis",
+                                "Critiquing and improving Canva projects",
+                                "Workshop on designing with user experience in mind",
+                                "Group activities for peer review and feedback"
                             ]
                         }
                     ]
@@ -117,42 +130,23 @@
                 "LU3": {
                     "Description": [
                         {
-                            "Topic": "Topic 3: Application Observability and Maintenance (K4, K6, A4)",
+                            "Topic": "Topic 5: Critical Review and Enhancement Strategies in Canva (A6, K2)",
                             "Details": [
-                                "Understand API deprecations",
-                                "Implement probes and health checks",
-                                "Use built-in CLI tools to monitor Kubernetes applications",
-                                "Utilize container logs",
-                                "Debugging in Kubernetes"
+                                "Methods for critiquing visual designs",
+                                "Strategies for effective visual communication",
+                                "Workshops on enhancing existing Canva designs",
+                                "Collaborative exercises for peer-to-peer learning",
+                                "Techniques for iterative design improvements"
                             ]
-                        }
-                    ]
-                },
-                "LU4": {
-                    "Description": [
+                        },
                         {
-                            "Topic": "Topic 4: Application Environment, Configuration and Security (K5, A5)",
+                            "Topic": "Topic 6: Innovative Approaches to Design in Canva (A7, K2)",
                             "Details": [
-                                "Discover and use resources that extend Kubernetes (CRD, Operators)",
-                                "Understand authentication, authorization and admission control",
-                                "Understand requests, limits, quotas",
-                                "Understand ConfigMaps",
-                                "Define resource requirements",
-                                "Create & consume Secrets",
-                                "Understand ServiceAccounts",
-                                "Understand Application Security (SecurityContexts, Capabilities, etc.)"
-                            ]
-                        }
-                    ]
-                },
-                "LU5": {
-                    "Description": [
-                        {
-                            "Topic": "Topic 5: Services and Networking (K7, A6)",
-                            "Details": [
-                                "Demonstrate basic understanding of NetworkPolicies",
-                                "Provide and troubleshoot access to applications via services",
-                                "Use Ingress rules to expose applications"
+                                "Developing innovative design strategies",
+                                "Exploring advanced features and tools in Canva",
+                                "Case Study of successful visual communication",
+                                "Group projects for practical application",
+                                "Presentations on innovative design solutions"
                             ]
                         }
                     ]
@@ -160,7 +154,7 @@
             }
         },
         "Instructional Methods": [
-            "Classroom",
+            "Lecture",
             "Didactic Questioning",
             "Demonstration",
             "Practical"

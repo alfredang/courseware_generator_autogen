@@ -5,7 +5,6 @@ import json
 import asyncio
 import os
 from dotenv import load_dotenv
-from utils.document_parser import parse_document
 
 load_dotenv()
 
@@ -24,210 +23,208 @@ config = {
 
 model_client = ChatCompletionClient.load_component(config)
 
-output_json = "json_output/output_TSC.json"
-# Load the JSON file into a Python variable
-with open(output_json, 'r', encoding='utf-8') as file:
-    data = json.load(file)
 
-course_info_extractor_message = f"""
-You are to extract the following variables from {data}:
-    1) Course Title
-    2) Name of Organisation
-    3) Classroom Hours
-    4) Number of Assessment Hours
-    5) Course Duration (Number of Hours)
-    6) Industry
+def extraction_task(data):
+    extraction_task = f"""
+    1. Extract data from the following JSON file: {data}
+    2. Map the extracted data according to the schemas.
+    3. Return a full JSON object with all the extracted data according to the schema.
+    """
+    return extraction_task
 
-    Use the term_library below for "Industry", based on the front 3 letters of the TSC code:
-    term_library = {{
-        'ACC': 'Accountancy',
-        'RET': 'Retail',
-        'MED': 'Media',
-        'ICT': 'Infocomm Technology',
-        'BEV': 'Built Environment',
-        'DSN': 'Design',
-        'DNS': 'Design',
-        'AGR': 'Agriculture',
-        'ELE': 'Electronics',
-        'LOG': 'Logistics',
-        'STP': 'Sea Transport',
-        'TOU': 'Tourism",
-        'AER': 'Aerospace',
-        'ATP': 'Air Transport',
-        'BEV': 'Built Environment',
-        'BPM': 'BioPharmaceuticals Manufacturing',
-        'ECM': 'Energy and Chemicals',
-        'EGS': 'Engineering Services',
-        'EPW': 'Energy and Power',
-        'EVS': 'Environmental Services',
-        'FMF': 'Food Manufacturing',
-        'FSE': 'Financial Services',
-        'FSS': 'Food Services',
-        'HAS': 'Hotel and Accommodation Services',
-        'HCE': 'Healthcare',
-        'HRS': 'Human Resource',
-        'INP': 'Intellectual Property',
-        'LNS': 'Landscape',
-        'MAR': 'Marine and Offshore',
-        'PRE': 'Precision Engineering',
-        'PTP': 'Public Transport',
-        'SEC': 'Security',
-        'SSC': 'Social Service',
-        'TAE': 'Training and Adult Education'
-        'WPH': 'Workplace Safety and Health'
-        'WST': 'Wholesale Trade'
-        'STP': 'Sea Transport',
-        'TOU': 'Tourism",
-        'ECC': 'Early Childhood Care and Education',
-        'ART': 'Arts'
+def create_extraction_team(data) -> RoundRobinGroupChat:
 
+    course_info_extractor_message = f"""
+    You are to extract the following variables from {data}:
+        1) Course Title
+        2) Name of Organisation
+        3) Classroom Hours
+        4) Number of Assessment Hours
+        5) Course Duration (Number of Hours)
+        6) Industry
 
-
-    }}
-    Format the extracted data in JSON format, with this structure, do NOT change the key names or add unnecessary spaces:
-        "Course Information": {{
-        "Course Title": "",
-        "Name of Organisation": "",
-        "Classroom Hours": ,
-        "Number of Assessment Hours": ,
-        "Course Duration (Number of Hours)": ,
-        "Industry": ""
-    }}
-    Extra emphasis on following the JSON format provided, do NOT change the names of the keys, never use "course_info" as the key name.
-"""
-
-learning_outcomes_extractor_message = f"""
-You are to extract the following variables from {data}:
-    1) Learning Outcomes, include the terms LO(x): in front of each learning outcome
-    2) Knowledge
-    3) Ability
-
-    Text Blocks which start with K or A and include a semicolon should be mapped under Knowledge (for K) and Ability (for A).
-
-    An example output is as follows:
-    "Learning Outcomes":  ["LO1: Calculate profitability ratios to assess an organization's financial health.", "LO2: Calculate performance ratios to evaluate an organization's overall financial performance."], 
-    "Knowledge": ["K1: Ratios for profitability\nK2: Ratios for performance"], 
-    "Ability": ["A1: Calculate ratios for assessing organisation's profitability\nA2: Calculate ratios for assessing organisation's financial performance"], 
+        Use the term_library below for "Industry", based on the front 3 letters of the TSC code:
+        term_library = {{
+            'ACC': 'Accountancy',
+            'RET': 'Retail',
+            'MED': 'Media',
+            'ICT': 'Infocomm Technology',
+            'BEV': 'Built Environment',
+            'DSN': 'Design',
+            'DNS': 'Design',
+            'AGR': 'Agriculture',
+            'ELE': 'Electronics',
+            'LOG': 'Logistics',
+            'STP': 'Sea Transport',
+            'TOU': 'Tourism",
+            'AER': 'Aerospace',
+            'ATP': 'Air Transport',
+            'BEV': 'Built Environment',
+            'BPM': 'BioPharmaceuticals Manufacturing',
+            'ECM': 'Energy and Chemicals',
+            'EGS': 'Engineering Services',
+            'EPW': 'Energy and Power',
+            'EVS': 'Environmental Services',
+            'FMF': 'Food Manufacturing',
+            'FSE': 'Financial Services',
+            'FSS': 'Food Services',
+            'HAS': 'Hotel and Accommodation Services',
+            'HCE': 'Healthcare',
+            'HRS': 'Human Resource',
+            'INP': 'Intellectual Property',
+            'LNS': 'Landscape',
+            'MAR': 'Marine and Offshore',
+            'PRE': 'Precision Engineering',
+            'PTP': 'Public Transport',
+            'SEC': 'Security',
+            'SSC': 'Social Service',
+            'TAE': 'Training and Adult Education'
+            'WPH': 'Workplace Safety and Health'
+            'WST': 'Wholesale Trade'
+            'STP': 'Sea Transport',
+            'TOU': 'Tourism",
+            'ECC': 'Early Childhood Care and Education',
+            'ART': 'Arts'
 
 
-    Format the extracted data in JSON format, with this structure:
-        "Learning Outcomes": {{
-        "Learning Outcomes": [
 
-        ],
-        "Knowledge": [
-
-        ],
-        "Ability": [
-        ]
         }}
-    }}
-"""
+        Format the extracted data in JSON format, with this structure, do NOT change the key names or add unnecessary spaces:
+            "Course Information": {{
+            "Course Title": "",
+            "Name of Organisation": "",
+            "Classroom Hours": ,
+            "Number of Assessment Hours": ,
+            "Course Duration (Number of Hours)": ,
+            "Industry": ""
+        }}
+        Extra emphasis on following the JSON format provided, do NOT change the names of the keys, never use "course_info" as the key name.
+    """
 
-tsc_and_topics_extractor_message = f"""
-You are to extract the following variables from {data}:
-    1) TSC Title
-    2) TSC Code
-    3) Topic (include the FULL string, including any K's and A's, only include items starting with "Topic" and not "LU" for this particular point)
-    4) Learning Units (do NOT include Topics under this point, do NOT include any brackets consisting of A's or K's), if there are no Learning Units (LUs) found, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics.
+    learning_outcomes_extractor_message = f"""
+    You are to extract the following variables from {data}:
+        1) Learning Outcomes, include the terms LO(x): in front of each learning outcome
+        2) Knowledge
+        3) Ability
 
-    An example output is as follows:
-    "TSC Title": "Financial Analysis",
-    "TSC Code": "ACC-MAC-3004-1.1",
-    "Topic": ["Topic 1 Assessing Organization’s Profitability (K1, A1)", "Topic 2 Evaluating an Organization’s Performance Using Ratio Analysis (K2, A2)"],
-    "Learning Units": ["LU1: Data Preparation for Machine Learning (ML)", "LU2: ML Model Development"]
+        Text Blocks which start with K or A and include a semicolon should be mapped under Knowledge (for K) and Ability (for A).
 
-    Format the extracted data in JSON format, with this structure:
-        "TSC and Topics": {{
-        "TSC Title": [
-            
-        ],
-        "TSC Code": [
-            
-        ],
-        "Topics": [
+        An example output is as follows:
+        "Learning Outcomes":  ["LO1: Calculate profitability ratios to assess an organization's financial health.", "LO2: Calculate performance ratios to evaluate an organization's overall financial performance."], 
+        "Knowledge": ["K1: Ratios for profitability\nK2: Ratios for performance"], 
+        "Ability": ["A1: Calculate ratios for assessing organisation's profitability\nA2: Calculate ratios for assessing organisation's financial performance"], 
 
-        ],
-        "Learning Units": [
 
-        ]
-    }}
-"""
+        Format the extracted data in JSON format, with this structure:
+            "Learning Outcomes": {{
+            "Learning Outcomes": [
 
-assessment_methods_extractor_message = f"""
-You are to extract the following variables from {data}:
-    1) Assessment Methods (remove the brackets and time values at the end of each string)
-    2) Instructional Methods
-    3) Amount of Practice Hours
-    4) Course Outline, which consists of Learning Units (LUs), Topics under that Learning Unit and their descriptions. A Learning Unit may have more than 1 topic, so nest that topic and its relevant descriptions under that as well.
+            ],
+            "Knowledge": [
 
-    Include the full topic names in Course Outline, including any bracketed K and A factors.
+            ],
+            "Ability": [
+            ]
+            }}
+        }}
+    """
 
-    Format the extracted data in JSON format, with this structure:
-        "Assessment Methods": {{
-        "Assessment Methods": [
-            "",
-            ""
-        ],
-        "Amount of Practice Hours": Insert "N.A." if not found or not specified,
-        "Course Outline": {{
-            "Learning Units": {{
-                "LU1": {{
-                    "Description": [
-                        ""
-                    ]
-                }},
-                "LU2": {{
-                    "Description": [
-                        {{
-                            "Topic": "Topic 1: Empathize and Define (K1, A1)",
-                            "Details": [
-                                "Techniques for understanding user needs",
-                                "Methods for defining clear problem statements",
-                                "Exercises: Empathy mapping and problem definition"
-                            ]
-                        }},
-                        {{
-                            "Topic": "Topic 2: Ideate and Prototype (K2, A2)",
-                            "Details": [
-                                "Strategies for brainstorming and generating creative solutions",
-                                "Steps to create and refine prototypes",
-                                "Activities: Brainstorming sessions and prototyping workshops"
-                            ]
-                        }},
-                        {{
-                            "Topic": "Topic 3: Test and Iterate (K3, A3)",
-                            "Details": [
-                                "Importance of gathering user feedback",
-                                "Methods for testing and iterating solutions",
-                                "Workshops: Testing prototypes and iterative improvements"
-                            ]
-                        }}                    
+    tsc_and_topics_extractor_message = f"""
+    You are to extract the following variables from {data}:
+        1) TSC Title
+        2) TSC Code
+        3) Topic (include the FULL string, including any K's and A's, only include items starting with "Topic" and not "LU" for this particular point)
+        4) Learning Units (do NOT include Topics under this point, do NOT include any brackets consisting of A's or K's), if there are no Learning Units (LUs) found, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics.
+
+        An example output is as follows:
+        "TSC Title": "Financial Analysis",
+        "TSC Code": "ACC-MAC-3004-1.1",
+        "Topic": ["Topic 1 Assessing Organization’s Profitability (K1, A1)", "Topic 2 Evaluating an Organization’s Performance Using Ratio Analysis (K2, A2)"],
+        "Learning Units": ["LU1: Data Preparation for Machine Learning (ML)", "LU2: ML Model Development"]
+
+        Format the extracted data in JSON format, with this structure:
+            "TSC and Topics": {{
+            "TSC Title": [
+                
+            ],
+            "TSC Code": [
+                
+            ],
+            "Topics": [
+
+            ],
+            "Learning Units": [
+
+            ]
+        }}
+    """
+
+    assessment_methods_extractor_message = f"""
+    You are to extract the following variables from {data}:
+        1) Assessment Methods (remove the brackets and time values at the end of each string)
+        2) Instructional Methods
+        3) Amount of Practice Hours
+        4) Course Outline, which consists of Learning Units (LUs), Topics under that Learning Unit and their descriptions. A Learning Unit may have more than 1 topic, so nest that topic and its relevant descriptions under that as well.
+
+        Include the full topic names in Course Outline, including any bracketed K and A factors.
+
+        Format the extracted data in JSON format, with this structure:
+            "Assessment Methods": {{
+            "Assessment Methods": [
+                "",
+                ""
+            ],
+            "Amount of Practice Hours": Insert "N.A." if not found or not specified,
+            "Course Outline": {{
+                "Learning Units": {{
+                    "LU1": {{
+                        "Description": [
+                            ""
                         ]
+                    }},
+                    "LU2": {{
+                        "Description": [
+                            {{
+                                "Topic": "Topic 1: Empathize and Define (K1, A1)",
+                                "Details": [
+                                    "Techniques for understanding user needs",
+                                    "Methods for defining clear problem statements",
+                                    "Exercises: Empathy mapping and problem definition"
+                                ]
+                            }},
+                            {{
+                                "Topic": "Topic 2: Ideate and Prototype (K2, A2)",
+                                "Details": [
+                                    "Strategies for brainstorming and generating creative solutions",
+                                    "Steps to create and refine prototypes",
+                                    "Activities: Brainstorming sessions and prototyping workshops"
+                                ]
+                            }},
+                            {{
+                                "Topic": "Topic 3: Test and Iterate (K3, A3)",
+                                "Details": [
+                                    "Importance of gathering user feedback",
+                                    "Methods for testing and iterating solutions",
+                                    "Workshops: Testing prototypes and iterative improvements"
+                                ]
+                            }}                    
+                            ]
+                    }}
+                    }}
                 }}
+            Instructional Methods: ""
                 }}
-            }}
-        Instructional Methods: ""
-            }}
-    
-"""
+        
+    """
 
-aggregator_message = f"""
-You are to combine the outputs from the following agents into a single JSON object, do NOT aggregate output from the validator agent:
-    1) course_info_extractor
-    2) learning_outcomes_extractor
-    3) tsc_and_topics_extractor
-    4) assessment_methods_extractor
-Return the combined output into a single JSON file, do not alter the keys in any way, do not add or nest any keys.
-"""
-
-extraction_task = f"""
-1. Extract data from the following JSON file: {data}
-2. Map the extracted data according to the schemas.
-3. Return a full JSON object with all the extracted data according to the schema.
-"""
-
-def create_extraction_team() -> RoundRobinGroupChat:
+    aggregator_message = f"""
+    You are to combine the outputs from the following agents into a single JSON object, do NOT aggregate output from the validator agent:
+        1) course_info_extractor
+        2) learning_outcomes_extractor
+        3) tsc_and_topics_extractor
+        4) assessment_methods_extractor
+    Return the combined output into a single JSON file, do not alter the keys in any way, do not add or nest any keys.
+    """
 
     course_info_extractor = AssistantAgent(
         name="course_info_extractor",

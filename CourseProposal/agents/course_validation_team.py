@@ -5,7 +5,6 @@ import json
 import asyncio
 import os
 from dotenv import load_dotenv
-from utils.document_parser import parse_document
 import sys
 
 load_dotenv()
@@ -25,83 +24,71 @@ config = {
 
 model_client = ChatCompletionClient.load_component(config)
 
-# # Extract command-line arguments
-# input_docx = sys.argv[1]
-# output_json = sys.argv[2]
-# word_template_1 = sys.argv[3]
-# word_template_2 = sys.argv[4]
-# word_template_3 = sys.argv[5]
-# output_directory = sys.argv[6]
+def validation_task(ensemble_output):
+    validation_task = f"""
+    1. Extract data from the following JSON file: {ensemble_output}
+    2. Generate 3 distinct sets of answers to two specific survey questions. 
+    3. Map the extracted data according to the schemas.
+    4. Return a full JSON object with all the extracted data according to the schema.
+    """
+    return validation_task
 
-output_json = "json_output/ensemble_output.json"
+def create_course_validation_team(ensemble_output) -> RoundRobinGroupChat:
 
-# Load the JSON file into a Python variable
-with open(output_json, 'r', encoding="utf-8") as file:
-    ensemble_output = json.load(file)
+    # insert research analysts
+    analyst_message = f"""
+    Using the following information from {ensemble_output}:
+    1. Course title (e.g., "Data Analytics for Business")
+    2. Industry (e.g., "Retail")
+    3. Learning outcomes expected from the course (e.g., "Better decision-making using data, automation of business reports")
 
-# insert research analysts
-analyst_message = f"""
-Using the following information from {ensemble_output}:
-1. Course title (e.g., "Data Analytics for Business")
-2. Industry (e.g., "Retail")
-3. Learning outcomes expected from the course (e.g., "Better decision-making using data, automation of business reports")
+    Generate 3 distinct sets of answers to two specific survey questions.
+    Survey Questions and Structure:
 
-Generate 3 distinct sets of answers to two specific survey questions.
-Survey Questions and Structure:
+    {{
+    Question 1: What are the performance gaps in the industry?
+    Question 1 Guidelines: You are to provide a short description (1-2 paragraphs) of what the key performance issues are within the specified industry. This will be based on general industry knowledge, considering the context of the course.
 
-{{
-Question 1: What are the performance gaps in the industry?
-Question 1 Guidelines: You are to provide a short description (1-2 paragraphs) of what the key performance issues are within the specified industry. This will be based on general industry knowledge, considering the context of the course.
+    Question 2: Why you think this WSQ course will address the training needs for the industry?
+    Question 2 Guidelines: You are to explain in a short paragraph (1-2 paragraphs) how the course you mentioned can help address those performance gaps in the industry. Each response will be tied to one or two of the learning outcomes you provided, without directly mentioning them.
 
-Question 2: Why you think this WSQ course will address the training needs for the industry?
-Question 2 Guidelines: You are to explain in a short paragraph (1-2 paragraphs) how the course you mentioned can help address those performance gaps in the industry. Each response will be tied to one or two of the learning outcomes you provided, without directly mentioning them.
+    }}
 
-}}
+    Rules for Each Response:
+    Distinct Answers: You will provide three different answers by focusing on different learning outcomes in each response.
+    Concise Structure: Each response will have no more than two paragraphs, with each paragraph containing fewer than 120 words.
 
-Rules for Each Response:
-Distinct Answers: You will provide three different answers by focusing on different learning outcomes in each response.
-Concise Structure: Each response will have no more than two paragraphs, with each paragraph containing fewer than 120 words.
+    No Mention of Certain Elements:
+    You won't mention the specific industry in the response.
+    You won't mention or restate the learning outcomes explicitly.
+    You won't indicate that I am acting in a director role.
 
-No Mention of Certain Elements:
-You won't mention the specific industry in the response.
-You won't mention or restate the learning outcomes explicitly.
-You won't indicate that I am acting in a director role.
+    You are to output your response in this JSON format, do not change the keys:
+    Output Format (for each of the 3 sets):
+    What are the performance gaps in the industry?
+    [Answer here based on the industry and course details you provide]
 
-You are to output your response in this JSON format, do not change the keys:
-Output Format (for each of the 3 sets):
-What are the performance gaps in the industry?
-[Answer here based on the industry and course details you provide]
+    Why do you think this WSQ course will address the training needs for the industry?
+    [Answer here showing how the course helps address the gaps based on relevant learning outcomes]
 
-Why do you think this WSQ course will address the training needs for the industry?
-[Answer here showing how the course helps address the gaps based on relevant learning outcomes]
+    By following these steps, you aim to provide actionable insights that match the course content to the training needs within the specified industry.
+    """
 
-By following these steps, you aim to provide actionable insights that match the course content to the training needs within the specified industry.
-"""
+    editor_message = f"""
+    You are to combine the outputs from the following agents into a single JSON object, do NOT aggregate output from the validator agent:
+        1) analyst
+    Return the combined output into a single JSON file.
 
-editor_message = f"""
-You are to combine the outputs from the following agents into a single JSON object, do NOT aggregate output from the validator agent:
-    1) analyst
-Return the combined output into a single JSON file.
-
-Follow this structure and naming convention below:
-{{
-    "analyst_responses": [
-        {{
-            "What are the performance gaps in the industry?": "",
-            "Why do you think this WSQ course will address the training needs for the industry?": ""
-        }}
-    ]
-}}
-"""
-
-validation_task = f"""
-1. Extract data from the following JSON file: {ensemble_output}
-2. Generate 3 distinct sets of answers to two specific survey questions. 
-3. Map the extracted data according to the schemas.
-4. Return a full JSON object with all the extracted data according to the schema.
-"""
-
-def create_course_validation_team() -> RoundRobinGroupChat:
+    Follow this structure and naming convention below:
+    {{
+        "analyst_responses": [
+            {{
+                "What are the performance gaps in the industry?": "",
+                "Why do you think this WSQ course will address the training needs for the industry?": ""
+            }}
+        ]
+    }}
+    """
 
     analyst = AssistantAgent(
         name="analyst",
