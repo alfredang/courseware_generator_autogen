@@ -1,23 +1,17 @@
 from llama_index.llms.openai import OpenAI as llama_openai
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
-from autogen import AssistantAgent, UserProxyAgent
-from autogen.cache import Cache
+from autogen_agentchat.agents import AssistantAgent
+from autogen_core import CancellationToken
+from autogen_agentchat.messages import TextMessage
 import streamlit as st
 import json
 import re
 import pprint
 
-# import os
-# from llama_index.core.response.pprint_utils import pprint_response
-# from llama_index.postprocessor.cohere_rerank import CohereRerank
+async def generate_saq(extracted_data, index, model_client):
+    openai_api_key = st.secrets("OPENAI_API_KEY")
 
-# api_key = st.secrets["COHERE_API_KEY"]
-# cohere_rerank = CohereRerank(api_key=api_key, top_n=2)
-
-def generate_saq(extracted_data, index, llm_config):
-    openai_api_key = llm_config["config_list"][0]["api_key"]
-
-    system_prompt = """\
+    system_prompt = """
     You are a content retrieval assistant. Your role is to retrieve topic content that aligns strictly with the specified Knowledge Statement.
 
     Your role:
@@ -53,17 +47,10 @@ def generate_saq(extracted_data, index, llm_config):
     )
     retrieved_content = retrieve_content_for_knowledge_statement(extracted_data, ks_generation_query_engine)
 
-    user_proxy_agent = UserProxyAgent(
-        name="user_proxy",
-        human_input_mode="NEVER",   
-        max_consecutive_auto_reply=5,
-        is_termination_msg=lambda msg: msg.get("content", "") and "TERMINATE" in msg["content"],
-        code_execution_config={"work_dir": "output", "use_docker": False, "response_format": {"type": "json_object"}}
-    )
-
     # Autogen setup
     qa_generation_agent = AssistantAgent(
         name="question_answer_generator",
+        model_client=model_client,
         system_message=f"""
         You are an expert educator in '{extracted_data.course_title}'. 
         You will create knowledge-based scenario question-answer pairs based on the retrieved content.
@@ -113,47 +100,42 @@ def generate_saq(extracted_data, index, llm_config):
         
         7. Return the JSON between triple backticks followed by 'TERMINATE'.
         """,
-        llm_config=llm_config,
     )
     assessment_duration = ""
     for assessment in extracted_data.assessments:
         if "SAQ" in assessment.code:
             assessment_duration = assessment.duration
 
-    with Cache.disk() as cache:
-        chat_result = user_proxy_agent.initiate_chat(
-            qa_generation_agent,
-            message=f"""
-            Please generate the questions and answers using the following course title: '{extracted_data.course_title}', 
-            assessment duration: '{assessment_duration}', and topic contents: {retrieved_content}.
-            Ensure suggestive answers are provided as bullet points, concise and practical, covering key aspects of the knowledge statement.
-            Phrase questions in alignment with Bloom's Taxonomy Level: {extracted_data.tsc_proficiency_level}.
-            If any part of an answer cannot be found in the retrieved content, explicitly state that 'The retrieved content does not include that (information).'
-            Bloom's Taxonomy Levels:
-                Level 1: Remembering
-                Level 2: Understanding
-                Level 3: Applying
-                Level 4: Analyzing
-                Level 5: Evaluating
-                Level 6: Creating
-            Return the output in JSON string format with specific detailed answers as bullet points.
-            RETURN 'TERMINATE' once the generation is complete.
-            """,
-            summary_method="reflection_with_llm",
-            cache=cache,
+    agent_task=f"""
+        Please generate the questions and answers using the following course title: '{extracted_data.course_title}', 
+        assessment duration: '{assessment_duration}', and topic contents: {retrieved_content}.
+        Ensure suggestive answers are provided as bullet points, concise and practical, covering key aspects of the knowledge statement.
+        Phrase questions in alignment with Bloom's Taxonomy Level: {extracted_data.tsc_proficiency_level}.
+        If any part of an answer cannot be found in the retrieved content, explicitly state that 'The retrieved content does not include that (information).'
+        Bloom's Taxonomy Levels:
+            Level 1: Remembering
+            Level 2: Understanding
+            Level 3: Applying
+            Level 4: Analyzing
+            Level 5: Evaluating
+            Level 6: Creating
+        Return the question and answer as a JSON object directly.
+        """
+    
+    # Process sample input
+    response = await qa_generation_agent.on_messages(
+        [TextMessage(content=agent_task, source="user")], CancellationToken()
     )
     try:
-        last_message_content = chat_result.chat_history[-1].get("content", "")
-        if not last_message_content:
+        if not response.chat_message.content:
             print("No content found in the agent's last message.")
-        last_message_content = last_message_content.strip()
+        json_content = response.chat_message.content.strip()
         json_pattern = re.compile(r'```json\s*(\{.*?\})\s*```', re.DOTALL)
-        json_match = json_pattern.search(last_message_content)
+        json_match = json_pattern.search(json_content)
         if json_match:
             json_str = json_match.group(1)
             context = json.loads(json_str)
             print(f"CONTEXT JSON MAPPING: \n\n{context}")
-        pprint.pprint(f"SAQ cost: {chat_result.cost}")
     except json.JSONDecodeError as e:
         print(f"Error parsing context JSON: {e}")
     return context

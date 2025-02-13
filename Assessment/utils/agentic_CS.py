@@ -3,13 +3,14 @@ import re
 import json
 import pprint
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
-from autogen import AssistantAgent, UserProxyAgent
-from autogen.cache import Cache
+from autogen_agentchat.agents import AssistantAgent
+from autogen_core import CancellationToken
+from autogen_agentchat.messages import TextMessage
 from llama_index.llms.openai import OpenAI as llama_openai
 
-def generate_cs(extracted_data, index, llm_config):
-    openai_api_key = llm_config["config_list"][0]["api_key"]
-    system_prompt = """\
+async def generate_cs(extracted_data, index, model_client):
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    system_prompt = """
     You are an instructional design assistant tasked with generating concise, realistic, and practical scenario-based question-answer pairs for educational purposes.
 
     Your role:
@@ -44,7 +45,7 @@ def generate_cs(extracted_data, index, llm_config):
     # Generate the shared scenario
     scenario = generate_case_study_scenario(extracted_data, scenario_query_engine)
 
-    system_prompt = """\
+    system_prompt = """
     You are an instructional design assistant tasked with generating concise, realistic, and practical scenario-based question-answer pairs for educational purposes.
 
     Your role:
@@ -78,17 +79,10 @@ def generate_cs(extracted_data, index, llm_config):
     retrieved_content = retrieve_content_for_learning_outcomes(extracted_data, qa_generation_query_engine)
     pprint.pprint(retrieved_content)
 
-    user_proxy_agent = UserProxyAgent(
-        name="user_proxy",
-        human_input_mode="NEVER",
-        max_consecutive_auto_reply=5,
-        is_termination_msg=lambda msg: msg.get("content", "") and "TERMINATE" in msg["content"],
-        code_execution_config={"work_dir": "output", "use_docker": False, "response_format": {"type": "json_object"}}
-    )
-
     # Autogen setup
     qa_generation_agent = AssistantAgent(
         name="question_answer_generator",
+        model_client=model_client,
         system_message=f"""
         You are an expert educator in '{extracted_data.course_title}'. You will create scenario-based case study question-answer pairs based on course data.
         The data will include:
@@ -123,47 +117,41 @@ def generate_cs(extracted_data, index, llm_config):
             }}
             ```
         """,
-        llm_config=llm_config,
     )
     assessment_duration = ""
     for assessment in extracted_data.assessments:
         if "CS" in assessment.code:
             assessment_duration = assessment.duration
+    
+    agent_task = f"""
+        Please generate the questions and answer using the following course title:'{extracted_data.course_title}', assessment_duration:'{assessment_duration}', scenario: '{scenario}' and topic contents:{retrieved_content}
+        Phrase your question in accordance with the Bloom's Taxonomy Level: {extracted_data.tsc_proficiency_level}
+        Bloom's Taxonomy Level Information:
+            Level 1: Remembering
+            Level 2: Understanding
+            Level 3: Applying
+            Level 4: Analyzing
+            Level 5: Evaluating
+            Level 6: Creating
+        Return the question and answer as a JSON object directly.
+    """
 
-    with Cache.disk() as cache:
-        chat_result = user_proxy_agent.initiate_chat(
-            qa_generation_agent,
-            message=f"""
-            Please generate the questions and answer using the following course title:'{extracted_data.course_title}', assessment_duration:'{assessment_duration}', scenario: '{scenario}' and topic contents:{retrieved_content}
-            Phrase your question in accordance with the Bloom's Taxonomy Level: {extracted_data.tsc_proficiency_level}
-            Bloom's Taxonomy Level Information:
-                Level 1: Remembering
-                Level 2: Understanding
-                Level 3: Applying
-                Level 4: Analyzing
-                Level 5: Evaluating
-                Level 6: Creating
-            Return the question and answer as a JSON string containing the specified fields.
-            RETURN 'TERMINATE' once the generation is done.
-            """,
-            summary_method="reflection_with_llm",
-            cache=cache,
+    # Process sample input
+    response = await qa_generation_agent.on_messages(
+        [TextMessage(content=agent_task, source="user")], CancellationToken()
     )
     try:
-        last_message_content = chat_result.chat_history[-1].get("content", "")
-        if not last_message_content:
+        if not response.chat_message.content:
             print("No content found in the agent's last message.")
-        last_message_content = last_message_content.strip()
+        json_content = response.chat_message.content.strip()
         json_pattern = re.compile(r'```json\s*(\{.*?\})\s*```', re.DOTALL)
-        json_match = json_pattern.search(last_message_content)
+        json_match = json_pattern.search(json_content)
         if json_match:
             json_str = json_match.group(1)
             context = json.loads(json_str)
             print(f"CONTEXT JSON MAPPING: \n\n{context}")
-        pprint.pprint(f"CS cost: {chat_result.cost}")
     except json.JSONDecodeError as e:
         print(f"Error parsing context JSON: {e}")
-
     return context
 
 # Generate a detailed scenario for the case study
@@ -189,15 +177,16 @@ def generate_case_study_scenario(data: FacilitatorGuideExtraction, engine) -> st
     outcomes_text = "\n".join([f"- {lo}" for lo in learning_outcomes])
     abilities_text = "\n".join([f"- {ability}" for ability in abilities])
 
-    prompt = (
-        f"You are tasked with designing a concise, realistic case study scenario for the course '{course_title}'.\n\n"
-        f"The scenario should align with the following:\n\n"
-        f"Learning Outcomes:\n{outcomes_text}\n\n"
-        f"Abilities:\n{abilities_text}\n\n"
-        f"Bloom's Taxonomy Level:\n{bloom_taxonomy_level}\n\n"
-        "The scenario should describe a company or organization facing challenges related to communication, collaboration, or customer satisfaction. "
-        "Ensure the scenario is realistic and practical, and keep it to 1-2 paragraphs without markdown elements or formatting."
-    )
+    prompt = f"""
+        You are tasked with designing a concise, realistic case study scenario for the course '{course_title}'.
+        The scenario should align with the following:
+        Learning Outcomes:{outcomes_text}
+        Abilities:{abilities_text}
+        Bloom's Taxonomy Level:{bloom_taxonomy_level}
+        The scenario should describe a company or organization facing challenges related to communication, collaboration, or customer satisfaction.
+        Ensure the scenario is realistic and practical, and keep it to 1-2 paragraphs without markdown elements or formatting.
+    """
+    
     response = engine.query(prompt)
     return response.response.strip()
 
@@ -222,7 +211,7 @@ def retrieve_content_for_learning_outcomes(extracted_data, engine):
             ability_ids.extend([ability.id for ability in topic.tsc_abilities])
 
         # Define the content retrieval prompt
-        retrieval_prompt = (
+        retrieval_prompt =(
             f"Retrieve the most relevant inline segments aligned to Learning Outcome: {learning_outcome}\n"
             f"Associated Abilities:\n"
             + "\n".join([f"- [{ability.id}] {ability.text}" for ability in associated_abilities])

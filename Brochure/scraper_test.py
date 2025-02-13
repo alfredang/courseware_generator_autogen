@@ -15,6 +15,7 @@ class CourseData(BaseModel):
     learning_outcomes: List[str]
     tsc_title: str
     tsc_code: str
+    tsc_framework: str
     wsq_funding: dict
     tgs_reference_no: str
     gst_exclusive_price: str
@@ -61,23 +62,17 @@ try:
         learning_outcomes = []
         print(f"Error extracting learning outcomes: NOT APPLICABLE OR NOT FOUND")
 
-    # Extract Skills Framework (TSC Title and TSC Code)
+    # Extract TSC Title and TSC Code
     try:
-        skills_framework_text = driver.find_element(
-            By.XPATH, "//h2[contains(text(), 'Skills Framework')]/following-sibling::p"
-        ).text.strip()
-        # Extract TSC Title and TSC Code using regex
+        skills_framework_text = driver.find_element(By.XPATH, "//h2[contains(text(), 'Skills Framework')]/following-sibling::p").text.strip()
         match = re.search(r"guideline of\s+(.*?)\s+(\S+)\s+under", skills_framework_text)
-        if match:
-            tsc_title = match.group(1).strip()
-            tsc_code = match.group(2).strip()
-        else:
-            tsc_title = "Not Available"
-            tsc_code = "Not Available"
-    except Exception as e:
-        tsc_title = "Not Applicable"
-        tsc_code = "Not Applicable"
-        print(f"Error extracting Skills Framework: NOT APPLICABLE OR NOT FOUND")
+        tsc_title = match.group(1).strip() if match else "Not Applicable"
+        tsc_code = match.group(2).strip() if match else "Not Applicable"
+        # Now extract the framework (e.g., "Human Resource" from "under Human Resource Skills Framework")
+        framework_match = re.search(r"under\s+(.+?)\s+Skills\s+Framework", skills_framework_text, re.IGNORECASE)
+        tsc_framework = framework_match.group(1).strip() if framework_match else "Not Applicable"
+    except:
+        tsc_title, tsc_code, tsc_framework = "Not Applicable", "Not Applicable", "Not Applicable"
 
     # Extract WSQ Funding table, including Effective Date
     wsq_funding = {}
@@ -204,6 +199,7 @@ try:
         learning_outcomes=learning_outcomes,
         tsc_title=tsc_title,
         tsc_code=tsc_code,
+        tsc_framework=tsc_framework,
         wsq_funding=wsq_funding,
         tgs_reference_no=tgs_reference,
         gst_exclusive_price=gst_exclusive,
@@ -217,7 +213,9 @@ try:
     print("Course Description:", course_data.course_description)
     print("\nLearning Outcomes:", course_data.learning_outcomes)
     print("\nTSC Title:", course_data.tsc_title)
-    print("TSC Code:", course_data.tsc_code)
+    print("\nTSC Code:", course_data.tsc_code)
+    print("\nTSC_Framework:", course_data.tsc_framework),
+
     print("\nWSQ Funding:", course_data.wsq_funding)
     print("\nTGS Reference No.:", course_data.tgs_reference_no)
     print("\nCourse Booking:")
