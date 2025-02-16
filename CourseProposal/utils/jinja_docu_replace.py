@@ -40,7 +40,7 @@ def replace_placeholders_with_docxtpl(json_path, doc_path, new_doc_name):
     print(json.dumps(context, indent=4))  # Prints the context in a readable format to the console
 
     # Alternatively, write the context to a file for inspection
-    with open('json_output/context_output.json', 'w') as outfile:
+    with open('CourseProposal/json_output/context_output.json', 'w') as outfile:
         json.dump(context, outfile, indent=4)
     print("Context written to 'context_output.json'")
 
