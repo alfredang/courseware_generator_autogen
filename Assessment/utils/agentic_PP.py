@@ -2,6 +2,7 @@ import os
 import re
 import json
 import pprint
+import streamlit as st
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken
@@ -9,7 +10,7 @@ from autogen_agentchat.messages import TextMessage
 from llama_index.llms.openai import OpenAI as llama_openai
 
 async def generate_pp(extracted_data, index, model_client):
-    openai_api_key = os.getenv("OPENAI_API_KEY")
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
     system_prompt = """
     You are an instructional design assistant tasked with generating concise, realistic, and practical scenario-based question-answer pairs for educational purposes.
 

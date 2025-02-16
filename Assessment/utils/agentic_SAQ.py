@@ -9,7 +9,7 @@ import re
 import pprint
 
 async def generate_saq(extracted_data, index, model_client):
-    openai_api_key = st.secrets("OPENAI_API_KEY")
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
 
     system_prompt = """
     You are a content retrieval assistant. Your role is to retrieve topic content that aligns strictly with the specified Knowledge Statement.
