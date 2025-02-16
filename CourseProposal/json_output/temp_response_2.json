@@ -3,17 +3,17 @@
         "Course Title": "AZ-900 Microsoft Azure Fundamentals Certification",
         "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Assess cloud solutions and specifications for Azure cloud computing.",
-            "LO2: Develop an implementation plan for implementing Azure cloud computing.",
-            "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
+            "LO1 \u2013 Assess cloud solutions and specifications for Azure cloud computing.",
+            "LO2 - Develop an implementation plan for implementing Azure cloud computing",
+            "LO3 - Develop review processes to resolve Azure cloud computing implementation issues."
         ],
         "TSC Title": "Cloud Computing",
         "TSC Code": "ICT-DIT-4020-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "A prevalent issue in the industry is the inadequate integration of existing systems with cloud computing components. This often leads to compatibility problems and hinders the full utilization of cloud capabilities. Furthermore, organizations frequently lack the necessary skills to conduct impact analysis, which is crucial for understanding the implications of cloud adoption on their operations.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course equips participants with the skills to draft specifications that address performance and security requirements, ensuring that cloud solutions are tailored to organizational needs. Additionally, it emphasizes the importance of aligning existing systems with cloud components, which can significantly improve integration and overall system performance."
+            "What are the performance gaps in the industry?": "A significant challenge is the difficulty in migrating existing systems to the cloud seamlessly. This often results in compatibility issues and prolonged downtime, impacting business continuity. Furthermore, many organizations lack standardized processes for deploying and managing cloud resources, leading to inconsistencies and inefficiencies. Insufficient planning for scalability and disaster recovery is another common oversight.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This WSQ course teaches the creation of detailed implementation plans to integrate cloud solutions into existing systems and workflows effectively. Focusing on the practical aspects of deploying and managing cloud resources ensures minimal disruption during the transition. Professionals will develop skills in testing and aligning current infrastructures with new cloud components, improving overall operational efficiency and system reliability, therefore addressing the performance gap of seamless system migration."
         }
     ]
 }

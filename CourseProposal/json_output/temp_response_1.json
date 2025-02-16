@@ -3,17 +3,17 @@
         "Course Title": "AZ-900 Microsoft Azure Fundamentals Certification",
         "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Assess cloud solutions and specifications for Azure cloud computing.",
-            "LO2: Develop an implementation plan for implementing Azure cloud computing.",
-            "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
+            "LO1 \u2013 Assess cloud solutions and specifications for Azure cloud computing.",
+            "LO2 - Develop an implementation plan for implementing Azure cloud computing",
+            "LO3 - Develop review processes to resolve Azure cloud computing implementation issues."
         ],
         "TSC Title": "Cloud Computing",
         "TSC Code": "ICT-DIT-4020-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "The industry faces significant challenges in effectively leveraging cloud solutions, leading to inefficiencies and missed opportunities. Many organizations struggle with understanding the requirements for cloud implementation, resulting in poorly designed systems that do not meet business needs. Additionally, there is a lack of standardized processes for assessing cloud performance, which can lead to inconsistent results and increased operational costs.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course provides essential knowledge on assessing cloud solutions, enabling participants to identify and address performance issues effectively. By developing a structured implementation plan, organizations can align their cloud strategies with business objectives, ultimately enhancing operational efficiency and reducing costs."
+            "What are the performance gaps in the industry?": "Many companies struggle with inefficient IT infrastructure, leading to increased operational costs and slower response times to market changes. There's also a lack of expertise in leveraging cloud technologies for scalability and innovation, which hinders their ability to compete effectively. Data security and compliance concerns further exacerbate these issues, often resulting in costly breaches and regulatory penalties.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course equips professionals with the skills to understand and specify cloud solutions tailored to their business needs, considering usage patterns, performance expectations, and stringent security requirements. By learning to assess existing systems and determine the best fit for cloud integration, organizations can optimize their resource allocation and improve overall performance. The ability to draft precise specifications will enable the deployment of robust and secure cloud solutions that align with business goals."
         }
     ]
 }

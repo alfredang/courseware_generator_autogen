@@ -64,8 +64,6 @@ def validate_knowledge_and_ability():
         print(f"ERROR: {str(e)}")
         sys.exit(error_message)
 
-import json
-
 
 def extract_final_aggregator_json(file_path: str = "group_chat_state.json"):
     """
@@ -118,18 +116,6 @@ def extract_final_aggregator_json(file_path: str = "group_chat_state.json"):
     except json.JSONDecodeError:
         print("Failed to parse aggregator content as valid JSON.")
         return None
-
-# Example usage:
-# aggregator_json = extract_final_aggregator_json("group_chat_state.json")
-# print(aggregator_json)
-#
-# If you want to parse and save it as JSON:
-# try:
-#     aggregator_data = json.loads(aggregator_json)
-#     with open("final_aggregator_output.json", "w", encoding="utf-8") as out:
-#         json.dump(aggregator_data, out, indent=2)
-# except json.JSONDecodeError:
-#     print("Failed to parse aggregator content as valid JSON.")
 
 def extract_final_editor_json(file_path: str = "research_group_chat_state.json"):
     """
@@ -442,3 +428,14 @@ def append_validation_output(
         json.dump(existing_data, out_f, indent=2)
 
     print(f"Updated validation data saved to {validation_output_path}.")
+
+def safe_json_loads(json_str):
+    """Fix common JSON issues like unescaped quotes before parsing."""
+    # Escape unescaped double quotes within strings
+    json_str = re.sub(r'(?<!\\)"(?![:,}\]\s])', r'\"', json_str)
+    try:
+        return json.loads(json_str)
+    except json.JSONDecodeError as e:
+        print(f"JSON Parsing Error: {e}")
+        return None
+    

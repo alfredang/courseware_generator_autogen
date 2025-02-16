@@ -23,6 +23,7 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
         1. If there are no LU's present, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics. Ignore this instruction if there are LUs present.
         2. Ensure that any mention of "Topic" is followed by a number and a colon.
         2.5. Ensure that any mention of "LU" is followed by a number and a colon.
+        2.6. Ensure that the A and K factors are followed by a number and a colon.
         3. Ensure that the K and A factors are correctly mapped to the LUs in brackets.
         4. Catch and amend any spelling errors to the following words:
         Instructional Methods:
@@ -64,15 +65,15 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
                     "TSC Title: Digital Technology Adoption and Innovation",
                     "TSC Code: ACC-ICT-3004-1.1",
                     "TSC Knowledge:",
-                    "K1 Relevant systems and software",
-                    "K2 Organisation's processes",
-                    "K3 Strengths and weaknesses of existing software and systems",
-                    "K4 Emerging technological trends such as block chain, machine learning, artificial intelligence,",
+                    "K1: Relevant systems and software",
+                    "K2: Organisation's processes",
+                    "K3: Strengths and weaknesses of existing software and systems",
+                    "K4: Emerging technological trends such as block chain, machine learning, artificial intelligence,",
                     "TSC Abilities:",
-                    "A1 Identify issues in the existing software and systems",
-                    "A2 Seek potential IT solutions to resolve issues or for systems upgrading",
-                    "A3 Propose to management on suitable IT solutions for the organisation",
-                    "A4 Keep up to date with new technologies and systems",
+                    "A1: Identify issues in the existing software and systems",
+                    "A2: Seek potential IT solutions to resolve issues or for systems upgrading",
+                    "A3: Propose to management on suitable IT solutions for the organisation",
+                    "A4: Keep up to date with new technologies and systems",
                     "Learning Units"
                 ],
                 "LU1: Introduction to Copilot (K1, K3, A1, A3)": [
