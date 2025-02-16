@@ -12,7 +12,7 @@ import os
 
 async def create_course_validation(model_choice: str) -> None:
     # Load the JSON file into a Python variable
-    with open('json_output/ensemble_output.json', 'r', encoding="utf-8") as file:
+    with open('CourseProposal/json_output/ensemble_output.json', 'r', encoding="utf-8") as file:
         ensemble_output = json.load(file)    
     # Course Validation Form Process
     validation_group_chat = create_course_validation_team(ensemble_output, model_choice=model_choice)
@@ -21,22 +21,22 @@ async def create_course_validation(model_choice: str) -> None:
 
     # Validation Team JSON management
     state = await validation_group_chat.save_state()
-    with open("json_output/validation_group_chat_state.json", "w") as f:
+    with open("CourseProposal/json_output/validation_group_chat_state.json", "w") as f:
         json.dump(state, f)
-    editor_data = extract_final_editor_json("json_output/validation_group_chat_state.json")
-    with open("json_output/validation_output.json", "w", encoding="utf-8") as out:
+    editor_data = extract_final_editor_json("CourseProposal/json_output/validation_group_chat_state.json")
+    with open("CourseProposal/json_output/validation_output.json", "w", encoding="utf-8") as out:
         json.dump(editor_data, out, indent=2)
     append_validation_output(
-        "json_output/ensemble_output.json",
-        "json_output/validation_output.json",
+        "CourseProposal/json_output/ensemble_output.json",
+        "CourseProposal/json_output/validation_output.json",
     )
-    with open('json_output/validation_output.json', 'r') as file:
+    with open('CourseProposal/json_output/validation_output.json', 'r') as file:
         validation_output = json.load(file)
     # If validation_output is a JSON string, parse it first
     if isinstance(validation_output, str):
         validation_output = json.loads(validation_output)   
     # Load mapping template with key:empty list pair
-    with open('json_output/validation_mapping_source.json', 'r') as file:
+    with open('CourseProposal/json_output/validation_mapping_source.json', 'r') as file:
         validation_mapping_source = json.load(file) 
     # Step 2: Loop through the responses and create three different output documents
     responses = validation_output.get('analyst_responses', [])
@@ -45,9 +45,9 @@ async def create_course_validation(model_choice: str) -> None:
         sys.exit(1)
 
     # load CV templates
-    CV_template_1 = "templates/CP_validation_template_bernard.docx"
-    CV_template_2 = "templates/CP_validation_template_dwight.docx"
-    CV_template_3 = "templates/CP_validation_template_ferris.docx"
+    CV_template_1 = "CourseProposal/templates/CP_validation_template_bernard.docx"
+    CV_template_2 = "CourseProposal/templates/CP_validation_template_dwight.docx"
+    CV_template_3 = "CourseProposal/templates/CP_validation_template_ferris.docx"
     CV_templates = [CV_template_1, CV_template_2, CV_template_3]
     # Iterate over responses and templates
     for i, (response, CV_template) in enumerate(zip(responses[:3], CV_templates), 1):
@@ -57,7 +57,7 @@ async def create_course_validation(model_choice: str) -> None:
             print(f"Error: 'course_info' is missing from the JSON data during iteration {i}.")
             sys.exit(1)
         # Create a temporary JSON file for the current response
-        temp_response_json = f"json_output/temp_response_{i}.json"
+        temp_response_json = f"CourseProposal/json_output/temp_response_{i}.json"
         
         # Prepare the content to write to the JSON file
         json_content = {
@@ -77,7 +77,7 @@ async def create_course_validation(model_choice: str) -> None:
 
         # Extract the name of the word template without the file extension
         template_name_without_extension = os.path.splitext(os.path.basename(CV_template))[0]
-        output_directory = "output_docs"
+        output_directory = "CourseProposal/output_docs"
         os.makedirs(output_directory, exist_ok=True)   
         # Define the output file name for this response in the same directory as the input file
         output_docx_version = os.path.join(output_directory, f"{template_name_without_extension}_updated.docx")

@@ -178,11 +178,11 @@ def run_processing(input_file: str):
     asyncio.run(main(input_file))
 
     # 2) Now copy the relevant docx files from 'output_docs' to NamedTemporaryFiles
-    cp_doc_path = "output_docs/CP_output.docx"
+    cp_doc_path = "CourseProposal/output_docs/CP_output.docx"
     cv_doc_paths = [
-        "output_docs/CP_validation_template_bernard_updated.docx",
-        "output_docs/CP_validation_template_dwight_updated.docx",
-        "output_docs/CP_validation_template_ferris_updated.docx"
+        "CourseProposal/output_docs/CP_validation_template_bernard_updated.docx",
+        "CourseProposal/output_docs/CP_validation_template_dwight_updated.docx",
+        "CourseProposal/output_docs/CP_validation_template_ferris_updated.docx"
     ]
 
     # Copy CP doc into tempfile
