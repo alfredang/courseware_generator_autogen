@@ -129,7 +129,7 @@ def app():
         # 2) Process button
         if st.button("🚀 Process File"):
             # Optional: parse_document before the main pipeline if you want:
-            parse_document(input_tsc_path, "json_output/output_TSC_TEST.json")
+            # parse_document(input_tsc_path, "json_output/output_TSC_TEST.json")
             run_processing(input_tsc_path)
             st.session_state['processing_done'] = True
 

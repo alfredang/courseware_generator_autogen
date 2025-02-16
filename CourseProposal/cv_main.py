@@ -1,4 +1,4 @@
-from agents.course_validation_team import create_course_validation_team, validation_task
+from CourseProposal.agents.course_validation_team import create_course_validation_team, validation_task
 from autogen_agentchat.ui import Console
 from CourseProposal.utils.helpers import (
     extract_final_editor_json,
