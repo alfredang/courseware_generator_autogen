@@ -6,7 +6,7 @@ import os
 def validate_knowledge_and_ability():
     try:
         # Read data from the JSON file
-        with open('json_output/ensemble_output.json', 'r', encoding='utf-8') as file:
+        with open('CourseProposal/json_output/ensemble_output.json', 'r', encoding='utf-8') as file:
             data = json.load(file)
 
         # Extract Knowledge and Ability factors from the data

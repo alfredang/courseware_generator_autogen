@@ -224,8 +224,8 @@ def generate_documents(context: dict, assessment_type: str, output_dir: str) -> 
     }
 
     # Render both templates
-    answer_doc.render(answer_context)  # Render with answers
-    question_doc.render(question_context)  # Render without answers
+    answer_doc.render(answer_context, autoescape=True)  # Render with answers
+    question_doc.render(question_context, autoescape=True)  # Render without answers
 
     # Create temporary files for the question and answer documents
     question_tempfile = tempfile.NamedTemporaryFile(
@@ -382,10 +382,15 @@ def app():
                         st.error("❌ Error generating assessments.")
             except Exception as e:
                 st.error(f"Error generating assessments: {e}")
-
+            finally:
+                # Cleanup: delete the uploaded files to avoid accumulation on Streamlit Cloud
+                if os.path.exists(fg_filepath):
+                    os.remove(fg_filepath)
+                if os.path.exists(slides_filepath):
+                    os.remove(slides_filepath)
     # Download section
     if st.session_state.get('processing_done'):
-        st.header("Download Generated Documents")
+        st.subheader("Download Generated Documents")
 
         # Iterate over all generated assessments
         for assessment_type, file_paths in st.session_state.get('generated_files').items():
