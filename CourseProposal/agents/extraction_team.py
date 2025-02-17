@@ -118,7 +118,7 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
         1) TSC Title
         2) TSC Code
         3) Topic (include the FULL string, including any K's and A's, only include items starting with "Topic" and not "LU" for this particular point)
-        4) Learning Units (do NOT include Topics under this point, do NOT include any brackets consisting of A's or K's), if there are no Learning Units (LUs) found, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics.
+        4) Learning Units (do NOT include Topics under this point, do NOT include any brackets consisting of A's or K's), only include items starting with "LU".
 
         An example output is as follows:
         "TSC Title": "Financial Analysis",
@@ -207,7 +207,32 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
         2) learning_outcomes_extractor
         3) tsc_and_topics_extractor
         4) assessment_methods_extractor
-    Return the combined output into a single JSON file, do not alter the keys in any way, do not add or nest any keys.
+    Return the combined output into a single JSON file, do not alter the keys in any way, do not add or nest any keys. Ensure that the following is adhered to:
+    1. **Strict JSON Formatting:**  
+    - The output must be a valid JSON object with proper syntax (keys in double quotes, commas separating elements, arrays enclosed in square brackets, objects enclosed in curly braces).
+    
+    2. **Schema Compliance:**  
+    The JSON must include the following top-level keys:  
+    - `"Course Information"`  
+    - `"Learning Outcomes"`  
+    - `"TSC and Topics"`  
+    - `"Assessment Methods"`  
+    
+    3. **No Trailing Commas or Missing Brackets:**  
+    - Ensure that each array (`[...]`) and object (`{{...}}`) is closed properly.  
+    - Do not leave trailing commas.  
+
+    4. **Consistent Key Names:**  
+    - Use consistent and properly spelled keys as specified.  
+
+    5. **Always Validate Before Output:**  
+    - Run a JSON lint check (or a `json.loads()` equivalent if you are simulating code) before returning the final JSON.  
+    
+    6. **Error Handling:**  
+    If you detect an issue in the JSON (e.g., missing commas, brackets, or improper formatting), correct it immediately before providing the output.
+
+    7. **Output Format:**  
+    Return only the JSON object and no additional commentary.
     """
 
     course_info_extractor = AssistantAgent(

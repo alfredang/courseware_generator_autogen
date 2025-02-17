@@ -1,19 +1,21 @@
 {
     "course_info": {
-        "Course Title": "AZ-900 Microsoft Azure Fundamentals Certification",
+        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
         "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Assess cloud solutions and specifications for Azure cloud computing.",
-            "LO2: Develop an implementation plan for implementing Azure cloud computing",
-            "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
+            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
+            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
+            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
+            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
+            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
         ],
-        "TSC Title": "Cloud Computing",
-        "TSC Code": "ICT-DIT-4020-1.1"
+        "TSC Title": "Solution Architecture",
+        "TSC Code": "ICT-DES-5006-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "A common problem is the lack of effective monitoring and governance of cloud deployments. Without proper oversight, costs can quickly spiral out of control, and compliance with regulations becomes difficult. Furthermore, resolving implementation issues requires specialized skills that are often in short supply, hindering the ability to maintain optimal performance.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course emphasizes the development of review processes for cloud implementation. Participants will learn how to monitor key metrics, utilize governance tools, and troubleshoot issues effectively. This comprehensive approach enables organizations to maintain control over their cloud environments, ensuring cost-effectiveness, compliance, and reliable performance."
+            "What are the performance gaps in the industry?": "The absence of comprehensive monitoring and testing processes often leads to undetected issues in solution architectures. This results in performance bottlenecks, security vulnerabilities, and increased downtime. A reactive approach to problem-solving hinders the ability to proactively address potential risks.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course addresses this by establishing processes for regularly monitoring, testing, and reviewing solution architecture against business requirements. Participants will gain skills in using built-in CLI tools, container logs, and debugging techniques within Kubernetes to proactively identify and resolve issues. This will allow them to ensure the ongoing health and alignment of the solution with business needs."
         }
     ]
 }

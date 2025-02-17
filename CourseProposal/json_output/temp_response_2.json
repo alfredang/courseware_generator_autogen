@@ -1,19 +1,21 @@
 {
     "course_info": {
-        "Course Title": "AZ-900 Microsoft Azure Fundamentals Certification",
+        "Course Title": "Certified Kubernetes Application Developer (CKAD) Training",
         "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Assess cloud solutions and specifications for Azure cloud computing.",
-            "LO2: Develop an implementation plan for implementing Azure cloud computing",
-            "LO3: Develop review processes to resolve Azure cloud computing implementation issues."
+            "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
+            "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
+            "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
+            "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
+            "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
         ],
-        "TSC Title": "Cloud Computing",
-        "TSC Code": "ICT-DIT-4020-1.1"
+        "TSC Title": "Solution Architecture",
+        "TSC Code": "ICT-DES-5006-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "One major challenge is the effective implementation of cloud solutions within existing IT environments. Organizations often lack a clear roadmap, leading to poorly configured systems and security vulnerabilities. Integrating existing on-premise infrastructure with the cloud poses significant difficulties, resulting in inefficiencies and increased operational costs.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course offers hands-on training in developing implementation plans. Participants will learn how to deploy and manage cloud resources. This knowledge equips them with the skills to streamline the integration process, secure cloud environments, and optimize resource utilization, leading to a more efficient and robust cloud infrastructure."
+            "What are the performance gaps in the industry?": "A significant challenge lies in aligning technical requirements with actual business needs. Many solutions are implemented without fully considering stakeholder requirements, resulting in misaligned architectures that fail to deliver the expected value. This disconnect often leads to costly rework and missed opportunities.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes aligning requirements from various stakeholders, including internal and external parties, ensuring that the solutions meet technical, functional, and service demands. Participants will learn how to implement effective deployment strategies and utilize tools like Helm, which contributes to a smoother alignment process, resulting in solutions that are more relevant and impactful."
         }
     ]
 }
