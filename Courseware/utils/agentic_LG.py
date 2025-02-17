@@ -3,16 +3,14 @@ import os
 import re
 import json
 import tempfile
-import streamlit as st
 import asyncio
-from pydantic import BaseModel
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken
 from autogen_agentchat.messages import TextMessage
 from PIL import Image
 from docx.shared import Inches
 from docxtpl import DocxTemplate, InlineImage
-from jinja2 import Environment
+from Courseware.utils.helper import parse_json_content
 
 LG_TEMPLATE_DIR = "Courseware/input/Template/LG_TGS-Ref-No_Course-Title_v1.docx"  
 
@@ -74,16 +72,13 @@ async def generate_content(context, model_client):
     response = await content_generator.on_messages(
         [TextMessage(content=agent_task, source="user")], CancellationToken()
     )
+    
     try:
         if not response.chat_message.content:
             print("No content found in the agent's last message.")
-        json_content = response.chat_message.content.strip()
-        json_pattern = re.compile(r'```json\s*(\{.*?\})\s*```', re.DOTALL)
-        json_match = json_pattern.search(json_content)
-        if json_match:
-            json_str = json_match.group(1)
-            context = json.loads(json_str)
-        print(f"############ LG CONTENT RESPONSE: {context}")
+        print(f"#############LG CONTEXT###########\n\n{context}")
+        context = parse_json_content(response.chat_message.content)
+
     except json.JSONDecodeError as e:
         print(f"Error parsing LG content JSON: {e}")
     return context

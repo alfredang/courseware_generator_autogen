@@ -5,6 +5,7 @@ import json
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken
 from autogen_agentchat.messages import TextMessage
+from Courseware.utils.helper import parse_json_content
 
 def extract_unique_instructional_methods(course_context):
     unique_methods = set()
@@ -241,7 +242,7 @@ async def generate_timetable(context, num_of_days, model_client):
     )
 
     try:
-        timetable_response = json.loads(response.chat_message.content)
+        timetable_response = parse_json_content(response.chat_message.content)
         if 'lesson_plan' not in timetable_response:
             raise Exception("No lesson_plan key found in timetable data")
         return timetable_response

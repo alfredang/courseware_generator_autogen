@@ -32,6 +32,8 @@ from autogen_core import CancellationToken
 from autogen_ext.code_executors.local import LocalCommandLineCodeExecutor
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_ext.models.openai import OpenAIChatCompletionClient
+from Courseware.utils.model_configs import MODEL_CHOICES, get_model_config
+from Courseware.utils.helper import save_uploaded_file, parse_json_content
 
 # Initialize session state variables
 if 'processing_done' not in st.session_state:
@@ -48,14 +50,8 @@ if 'context' not in st.session_state:
     st.session_state['context'] = None
 if 'asr_output' not in st.session_state:
     st.session_state['asr_output'] = None
-
-def save_uploaded_file(uploaded_file, save_dir):
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
-    file_path = os.path.join(save_dir, uploaded_file.name)
-    with open(file_path, 'wb') as f:
-        f.write(uploaded_file.getbuffer())
-    return file_path
+if 'selected_model' not in st.session_state:
+    st.session_state['selected_model'] = "GPT-4o"
 
 ############################################################
 # 1. Pydantic Models
@@ -224,12 +220,11 @@ def web_scrape(course_title: str, name_of_org: str) -> str:
     finally:
         driver.quit()
 
-
-async def interpret_cp(raw_data: dict, model_clent: OpenAIChatCompletionClient) -> dict:
-        # Interpreter Agent with structured output enforcement
+async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient) -> dict:
+    # Interpreter Agent with structured output enforcement
     interpreter = AssistantAgent(
         name="Interpreter",
-        model_client=model_clent,
+        model_client=model_client,
         system_message=f"""
         You are an AI assistant that helps extract specific information from a JSON object containing a Course Proposal Form (CP). Your task is to interpret the JSON data, regardless of its structure, and extract the required information accurately.
 
@@ -295,7 +290,7 @@ async def interpret_cp(raw_data: dict, model_clent: OpenAIChatCompletionClient) 
             - Replacing other non-ASCII characters with their closest ASCII equivalents.
         - **Time fields** must include units (e.g., "40 hrs", "1 hr", "2 hrs").
         - For `Assessment_Methods`, always use the abbreviations (e.g., WA-SAQ, PP, CS, OQ, RP) as per the following rules:
-            1. Use the abbreviation provided in parent  heses if available.
+            1. Use the abbreviation provided in parentheses if available.
             2. Otherwise, generate an abbreviation by taking the first letters of the main words (ignoring articles/prepositions) and join with hyphens.
             3. For methods containing "Written Assessment", always prefix with "WA-".
             4. If duplicate or multiple variations exist, use the standard abbreviation.
@@ -318,15 +313,32 @@ async def interpret_cp(raw_data: dict, model_clent: OpenAIChatCompletionClient) 
     response = await interpreter.on_messages(
         [TextMessage(content=agent_task, source="user")], CancellationToken()
     )
+    if not response or not response.chat_message:
+        return "No content found in the agent's last message."
+    print(response.chat_message.content)
+    return response.chat_message.content
 
-    context = json.loads(response.chat_message.content)
-    return context
+    # context = parse_json_content(response.chat_message.content)
+    # return context
 
 # Streamlit App
 def app():
-    # Streamlit UI components
     st.title("Courseware Document Generator")
+    
+    # ================================================================
+    # MODEL SELECTION FEATURE
+    # ================================================================
+    st.subheader("Model Selection")
+    model_choice = st.selectbox(
+        "Select LLM Model:",
+        options=list(MODEL_CHOICES.keys()),
+        index=0  # default: "GPT-4o Mini (Default)"
+    )
+    st.session_state['selected_model'] = model_choice
 
+    # ================================================================
+    # Rest of your UI components
+    # ================================================================
     # Step 1: Upload Course Proposal (CP) Document
     st.subheader("Step 1: Upload Course Proposal (CP) Document")
     cp_file = st.file_uploader("Upload Course Proposal (CP) Document", type=["docx"])
@@ -374,10 +386,55 @@ def app():
     # Step 4: Generate Documents
     if st.button("Generate Documents"):
         if cp_file is not None and selected_org:
+            # --------------------------------------------------------
+            # Use the selected model configuration for all autogen agents
+            # --------------------------------------------------------
+            # Use the selected model configuration for all autogen agents
+            selected_config = get_model_config(st.session_state['selected_model'])
+            api_key = selected_config["config"].get("api_key")
+            if not api_key:
+                st.error("API key for the selected model is not provided.")
+                return
+            model_name = selected_config["config"]["model"]
+            temperature = selected_config["config"].get("temperature", 0)
+            base_url = selected_config["config"].get("base_url", None)
 
-            OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
-            GENERATION_MODEL_NAME = st.secrets["GENERATION_MODEL"]
-            REPLACEMENT_MODEL_NAME = st.secrets["REPLACEMENT_MODEL"]
+            # Extract model_info from the selected configuration (if provided)
+            model_info = selected_config["config"].get("model_info", None)
+
+            # Conditionally set response_format: use structured output only for valid OpenAI models.
+            if st.session_state['selected_model'] in ["DeepSeek", "Gemini"]:
+                cp_response_format = None  # DeepSeek and Gemini might not support structured output this way.
+                lp_response_format = None
+            else:
+                cp_response_format = CourseData  # For structured CP extraction
+                lp_response_format = LessonPlan  # For timetable generation
+
+            openai_struct_model_client = OpenAIChatCompletionClient(
+                model=model_name,
+                api_key=api_key,
+                temperature=temperature,
+                base_url=base_url,
+                response_format=cp_response_format,  # Only set for valid OpenAI models
+                model_info=model_info,
+            )
+
+            timetable_openai_struct_model_client = OpenAIChatCompletionClient(
+                model=model_name,
+                api_key=api_key,
+                temperature=temperature,
+                base_url=base_url,
+                response_format=lp_response_format,
+                model_info=model_info,
+            )
+
+            openai_model_client = OpenAIChatCompletionClient(
+                model=model_name,
+                api_key=api_key,
+                temperature=temperature,
+                base_url=base_url,
+                model_info=model_info,
+            )
 
             # Step 1: Parse the CP document
             raw_data = parse_cp_document(cp_file)
@@ -389,50 +446,14 @@ def app():
             raw_data["Date"] = current_date
             raw_data["Year"] = year
 
-            if not OPENAI_API_KEY:
-                raise ValueError("OPENAI_API_KEY not found in environment variables.")
-            if not GENERATION_MODEL_NAME:
-                raise ValueError("MODEL_NAME not found in environment variables.")
-            if not REPLACEMENT_MODEL_NAME:
-                raise ValueError("MODEL_NAME not found in environment variables.")
-
-            deepseek_struct_model_client = OpenAIChatCompletionClient(
-                model="deepseek-chat",
-                base_url="https://api.deepseek.com",
-                response_format=CourseData,  # Structured output currently unavailable for DeepSeek
-                temperature=0,
-                api_key=st.secrets["DEEPSEEK_API_KEY"],
-                model_capabilities={
-                    "vision": False,
-                    "function_calling": True,
-                    "json_output": True,
-                },
-            )
-
-            openai_struct_model_client = OpenAIChatCompletionClient(
-                model=GENERATION_MODEL_NAME,
-                response_format=CourseData,  # Structured output config
-                temperature=0,
-                api_key=OPENAI_API_KEY
-            )
-
-            timetable_openai_struct_model_client = OpenAIChatCompletionClient(
-                model=GENERATION_MODEL_NAME,
-                response_format=LessonPlan,  # Structured output config
-                temperature=0,
-                api_key=OPENAI_API_KEY
-            )
-
-            openai_model_client = OpenAIChatCompletionClient(
-                model=REPLACEMENT_MODEL_NAME,
-                temperature=0,
-                api_key=OPENAI_API_KEY
-            )
             try:
                 with st.spinner('Extracting Information from Course Proposal...'):
-                    context = asyncio.run(interpret_cp(raw_data=raw_data, model_clent=openai_struct_model_client))
+                    context = asyncio.run(interpret_cp(raw_data=raw_data, model_client=openai_struct_model_client))
+                    st.markdown(f"###LG CONTEXT\n\n{context}")
+
             except Exception as e:
                 st.error(f"Error extracting Course Proposal: {e}")
+                return
 
             # After obtaining the context
             if context:
@@ -500,7 +521,6 @@ def app():
                         if lp_output:
                             st.success(f"Lesson Plan generated: {lp_output}")
                             st.session_state['lp_output'] = lp_output  # Store output path in session state
-                        # Read the file and provide a download button
      
                     except Exception as e:
                         st.error(f"Error generating Lesson Plan: {e}")
