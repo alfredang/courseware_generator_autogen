@@ -7,7 +7,7 @@ TODO:
 5. The planning team will then send the relevant information to the assessment creation team for it to create questions and answers, returning in a JSON schema that allows for easy mapping to a document file.
 
 Functions to deliver:
-- Input (TSC Form) parser
+- Input (TSC Form) parser: DONE
 - Planning team
 - Retrieval team
 - Assessment Creation team

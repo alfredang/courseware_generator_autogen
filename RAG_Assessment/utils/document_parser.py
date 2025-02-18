@@ -34,11 +34,11 @@ def parse_document(input_docx, output_json):
 
     # Function to add text and table content
     def add_content_to_section(section_name, content):
-        if section_name not in data["Course_Proposal_Form"]:
-            data["Course_Proposal_Form"][section_name] = []
+        if section_name not in data["TSC_Form"]:
+            data["TSC_Form"][section_name] = []
         # Check for duplication before adding content
-        if content not in data["Course_Proposal_Form"][section_name]:
-            data["Course_Proposal_Form"][section_name].append(content)
+        if content not in data["TSC_Form"][section_name]:
+            data["TSC_Form"][section_name].append(content)
 
     # Function to detect bullet points using regex
     def is_bullet_point(text):
@@ -48,11 +48,11 @@ def parse_document(input_docx, output_json):
 
     # Function to add bullet points under a list
     def add_bullet_point(section_name, bullet_point_text):
-        if section_name not in data["Course_Proposal_Form"]:
-            data["Course_Proposal_Form"][section_name] = []
-        if not data["Course_Proposal_Form"][section_name] or not isinstance(data["Course_Proposal_Form"][section_name][-1], dict) or 'bullet_points' not in data["Course_Proposal_Form"][section_name][-1]:
-            data["Course_Proposal_Form"][section_name].append({"bullet_points": []})
-        data["Course_Proposal_Form"][section_name][-1]["bullet_points"].append(bullet_point_text)
+        if section_name not in data["TSC_Form"]:
+            data["TSC_Form"][section_name] = []
+        if not data["TSC_Form"][section_name] or not isinstance(data["TSC_Form"][section_name][-1], dict) or 'bullet_points' not in data["Course_Proposal_Form"][section_name][-1]:
+            data["TSC_Form"][section_name].append({"bullet_points": []})
+        data["TSC_Form"][section_name][-1]["bullet_points"].append(bullet_point_text)
 
     # Variables to track the current section
     current_section = None

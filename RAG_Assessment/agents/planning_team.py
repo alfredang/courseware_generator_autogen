@@ -3,19 +3,24 @@ from autogen_agentchat.teams import RoundRobinGroupChat
 from CourseProposal.model_configs import get_model_config
 from autogen_core.models import ChatCompletionClient
 
+# planning team functions
+# Planning team will create a retrieval plan on how to retrieve the information required to support the A and K factors. Perhaps limited to 5 key topics to be retrieved.
 
-def tsc_team_task(tsc_data):
+
+def planning_team_task(tsc_data):
     tsc_task = f"""
     1. Parse data from the following JSON file: {tsc_data}
-    2. Return a full JSON object with all the extracted data according to the schema.
+    2. Evaluate and create a retrieval plan to support the Learning Outcome, A and K factors.
+    3. Limit the retrieval plan to 5 key topics.
+    4. Return a full JSON object with your suggestions according to the schema.
     """
     return tsc_task
 
-def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
+def create_planning_team(tsc_data, model_choice: str) -> RoundRobinGroupChat:
     chosen_config = get_model_config(model_choice)
     model_client = ChatCompletionClient.load_component(chosen_config)
 
-    tsc_parser_agent_message = f"""
+    planner_agent_message = f"""
         You are to parse and extract the prepared TSC Form from the tsc_prepper_agent.
         The requirements are as follows:
         1. Ensure that the LOs (Learning Outcomes) are mapped.
@@ -26,36 +31,21 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
 
         An example JSON schema looks like this, with the LUs as a key-value pair:
         {{
-        "TSC_Form": {{
-            "Learning Outcomes": [
-                "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
-                "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
-                "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
-                "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
-                "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
+        "Planning": {{
+            "Retrieval Plan": [
+
             ],
             "Knowledge": [
-                "K1: Process for refining solution architecture",
-                "K2: Applications of tools and modelling techniques for creation of solution architecture",
-                "K3: Technical, functional and service considerations",
-                "K4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspect for the solution",
-                "K5: Standards for coding, scalability, integration and reusability",
-                "K6: Compatibility among multiple solution architecture components and design activities",
-                "K7: Techniques to measure a solution's value-add"
+
             ],
             "Ability": [
-                "A1: Establish high level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components",
-                "A2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint",
-                "A3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture",
-                "A4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework",
-                "A5: Articulate value added by the solution to the business needs",
-                "A6: Establish processes to regularly monitor, test and review solution architecture against business requirements"
+
             ],
     }}
         }}
         """
 
-    tsc_prepper_message = f"""
+    planner_critic_message = f"""
         You are to parse and correct spelling mistakes from {tsc_data}:
         The requirements are as follows:
         1. If there are no LU's present, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics. Ignore this instruction if there are LUs present.
