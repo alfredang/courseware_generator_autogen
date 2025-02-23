@@ -7,3 +7,6 @@ create_vector_index_flag: True
 project_id: assessment-rag  # Replace with your actual project ID
 firestore_db_name: "tertiary-rag-docstore"  # Replace with your Firestore database name, or leave as (default)
 firestore_namespace: "hierarchical_docs"   # Replace with desired collection, can be left empty
+embedding_model: "models/text-embedding-004"
+llm_model: "models/gemini-2.0-flash-exp"
+gemini_llm_model: "models/gemini-2.0-flash-exp"
