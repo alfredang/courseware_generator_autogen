@@ -315,11 +315,11 @@ async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient)
     )
     if not response or not response.chat_message:
         return "No content found in the agent's last message."
-    print(response.chat_message.content)
-    return response.chat_message.content
+    # print(response.chat_message.content)
+    # return response.chat_message.content
 
-    # context = parse_json_content(response.chat_message.content)
-    # return context
+    context = parse_json_content(response.chat_message.content)
+    return context
 
 # Streamlit App
 def app():
@@ -449,7 +449,7 @@ def app():
             try:
                 with st.spinner('Extracting Information from Course Proposal...'):
                     context = asyncio.run(interpret_cp(raw_data=raw_data, model_client=openai_struct_model_client))
-                    st.markdown(f"###LG CONTEXT\n\n{context}")
+                    # st.markdown(f"###CONTEXT\n\n{context}")
 
             except Exception as e:
                 st.error(f"Error extracting Course Proposal: {e}")

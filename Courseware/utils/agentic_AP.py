@@ -28,6 +28,7 @@ class AssessmentMethods(BaseModel):
     PP: Optional[AssessmentMethod] = None
     CS: Optional[AssessmentMethod] = None
     RP: Optional[AssessmentMethod] = None
+    OQ: Optional[AssessmentMethod] = None
 
 class EvidenceGatheringPlan(BaseModel):
     assessment_methods: AssessmentMethods
@@ -81,6 +82,7 @@ async def extract_assessment_evidence(structured_data, model_client):
         - Generate structured justifications for these applicable assessment methods:
         - **CS (Case Study)**
         - **PP (Practical Performance)**
+        - **OQ (Oral Questioning)**
         - **RP (Role Play)**
 
         - For each assessment method, extract the following:
@@ -99,7 +101,7 @@ async def extract_assessment_evidence(structured_data, model_client):
         - Bullet points: Max 30 words.
         - Marking Process: Max 6 words per evaluation.
         - **Format must be consistent**:
-        - **PP and CS:** Evidence must be in a list of LOs.
+        - **PP, CS and OQ:** Evidence must be in a list of LOs.
         - **RP:** Special handling with "No. of Role Play Scripts."
 
         ---
@@ -144,6 +146,21 @@ async def extract_assessment_evidence(structured_data, model_client):
                 ],
                 "retention_period": "All submitted case study reports will be retained for 3 years."
                 }},
+                "OQ": {{
+                "evidence": [
+                    "LO1: Candidates will ...",
+                    "LOx: Candidates will ..."
+                ],
+                "submission": [
+                    "Candidates will verbally respond to assessors during a structured questioning session."
+                ],
+                "marking_process": [
+                    "...",
+                    "...",
+                    "..."
+                ],
+                "retention_period": "All oral questioning recordings and assessment notes will be retained for 2 years for compliance and auditing."
+                }}, 
                 "RP": {{
                 "evidence": "Role Play",
                 "submission": [
@@ -196,8 +213,6 @@ def combine_assessment_methods(structured_data, evidence_data):
 
         # Match the evidence data based on the abbreviation
         if method_abbr in evidence_methods:
-            if "OQ" in method_abbr:
-                continue
             evidence_details = evidence_methods[method_abbr]
             
             
@@ -210,7 +225,7 @@ def combine_assessment_methods(structured_data, evidence_data):
                     "Retention_Period": evidence_details.get("retention_period", "")
                 })
 
-            if "PP" in method_abbr or "CS" in method_abbr:
+            if "PP" in method_abbr or "CS" in method_abbr or "OQ" in method_abbr:
             # Update the method with detailed evidence data
                 method.update({
                     "Evidence": evidence_details.get("evidence", []),

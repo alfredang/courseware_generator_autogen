@@ -1,23 +1,12 @@
 # brochure_generation.py
 
-import os
 import re
-import asyncio
-from autogen_agentchat.agents import AssistantAgent
-from autogen_core import CancellationToken
-from autogen_agentchat.messages import TextMessage
 import streamlit as st
-from typing import List, Dict, Optional
+from typing import List, Dict
 from pydantic import BaseModel
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
 from google.oauth2 import service_account
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import json
@@ -190,10 +179,6 @@ def scrape_course_data(url: str) -> CourseData:
         )
     finally:
         driver.quit()
-
-from autogen_ext.models.openai import OpenAIChatCompletionClient
-from autogen_agentchat.agents import AssistantAgent
-from autogen_core import CancellationToken
 
 def generate_brochure_wrapper(data: CourseData) -> BrochureResponse:
     brochure_info = generate_brochure(data)  # Now returns a dictionary
@@ -426,46 +411,10 @@ def extract_tool_response(chat_content):
     return None, None
 
 
-async def brochure_autogen(course_data, model_client):
-    doc_writer_agent = AssistantAgent(
-        name="doc_writer",
-        model_client=model_client,
-        tools=[generate_brochure_wrapper],
-        system_message="""
-            You are an assistant that generates brochures based on course data. 
-
-            ### Instructions:
-            "When replacing placeholders for Learning Outcomes and Course Topics, check for prefixes like '-', '*', or 'LOx:' at the start of each line, and remove them before inserting the text into the document. 
-            Do not modify the contents otherwise; only remove the prefixes.
-            Ensure that all fields, including `wsq_funding`, remain within the `data` dictionary.
-        """
-    )
-    agent_task = f"""
-        Please generate a brochure using the following course data: {course_data}
-        **Do not modify the data structure or move any fields outside of the `data` dictionary.**
-        Provide the shareable file link to the generated brochure.
-    """
-    # Process sample input
-    response = await doc_writer_agent.on_messages(
-        [TextMessage(content=agent_task, source="user")], CancellationToken()
-    )
-
-    output = response.chat_message.content
-    
-    if output:
-        return output 
-    else:
-        raise Exception(f"Error: Brochure chat content missing.")
-
 # Streamlit app
 def app():
     # Enable wide mode for the layout
-    st.title("📄 Brochure Generator with Autogen")
-    model_client = OpenAIChatCompletionClient(
-        model=st.secrets["REPLACEMENT_MODEL"],
-        temperature=0,
-        api_key=st.secrets["OPENAI_API_KEY"]
-    )
+    st.title("📄 Brochure Generator")
 
     # Create two columns
     left_col, right_col = st.columns([1, 1])  # Adjust column ratio (e.g., 1:2 for a wider right column)
@@ -526,8 +475,8 @@ def app():
                 
                 # Step 3: Generate brochure
                 try:
-                    with st.spinner("Generating brochure using Autogen..."):
-                        response = asyncio.run(brochure_autogen(json.dumps(st.session_state['course_data'])), model_client)
+                    with st.spinner("Generating brochure..."):
+                        response = generate_brochure_wrapper(json.dumps(st.session_state['course_data']))
                     
                 except Exception as e:
                     st.error(f"An error occurred: {e}")

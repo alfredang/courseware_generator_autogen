@@ -76,7 +76,7 @@ async def generate_content(context, model_client):
     try:
         if not response.chat_message.content:
             print("No content found in the agent's last message.")
-        print(f"#############LG CONTEXT###########\n\n{context}")
+        # print(f"#############LG CONTEXT###########\n\n{context}")
         context = parse_json_content(response.chat_message.content)
 
     except json.JSONDecodeError as e:
