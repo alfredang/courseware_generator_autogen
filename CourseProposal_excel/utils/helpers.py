@@ -450,4 +450,23 @@ def load_json_file(file_path):
     except json.JSONDecodeError:
         print(f"Error: Could not decode JSON from file '{file_path}'. Please ensure it is valid JSON.")
         return None
+
+def extract_lo_keys(json_data):
+    """
+    Extracts keys that match the pattern '#LO' followed by a number.
+
+    Args:
+        json_data (dict): The JSON data as a dictionary.
+
+    Returns:
+        list: A list of keys that match the pattern '#LO' followed by a number.
+    """
+    lo_keys = []
+    pattern = re.compile(r'^#LO\d+$')
+    for key in json_data.keys():
+        print(f"Checking key: {key}")  # Debugging statement
+        if pattern.match(key):
+            print(f"Matched key: {key}")  # Debugging statement
+            lo_keys.append(key)
+    return lo_keys
     

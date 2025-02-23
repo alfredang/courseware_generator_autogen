@@ -1,26 +1,8 @@
 import json
 import sys
 import os
+from helpers import load_json_file, extract_lo_keys
 
-def load_json_file(file_path):
-    """
-    Loads JSON data from a file.
-
-    Args:
-        file_path (str): The path to the JSON file.
-
-    Returns:
-        dict: The loaded JSON data as a dictionary, or None if an error occurs.
-    """
-    try:
-        with open(file_path, 'r') as f:
-            return json.load(f)
-    except FileNotFoundError:
-        print(f"Error: JSON file not found at '{file_path}'")
-        return None
-    except json.JSONDecodeError:
-        print(f"Error: Could not decode JSON from file '{file_path}'. Please ensure it is valid JSON.")
-        return None
 
 def extract_and_concatenate_json_values(json_data, keys_to_extract, new_key_name):
     """
@@ -136,17 +118,19 @@ def map_new_key_names_excel():
     tcs_keys = ["#TCS[1]", "#TCS[0]"]
     tcs_code_skill_data = extract_and_concatenate_json_values_space_seperator(generated_mapping, tcs_keys, "#TCS_Code_Skill")
 
+    combined_lo = ["#LO[0]", "#LO[1]", "#LO[2]", "#LO[3]", "#LO[4]", "#LO[5]", "#LO[6]", "#LO[7]"]
+    lo_data = extract_and_concatenate_json_values(generated_mapping, combined_lo, "#Combined_LO")
+
     if sequencing_rationale_data and tcs_code_skill_data: # Check if both data extractions were successful
         # **Update the existing data dictionary**
         existing_data.update(sequencing_rationale_data)
         existing_data.update(tcs_code_skill_data)
+        existing_data.update(lo_data)
 
         # **Write the updated dictionary back to the output file**
         write_json_file(existing_data, output_json_file)
     else:
         print("Error during data extraction, not writing to output file.")
-
-
 
 
 if __name__ == "__main__":

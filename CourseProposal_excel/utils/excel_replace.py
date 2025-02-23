@@ -27,11 +27,22 @@ def process_excel_with_direct_mapping(json_data_path, excel_template_path, outpu
     sheet4 = "4 - Methodologies"
 
     cell_replacement_map = {  # Define your cell mapping dictionary DIRECTLY HERE
+        # Sheet 1 items
         "#Company":      {"sheet": sheet1, "cell": "C2",  "json_key": "#Company"},        # Example - adjust json_key as needed
         "#CourseTitle":   {"sheet": sheet1, "cell": "C3",  "json_key": "#CourseTitle"},     # Example - adjust json_key as needed
         "#TCS_Code_Skill":      {"sheet": sheet1, "cell": "C10",  "json_key": "#TCS_Code_Skill"},      # Map to existing key
+
+        # Sheet 2 items
+        "#Placeholder[0]": {"sheet": sheet2, "cell": "B4", "json_key": "#Placeholder[0]"}, # Map to existing key
+        "#Placeholder[1]": {"sheet": sheet2, "cell": "B8", "json_key": "#Placeholder[1]"}, # Map to existing key
+
+        # Sheet 3 items
         "#Sequencing_rationale": {"sheet": sheet3, "cell": "B6", "json_key": "#Sequencing_rationale"}, # Map to existing key
-        
+        "#Combined_LO": {"sheet": sheet3, "cell": "B4", "json_key": "#Combined_LO"}, # Map to existing key
+        # "#Sequencing_rationale": {"sheet": sheet3, "cell": "B6", "json_key": "#Sequencing_rationale"}, # Map to existing key
+        # "#Sequencing_rationale": {"sheet": sheet3, "cell": "B6", "json_key": "#Sequencing_rationale"}, # Map to existing key
+        # "#Sequencing_rationale": {"sheet": sheet3, "cell": "B6", "json_key": "#Sequencing_rationale"}, # Map to existing key
+        # "#Sequencing_rationale": {"sheet": sheet3, "cell": "B6", "json_key": "#Sequencing_rationale"}, # Map to existing key        
     }
 
     try:
