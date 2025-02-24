@@ -4,6 +4,7 @@ import shutil
 import tempfile
 import zipfile
 import json
+import pandas as pd
 from lxml import etree as ET
 
 def load_json_file(filepath):
@@ -37,6 +38,14 @@ def get_sheet_mapping(workbook_xml_path, rels_map):
         if rId in rels_map:
             mapping[name] = rels_map[rId]
     return mapping
+
+def col_idx_to_letter(n):
+    """Converts a 1-indexed column number to an Excel column letter."""
+    result = ""
+    while n:
+        n, remainder = divmod(n - 1, 26)
+        result = chr(65 + remainder) + result
+    return result
 
 def update_cell_in_sheet(sheet_xml_path, cell_ref, new_value):
     """
@@ -86,14 +95,82 @@ def update_cell_in_sheet(sheet_xml_path, cell_ref, new_value):
     tree.write(sheet_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
     return True
 
-def process_excel_update(json_data_path, excel_template_path, output_excel_path):
+def insert_dataframe_into_sheet(sheet_xml_path, start_row, start_col, df):
     """
-    Updates specific cells in an Excel workbook by only modifying the worksheet XML parts.
-    This approach unzips the .xlsx, updates cells, and then repackages it—preserving all other parts.
+    Inserts the DataFrame into the worksheet XML starting at the given row and column.
+    For each cell, the value is stored as an inline string.
+    """
+    ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+    parser = ET.XMLParser(remove_blank_text=False)
+    tree = ET.parse(sheet_xml_path, parser)
+    root = tree.getroot()
+
+    # Locate the sheetData element
+    sheetData = root.find(f"{{{ns['main']}}}sheetData")
+    if sheetData is None:
+        # Create one if not present.
+        sheetData = ET.SubElement(root, f"{{{ns['main']}}}sheetData")
+
+    # For each row in the DataFrame, create/update a row element.
+    # Assume start_row and start_col are 1-indexed.
+    for i, row_values in enumerate(df.values):
+        current_row_number = start_row + i
+        # Try to find an existing <row> element with attribute r=current_row_number
+        row_elem = sheetData.find(f".//{{{ns['main']}}}row[@r='{current_row_number}']")
+        if row_elem is None:
+            row_elem = ET.SubElement(sheetData, f"{{{ns['main']}}}row", r=str(current_row_number))
+        # For each cell in the row:
+        for j, cell_value in enumerate(row_values):
+            col_letter = col_idx_to_letter(start_col + j)
+            cell_ref = f"{col_letter}{current_row_number}"
+
+            # Check if a cell with this reference already exists in the row.
+            cell_elem = None
+            for cell in row_elem.findall(f"{{{ns['main']}}}c"):
+                if cell.get('r') == cell_ref:
+                    cell_elem = cell
+                    break
+            if cell_elem is None:
+                cell_elem = ET.SubElement(row_elem, f"{{{ns['main']}}}c", r=cell_ref)
+            # Remove any existing value or inline string
+            for child in list(cell_elem):
+                if child.tag in {f"{{{ns['main']}}}v", f"{{{ns['main']}}}is"}:
+                    cell_elem.remove(child)
+            # Set cell type to inline string
+            cell_elem.set('t', 'inlineStr')
+            is_elem = ET.Element(f"{{{ns['main']}}}is")
+            t_elem = ET.Element(f"{{{ns['main']}}}t")
+            t_elem.text = str(cell_value)
+            is_elem.append(t_elem)
+            cell_elem.append(is_elem)
+            # (Optionally, you could set style attributes if needed.)
+
+    # Optionally, update the dimension element if present.
+    dimension_elem = root.find(f"{{{ns['main']}}}dimension")
+    if dimension_elem is not None:
+        # Compute new ref: from A1 to the bottom-right cell of the updated area.
+        # (Here we assume that the updated block starts at start_row, start_col)
+        max_col = col_idx_to_letter(start_col + df.shape[1] - 1)
+        max_row = start_row + df.shape[0] - 1
+        dimension_elem.set('ref', f"A1:{max_col}{max_row}")
+
+    tree.write(sheet_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+    print(f"Inserted DataFrame into {sheet_xml_path}")
+
+def process_excel_update(json_data_path, excel_template_path, output_excel_path, ensemble_output_path):
+    """
+    Updates specific cells in an Excel workbook (including inserting a DataFrame)
+    by only modifying the worksheet XML parts. This approach unzips the .xlsx,
+    updates cells, and then repackages it—preserving all other parts.
     """
     json_data = load_json_file(json_data_path)
     if not json_data:
         print("Failed to load JSON data.")
+        return
+
+    ensemble_output = load_json_file(ensemble_output_path)
+    if not ensemble_output:
+        print("Failed to load Ensemble Output JSON data.")
         return
 
     # Define cell mapping as before
@@ -120,7 +197,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path)
         rels_map = get_relationship_mapping(rels_path)
         sheet_mapping = get_sheet_mapping(workbook_xml_path, rels_map)
 
-        # For each mapping, update the corresponding cell in the correct sheet XML
+        # Update individual cells based on cell_replacement_map
         for key, mapping in cell_replacement_map.items():
             sheet_name = mapping.get("sheet")
             cell_ref = mapping.get("cell")
@@ -141,6 +218,19 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path)
             if updated:
                 print(f"Updated {sheet_name} cell {cell_ref} with value: {new_value}")
 
+        # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
+        if "3 - Instructional Design" in sheet_mapping:
+            # Create the DataFrame using your helper function (provided separately)
+            df = create_course_dataframe(ensemble_output)
+            if not df.empty:
+                sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Instructional Design"])
+                # For example, insert starting at row 18 and column 2 (B18)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=17, start_col=2, df=df)
+            else:
+                print("Warning: DataFrame is empty. Nothing to insert.")
+        else:
+            print("Sheet '3 - Instructional Design' not found. DataFrame not inserted.")
+
         # Repackage the updated directory into a new .xlsx file
         with zipfile.ZipFile(output_excel_path, 'w', zipfile.ZIP_DEFLATED) as zout:
             for foldername, subfolders, filenames in os.walk(temp_dir):
@@ -153,8 +243,78 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path)
     finally:
         shutil.rmtree(temp_dir)
 
+# Example DataFrame creator (from your provided code)
+def create_course_dataframe(json_data):
+    """
+    Creates a DataFrame from the provided JSON data, structured as requested.
+    """
+    learning_units = json_data["TSC and Topics"].get("Learning Units", [])
+    learning_outcomes = json_data["Learning Outcomes"].get("Learning Outcomes", [])
+    knowledge_statements = json_data["Learning Outcomes"].get("Knowledge", [])
+    ability_statements = json_data["Learning Outcomes"].get("Ability", [])
+    course_outline = json_data["Assessment Methods"].get("Course Outline", {}).get("Learning Units", {})
+    tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
+
+    data = []
+    for lu_index, lu_title in enumerate(learning_units):
+        lu_num = f"LU{lu_index + 1}"
+        # Split at ": " to remove the prefix (assumes format "LUx: title")
+        lu_title_only = lu_title.split(": ", 1)[1] if ": " in lu_title else lu_title
+
+        lo_title = learning_outcomes[lu_index] if lu_index < len(learning_outcomes) else "N/A"
+        lo_num = f"LO{lu_index + 1}"
+        lo_title_only = lo_title.split(": ", 1)[1] if (lo_title != "N/A" and ": " in lo_title) else lo_title
+
+        lu_key = f"LU{lu_index + 1}"
+        if lu_key in course_outline:
+            topics = course_outline[lu_key].get("Description", [])
+            for topic in topics:
+                topic_title_full = topic.get("Topic", "N/A")
+                topic_num = topic_title_full.split(":")[0].replace("Topic ", "T")
+                topic_title = topic_title_full.split(': ', 1)[1] if ': ' in topic_title_full else topic_title_full
+                topic_title_short = topic_title.split(' (')[0]
+
+                ka_codes_str = topic_title_full.split('(')[-1].rstrip(')')
+                ka_codes = [code.strip() for code in ka_codes_str.split(',')]
+                for code in ka_codes:
+                    if code.startswith('K'):
+                        k_index = int(code[1:]) - 1
+                        k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
+                        data.append([
+                            lu_num,
+                            lu_title_only,
+                            lo_num,
+                            lo_title_only,
+                            f"{topic_num}: {topic_title_short}",
+                            k_statement,
+                            "Written Exam"
+                        ])
+                    elif code.startswith('A'):
+                        a_index = int(code[1:]) - 1
+                        a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
+                        data.append([
+                            lu_num,
+                            lu_title_only,
+                            lo_num,
+                            lo_title_only,
+                            f"{topic_num}: {topic_title_short}",
+                            a_statement,
+                            "Practical Exam"
+                        ])
+    df = pd.DataFrame(data, columns=[
+        "LU#",
+        "Learning Unit Title",
+        "LO#",
+        "Learning Outcome",
+        "Topic (T#: Topic title)",
+        "Applicable K&A Statement",
+        "Mode of Assessment"
+    ])
+    return df
+
 if __name__ == "__main__":
     json_data_path = os.path.join('..', 'json_output', 'generated_mapping.json')
     excel_template_path = os.path.join('..', 'templates', 'CP_excel_template.xlsx')
     output_excel_path = os.path.join('..', 'output_docs', 'CP_template_updated_preserving_all_parts.xlsx')
-    process_excel_update(json_data_path, excel_template_path, output_excel_path)
+    ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
+    process_excel_update(json_data_path, excel_template_path, output_excel_path, ensemble_output_path)
