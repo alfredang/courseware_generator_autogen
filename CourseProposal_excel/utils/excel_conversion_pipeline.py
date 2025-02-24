@@ -2,6 +2,7 @@ import json
 import sys
 import os
 from helpers import load_json_file, extract_lo_keys
+import pandas as pd
 
 
 def extract_and_concatenate_json_values(json_data, keys_to_extract, new_key_name):
@@ -97,6 +98,97 @@ def write_json_file(data, output_file_path):
     except Exception as e:
         print(f"Error writing to '{output_file_path}': {e}")
 
+def create_course_dataframe(json_data):
+    """
+    Creates a DataFrame from the provided JSON data, structured as requested.
+
+    Args:
+        json_data (dict): The JSON data containing course information.
+
+    Returns:
+        pandas.DataFrame: A DataFrame representing the course schema.
+    """
+
+    # Extract relevant data sections (with defaults for safety)
+    learning_units = json_data["TSC and Topics"].get("Learning Units", [])
+    learning_outcomes = json_data["Learning Outcomes"].get("Learning Outcomes", [])
+    knowledge_statements = json_data["Learning Outcomes"].get("Knowledge", [])
+    ability_statements = json_data["Learning Outcomes"].get("Ability", [])
+    course_outline = json_data["Assessment Methods"].get("Course Outline", {}).get("Learning Units", {})
+    tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
+
+    # Initialize lists to hold the data for each row in the DataFrame
+    data = []
+
+    # Iterate through Learning Units (LU)
+    for lu_index, lu_title in enumerate(learning_units):
+        lu_num = f"LU{lu_index + 1}"  # LU1, LU2, etc.
+        lu_title_only = lu_title.split(": ", 1)[1]  # Extract title after "LUx: "
+
+        # Get Learning Outcome (LO) for the current LU
+        lo_title = learning_outcomes[lu_index] if lu_index < len(learning_outcomes) else "N/A"
+        lo_num = f"LO{lu_index + 1}"
+        lo_title_only = lo_title.split(": ", 1)[1] if lo_title != "N/A" else "N/A" # Extract title after "LOx: "
+
+        # Get Topics for the current LU from Course Outline
+        lu_key = f"LU{lu_index + 1}"
+        if lu_key in course_outline:
+            topics = course_outline[lu_key].get("Description", [])
+            for topic in topics:
+                topic_title_full = topic.get("Topic", "N/A")
+                topic_num = topic_title_full.split(":")[0].replace("Topic ", "T") # "Topic 1" -> "T1"
+                topic_title = topic_title_full.split(': ', 1)[1]  # Get the title only, after the first ': '
+                topic_title_short = topic_title.split(' (')[0]  # extract the topic title without KA
+
+                # Extract K and A statements from the topic title
+                ka_codes_str = topic_title_full.split('(')[-1].rstrip(')')  # Everything inside (...)
+                ka_codes = [code.strip() for code in ka_codes_str.split(',')]
+
+
+                # Create rows for EACH K and A statement
+                for code in ka_codes:
+                    if code.startswith('K'):
+                        k_index = int(code[1:]) - 1
+                        # Correct K statement formatting:  Remove the duplicate "Kx: " prefix
+                        k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
+                        data.append([
+                            lu_num,
+                            lu_title_only,
+                            lo_num,
+                            lo_title_only,
+                            f"{topic_num}: {topic_title_short}",
+                            k_statement,
+                            "Written Exam"  # Mode of Assessment for K
+                        ])
+                    elif code.startswith('A'):
+                        a_index = int(code[1:]) - 1
+                        # Correct A statement formatting: Remove the duplicate "Ax: " prefix
+                        a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
+                        data.append([
+                            lu_num,
+                            lu_title_only,
+                            lo_num,
+                            lo_title_only,
+                            f"{topic_num}: {topic_title_short}",
+                            a_statement,
+                            "Practical Exam"  # Mode of Assessment for A
+                        ])
+
+    # Create the DataFrame
+    df = pd.DataFrame(data, columns=[
+        "LU#",
+        "Learning Unit Title",
+        "LO#",
+        "Learning Outcome",
+        "Topic (T#: Topic title)",
+        "Applicable K&A Statement",
+        "Mode of Assessment"
+    ])
+
+    return df
+
+
+# main function for this script
 def map_new_key_names_excel():
     generated_mapping_path = os.path.join('..', 'json_output', 'generated_mapping.json')
     generated_mapping = load_json_file(generated_mapping_path)
@@ -134,4 +226,16 @@ def map_new_key_names_excel():
 
 
 if __name__ == "__main__":
-    map_new_key_names_excel()
+    # map_new_key_names_excel()
+
+    # Load your JSON data
+    ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
+    ensemble_output = load_json_file(ensemble_output_path)
+
+    # Create the DataFrame
+    df = create_course_dataframe(ensemble_output)
+
+    # Print the DataFrame (optional)
+    print(df)
+    df.to_csv("course_dataframe.csv", index=False)
+
