@@ -6,153 +6,92 @@ import zipfile
 import json
 import pandas as pd
 from lxml import etree as ET
+from excel_conversion_pipeline import create_course_dataframe
 
-def load_json_file(filepath):
-    with open(filepath, 'r', encoding='utf-8') as f:
-        return json.load(f)
-
-def get_relationship_mapping(rels_path):
-    ns = {'r': 'http://schemas.openxmlformats.org/package/2006/relationships'}
-    tree = ET.parse(rels_path)
-    root = tree.getroot()
-    rels = {}
-    for rel in root.findall('r:Relationship', ns):
-        rId = rel.attrib.get('Id')
-        target = rel.attrib.get('Target')  # e.g., "worksheets/sheet1.xml"
-        # Prepend "xl/" if needed
-        rels[rId] = os.path.join('xl', target) if not target.startswith('/') else target[1:]
-    return rels
-
-def get_sheet_mapping(workbook_xml_path, rels_map):
-    """
-    Returns a mapping from sheet name to its full path (within the extracted directory)
-    """
-    ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-          'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
-    tree = ET.parse(workbook_xml_path)
-    root = tree.getroot()
-    mapping = {}
-    for sheet in root.xpath('.//main:sheets/main:sheet', namespaces=ns):
-        name = sheet.get('name')
-        rId = sheet.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
-        if rId in rels_map:
-            mapping[name] = rels_map[rId]
-    return mapping
-
-def col_idx_to_letter(n):
-    """Converts a 1-indexed column number to an Excel column letter."""
-    result = ""
-    while n:
-        n, remainder = divmod(n - 1, 26)
-        result = chr(65 + remainder) + result
-    return result
-
-def update_cell_in_sheet(sheet_xml_path, cell_ref, new_value):
-    """
-    Updates the cell with reference cell_ref in the sheet XML using lxml.
-    This version preserves namespaces and structure.
-    If new_value is a list and contains only one element, that element is used.
-    Otherwise, multiple items are joined with a newline.
-    """
+def force_full_recalc_in_workbook(workbook_xml_path):
     ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
     parser = ET.XMLParser(remove_blank_text=False)
-    tree = ET.parse(sheet_xml_path, parser)
+    tree = ET.parse(workbook_xml_path, parser)
     root = tree.getroot()
-    found = False
 
-    # Flatten new_value if it's a list
-    if isinstance(new_value, list):
-        if len(new_value) == 1:
-            new_value = new_value[0]
-        else:
-            new_value = "\n".join(map(str, new_value))
+    # <workbook> is the root, find or create <calcPr>
+    calcPr = root.find('main:calcPr', namespaces=ns)
+    if calcPr is None:
+        calcPr = ET.SubElement(root, '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}calcPr')
 
-    # Find the <c> element with attribute r equal to cell_ref
-    for cell in root.xpath('.//main:c[@r="%s"]' % cell_ref, namespaces=ns):
-        # Skip cells that have a formula (we don’t want to overwrite them)
-        if cell.xpath('main:f', namespaces=ns):
-            print(f"Skipping formula cell {cell_ref}")
-            return False
+    # Force automatic recalculation
+    calcPr.set('calcMode', 'auto')
+    calcPr.set('fullCalcOnLoad', '1')
+    calcPr.set('forceFullCalc', '1')
 
-        # Remove any existing value elements (<v> or <is>)
-        for child in list(cell):
-            if child.tag in {f"{{{ns['main']}}}v", f"{{{ns['main']}}}is"}:
-                cell.remove(child)
-        # Set type attribute to inline string
-        cell.set('t', 'inlineStr')
-        is_elem = ET.Element(f"{{{ns['main']}}}is")
-        t_elem = ET.Element(f"{{{ns['main']}}}t")
-        t_elem.text = str(new_value)
-        is_elem.append(t_elem)
-        cell.append(is_elem)
-        found = True
-        break
+    tree.write(workbook_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+    print("Set fullCalcOnLoad='1' and forceFullCalc='1' in workbook.xml")
 
-    if not found:
-        print(f"Cell {cell_ref} not found in {sheet_xml_path}. Skipping.")
-        return False
-
-    tree.write(sheet_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
-    return True
+def remove_calc_chain(temp_dir):
+    """Remove calcChain.xml so Excel forces a full recalc on next open."""
+    calc_chain_path = os.path.join(temp_dir, 'xl', 'calcChain.xml')
+    if os.path.exists(calc_chain_path):
+        os.remove(calc_chain_path)
+        print("Removed calcChain.xml to force full recalculation.")
+    else:
+        print("No calcChain.xml found; nothing to remove.")
 
 def insert_dataframe_into_sheet(sheet_xml_path, start_row, start_col, df):
     """
-    Inserts the DataFrame into the worksheet XML starting at the given row and column.
-    For each cell, the value is stored as an inline string.
+    Inserts a Pandas DataFrame into the specified Excel worksheet.
+
+    Args:
+        sheet_xml_path: Path to the sheet XML file.
+        start_row:     The 1-indexed row number to start inserting data.
+        start_col:     The 1-indexed column number to start inserting data.
+        df:            The Pandas DataFrame to insert.
     """
     ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
     parser = ET.XMLParser(remove_blank_text=False)
     tree = ET.parse(sheet_xml_path, parser)
     root = tree.getroot()
 
-    # Locate the sheetData element
     sheetData = root.find(f"{{{ns['main']}}}sheetData")
     if sheetData is None:
-        # Create one if not present.
         sheetData = ET.SubElement(root, f"{{{ns['main']}}}sheetData")
 
-    # For each row in the DataFrame, create/update a row element.
-    # Assume start_row and start_col are 1-indexed.
+    rows = sheetData.findall(f"{{{ns['main']}}}row")
+
     for i, row_values in enumerate(df.values):
         current_row_number = start_row + i
-        # Try to find an existing <row> element with attribute r=current_row_number
-        row_elem = sheetData.find(f".//{{{ns['main']}}}row[@r='{current_row_number}']")
-        if row_elem is None:
-            row_elem = ET.SubElement(sheetData, f"{{{ns['main']}}}row", r=str(current_row_number))
-        # For each cell in the row:
+        
+        try:
+            row_elem = rows[current_row_number - 1] #  Access the existing row
+        except IndexError:
+            row_elem = ET.SubElement(sheetData, f"{{{ns['main']}}}row", r=str(current_row_number)) #create a new row.
+
+        row_elem.set("r", str(current_row_number)) # Ensure row number is correct
+
         for j, cell_value in enumerate(row_values):
             col_letter = col_idx_to_letter(start_col + j)
             cell_ref = f"{col_letter}{current_row_number}"
 
-            # Check if a cell with this reference already exists in the row.
+            # Find existing cell element in the row
             cell_elem = None
             for cell in row_elem.findall(f"{{{ns['main']}}}c"):
                 if cell.get('r') == cell_ref:
                     cell_elem = cell
                     break
+
+            # If cell doesn't exist, create it; otherwise, clear existing content
             if cell_elem is None:
                 cell_elem = ET.SubElement(row_elem, f"{{{ns['main']}}}c", r=cell_ref)
-            # Remove any existing value or inline string
-            for child in list(cell_elem):
-                if child.tag in {f"{{{ns['main']}}}v", f"{{{ns['main']}}}is"}:
+            else:
+                for child in list(cell_elem): # Remove existing children
                     cell_elem.remove(child)
-            # Set cell type to inline string
+
+            #Set the type attribute to inline string and add a cell Value.
             cell_elem.set('t', 'inlineStr')
             is_elem = ET.Element(f"{{{ns['main']}}}is")
             t_elem = ET.Element(f"{{{ns['main']}}}t")
             t_elem.text = str(cell_value)
             is_elem.append(t_elem)
             cell_elem.append(is_elem)
-            # (Optionally, you could set style attributes if needed.)
-
-    # Optionally, update the dimension element if present.
-    dimension_elem = root.find(f"{{{ns['main']}}}dimension")
-    if dimension_elem is not None:
-        # Compute new ref: from A1 to the bottom-right cell of the updated area.
-        # (Here we assume that the updated block starts at start_row, start_col)
-        max_col = col_idx_to_letter(start_col + df.shape[1] - 1)
-        max_row = start_row + df.shape[0] - 1
-        dimension_elem.set('ref', f"A1:{max_col}{max_row}")
 
     tree.write(sheet_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
     print(f"Inserted DataFrame into {sheet_xml_path}")
@@ -231,6 +170,8 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         else:
             print("Sheet '3 - Instructional Design' not found. DataFrame not inserted.")
 
+        # remove_calc_chain(temp_dir)
+
         # Repackage the updated directory into a new .xlsx file
         with zipfile.ZipFile(output_excel_path, 'w', zipfile.ZIP_DEFLATED) as zout:
             for foldername, subfolders, filenames in os.walk(temp_dir):
@@ -243,78 +184,189 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
     finally:
         shutil.rmtree(temp_dir)
 
-# Example DataFrame creator (from your provided code)
-def create_course_dataframe(json_data):
+def load_json_file(filepath):
+    with open(filepath, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def get_relationship_mapping(rels_path):
+    ns = {'r': 'http://schemas.openxmlformats.org/package/2006/relationships'}
+    tree = ET.parse(rels_path)
+    root = tree.getroot()
+    rels = {}
+    for rel in root.findall('r:Relationship', ns):
+        rId = rel.attrib.get('Id')
+        target = rel.attrib.get('Target')  # e.g., "worksheets/sheet1.xml"
+        # Prepend "xl/" if needed
+        rels[rId] = os.path.join('xl', target) if not target.startswith('/') else target[1:]
+    return rels
+
+def get_sheet_mapping(workbook_xml_path, rels_map):
     """
-    Creates a DataFrame from the provided JSON data, structured as requested.
+    Returns a mapping from sheet name to its full path (within the extracted directory)
     """
-    learning_units = json_data["TSC and Topics"].get("Learning Units", [])
-    learning_outcomes = json_data["Learning Outcomes"].get("Learning Outcomes", [])
-    knowledge_statements = json_data["Learning Outcomes"].get("Knowledge", [])
-    ability_statements = json_data["Learning Outcomes"].get("Ability", [])
-    course_outline = json_data["Assessment Methods"].get("Course Outline", {}).get("Learning Units", {})
-    tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
+    ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+          'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+    tree = ET.parse(workbook_xml_path)
+    root = tree.getroot()
+    mapping = {}
+    for sheet in root.xpath('.//main:sheets/main:sheet', namespaces=ns):
+        name = sheet.get('name')
+        rId = sheet.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+        if rId in rels_map:
+            mapping[name] = rels_map[rId]
+    return mapping
 
-    data = []
-    for lu_index, lu_title in enumerate(learning_units):
-        lu_num = f"LU{lu_index + 1}"
-        # Split at ": " to remove the prefix (assumes format "LUx: title")
-        lu_title_only = lu_title.split(": ", 1)[1] if ": " in lu_title else lu_title
+def col_idx_to_letter(n):
+    """Converts a 1-indexed column number to an Excel column letter."""
+    result = ""
+    while n:
+        n, remainder = divmod(n - 1, 26)
+        result = chr(65 + remainder) + result
+    return result
 
-        lo_title = learning_outcomes[lu_index] if lu_index < len(learning_outcomes) else "N/A"
-        lo_num = f"LO{lu_index + 1}"
-        lo_title_only = lo_title.split(": ", 1)[1] if (lo_title != "N/A" and ": " in lo_title) else lo_title
+def update_cell_in_sheet(sheet_xml_path, cell_ref, new_value):
+    """Updates cell value in sheet XML (implementation from previous response remains the same)"""
+    ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
+    parser = ET.XMLParser(remove_blank_text=False)
+    tree = ET.parse(sheet_xml_path, parser)
+    root = tree.getroot()
+    found = False
 
-        lu_key = f"LU{lu_index + 1}"
-        if lu_key in course_outline:
-            topics = course_outline[lu_key].get("Description", [])
-            for topic in topics:
-                topic_title_full = topic.get("Topic", "N/A")
-                topic_num = topic_title_full.split(":")[0].replace("Topic ", "T")
-                topic_title = topic_title_full.split(': ', 1)[1] if ': ' in topic_title_full else topic_title_full
-                topic_title_short = topic_title.split(' (')[0]
+    # Flatten new_value if it's a list
+    if isinstance(new_value, list):
+        if len(new_value) == 1:
+            new_value = new_value[0]
+        else:
+            new_value = "\n".join(map(str, new_value))
 
-                ka_codes_str = topic_title_full.split('(')[-1].rstrip(')')
-                ka_codes = [code.strip() for code in ka_codes_str.split(',')]
-                for code in ka_codes:
-                    if code.startswith('K'):
-                        k_index = int(code[1:]) - 1
-                        k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
-                        data.append([
-                            lu_num,
-                            lu_title_only,
-                            lo_num,
-                            lo_title_only,
-                            f"{topic_num}: {topic_title_short}",
-                            k_statement,
-                            "Written Exam"
-                        ])
-                    elif code.startswith('A'):
-                        a_index = int(code[1:]) - 1
-                        a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
-                        data.append([
-                            lu_num,
-                            lu_title_only,
-                            lo_num,
-                            lo_title_only,
-                            f"{topic_num}: {topic_title_short}",
-                            a_statement,
-                            "Practical Exam"
-                        ])
-    df = pd.DataFrame(data, columns=[
-        "LU#",
-        "Learning Unit Title",
-        "LO#",
-        "Learning Outcome",
-        "Topic (T#: Topic title)",
-        "Applicable K&A Statement",
-        "Mode of Assessment"
-    ])
-    return df
+    # Find the <c> element with attribute r equal to cell_ref
+    for cell in root.xpath('.//main:c[@r="%s"]' % cell_ref, namespaces=ns):
+        # Skip cells that have a formula (we don’t want to overwrite them)
+        if cell.xpath('main:f', namespaces=ns):
+            print(f"Skipping formula cell {cell_ref}")
+            return False
+
+        # Remove any existing value elements (<v> or <is>)
+        for child in list(cell):
+            if child.tag in {f"{{{ns['main']}}}v", f"{{{ns['main']}}}is"}:
+                cell.remove(child)
+        # Set type attribute to inline string
+        cell.set('t', 'inlineStr')
+        is_elem = ET.Element(f"{{{ns['main']}}}is")
+        t_elem = ET.Element(f"{{{ns['main']}}}t")
+        t_elem.text = str(new_value)
+        is_elem.append(t_elem)
+        cell.append(is_elem)
+        found = True
+        break
+
+    if not found:
+        print(f"Cell {cell_ref} not found in {sheet_xml_path}. Skipping.")
+        return False
+
+    tree.write(sheet_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+    return True
+
+
+def preserve_excel_metadata(template_path, modified_path, output_path):
+    """Preserve metadata function remains the same as the previous response"""
+    temp_template_dir = "temp_template"
+    temp_modified_dir = "temp_modified"
+
+    try:
+        # 1. Unzip both files
+        with zipfile.ZipFile(template_path, 'r') as template_zip:
+            template_zip.extractall(temp_template_dir)
+        with zipfile.ZipFile(modified_path, 'r') as modified_zip:
+            modified_zip.extractall(temp_modified_dir)
+
+        # 2. Copy missing files and folders (based on diff report - adapt as needed)
+        files_to_copy = [
+            "xl/calcChain.xml",
+            "xl/comments",
+            "xl/drawings/commentsDrawing1.vml", # Example - add all vmlDrawing files if needed
+            "xl/drawings/commentsDrawing2.vml",
+            "xl/drawings/commentsDrawing3.vml",
+            "xl/drawings/commentsDrawing4.vml",
+            "xl/drawings/commentsDrawing5.vml",
+            "xl/drawings/commentsDrawing6.vml",
+            "xl/drawings/commentsDrawing7.vml",
+            "xl/drawings/commentsDrawing8.vml",
+            "xl/drawings/commentsDrawing9.vml",
+            "xl/drawings/commentsDrawing10.vml",
+            "xl/metadata.xml",
+            "xl/persons",
+            "xl/printerSettings",
+            "xl/richData",
+            "xl/sharedStrings.xml",
+            "customXml",
+            "customXml/_rels"
+        ]
+
+        for item in files_to_copy:
+            template_item_path = os.path.join(temp_template_dir, item)
+            modified_item_path = os.path.join(temp_modified_dir, item)
+            if os.path.exists(template_item_path):
+                if os.path.isdir(template_item_path):
+                    if os.path.exists(modified_item_path):
+                        shutil.rmtree(modified_item_path) # remove existing dir to avoid issues
+                    shutil.copytree(template_item_path, modified_item_path)
+                else:
+                    shutil.copy2(template_item_path, modified_item_path) # copy2 to preserve metadata
+
+        # 3. Update relationship XMLs
+        content_types_path_template = os.path.join(temp_template_dir, "[Content_Types].xml")
+        content_types_path_modified = os.path.join(temp_modified_dir, "[Content_Types].xml")
+        workbook_rels_path_template = os.path.join(temp_template_dir, "xl", "_rels", "workbook.xml.rels")
+        workbook_rels_path_modified = os.path.join(temp_modified_dir, "xl", "_rels", "workbook.xml.rels")
+
+        # Update [Content_Types].xml - Example, needs to be comprehensive based on diff report
+        tree_content_types_template = ET.parse(content_types_path_template)
+        root_content_types_template = tree_content_types_template.getroot()
+        tree_content_types_modified = ET.parse(content_types_path_modified)
+        root_content_types_modified = tree_content_types_modified.getroot()
+
+        for element in root_content_types_template.findall("Override"): # Copy Override elements from template
+            if not any(override.get('PartName') == element.get('PartName') for override in root_content_types_modified.findall("Override")): # Avoid duplicates
+                root_content_types_modified.append(element)
+        tree_content_types_modified.write(content_types_path_modified)
+
+
+        # Update xl/_rels/workbook.xml.rels - Example, needs to be comprehensive based on diff report
+        tree_workbook_rels_template = ET.parse(workbook_rels_path_template)
+        root_workbook_rels_template = tree_workbook_rels_template.getroot()
+        tree_workbook_rels_modified = ET.parse(workbook_rels_path_modified)
+        root_workbook_rels_modified = tree_workbook_rels_modified.getroot()
+
+        for element in root_workbook_rels_template.findall("Relationship"): # Copy Relationship elements from template
+             if not any(rel.get('Id') == element.get('Id') for rel in root_workbook_rels_modified.findall("Relationship")): # Avoid duplicates
+                root_workbook_rels_modified.append(element)
+        tree_workbook_rels_modified.write(workbook_rels_path_modified)
+
+
+        # 4. Re-zip to XLSX
+        shutil.make_archive(output_path[:-5], 'zip', temp_modified_dir) # Create zip archive
+        os.rename(output_path[:-5] + ".zip", output_path) # Rename to .xlsx
+
+        print(f"Metadata preserved Excel file saved to: {output_path}")
+
+    except Exception as e:
+        print(f"Error preserving metadata: {e}")
+    finally:
+        # Cleanup temporary directories
+        shutil.rmtree(temp_template_dir, ignore_errors=True)
+        shutil.rmtree(temp_modified_dir, ignore_errors=True)
+
 
 if __name__ == "__main__":
     json_data_path = os.path.join('..', 'json_output', 'generated_mapping.json')
     excel_template_path = os.path.join('..', 'templates', 'CP_excel_template.xlsx')
-    output_excel_path = os.path.join('..', 'output_docs', 'CP_template_updated_preserving_all_parts.xlsx')
+    output_excel_path_modified = os.path.join('..', 'output_docs', 'CP_template_updated_cells_output.xlsx') # Intermediate output after cell update
+    output_excel_path_preserved = os.path.join('..', 'output_docs', 'CP_template_metadata_preserved.xlsx') # Final output with metadata preserved
     ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
-    process_excel_update(json_data_path, excel_template_path, output_excel_path, ensemble_output_path)
+
+    # First, run the XML-based code to update cell values (output to _modified file)
+    process_excel_update(json_data_path, excel_template_path, output_excel_path_modified, ensemble_output_path)
+
+    # Then, preserve metadata, taking the modified file and template, and outputting the final, preserved file
+    preserve_excel_metadata(excel_template_path, output_excel_path_modified, output_excel_path_preserved)
