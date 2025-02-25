@@ -6,35 +6,29 @@ import zipfile
 import json
 import pandas as pd
 from lxml import etree as ET
-from excel_conversion_pipeline import create_course_dataframe
+from excel_conversion_pipeline import create_course_dataframe, create_assessment_dataframe, create_instructional_dataframe, create_instruction_description_dataframe
 
-def force_full_recalc_in_workbook(workbook_xml_path):
-    ns = {'main': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
-    parser = ET.XMLParser(remove_blank_text=False)
-    tree = ET.parse(workbook_xml_path, parser)
-    root = tree.getroot()
+def cleanup_old_files(output_excel_path_modified, output_excel_path_preserved):
+    """
+    Deletes existing output Excel files (both intermediate and final) before script execution.
+    """
+    files_to_delete = [
+        output_excel_path_modified,
+        output_excel_path_preserved,
+        output_excel_path_preserved[:-5] + ".zip"  # Potential zip file from previous run
+    ]
 
-    # <workbook> is the root, find or create <calcPr>
-    calcPr = root.find('main:calcPr', namespaces=ns)
-    if calcPr is None:
-        calcPr = ET.SubElement(root, '{http://schemas.openxmlformats.org/spreadsheetml/2006/main}calcPr')
-
-    # Force automatic recalculation
-    calcPr.set('calcMode', 'auto')
-    calcPr.set('fullCalcOnLoad', '1')
-    calcPr.set('forceFullCalc', '1')
-
-    tree.write(workbook_xml_path, encoding="UTF-8", xml_declaration=True, pretty_print=True)
-    print("Set fullCalcOnLoad='1' and forceFullCalc='1' in workbook.xml")
-
-def remove_calc_chain(temp_dir):
-    """Remove calcChain.xml so Excel forces a full recalc on next open."""
-    calc_chain_path = os.path.join(temp_dir, 'xl', 'calcChain.xml')
-    if os.path.exists(calc_chain_path):
-        os.remove(calc_chain_path)
-        print("Removed calcChain.xml to force full recalculation.")
-    else:
-        print("No calcChain.xml found; nothing to remove.")
+    print("--- Cleaning up old output files ---")
+    for filepath in files_to_delete:
+        if os.path.exists(filepath):
+            try:
+                os.remove(filepath)
+                print(f" попередній файл '{filepath}' успішно видалено.")
+            except OSError as e:
+                print(f"Error deleting existing file '{filepath}': {e}")
+        else:
+            print(f"Файл '{filepath}' не існує, пропускаю видалення.") # File does not exist, skipping deletion
+    print("--- Cleanup complete ---")
 
 def insert_dataframe_into_sheet(sheet_xml_path, start_row, start_col, df):
     """
@@ -170,7 +164,47 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         else:
             print("Sheet '3 - Instructional Design' not found. DataFrame not inserted.")
 
-        # remove_calc_chain(temp_dir)
+
+        # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
+        if "3 - Methodologies" in sheet_mapping:
+            # Create the DataFrame using your helper function (provided separately)
+            df = create_assessment_dataframe(ensemble_output)
+            if not df.empty:
+                sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
+                # For example, insert starting at row 18 and column 2 (B18)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=10, df=df)
+            else:
+                print("Warning: DataFrame is empty. Nothing to insert.")
+        else:
+            print("Sheet '3 - Methodologies' not found. DataFrame not inserted.")
+
+        # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
+        if "3 - Methodologies" in sheet_mapping:
+            # Create the DataFrame using your helper function (provided separately)
+            df = create_instructional_dataframe(ensemble_output)
+            if not df.empty:
+                sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
+                # For example, insert starting at row 18 and column 2 (B18)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=2, df=df)
+            else:
+                print("Warning: DataFrame is empty. Nothing to insert.")
+        else:
+            print("Sheet '3 - Methodologies' not found. DataFrame not inserted.")
+
+        # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
+        if "3 - Methodologies" in sheet_mapping:
+            ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
+            instructional_methods_path = os.path.join('..', 'json_output', 'instructional_methods.json')
+            # Create the DataFrame using your helper function (provided separately)
+            df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
+            if not df.empty:
+                sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
+                # For example, insert starting at row 18 and column 2 (B18)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=7, df=df)
+            else:
+                print("Warning: DataFrame is empty. Nothing to insert.")
+        else:
+            print("Sheet '3 - Methodologies' not found. DataFrame not inserted.")
 
         # Repackage the updated directory into a new .xlsx file
         with zipfile.ZipFile(output_excel_path, 'w', zipfile.ZIP_DEFLATED) as zout:
@@ -282,7 +316,7 @@ def preserve_excel_metadata(template_path, modified_path, output_path):
 
         # 2. Copy missing files and folders (based on diff report - adapt as needed)
         files_to_copy = [
-            "xl/calcChain.xml",
+            # "xl/calcChain.xml",
             "xl/comments",
             "xl/drawings/commentsDrawing1.vml", # Example - add all vmlDrawing files if needed
             "xl/drawings/commentsDrawing2.vml",
@@ -343,6 +377,15 @@ def preserve_excel_metadata(template_path, modified_path, output_path):
                 root_workbook_rels_modified.append(element)
         tree_workbook_rels_modified.write(workbook_rels_path_modified)
 
+        output_zip_path = output_path[:-5] + ".zip" # Path for the zip archive before renaming
+        # Check if zip file already exists and remove it
+        if os.path.exists(output_zip_path):
+            try:
+                os.remove(output_zip_path)
+                print(f" попередній файл '{output_zip_path}' успішно видалено.")
+            except OSError as e:
+                print(f"Error deleting existing zip file '{output_zip_path}': {e}")
+                raise # Re-raise the exception if deletion fails
 
         # 4. Re-zip to XLSX
         shutil.make_archive(output_path[:-5], 'zip', temp_modified_dir) # Create zip archive
@@ -364,6 +407,11 @@ if __name__ == "__main__":
     output_excel_path_modified = os.path.join('..', 'output_docs', 'CP_template_updated_cells_output.xlsx') # Intermediate output after cell update
     output_excel_path_preserved = os.path.join('..', 'output_docs', 'CP_template_metadata_preserved.xlsx') # Final output with metadata preserved
     ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
+
+    # --- CALL CLEANUP FUNCTION HERE ---
+    output_excel_path_modified = os.path.join('..', 'output_docs', 'CP_template_updated_cells_output.xlsx') # Intermediate output after cell update
+    output_excel_path_preserved = os.path.join('..', 'output_docs', 'CP_template_metadata_preserved.xlsx') # Final output with metadata preserved
+    cleanup_old_files(output_excel_path_modified, output_excel_path_preserved)
 
     # First, run the XML-based code to update cell values (output to _modified file)
     process_excel_update(json_data_path, excel_template_path, output_excel_path_modified, ensemble_output_path)

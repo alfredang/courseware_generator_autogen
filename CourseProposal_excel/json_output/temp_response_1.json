@@ -1,20 +1,22 @@
 {
     "course_info": {
-        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
-        "Industry": "Security",
+        "Course Title": "Github Foundations Certification Training",
+        "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
-            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
-            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
-            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+            "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
+            "LO2: Select appropriate Git scripts for integrating and deploying software products.",
+            "LO3: Configure software products and deploy releases using Git configuration tests.",
+            "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
+            "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
+            "LO6: Implement modifications to software products and processes for improved functionality."
         ],
-        "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
-        "TSC Code": "SEC-SRM-3002-1.1"
+        "TSC Title": "Software Configuration",
+        "TSC Code": "ICT-DIT-3014-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "One of the key performance gaps in the industry is the inability to effectively identify and respond to potential security threats. Many organizations struggle with recognizing tell-tale signs of suspicious activities or behaviors, which can lead to inadequate security measures. Additionally, there is often a lack of systematic procedures for conducting thorough site assessments, resulting in vulnerabilities that could be exploited by malicious actors. This gap in risk identification and assessment can compromise the safety and security of both personnel and assets.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course is designed to enhance the skills necessary for identifying potential security threats through structured risk identification techniques. By focusing on systematic assessment methods, participants will learn to recognize and analyze suspicious behaviors and activities, thereby improving their ability to mitigate risks effectively."
+            "What are the performance gaps in the industry?": "In the rapidly evolving landscape, many organizations struggle with inefficient software release cycles and version control. Coordination issues between developers, testers, and operations teams often lead to delays and integration conflicts. Legacy systems and a lack of standardized procedures further complicate the process, increasing the risk of errors and security vulnerabilities.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course provides hands-on experience with industry-standard tools and techniques for streamlining software development. It equips individuals with the skills to effectively manage code changes, automate deployment processes, and ensure platform-specific compatibility. By learning how to tailor software products and processes, professionals can contribute to smoother releases and improved software functionality across various platforms."
         }
     ]
 }

@@ -1,20 +1,22 @@
 {
     "course_info": {
-        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
-        "Industry": "Security",
+        "Course Title": "Github Foundations Certification Training",
+        "Industry": "Infocomm Technology",
         "Learning Outcomes": [
-            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
-            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
-            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
-            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+            "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
+            "LO2: Select appropriate Git scripts for integrating and deploying software products.",
+            "LO3: Configure software products and deploy releases using Git configuration tests.",
+            "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
+            "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
+            "LO6: Implement modifications to software products and processes for improved functionality."
         ],
-        "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
-        "TSC Code": "SEC-SRM-3002-1.1"
+        "TSC Title": "Software Configuration",
+        "TSC Code": "ICT-DIT-3014-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "Another significant performance gap is the lack of collaboration among security teams when assessing risks. Often, security personnel work in silos, which can lead to incomplete risk evaluations and missed opportunities for addressing vulnerabilities. Furthermore, the absence of established methods for risk analysis can hinder the effectiveness of security operations, leaving organizations exposed to potential threats.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes the importance of teamwork and collaboration in risk assessment processes. By engaging with peers and security teams, participants will develop a comprehensive understanding of established risk analysis methods, enabling them to work more effectively together to identify and address security deficiencies."
+            "What are the performance gaps in the industry?": "Many software development teams face challenges in selecting and utilizing the right tools for integration and deployment. A lack of expertise in scripting and automation leads to manual processes that are time-consuming and prone to errors. Moreover, teams often struggle to properly diagnose configuration issues, resulting in prolonged debugging cycles and delayed project timelines.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "The course covers a broad range of Git scripts and tools necessary for effectively integrating and deploying software. Participants will learn how to interpret configuration test results and identify the root causes of issues. This skillset enables them to proactively address problems and implement necessary modifications, which in turn leads to more reliable and efficient software releases."
         }
     ]
 }
