@@ -469,4 +469,24 @@ def extract_lo_keys(json_data):
             print(f"Matched key: {key}")  # Debugging statement
             lo_keys.append(key)
     return lo_keys
+
+def recursive_get_keys(json_data, key_prefix=""):
+    """
+    Extracts keys from a JSON dictionary that start with '#Topics' and returns them as a list.
+
+    Args:
+        json_data (dict): A dictionary loaded from a JSON file.
+
+    Returns:
+        list: A list of strings, where each string is a key from the json_data
+              that starts with '#Topics'. For example: ['#Topics[0]', '#Topics[1]', '#Topics[2]', ...].
+              Returns an empty list if no keys start with '#Topics'.
+    """
+    topic_keys = []
+    for key in json_data.keys():
+        # if key.startswith("#Topics"):
+        if key.startswith(key_prefix):
+            topic_keys.append(key)
+    return topic_keys
+
     

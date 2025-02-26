@@ -1,7 +1,7 @@
 import json
 import sys
 import os
-from helpers import load_json_file, extract_lo_keys
+from helpers import load_json_file, extract_lo_keys, recursive_get_keys
 import pandas as pd
 
 
@@ -31,9 +31,9 @@ def extract_and_concatenate_json_values(json_data, keys_to_extract, new_key_name
                 continue # Skip to the next key if not found
 
             if isinstance(value, list):
-                concatenated_string += "\n".join(map(str, value)) + "\n" # Map to str to handle non-string list elements if any
+                concatenated_string += "\n".join(map(str, value)) + "\n\n" # Map to str to handle non-string list elements if any
             else: # If value is not a list (e.g., string, number)
-                concatenated_string += str(value) + "\n" # Ensure it's a string
+                concatenated_string += str(value) + "\n\n" # Ensure it's a string
 
         except KeyError:
             print(f"Error: Key '{key_path}' not found in JSON data.")
@@ -41,7 +41,7 @@ def extract_and_concatenate_json_values(json_data, keys_to_extract, new_key_name
             print(f"TypeError accessing key '{key_path}': {e}")
 
 
-    output_data = {new_key_name: concatenated_string.rstrip('\n')} # rstrip to remove trailing newline
+    output_data = {new_key_name: concatenated_string.rstrip('\n\n')} # rstrip to remove trailing newline
     return output_data
 
 def extract_and_concatenate_json_values_space_seperator(json_data, keys_to_extract, new_key_name):
@@ -360,11 +360,16 @@ def map_new_key_names_excel():
     combined_lo = ["#LO[0]", "#LO[1]", "#LO[2]", "#LO[3]", "#LO[4]", "#LO[5]", "#LO[6]", "#LO[7]"]
     lo_data = extract_and_concatenate_json_values(generated_mapping, combined_lo, "#Combined_LO")
 
+    course_outline_keys = recursive_get_keys(generated_mapping, "#Topics[")
+    print(course_outline_keys)
+    course_outline = extract_and_concatenate_json_values(generated_mapping, course_outline_keys, "#Course_Outline")
+
     if sequencing_rationale_data and tcs_code_skill_data: # Check if both data extractions were successful
         # **Update the existing data dictionary**
         existing_data.update(sequencing_rationale_data)
         existing_data.update(tcs_code_skill_data)
         existing_data.update(lo_data)
+        existing_data.update(course_outline)
 
         # **Write the updated dictionary back to the output file**
         write_json_file(existing_data, output_json_file)
@@ -515,20 +520,20 @@ def create_instruction_description_dataframe(ensemble_json_path, methods_json_pa
     return df
 
 if __name__ == "__main__":
-    # map_new_key_names_excel()
+    map_new_key_names_excel()
 
-    # Load your JSON data
-    ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
-    ensemble_output = load_json_file(ensemble_output_path)
+    # # Load your JSON data
+    # ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
+    # ensemble_output = load_json_file(ensemble_output_path)
 
-    instructional_methods_path = os.path.join('..', 'json_output', 'instructional_methods.json')
-    instructional_methods_output = load_json_file(ensemble_output_path)
+    # instructional_methods_path = os.path.join('..', 'json_output', 'instructional_methods.json')
+    # instructional_methods_output = load_json_file(ensemble_output_path)
 
-    # Create the DataFrame
-    # df = create_course_dataframe(ensemble_output)
-    # df = create_instructional_dataframe(ensemble_output)
-    df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
-    # Print the DataFrame (optional)
-    print(df)
-    df.to_csv("instructional_methods_dataframe.csv", index=False)
+    # # Create the DataFrame
+    # # df = create_course_dataframe(ensemble_output)
+    # # df = create_instructional_dataframe(ensemble_output)
+    # df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
+    # # Print the DataFrame (optional)
+    # print(df)
+    # df.to_csv("instructional_methods_dataframe.csv", index=False)
 

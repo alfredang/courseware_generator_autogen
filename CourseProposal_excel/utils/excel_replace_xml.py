@@ -6,7 +6,7 @@ import zipfile
 import json
 import pandas as pd
 from lxml import etree as ET
-from excel_conversion_pipeline import create_course_dataframe, create_assessment_dataframe, create_instructional_dataframe, create_instruction_description_dataframe
+from excel_conversion_pipeline import create_course_dataframe, create_assessment_dataframe, create_instructional_dataframe, create_instruction_description_dataframe, map_new_key_names_excel
 
 def cleanup_old_files(output_excel_path_modified, output_excel_path_preserved):
     """
@@ -111,6 +111,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         "#Company":      {"sheet": "1 - Course Particulars", "cell": "C2", "json_key": "#Company"},
         "#CourseTitle":   {"sheet": "1 - Course Particulars", "cell": "C3", "json_key": "#CourseTitle"},
         "#TCS_Code_Skill": {"sheet": "1 - Course Particulars", "cell": "C10", "json_key": "#TCS_Code_Skill"},
+        "#Course_Outline": {"sheet": "1 - Course Particulars", "cell": "C7", "json_key": "#Course_Outline"},        
         "#Placeholder[0]": {"sheet": "2 - Background", "cell": "B4", "json_key": "#Placeholder[0]"},
         "#Placeholder[1]": {"sheet": "2 - Background", "cell": "B8", "json_key": "#Placeholder[1]"},
         "#Sequencing_rationale": {"sheet": "3 - Instructional Design", "cell": "B6", "json_key": "#Sequencing_rationale"},
@@ -316,7 +317,7 @@ def preserve_excel_metadata(template_path, modified_path, output_path):
 
         # 2. Copy missing files and folders (based on diff report - adapt as needed)
         files_to_copy = [
-            # "xl/calcChain.xml",
+            "xl/calcChain.xml",
             "xl/comments",
             "xl/drawings/commentsDrawing1.vml", # Example - add all vmlDrawing files if needed
             "xl/drawings/commentsDrawing2.vml",
@@ -402,6 +403,8 @@ def preserve_excel_metadata(template_path, modified_path, output_path):
 
 
 if __name__ == "__main__":
+
+    map_new_key_names_excel()
     json_data_path = os.path.join('..', 'json_output', 'generated_mapping.json')
     excel_template_path = os.path.join('..', 'templates', 'CP_excel_template.xlsx')
     output_excel_path_modified = os.path.join('..', 'output_docs', 'CP_template_updated_cells_output.xlsx') # Intermediate output after cell update
