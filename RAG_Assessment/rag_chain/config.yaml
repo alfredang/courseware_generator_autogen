@@ -7,6 +7,11 @@ create_vector_index_flag: True
 project_id: assessment-rag  # Replace with your actual project ID
 firestore_db_name: "tertiary-rag-docstore"  # Replace with your Firestore database name, or leave as (default)
 firestore_namespace: "hierarchical_docs"   # Replace with desired collection, can be left empty
-embedding_model: "models/text-embedding-004"
+embedding_model: "huggingface"
 llm_model: "models/gemini-2.0-flash-exp"
 gemini_llm_model: "models/gemini-2.0-flash-exp"
+redis_host: localhost # Default Redis host
+redis_port: 6379      # Default Redis port
+redis_password: null  # Default Redis password (set to null or your password if needed)
+redis_vector_index_name: vector_index # Default Redis vector index name
+redis_docstore_index_name: docstore   # Default Redis document store index name
