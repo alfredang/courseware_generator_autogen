@@ -57,44 +57,168 @@ class LearningUnits(RootModel): # LearningUnits can still be RootModel if you wa
 lu_data = load_json_file("output_json/parsed_TSC.json")
 
 # Parse the dictionary into the Pydantic model
-learning_units = LearningUnits.parse_obj(lu_data) # Use .parse_obj for RootModel
+learning_units = LearningUnits.model_validate(lu_data) # Use .parse_obj for RootModel
+
+from llama_index.core.workflow import Event
+from llama_index.core.schema import NodeWithScore
+from llama_index.core.prompts import PromptTemplate
+from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
+from llama_index.core.workflow import (
+    Context,
+    Workflow,
+    StartEvent,
+    StopEvent,
+    step,
+)
+from llama_index.core.schema import (
+    MetadataMode,
+    NodeWithScore,
+    TextNode,
+)
+from llama_index.core.response_synthesizers import (
+    ResponseMode,
+    get_response_synthesizer,
+)
+from typing import Union, List
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.llms.gemini import Gemini
+from redisvl.schema import IndexSchema
+from config_loader import load_shared_resources
+import asyncio
+from llama_index.core import VectorStoreIndex, PromptTemplate
+from llama_index.core.llms import ChatMessage
+from llama_index.vector_stores.redis import RedisVectorStore
+from redisvl.schema import IndexSchema
+from llama_index.core.query_pipeline import (
+    QueryPipeline,
+    CustomQueryComponent
+)
+from llama_index.llms.gemini import Gemini
+from llama_index.core.retrievers import VectorIndexRetriever
+from llama_index.core.query_pipeline.components.input import InputComponent
+from typing import Optional, List, Dict, Any
+from pydantic import Field
+from llama_index.core.schema import NodeWithScore
+
+class RetrieverEvent(Event):
+    """Result of running retrieval"""
+
+    nodes: list[NodeWithScore]
+
+
+class CreateCitationsEvent(Event):
+    """Add citations to the nodes."""
+
+    nodes: list[NodeWithScore]
+
+config, embed_model = load_shared_resources()
+llm = Gemini(
+    api_key=config.get("gemini_api_key") or config.get("GEMINI_API_KEY") or config.get("GEMINI_API"), 
+    model_name=config.get("llm_model", "gemini-1.5-pro")
+)
+
+CITATION_QA_TEMPLATE = PromptTemplate(
+    "Please provide an answer based solely on the provided sources. "
+    "When referencing information from a source, "
+    "cite the appropriate source(s) using their corresponding numbers. "
+    "Every answer should include at least one source citation. "
+    "Only cite a source when you are explicitly referencing it. "
+    "If none of the sources are helpful, you should indicate that. "
+    "For example:\n"
+    "Source 1:\n"
+    "The sky is red in the evening and blue in the morning.\n"
+    "Source 2:\n"
+    "Water is wet when the sky is red.\n"
+    "Query: When is water wet?\n"
+    "Answer: Water will be wet when the sky is red [2], "
+    "which occurs in the evening [1].\n"
+    "Now it's your turn. Below are several numbered sources of information:"
+    "\n------\n"
+    "{context_str}"
+    "\n------\n"
+    "Query: {query_str}\n"
+    "Answer: "
+)
+
+CITATION_REFINE_TEMPLATE = PromptTemplate(
+    "Please provide an answer based solely on the provided sources. "
+    "When referencing information from a source, "
+    "cite the appropriate source(s) using their corresponding numbers. "
+    "Every answer should include at least one source citation. "
+    "Only cite a source when you are explicitly referencing it. "
+    "If none of the sources are helpful, you should indicate that. "
+    "For example:\n"
+    "Source 1:\n"
+    "The sky is red in the evening and blue in the morning.\n"
+    "Source 2:\n"
+    "Water is wet when the sky is red.\n"
+    "Query: When is water wet?\n"
+    "Answer: Water will be wet when the sky is red [2], "
+    "which occurs in the evening [1].\n"
+    "Now it's your turn. "
+    "We have provided an existing answer: {existing_answer}"
+    "Below are several numbered sources of information. "
+    "Use them to refine the existing answer. "
+    "If the provided sources are not helpful, you will repeat the existing answer."
+    "\nBegin refining!"
+    "\n------\n"
+    "{context_msg}"
+    "\n------\n"
+    "Query: {query_str}\n"
+    "Answer: "
+)
+
+DEFAULT_CITATION_CHUNK_SIZE = 512
+DEFAULT_CITATION_CHUNK_OVERLAP = 20
+
+def define_custom_schema():
+    """Defines the custom Redis index schema."""
+    return IndexSchema.from_dict(
+        {
+            "index": {"name": "redis_vector_store", "prefix": "doc"},
+            "fields": [
+                {"type": "tag", "name": "id"},
+                {"type": "tag", "name": "doc_id"},
+                {"type": "text", "name": "text"},
+                {"type": "numeric", "name": "updated_at"},
+                {"type": "tag", "name": "file_name"},
+                {
+                    "type": "vector",
+                    "name": "vector",
+                    "attrs": {
+                        "dims": 384,
+                        "algorithm": "hnsw",
+                        "distance_metric": "cosine",
+                    },
+                },
+            ],
+        }
+    )
+
+class LUStopEvent(StopEvent):
+    """Custom StopEvent that includes Learning Unit Details."""
+    
+    lu_details: LearningUnitDetails = None
+    
+    def __init__(self, result: Any = None, lu_details: LearningUnitDetails = None, **kwargs: Any) -> None:
+        super().__init__(result=result, **kwargs)
+        self.lu_details = lu_details
+    
+    def _get_result(self) -> Any:
+        """Override to return desired result."""
+        return self._result
 
 # Define a custom Event class to hold Learning Unit data
-class LUDataEvent(Event): # Inherit from Event
+class LUDataEvent(Event):
     lu_details: LearningUnitDetails
-
-# # Loop through each Learning Unit and print its details
-# for lu_name, lu_details in learning_units.root.items(): # Iterate through items (key-value pairs)
-#     print(f"Learning Unit: {lu_name}")
-#     print(f"Learning Unit Details: {lu_details}")
-#     # print(f"  LO: {lu_details.LO}")
-#     # print(f"  Abilities: {lu_details.Abilities.root}") # Access abilities dictionary via .root
-#     # print(f"  Knowledge: {lu_details.Knowledge.root}") # Access knowledge dictionary via .root
-#     # print(f"  Keywords: {lu_details.Keywords}")
-#     # print(f"  Question: {lu_details.Question}")
-#     # print(f"  Answer: {lu_details.Answer}")
-#     print("-" * 30) # Separator for readability
-# # Accessing data (with RootModel for Abilities and Knowledge, field names match JSON)
-# lu1_details = learning_units.root["LU1: Git and GitHub Fundamentals (A1, A2)"] # No change for accessing LearningUnits root
-# print(f"Learning Unit 1 LO: {lu1_details.LO}")
-# print(f"Ability A1: {lu1_details.Abilities.root['A1']}") # Access via .Abilities.root (matches JSON structure)
-# print(f"Knowledge K1: {lu1_details.Knowledge.root.get('K1', 'N/A')}") # Safely access Knowledge dict, handle missing K1
-# print(f"Keywords for LU1 (initially empty): {lu1_details.Keywords}")
-
-# # Example of setting Keywords, Question, Answer (no changes needed here for these fields)
-# lu1_details.Keywords = ["Git", "GitHub", "Fundamentals", "Version Control", "Release Scheduling"]
-# lu1_details.Question = "Explain the fundamentals of Git and GitHub and how to coordinate release scheduling with collaborators."
-# lu1_details.Answer = "This is where the RAG answer would go after querying..."
-
-# print(f"Keywords for LU1 (after setting): {lu1_details.Keywords}")
-# print(f"Question for LU1: {lu1_details.Question}")
-# print(f"Answer for LU1: {lu1_details.Answer}")
+    query: Optional[List[str]] = None
+    index: Optional[Any] = None
 
 class PydanticWorkflow(Workflow):
     llm = llm # Initialize LLM in the Workflow class
 
     @step
-    async def first_step(self, ev: StartEvent) -> LUDataEvent: # First step takes StartEvent
+    async def keyword_generation(self, ev: StartEvent) -> LUDataEvent: # First step takes StartEvent
         lu_details = ev.lu_details # Access lu_details from StartEvent (passed from main())
 
         # LLM Keyword Generation Prompt
@@ -115,30 +239,162 @@ class PydanticWorkflow(Workflow):
         lu_details.Keywords = generated_keywords # Update the Keywords list
 
         print(f"Generated Keywords for {lu_details.Keywords}") # Print generated keywords
-
+        query = lu_details.Keywords
         # First step now *receives*, *updates*, and packages the data into LUDataEvent
-        return LUDataEvent(lu_details=lu_details)
+        return LUDataEvent(lu_details=lu_details, query=query, index=ev.index)
+
+    # @step
+    # async def send_query(self, event: LUDataEvent) -> LUDataEvent:
+    #     # Extract keywords from lu_details and preserve lu_details in the return event
+    #     lu_details = event.lu_details
+
+        
+    #     # Return updated event with both lu_details and query
+    #     return LUDataEvent(lu_details=lu_details, query=query, index=event.index)
+
+    # 3. Update retrieve method to work with the updated LUDataEvent
+    @step
+    async def retrieve(
+        self, ctx: Context, ev: LUDataEvent
+    ) -> Union[RetrieverEvent, None]:
+        "Entry point for RAG, triggered by a LUDataEvent with `query`."
+        query = ev.query
+        if not query:
+            return None
+        
+        print(f"Query the database with: {query}")
+        
+        # store the query in the global context
+        await ctx.set("query", query)
+        # Store lu_details in context for later use
+        await ctx.set("lu_details", ev.lu_details)
+        
+        index = ev.index
+        if index is None:
+            print("Index is empty, load some documents before querying!")
+            return None
+            
+        retriever = index.as_retriever(similarity_top_k=2)
+        # Join the keywords into a query string
+        query_str = " ".join(query) if isinstance(query, list) else query
+        nodes = retriever.retrieve(query_str)
+        print(f"Retrieved {len(nodes)} nodes.")
+        return RetrieverEvent(nodes=nodes)
 
     @step
-    async def second_step(self, event: LUDataEvent, query_workflow: Workflow) -> StopEvent: # Second step takes LUDataEvent
-        lu_details = event.lu_details
-        query = lu_details.Keywords
-        res = await query_workflow.run(query=query)
+    async def create_citation_nodes(
+        self, ev: RetrieverEvent
+    ) -> CreateCitationsEvent:
+        """
+        Modify retrieved nodes to create granular sources for citations.
 
-        return StopEvent()
+        Takes a list of NodeWithScore objects and splits their content
+        into smaller chunks, creating new NodeWithScore objects for each chunk.
+        Each new node is labeled as a numbered source, allowing for more precise
+        citation in query results.
+
+        Args:
+            nodes (List[NodeWithScore]): A list of NodeWithScore objects to be processed.
+
+        Returns:
+            List[NodeWithScore]: A new list of NodeWithScore objects, where each object
+            represents a smaller chunk of the original nodes, labeled as a source.
+        """
+        nodes = ev.nodes
+
+        new_nodes: List[NodeWithScore] = []
+
+        text_splitter = SentenceSplitter(
+            chunk_size=DEFAULT_CITATION_CHUNK_SIZE,
+            chunk_overlap=DEFAULT_CITATION_CHUNK_OVERLAP,
+        )
+
+        for node in nodes:
+            text_chunks = text_splitter.split_text(
+                node.node.get_content(metadata_mode=MetadataMode.NONE)
+            )
+
+            for text_chunk in text_chunks:
+                text = f"Source {len(new_nodes)+1}:\n{text_chunk}\n"
+
+                new_node = NodeWithScore(
+                    node=TextNode.model_validate(node.node), score=node.score
+                )
+                new_node.node.text = text
+                new_nodes.append(new_node)
+                print(f"New Node: {new_node.node.text}")
+        return CreateCitationsEvent(nodes=new_nodes)
+
+    # 4. Update synthesize to save results back to lu_details
+    @step
+    async def synthesize(
+        self, ctx: Context, ev: CreateCitationsEvent
+    ) -> StopEvent:
+        """Return a streaming response using the retrieved nodes."""
+        query = await ctx.get("query", default=None)
+        lu_details = await ctx.get("lu_details", default=None)
+        print(lu_details)
+        
+        # Convert list to string if needed
+        if isinstance(query, list):
+            query_str = "Based on the retrieved context, create a question and answer that takes into account the following: ".join(query)
+        else:
+            query_str = query
+        
+        synthesizer = get_response_synthesizer(
+            llm=llm,
+            text_qa_template=CITATION_QA_TEMPLATE,
+            refine_template=CITATION_REFINE_TEMPLATE,
+            response_mode=ResponseMode.COMPACT,
+            use_async=True,
+        )
+
+        # Use query_str instead of query
+        response = await synthesizer.asynthesize(query_str, nodes=ev.nodes)
+        print(f"Response: {response.response}")
+        
+        # Update the lu_details with the answer if lu_details is available
+        if lu_details:
+            lu_details.Answer = response.response
+            # Store question too
+            lu_details.Question = f"Tell me about: {query_str}"
+                
+        return LUStopEvent(result=response, lu_details=lu_details)
+
 
 async def main():
     # Load data *once* outside the workflow loop
     lu_data = load_json_file("output_json/parsed_TSC.json")
-    learning_units = LearningUnits.parse_obj(lu_data)
+    learning_units = LearningUnits.model_validate(lu_data)  # Updated from parse_obj
+    
+    # 1. Define the Redis schema
+    custom_schema = define_custom_schema()
 
+    # 2. Initialize the RedisVectorStore
+    vector_store = RedisVectorStore(
+        schema=custom_schema, redis_url="redis://localhost:6379"
+    )
+
+    # 3. Load the index from the existing Redis store
+    index = VectorStoreIndex.from_vector_store(
+        vector_store, embed_model=embed_model
+    )
+    
     # Loop through each Learning Unit and run a *new* workflow for each
     for lu_name, lu_details in learning_units.root.items():
-        w = PydanticWorkflow(timeout=60, verbose=False) # New workflow instance, increased timeout
-        # Pass lu_name and lu_details directly in StartEvent in w.run()
-        result = await w.run(lu_details=lu_details) # Pass data in StartEvent
-        print(f"Workflow Result for {lu_name}: {result}") # Print workflow result (optional)
+        w = PydanticWorkflow(timeout=60, verbose=True)  # Set verbose=True for debugging
+        # Pass both lu_details and index to the workflow
+        result = await w.run(lu_details=lu_details, index=index)
+        
+        # Store results back to your learning units data
+        if hasattr(result, 'lu_details') and result.lu_details:
+            learning_units.root[lu_name] = result.lu_details
+        
+        print(f"Workflow Result for {lu_name}: {result.result}")  # Access .result to get the response
 
+    # Optionally save the updated learning units back to file
+    with open("output_json/updated_TSC.json", "w") as f:
+        json.dump(learning_units.model_dump(), f, indent=2)
 
 if __name__ == "__main__":
     import asyncio
