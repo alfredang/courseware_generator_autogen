@@ -221,8 +221,8 @@ def _ensure_list(answer):
 def generate_documents(context: dict, assessment_type: str, output_dir: str) -> dict:
     os.makedirs(output_dir, exist_ok=True)
     TEMPLATES = {
-        "QUESTION": f"Assessment/Templates/(Template) {assessment_type} - Course Title - v1.docx",
-        "ANSWER": f"Assessment/Templates/(Template) Answer to {assessment_type} - Course Title - v1.docx"
+        "QUESTION": f"Assessment/utils/Templates/(Template) {assessment_type} - Course Title - v1.docx",
+        "ANSWER": f"Assessment/utils/Templates/(Template) Answer to {assessment_type} - Course Title - v1.docx"
     }
     qn_template = TEMPLATES["QUESTION"]
     ans_template = TEMPLATES["ANSWER"]
@@ -271,7 +271,7 @@ def app():
     )
     st.session_state['selected_model'] = model_choice
     
-    st.subheader("Generate Assessments")
+    st.subheader("Step 1: Upload Relevant Documents")
     st.write("Upload your Facilitator Guide (.docx) and Trainer Slide Deck (.pdf) to generate assessments.")
     fg_doc_file = st.file_uploader("Upload Facilitator Guide (.docx)", type=["docx"])
     slide_deck_file = st.file_uploader("Upload Trainer Slide Deck (.pdf)", type=["pdf"])
@@ -401,6 +401,7 @@ def app():
                             files = generate_documents(saq_context, assessment_type, "output")
                             st.session_state['generated_files'][assessment_type] = files
                         elif assessment_type == "PP":
+                            print(st.session_state['fg_data'])
                             pp_context = asyncio.run(generate_pp(st.session_state['fg_data'], index, model_client, premium_parsing))
                             files = generate_documents(pp_context, assessment_type, "output")
                             st.session_state['generated_files'][assessment_type] = files
