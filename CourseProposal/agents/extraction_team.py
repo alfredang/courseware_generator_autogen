@@ -23,9 +23,10 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
         1) Course Title
         2) Name of Organisation
         3) Classroom Hours
-        4) Number of Assessment Hours
-        5) Course Duration (Number of Hours)
-        6) Industry
+        4) Practical Hours (if none found, insert 0)
+        5) Number of Assessment Hours
+        6) Course Duration (Number of Hours)
+        7) Industry
 
         Use the term_library below for "Industry", based on the front 3 letters of the TSC code:
         term_library = {{
@@ -78,6 +79,7 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
             "Course Title": "",
             "Name of Organisation": "",
             "Classroom Hours": ,
+            "Practical Hours": ,
             "Number of Assessment Hours": ,
             "Course Duration (Number of Hours)": ,
             "Industry": ""

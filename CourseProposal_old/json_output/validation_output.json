@@ -1,0 +1,28 @@
+{
+  "analyst_responses": [
+    {
+      "What are the performance gaps in the industry?": "Many security professionals struggle with consistently identifying subtle indicators of potential threats. Recognizing these early warning signs is crucial for proactive security measures. Without a keen eye for detail and an understanding of potential threat behaviors, vulnerabilities may go unnoticed until it's too late, leading to security breaches and compromised safety.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "This course emphasizes the application of risk identification techniques, enabling security personnel to better detect and interpret these subtle signs and symptoms. By learning to recognize these indicators effectively, professionals can enhance their ability to proactively address potential security threats before they escalate, leading to a safer and more secure environment."
+    },
+    {
+      "What are the performance gaps in the industry?": "A significant challenge lies in consistently adhering to established security procedures and adapting them to varying situations. Often, protocols are either not followed precisely or are applied inflexibly, failing to address unique circumstances. This lack of consistent and adaptable procedure adherence can lead to vulnerabilities and compromised security.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "This course reinforces the importance of following organizational standard operating procedures (SOPs) while also encouraging adaptability. Participants will learn to identify risks by properly implementing security protocols and recognizing suspicious behaviors, ensuring a more robust and responsive security posture."
+    },
+    {
+      "What are the performance gaps in the industry?": "Many security personnel find it challenging to accurately assess the potential impact of security deficiencies. A failure to accurately gauge the severity and scope of these gaps can lead to misprioritization of resources and inadequate responses to critical vulnerabilities, ultimately undermining the effectiveness of security efforts.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "The course trains security teams to collaborate and use methods of risk analysis, this improves their ability to make well informed recommendations. Professionals will learn how to assess the situation and identify risks, this ensures resources are allocated where they are most needed, significantly strengthening overall protection."
+    }
+  ],
+  "course_info": {
+    "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
+    "Industry": "Security",
+    "Learning Outcomes": [
+      "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
+      "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
+      "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
+      "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+    ],
+    "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
+    "TSC Code": "SEC-SRM-3002-1.1"
+  }
+}

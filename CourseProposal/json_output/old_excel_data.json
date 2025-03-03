@@ -1,0 +1,27 @@
+[
+    {
+      "course_overview": {
+        "description": "This course offers a comprehensive introduction to managing software configurations. It begins with Git and GitHub fundamentals, then progresses to repository management, collaborative workflows, and modern development practices. You'll explore automation, security, and administration, gaining a holistic understanding of efficient software development lifecycle practices. Expect hands-on experience with Git commands, pull requests, GitHub Actions, and project automation.",
+        "benefits": "Upon completion, you will be able to analyze GitHub components, select appropriate Git scripts, and configure software products using Git configuration tests. Diagnose issues from testing results and identify areas for improvement in software configurations, thus promoting better collaboration and faster releases, reducing deployment errors and improving software stability. Reduced operational costs through optimized software configurations.",
+        "relevance_and_impact": "In the Infocomm Technology sector, the course addresses the critical needs for standardized version control, improved collaboration, and efficient deployment processes. By mastering these skills, you can contribute to streamlined software development lifecycles, reduce time-to-market, and enhance software quality. This leads to employment and job-upgrading opportunities within your current role. Roles that would benefit include software developers, DevOps engineers, system administrators, QA engineers, project managers, security engineers, and technical leads.",
+        "target_audience": "This course is designed for beginners with little to no prior experience in Git and GitHub."
+      }
+    },
+    {
+      "KA_Analysis": {
+        "A1": "Practical exams are suitable for assessing the candidate's ability to analyse release components in a simulated real-world environment.",
+        "A2": "Practical exams allow observation of coordination skills with stakeholders during a simulated release, assessing communication and collaboration abilities.",
+        "K1": "Written exams effectively assess the candidate's understanding of different scripts and tools and their applications in software integration and deployment.",
+        "A3": "Practical exams directly assess the ability to select appropriate scripts and tools for integration and deployment tasks, demonstrating practical judgment.",
+        "K2": "Written exams are appropriate for evaluating theoretical knowledge of software configuration procedures and best practices.",
+        "K3": "Written exams can assess the candidate's understanding of configuration tests, their purposes, and how they contribute to quality assurance.",
+        "A4": "Practical exams provide a direct way to evaluate the ability to configure software products for integration and deployment across various platforms.",
+        "A5": "Practical exams are the most suitable method to evaluate the execution of configuration tests on platform-specific software versions.",
+        "K4": "Written exams are appropriate for assessing the candidate's ability to interpret configuration test results and identify potential issues or failures.",
+        "A6": "Practical exams effectively evaluate the skills required to diagnose issues identified during configuration testing in a hands-on environment.",
+        "K5": "Written exams are suitable for testing the candidate's knowledge of the elements involved in software configuration and the deployment process.",
+        "A7": "Practical exams enable observation of the ability to identify areas for improvement in the configuration or code during a practical task.",
+        "A8": "Practical exams allow direct assessment of the ability to implement modifications to platform-specific software, demonstrating practical problem-solving skills."
+      }
+    }
+  ]

@@ -1,88 +1,59 @@
 {
     "Course Information": {
-        "Course Title": "Github Foundations Certification Training",
+        "Course Title": "Hands-on AI-Assisted Programming Made Simple with GitHub Copilot",
         "Name of Organisation": "Tertiary Infotech Pte Ltd",
-        "Classroom Hours": 7,
-        "Number of Assessment Hours": 2,
-        "Course Duration (Number of Hours)": 16,
+        "Classroom Hours": 3,
+        "Practical Hours": 4,
+        "Number of Assessment Hours": 1,
+        "Course Duration (Number of Hours)": 8,
         "Industry": "Infocomm Technology"
     },
     "Learning Outcomes": {
         "Learning Outcomes": [
-            "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
-            "LO2: Select appropriate Git scripts for integrating and deploying software products.",
-            "LO3: Configure software products and deploy releases using Git configuration tests.",
-            "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
-            "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
-            "LO6: Implement modifications to software products and processes for improved functionality."
+            "LO1: Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency.",
+            "LO2: Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes."
         ],
         "Knowledge": [
-            "K1: Types and usage of scripts and tools for integrating and deploying software products",
-            "K2: Software configuration procedures",
-            "K3: Configuration tests and their purposes",
-            "K4: Interpretation of configuration test results",
-            "K5: Elements of the software configuration and deployment process"
+            "K1: Relevant systems and software",
+            "K2: Organisation's processes",
+            "K3: Strengths and weaknesses of existing software and systems",
+            "K4: Emerging technological trends such as block chain, machine learning, artificial intelligence,"
         ],
         "Ability": [
-            "A1: Analyse release components",
-            "A2: Coordinate with relevant stakeholders on release scheduling to align release processes and procedures",
-            "A3: Select appropriate scripts and tools for integrating and deploying software products",
-            "A4: Configure software products to integrate and deploy software releases to various platforms",
-            "A5: Execute configuration tests on platform specific versions of software products in line with testing procedures",
-            "A6: Diagnose issues surfaced from configuration testing",
-            "A7: Identify potential improvements and modifications to the software configuration and deployment process or the software code",
-            "A8: Implement modifications to platform-specific software products and processes"
+            "A1: Identify issues in the existing software and systems",
+            "A2: Seek potential IT solutions to resolve issues or for systems upgrading",
+            "A3: Propose to management on suitable IT solutions for the organisation",
+            "A4: Keep up to date with new technologies and systems"
         ],
         "Knowledge and Ability Mapping": {
             "KA1": [
-                "A1",
-                "A2"
-            ],
-            "KA2": [
                 "K1",
+                "K3",
+                "A1",
                 "A3"
             ],
-            "KA3": [
+            "KA2": [
                 "K2",
-                "K3",
-                "A4",
-                "A5"
-            ],
-            "KA4": [
                 "K4",
-                "A6"
-            ],
-            "KA5": [
-                "K5",
-                "A7"
-            ],
-            "KA6": [
-                "A8"
+                "A2",
+                "A4"
             ]
         }
     },
     "TSC and Topics": {
         "TSC Title": [
-            "Software Configuration"
+            "Digital Technology Adoption and Innovation"
         ],
         "TSC Code": [
-            "ICT-DIT-3014-1.1"
+            "ACC-ICT-3004-1.1"
         ],
         "Topics": [
-            "Topic 1: Introduction to Git and GitHub (A1, A2)",
-            "Topic 2: Working with GitHub Repository (K1, A3)",
-            "Topic 3: Collaboration Features (K2, K3, A4, A5)",
-            "Topic 4: Modern Development (K4, A6)",
-            "Topic 5: GitHub Project (K5, A7)",
-            "Topic 6: Privacy, Security and Administration (A8)"
+            "Topic 1: Getting Started  with Github Copilot (K1, K3, A1, A3)",
+            "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)"
         ],
         "Learning Units": [
-            "LU1: Git and GitHub Fundamentals",
-            "LU2: GitHub Repository Management",
-            "LU3: Collaborative Workflows on GitHub",
-            "LU4: Modern GitHub Development Practices",
-            "LU5: GitHub Project Automation",
-            "LU6: GitHub Security and Administration"
+            "LU1: Introduction to Copilot",
+            "LU2: Coding with Github Copilot"
         ]
     },
     "Assessment Methods": {
@@ -90,101 +61,43 @@
             "Written Assessment",
             "Practical Performance"
         ],
-        "Amount of Practice Hours": "7 hrs",
+        "Amount of Practice Hours": "4 hrs",
         "Course Outline": {
             "Learning Units": {
-                "LU1": {
+                "LU1: Introduction to Copilot (K1, K3, A1, A3)": {
                     "Description": [
                         {
-                            "Topic": "Topic 1: Introduction to Git and GitHub (A1, A2)",
+                            "Topic": "Topic 1: Getting Started  with Github Copilot (K1, K3, A1, A3)",
                             "Details": [
-                                "What is version control",
-                                "Basic Git commands",
-                                "What is GitHub?",
-                                "Components of the GitHub flow",
-                                "GitHub is a collaborative platform",
-                                "GitHub platform management"
+                                "What is Github Copilot?",
+                                "How Github Copilot enhances software development efficiency?",
+                                "Install Github Copilot on Visual Studio Code",
+                                "Explore Github Copilot features"
                             ]
                         }
                     ]
                 },
-                "LU2": {
+                "LU2: Coding with Github Copilot (K2, K4, A2, A4)": {
                     "Description": [
                         {
-                            "Topic": "Topic 2: Working with GitHub Repository (K1, A3)",
+                            "Topic": "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)",
                             "Details": [
-                                "Repository management",
-                                "Create a new GitHub Repository",
-                                "Clone a repository",
-                                "Create a new branch",
-                                "Add files to a repository",
-                                "Manage repository changes by using pull requests on GitHub",
-                                "View repository insights"
-                            ]
-                        }
-                    ]
-                },
-                "LU3": {
-                    "Description": [
-                        {
-                            "Topic": "Topic 3: Collaboration Features (K2, K3, A4, A5)",
-                            "Details": [
-                                "Managing issues and discussions",
-                                "Forking and pull requests",
-                                "GitHub pages",
-                                "Markdown Features",
-                                "Link a PR to an Issue",
-                                "Identify how to assign Issues.",
-                                "Code reviews"
-                            ]
-                        }
-                    ]
-                },
-                "LU4": {
-                    "Description": [
-                        {
-                            "Topic": "Topic 4: Modern Development (K4, A6)",
-                            "Details": [
-                                "GitHub Actions",
-                                "GitHub Copilot",
-                                "GitHub Codespaces"
-                            ]
-                        }
-                    ]
-                },
-                "LU5": {
-                    "Description": [
-                        {
-                            "Topic": "Topic 5: GitHub Project (K5, A7)",
-                            "Details": [
-                                "Projects versus Projects Classic",
-                                "How to create a project",
-                                "How to organize your project",
-                                "How to organize and automate your project",
-                                "Insight and automation with projects"
-                            ]
-                        }
-                    ]
-                },
-                "LU6": {
-                    "Description": [
-                        {
-                            "Topic": "Topic 6: Privacy, Security and Administration (A8)",
-                            "Details": [
-                                "Introduction to GitHub administration",
-                                "Authenticate and authorize user identities on GitHub",
-                                "Dependency management",
-                                "Code scanning",
-                                "Secret scanning",
-                                "How to maintain a secure GitHub repository",
-                                "Automated security",
-                                "InnerSouce"
+                                "Github Copilot for HTML",
+                                "Github Copilot for Python",
+                                "Github Copilot for Javascript",
+                                "Github Copilot for REST API",
+                                "Other emerging AI tools for software development"
                             ]
                         }
                     ]
                 }
             }
         },
-        "Instructional Methods": "Classroom, Didactic Questioning, Demonstration, Practical"
+        "Instructional Methods": [
+            "Classroom: 3 hrs",
+            "Didactic Questioning",
+            "Demonstration",
+            "Practical: 4 hrs"
+        ]
     }
 }

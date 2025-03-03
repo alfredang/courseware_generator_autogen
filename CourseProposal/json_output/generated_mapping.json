@@ -6,7 +6,7 @@
         "Practical Performance (PP)"
     ],
     "#A[0]": [
-        "A1: Analyse release components"
+        "A1: Identify issues in the existing software and systems"
     ],
     "#A[10]": [],
     "#A[11]": [],
@@ -17,73 +17,59 @@
     "#A[16]": [],
     "#A[17]": [],
     "#A[1]": [
-        "A2: Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
+        "A2: Seek potential IT solutions to resolve issues or for systems upgrading"
     ],
     "#A[2]": [
-        "A3: Select appropriate scripts and tools for integrating and deploying software products"
+        "A3: Propose to management on suitable IT solutions for the organisation"
     ],
     "#A[3]": [
-        "A4: Configure software products to integrate and deploy software releases to various platforms"
+        "A4: Keep up to date with new technologies and systems"
     ],
-    "#A[4]": [
-        "A5: Execute configuration tests on platform specific versions of software products in line with testing procedures"
-    ],
-    "#A[5]": [
-        "A6: Diagnose issues surfaced from configuration testing"
-    ],
-    "#A[6]": [
-        "A7: Identify potential improvements and modifications to the software configuration and deployment process or the software code"
-    ],
-    "#A[7]": [
-        "A8: Implement modifications to platform-specific software products and processes"
-    ],
+    "#A[4]": [],
+    "#A[5]": [],
+    "#A[6]": [],
+    "#A[7]": [],
     "#A[8]": [],
     "#A[9]": [],
     "#Company": [
         "Tertiary Infotech Pte Ltd"
     ],
     "#Conclusion[0]": [
-        null
+        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the infocomm technology sector while equipping learners with the necessary attributes to excel in their roles as software developers and IT professionals."
     ],
     "#CourseTitle": [
-        "Github Foundations Certification Training"
+        "Hands-on AI-Assisted Programming Made Simple with GitHub Copilot"
     ],
     "#Hours[0]": [
-        7
+        3
     ],
     "#Hours[1]": [
-        2
+        1
     ],
     "#Hours[2]": [
-        16
+        8
     ],
     "#Hours[3]": [
-        "7 hrs"
+        "4 hrs"
     ],
     "#Hours[4]": [],
     "#IM": [
-        "Classroom",
+        "Classroom: 3 hrs",
         "Didactic Questioning",
         "Demonstration",
-        "Practical"
+        "Practical: 4 hrs"
     ],
     "#KA[0]": [
-        "A1, A2"
+        "K1, K3, A1, A3"
     ],
     "#KA[1]": [
-        "K1, A3"
+        "K2, K4, A2, A4"
     ],
-    "#KA[2]": [
-        "K2, K3, A4, A5"
-    ],
-    "#KA[3]": [
-        "K4, A6"
-    ],
-    "#KA[4]": [
-        "K5, A7"
-    ],
+    "#KA[2]": [],
+    "#KA[3]": [],
+    "#KA[4]": [],
     "#K[0]": [
-        "K1: Types and usage of scripts and tools for integrating and deploying software products"
+        "K1: Relevant systems and software"
     ],
     "#K[10]": [],
     "#K[11]": [],
@@ -94,94 +80,70 @@
     "#K[16]": [],
     "#K[17]": [],
     "#K[1]": [
-        "K2: Software configuration procedures"
+        "K2: Organisation's processes"
     ],
     "#K[2]": [
-        "K3: Configuration tests and their purposes"
+        "K3: Strengths and weaknesses of existing software and systems"
     ],
     "#K[3]": [
-        "K4: Interpretation of configuration test results"
+        "K4: Emerging technological trends such as block chain, machine learning, artificial intelligence,"
     ],
-    "#K[4]": [
-        "K5: Elements of the software configuration and deployment process"
-    ],
+    "#K[4]": [],
     "#K[5]": [],
     "#K[6]": [],
     "#K[7]": [],
     "#K[8]": [],
     "#K[9]": [],
     "#LO[0]": [
-        "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes."
+        "LO1: Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency."
     ],
     "#LO[1]": [
-        "LO2: Select appropriate Git scripts for integrating and deploying software products."
+        "LO2: Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes."
     ],
-    "#LO[2]": [
-        "LO3: Configure software products and deploy releases using Git configuration tests."
-    ],
-    "#LO[3]": [
-        "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results."
-    ],
-    "#LO[4]": [
-        "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements."
-    ],
-    "#LO[5]": [
-        "LO6: Implement modifications to software products and processes for improved functionality."
-    ],
+    "#LO[2]": [],
+    "#LO[3]": [],
+    "#LO[4]": [],
+    "#LO[5]": [],
     "#LO[6]": [],
     "#LO[7]": [],
     "#LU[0]": [
-        "LU1: Git and GitHub Fundamentals"
+        "LU1: Introduction to Copilot"
     ],
     "#LU[1]": [
-        "LU2: GitHub Repository Management"
+        "LU2: Coding with Github Copilot"
     ],
-    "#LU[2]": [
-        "LU3: Collaborative Workflows on GitHub"
-    ],
-    "#LU[3]": [
-        "LU4: Modern GitHub Development Practices"
-    ],
-    "#LU[4]": [
-        "LU5: GitHub Project Automation"
-    ],
-    "#LU[5]": [
-        "LU6: GitHub Security and Administration"
-    ],
+    "#LU[2]": [],
+    "#LU[3]": [],
+    "#LU[4]": [],
+    "#LU[5]": [],
     "#LU[6]": [],
     "#LU[7]": [],
     "#LUex[0]": [
-        "LU1 introduces the foundational concepts of Git and GitHub, including version control, basic Git commands, and the components of the GitHub flow. This unit establishes a common understanding of the platform and its collaborative nature. Performance Gap: Lack of understanding of basic Git commands; Attribute Gained: Understanding of version control concepts."
+        "LU1 serves as the cornerstone of the course, providing learners with a thorough introduction to GitHub Copilot. The session will introduce learners to the basics of Github Copilot and its features that enhance software development efficiency. Installation of GitHub Copilot on Visual Studio Code is also covered to enable learners explore the copilot features. This unit lays the groundwork for subsequent learning units by ensuring that learners have a solid understanding of the tool's capabilities and how it can be used to improve their programming workflows."
     ],
     "#LUex[1]": [
-        "LU2 builds upon the fundamentals by focusing on repository management, including creating, cloning, branching, and managing changes using pull requests. Learners gain hands-on experience in managing code repositories. Performance Gap: Difficulty managing repository changes; Attribute Gained: Ability to create and manage GitHub repositories."
+        "Building on the foundational knowledge gained in LU1, LU2 delves into the practical application of GitHub Copilot in various coding scenarios. The facilitator will guide learners through coding exercises that are related to Software Development with Github Copilot. Learners will also be introduced to different coding languages such as Github Copilot for HTML, Python, Javascript. Github Copilot for REST API and other emerging AI tools for software development are also explored in this unit. This unit focuses on hands-on experience, enabling learners to translate theoretical knowledge into practical skills and understand how GitHub Copilot can be used to streamline organizational coding processes."
     ],
-    "#LUex[2]": [
-        "LU3 delves into collaborative workflows, such as managing issues, discussions, forking, pull requests, and code reviews. Learners learn how to effectively collaborate with others on GitHub projects. Performance Gap: Inefficient collaborative practices; Attribute Gained: Proficiency in using collaborative features like pull requests and code reviews."
-    ],
-    "#LUex[3]": [
-        "LU4 introduces modern development practices, including GitHub Actions, GitHub Copilot, and GitHub Codespaces. Learners explore tools that enhance productivity and streamline development workflows. Performance Gap: Limited knowledge of modern development tools; Attribute Gained: Familiarity with GitHub Actions for automation."
-    ],
-    "#LUex[4]": [
-        "LU5 focuses on project automation, covering project creation, organization, and automation using GitHub Projects. Learners learn how to manage and automate their projects for improved efficiency. Performance Gap: Inability to automate project tasks; Attribute Gained: Skills in creating and organizing projects within GitHub."
-    ],
+    "#LUex[2]": [],
+    "#LUex[3]": [],
+    "#LUex[4]": [],
     "#LUex[5]": [],
     "#LUex[6]": [],
     "#LUex[7]": [],
     "#Placeholder[0]": [
-        "The Infocomm Technology sector faces significant challenges related to software configuration management, collaboration, and efficient deployment processes. A primary performance gap arises from a lack of standardized version control practices, leading to inconsistencies, errors, and difficulties in tracking changes across different software versions. Many organizations struggle with effectively managing code repositories, often resulting in duplicated efforts, integration conflicts, and delayed release cycles. Inadequate collaboration tools and workflows hinder seamless teamwork among developers, testers, and operations teams. This deficiency often manifests as communication breakdowns, delayed feedback loops, and increased time-to-market for software products. Furthermore, many IT professionals lack proficiency in utilizing modern development platforms for automation, code review, and continuous integration/continuous deployment (CI/CD) pipelines. This skill gap results in manual, error-prone processes, longer development cycles, and reduced software quality. Another critical challenge lies in security vulnerabilities stemming from improper configuration management and inadequate security practices within the development lifecycle. Without robust security protocols and automated scanning tools, organizations are exposed to potential threats, data breaches, and compliance violations. The absence of efficient issue tracking and resolution mechanisms also contributes to performance gaps. Teams often struggle to promptly identify, diagnose, and address software defects, leading to prolonged downtime, user dissatisfaction, and reputational damage. Finally, the interpretation of configuration test results and the subsequent implementation of necessary modifications pose a considerable challenge. Many developers find it difficult to translate test findings into actionable improvements, resulting in recurring issues and suboptimal software performance. Addressing these performance gaps requires a concerted effort to improve version control practices, enhance collaboration workflows, promote automation, strengthen security protocols, and foster a culture of continuous improvement within the Infocomm Technology sector.\n\nTo address the identified performance gaps, comprehensive training is necessary in several key areas. Firstly, there is a need for in-depth training on version control systems, particularly Git and GitHub, focusing on best practices for repository management, branching strategies, and conflict resolution. This training should equip IT professionals with the skills to effectively track changes, collaborate on code, and maintain code integrity. Secondly, training on collaborative workflows using GitHub is essential to facilitate seamless teamwork and improve communication among development teams. This should include practical guidance on utilizing features such as pull requests, code reviews, issue tracking, and project management tools. Furthermore, training on automation and CI/CD pipelines is crucial to streamline software development processes and reduce manual errors. This training should cover topics such as GitHub Actions, automated testing, and deployment strategies. In addition to technical skills, training should also focus on security best practices for software configuration management. This includes secure coding practices, dependency management, and the use of automated security scanning tools to identify and mitigate vulnerabilities. Moreover, training on the interpretation of configuration test results and the implementation of necessary modifications is vital to improve software quality and performance. This training should provide developers with the skills to diagnose issues, identify root causes, and implement effective solutions. Lastly, training on GitHub administration, security, and compliance is crucial to ensure the integrity and security of code repositories and development environments. This includes authentication, authorization, and access control mechanisms. By providing targeted training in these areas, the Infocomm Technology sector can equip its workforce with the necessary skills to overcome performance gaps, improve software quality, and accelerate innovation.\n\nA wide range of job roles within the Infocomm Technology sector would significantly benefit from training related to this. Software developers, regardless of their specific programming language or area of expertise, would greatly benefit from a stronger foundation in Git and GitHub for version control, collaboration, and CI/CD practices. DevOps engineers, whose primary responsibility is to streamline the software development lifecycle, would gain valuable insights into automating processes, managing configurations, and ensuring continuous delivery. System administrators would find the training beneficial for managing infrastructure as code, automating deployment processes, and maintaining system configurations. QA engineers and software testers would benefit from understanding how to integrate testing into CI/CD pipelines, automate test execution, and analyze test results effectively. Project managers and team leads would gain a better understanding of the development workflow, enabling them to plan and manage software projects more efficiently, track progress, and facilitate communication among team members. Security engineers would benefit from enhanced knowledge of secure coding practices, vulnerability scanning, and dependency management, allowing them to identify and mitigate potential security risks. Technical leads and architects would benefit from understanding modern development practices and architectural patterns, enabling them to design and implement scalable, reliable, and secure software systems. Finally, IT managers and directors would benefit from an overview of GitHub features and best practices, allowing them to make informed decisions about technology investments, resource allocation, and process improvements. In essence, anyone involved in the software development lifecycle, from initial planning to deployment and maintenance, would find this training valuable and applicable to their daily tasks."
+        "The infocomm technology (ICT) sector is characterized by rapid innovation and a constant need for adaptation. However, this dynamic environment presents several challenges that can lead to performance gaps. One significant challenge is the increasing complexity of software development. Modern applications often require intricate architectures, diverse coding languages, and integration with multiple systems. This complexity can slow down development cycles, increase the likelihood of errors, and make it difficult for developers to maintain code quality. Traditional programming workflows, which often rely on manual coding and extensive debugging, can become bottlenecks, hindering the ability of organizations to deliver software solutions quickly and efficiently. Furthermore, the shortage of skilled developers exacerbates these challenges, as companies struggle to find and retain talent capable of handling complex projects. This skills gap can lead to project delays, increased costs, and a decline in overall software quality. Organizations may also face difficulties in keeping up with the latest technological advancements, particularly in areas such as artificial intelligence and machine learning. Integrating these technologies into existing systems requires specialized knowledge and expertise, which may not be readily available within the organization. The lack of awareness and understanding of AI-assisted programming tools can also prevent organizations from leveraging these tools to improve their development processes. The need to continuously update and maintain existing systems also poses a challenge, as developers must spend time addressing bugs, implementing security patches, and ensuring compatibility with new technologies. This can divert resources away from new development projects and limit the organization's ability to innovate. The reliance on outdated tools and techniques can further hinder performance, as developers may not have access to the latest features and capabilities that can streamline their work. The industry needs to equip the workforce with relevant skills such as AI-assisted tools to address the performance gaps in the long run.\n\nTo address the performance gaps in the infocomm technology sector, targeted training programs are essential to equip developers with the skills and knowledge necessary to leverage AI-assisted programming tools effectively. Training should focus on providing hands-on experience with tools like GitHub Copilot, enabling developers to understand how these tools can streamline their coding processes and improve their overall efficiency. A key training need is to develop developers' ability to identify areas within their existing workflows where AI-assisted tools can be most effectively applied. This requires a thorough understanding of the strengths and weaknesses of current programming practices and the potential benefits of integrating AI-powered solutions. Training should also cover the installation, configuration, and use of GitHub Copilot, as well as other emerging AI programming tools. Developers need to learn how to effectively use these tools to generate code, debug errors, and optimize performance. Furthermore, training should emphasize the importance of code quality and security. Developers need to understand how to use AI-assisted tools to ensure that the code they produce is both efficient and secure. This includes learning how to identify and mitigate potential vulnerabilities and how to adhere to industry best practices for secure coding. Training should also address the ethical considerations associated with AI-assisted programming, such as data privacy and algorithmic bias. Developers need to be aware of these issues and understand how to develop AI-powered solutions that are both responsible and ethical. Continuous learning and professional development are also crucial, as the infocomm technology sector is constantly evolving. Developers need to stay up-to-date with the latest technological advancements and be willing to adapt their skills and knowledge accordingly. This can be achieved through ongoing training programs, online courses, and participation in industry conferences and events. The training should also cover topics such as how to prompt engineer effectively, how to review the AI generated codes critically and how to customize the AI tool for different use cases and to align with different coding styles.\n\nA wide range of job roles within the infocomm technology sector would benefit from training. Software developers, regardless of their specific area of expertise, would gain valuable skills and knowledge from learning how to use AI-assisted programming tools. This includes front-end developers, back-end developers, full-stack developers, and mobile app developers. By leveraging tools like GitHub Copilot, developers can automate repetitive tasks, generate code more quickly, and improve the overall quality of their work. Software engineers, who are responsible for designing, developing, and testing software systems, would also benefit from the training. They can use AI-assisted tools to streamline the development process, identify potential issues early on, and ensure that the software meets the required performance and security standards. IT professionals responsible for maintaining and updating existing systems would also find the training valuable. They can use AI-assisted tools to identify and fix bugs, implement security patches, and ensure compatibility with new technologies. This can help them to reduce downtime, improve system performance, and enhance overall security. Project managers can also benefit from the training by gaining a better understanding of how AI-assisted tools can improve the software development process. This can help them to better estimate project timelines, allocate resources effectively, and manage risks. Furthermore, architects who design and plan the IT infrastructure can benefit from gaining knowledge of AI-assisted tools. They can learn how to design systems that are optimized for AI-powered applications and how to integrate AI into existing infrastructure. The training can also be valuable for technical leads and team leaders, who are responsible for guiding and mentoring other developers. By understanding how to use AI-assisted tools, they can help their team members to improve their skills and productivity and ensure that projects are completed on time and within budget. In essence, anyone involved in the software development lifecycle, from initial design to deployment and maintenance, can benefit from learning how to use AI-assisted programming tools to improve their efficiency and effectiveness. This includes roles in quality assurance, DevOps, and even technical writing, where AI can assist in generating documentation and user manuals. Overall, it is important to recognize that the adoption of AI-assisted programming tools requires a shift in mindset and a commitment to continuous learning and adaptation. The benefits of this shift are significant, as organizations can improve their productivity, reduce costs, and deliver higher-quality software solutions faster than ever before."
     ],
     "#Placeholder[1]": [
-        "Performance gaps were identified through survey forms distributed to external stakeholders:\n\nPerformance Gaps:\n\u2022\tLearners struggle/are unclear with analyzing individual GitHub components and their interactions within complex workflows.\n\u2022\tLearners struggle/are unclear with selecting and customizing Git scripts for different software integration and deployment scenarios.\n\u2022\tLearners struggle/are unclear with configuring software products using Git configuration tests and understanding the implications of test failures.\n\u2022\tLearners struggle/are unclear with diagnosing complex issues from GitHub configuration testing results due to insufficient knowledge of error patterns.\n\u2022\tLearners struggle/are unclear with identifying areas for improvement in existing software configurations and deployment processes to enhance efficiency.\n\nThrough targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:\n\nAttributes Gained:\n\u2022\tAbility to comprehensively analyze GitHub components and coordinate release schedules effectively, ensuring streamlined processes.\n\u2022\tProficiency in selecting and applying appropriate Git scripts for seamless integration and deployment of software products.\n\u2022\tAbility to confidently configure software products and execute Git configuration tests to ensure deployment readiness.\n\u2022\tProficiency in diagnosing and resolving issues identified during GitHub configuration testing by accurately interpreting test results.\n\u2022\tAbility to critically assess software configurations and deployment processes to identify potential improvements and optimizations.\n\nPost-Training Benefits to Learners:\n\u2022\tImproved collaboration and alignment of release processes, leading to faster and more reliable software releases.\n\u2022\tReduced deployment errors and improved efficiency in integrating software components, resulting in quicker time to market.\n\u2022\tEnhanced software stability and reduced post-deployment issues, leading to improved user satisfaction.\n\u2022\tFaster identification and resolution of software defects, minimizing downtime and improving overall system reliability.\n\u2022\tStreamlined deployment processes and reduced operational costs through optimized software configurations."
+        "Performance gaps were identified through survey forms distributed to external stakeholders:\n\nPerformance Gaps:\n\u2022\tLearners struggle/are unclear with identifying specific bottlenecks in their current programming workflows that could be improved with AI assistance.\n\u2022\tLearners struggle/are unclear with knowing how to effectively integrate emerging AI programming tools like GitHub Copilot into existing organizational coding processes to achieve streamlined operations.\n\nThrough targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:\n\nAttributes Gained:\n\u2022\tAbility to analyze programming workflows and pinpoint areas where GitHub Copilot can significantly enhance efficiency.\n\u2022\tProficiency in applying GitHub Copilot and other AI tools to simplify and accelerate organizational coding processes.\n\nPost-Training Benefits to Learners:\n\u2022\tImproved ability to optimize existing workflows, leading to faster development cycles and reduced project costs.\n\u2022\tEnhanced organizational agility and responsiveness to changing market demands through optimized coding processes."
     ],
     "#Rationale[0]": [
-        "For this course, a step-by-step sequencing approach is crucial for building a strong foundation in Git and GitHub, progressing from basic concepts to more advanced collaborative and automation practices. This methodology ensures that learners gradually acquire the knowledge and skills necessary to effectively manage software configurations and deployment processes. Starting with fundamental concepts allows learners to understand the underlying principles before moving on to more complex topics, fostering a deeper understanding and practical application of the learned concepts."
+        "For this course, a foundational-to-application sequencing strategy is employed to facilitate a comprehensive understanding and practical application of AI-assisted programming using GitHub Copilot. This approach is vital for enabling learners to systematically build their knowledge from the ground up, ensuring that each learning unit builds upon the previous one to create a cohesive learning experience. The rationale behind this sequencing is to first introduce the fundamental concepts and capabilities of GitHub Copilot, followed by practical coding exercises that allow learners to apply these concepts in real-world scenarios. This structured progression enhances learners' ability to effectively integrate AI-assisted tools into their existing programming workflows, address performance gaps, and streamline organizational coding processes."
     ],
     "#TCS[0]": [
-        "Software Configuration"
+        "Digital Technology Adoption and Innovation"
     ],
     "#TCS[1]": [
-        "ICT-DIT-3014-1.1"
+        "ACC-ICT-3004-1.1"
     ],
     "#TopicsEX[0]": [],
     "#TopicsEX[1]": [],
@@ -190,72 +152,43 @@
     "#TopicsEX[4]": [],
     "#TopicsEX[5]": [],
     "#Topics[0]": [
-        "Topic 1: Introduction to Git and GitHub (A1, A2)\n\u2022\tWhat is version control\n\u2022\tBasic Git commands\n\u2022\tWhat is GitHub?\n\u2022\tComponents of the GitHub flow\n\u2022\tGitHub is a collaborative platform\n\u2022\tGitHub platform management\n\nLO1 \u2013 Analyze Github components and coordinate release scheduling with collaborators to align processes.\n\n\nA1: Analyse release components\n\nA2: Coordinate with relevant stakeholders on release scheduling to align release processes and procedures\n\n"
+        "Topic 1: Getting Started  with Github Copilot (K1, K3, A1, A3)\n\u2022\tWhat is Github Copilot?\n\u2022\tHow Github Copilot enhances software development efficiency?\n\u2022\tInstall Github Copilot on Visual Studio Code\n\u2022\tExplore Github Copilot features\n\nLO1 \u2013 Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency.\n\n\nK1: Relevant systems and software\n\nK3: Strengths and weaknesses of existing software and systems\n\nA1: Identify issues in the existing software and systems\n\nA3: Propose to management on suitable IT solutions for the organisation\n\n"
     ],
     "#Topics[1]": [
-        "Topic 2: Working with GitHub Repository (K1, A3)\n\u2022\tRepository management\n\u2022\tCreate a new GitHub Repository\n\u2022\tClone a repository\n\u2022\tCreate a new branch\n\u2022\tAdd files to a repository\n\u2022\tManage repository changes by using pull requests on GitHub\n\u2022\tView repository insights\n\nLO2 \u2013 Select appropriate Git scripts for integrating and deploying software products.\n\n\nK1: Types and usage of scripts and tools for integrating and deploying software products\n\nA3: Select appropriate scripts and tools for integrating and deploying software products\n\n"
+        "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)\n\u2022\tGithub Copilot for HTML\n\u2022\tGithub Copilot for Python\n\u2022\tGithub Copilot for Javascript\n\u2022\tGithub Copilot for REST API\n\u2022\tOther emerging AI tools for software development\n\nLO2 \u2013 Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes.\n\n\nK2: Organisation's processes\n\nK4: Emerging technological trends such as block chain, machine learning, artificial intelligence,\n\nA2: Seek potential IT solutions to resolve issues or for systems upgrading\n\nA4: Keep up to date with new technologies and systems\n\n"
     ],
-    "#Topics[2]": [
-        "Topic 3: Collaboration Features (K2, K3, A4, A5)\n\u2022\tManaging issues and discussions\n\u2022\tForking and pull requests\n\u2022\tGitHub pages\n\u2022\tMarkdown Features\n\u2022\tLink a PR to an Issue\n\u2022\tIdentify how to assign Issues.\n\u2022\tCode reviews\n\nLO3 \u2013 Configure software products and deploy releases using Git configuration tests.\n\n\nK2: Software configuration procedures\n\nK3: Configuration tests and their purposes\n\nA4: Configure software products to integrate and deploy software releases to various platforms\n\nA5: Execute configuration tests on platform specific versions of software products in line with testing procedures\n\n"
-    ],
-    "#Topics[3]": [
-        "Topic 4: Modern Development (K4, A6)\n\u2022\tGitHub Actions\n\u2022\tGitHub Copilot\n\u2022\tGitHub Codespaces\n\nLO4 \u2013 Diagnose issues identified during Github configuration testing by interpreting configuration test results.\n\n\nK4: Interpretation of configuration test results\n\nA6: Diagnose issues surfaced from configuration testing\n\n"
-    ],
-    "#Topics[4]": [
-        "Topic 5: GitHub Project (K5, A7)\n\u2022\tProjects versus Projects Classic\n\u2022\tHow to create a project\n\u2022\tHow to organize your project\n\u2022\tHow to organize and automate your project\n\u2022\tInsight and automation with projects\n\nLO5 \u2013 Identify potential improvements to the software configuration, deployment processes, and code elements.\n\n\nK5: Elements of the software configuration and deployment process\n\nA7: Identify potential improvements and modifications to the software configuration and deployment process or the software code\n\n"
-    ],
-    "#Topics[5]": [
-        "Topic 6: Privacy, Security and Administration (A8)\n\u2022\tIntroduction to GitHub administration\n\u2022\tAuthenticate and authorize user identities on GitHub\n\u2022\tDependency management\n\u2022\tCode scanning\n\u2022\tSecret scanning\n\u2022\tHow to maintain a secure GitHub repository\n\u2022\tAutomated security\n\u2022\tInnerSouce\n\nLO6 \u2013 Implement modifications to software products and processes for improved functionality.\n\n\nA8: Implement modifications to platform-specific software products and processes\n\n"
-    ],
+    "#Topics[2]": [],
+    "#Topics[3]": [],
+    "#Topics[4]": [],
+    "#Topics[5]": [],
     "#TotalHours": [],
     "#Assessment[0]": [
-        "Practical Performance (PP) \u2013 A1, A2"
+        ""
     ],
     "#Assessment[1]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1\n\nPractical Performance (PP) \u2013 A3"
+        ""
     ],
-    "#Assessment[2]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2, K3\n\nPractical Performance (PP) \u2013 A4, A5"
-    ],
-    "#Assessment[3]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K4\n\nPractical Performance (PP) \u2013 A6"
-    ],
-    "#Assessment[4]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5\n\nPractical Performance (PP) \u2013 A7"
-    ],
+    "#Assessment[2]": [],
+    "#Assessment[3]": [],
+    "#Assessment[4]": [],
     "#AssessmentJustification": [
-        "Practical Performance (PP):\nA practical Performance (PP) assessment will provide direct evidence of whether candidates have acquired the competency for the ability statements by solving a scenario-based problem.\n\nThe Practical Performance (PP) assessment focuses on providing authentic 'Show Me Application' evidence of candidates' ability to apply Git and GitHub skills in realistic software development tasks.\nCandidates will complete a series of practical tasks that demonstrate their ability to use Git and GitHub for version control, collaboration, and deployment.\n\nType of Evidence:\n\u2022\tFor LO1: Candidates will analyze a project's GitHub components and create a release schedule, demonstrating their ability to coordinate with collaborators.\n\u2022\tFor LO2: Candidates will select and use appropriate Git scripts to integrate and deploy a software product, showcasing their understanding of scripting and deployment processes.\n\u2022\tFor LO3: Candidates will configure a software product and deploy a release using Git configuration tests, verifying configuration accuracy.\n\u2022\tFor LO4: Candidates will diagnose issues identified during GitHub configuration testing by interpreting the test results, showing problem-solving skills.\n\u2022\tFor LO5: Candidates will identify potential improvements to the software configuration, deployment processes, and code elements based on their analysis.\n\u2022\tFor LO6: Candidates will implement modifications to software products and processes for improved functionality, demonstrating their practical coding and process improvement skills.\nManner of Submission:\n\u2022\tCandidates will submit their Git repositories, configuration files, test results, and a report detailing their actions and findings.\n\u2022\tThis includes commit histories, pull requests, configuration test outputs, and documentation of implemented modifications.\nMarking Process: \n\u2022\tFunctionality and correctness.\n\u2022\tCode quality and efficiency.\n\u2022\tCollaboration and communication.\nRetention Period:\n\u2022\tAll submitted evidence, including Git repositories, configuration files, test results, reports, and assessment records, will be retained for 3 years to ensure compliance with institutional policies and for auditing purposes.\n"
+        "Practical Performance (PP):\nA practical Performance (PP) assessment will provide direct evidence of whether candidates have acquired the competency for the ability statements by solving a scenario-based problem.\n\nThe Practical Performance (PP) assessment focuses on providing authentic \"Show Me Application\" evidence of candidates' ability to apply GitHub Copilot to enhance programming workflows and streamline coding processes.\nCandidates will complete practical tasks demonstrating the use of GitHub Copilot in identifying workflow gaps and proposing AI-assisted solutions.\n\nType of Evidence:\n\u2022\tFor LO1: Candidates will demonstrate the use of GitHub Copilot to identify inefficiencies in a given code and suggest improvements.\n\u2022\tFor LO2: Candidates will use GitHub Copilot to generate code snippets, debug code, and automate repetitive coding tasks, showcasing streamlined coding processes.\nManner of Submission:\n\u2022\tCandidates will submit code samples, screenshots, and a brief report detailing how GitHub Copilot was used to enhance efficiency and streamline processes.\n\u2022\tThis includes documenting specific features of GitHub Copilot used and their impact on the programming workflow.\nMarking Process: \n\u2022\tEffective use of Copilot.\n\u2022\tQuality of code output.\n\u2022\tProcess Streamlining Impact.\nRetention Period:\n\u2022\tAll submitted evidence, including code samples, screenshots, reports, and assessment records, will be retained for 3 years to ensure compliance with institutional policies and for auditing purposes.\n"
     ],
     "#ADuration[0]": [
-        "Practical Performance (PP) \u2013 10 mins"
+        ""
     ],
     "#ADuration[1]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
+        ""
     ],
-    "#ADuration[2]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
-    ],
-    "#ADuration[3]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
-    ],
-    "#ADuration[4]": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
-    ],
-    "#ADuration[5]": [
-        "Practical Performance (PP) \u2013 10 mins"
-    ],
+    "#ADuration[2]": [],
+    "#ADuration[3]": [],
+    "#ADuration[4]": [],
+    "#ADuration[5]": [],
     "#ADurationTotal": [
-        "WA-SAQ \u2013 1 hr\nPP \u2013 1 hr\nTotal \u2013 2 hr"
-    ],
-    "#Assessment[5]": [
-        "Practical Performance (PP) \u2013 A8"
+        "Total \u2013 0 hr"
     ],
     "#Sequencing": [
-        "LU1: Git and GitHub Fundamentals\nLU1 introduces the foundational concepts of Git and GitHub, including version control, basic Git commands, and the components of the GitHub flow. This unit establishes a common understanding of the platform and its collaborative nature. Performance Gap: Lack of understanding of basic Git commands; Attribute Gained: Understanding of version control concepts.",
-        "LU2: GitHub Repository Management\nLU2 builds upon the fundamentals by focusing on repository management, including creating, cloning, branching, and managing changes using pull requests. Learners gain hands-on experience in managing code repositories. Performance Gap: Difficulty managing repository changes; Attribute Gained: Ability to create and manage GitHub repositories.",
-        "LU3: Collaborative Workflows on GitHub\nLU3 delves into collaborative workflows, such as managing issues, discussions, forking, pull requests, and code reviews. Learners learn how to effectively collaborate with others on GitHub projects. Performance Gap: Inefficient collaborative practices; Attribute Gained: Proficiency in using collaborative features like pull requests and code reviews.",
-        "LU4: Modern GitHub Development Practices\nLU4 introduces modern development practices, including GitHub Actions, GitHub Copilot, and GitHub Codespaces. Learners explore tools that enhance productivity and streamline development workflows. Performance Gap: Limited knowledge of modern development tools; Attribute Gained: Familiarity with GitHub Actions for automation.",
-        "LU5: GitHub Project Automation\nLU5 focuses on project automation, covering project creation, organization, and automation using GitHub Projects. Learners learn how to manage and automate their projects for improved efficiency. Performance Gap: Inability to automate project tasks; Attribute Gained: Skills in creating and organizing projects within GitHub.",
-        "LU6: GitHub Security and Administration"
+        "LU1: Introduction to Copilot\nLU1 serves as the cornerstone of the course, providing learners with a thorough introduction to GitHub Copilot. The session will introduce learners to the basics of Github Copilot and its features that enhance software development efficiency. Installation of GitHub Copilot on Visual Studio Code is also covered to enable learners explore the copilot features. This unit lays the groundwork for subsequent learning units by ensuring that learners have a solid understanding of the tool's capabilities and how it can be used to improve their programming workflows.",
+        "LU2: Coding with Github Copilot\nBuilding on the foundational knowledge gained in LU1, LU2 delves into the practical application of GitHub Copilot in various coding scenarios. The facilitator will guide learners through coding exercises that are related to Software Development with Github Copilot. Learners will also be introduced to different coding languages such as Github Copilot for HTML, Python, Javascript. Github Copilot for REST API and other emerging AI tools for software development are also explored in this unit. This unit focuses on hands-on experience, enabling learners to translate theoretical knowledge into practical skills and understand how GitHub Copilot can be used to streamline organizational coding processes."
     ]
 }

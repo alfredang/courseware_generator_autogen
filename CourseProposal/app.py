@@ -182,7 +182,8 @@ def run_processing(input_file: str):
     cv_doc_paths = [
         "CourseProposal/output_docs/CP_validation_template_bernard_updated.docx",
         "CourseProposal/output_docs/CP_validation_template_dwight_updated.docx",
-        "CourseProposal/output_docs/CP_validation_template_ferris_updated.docx"
+        "CourseProposal/output_docs/CP_validation_template_ferris_updated.docx",
+        "CourseProposal/output_docs/CP_template_metadata_preserved.xlsx"
     ]
 
     # Copy CP doc into tempfile

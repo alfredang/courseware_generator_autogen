@@ -21,6 +21,7 @@ from CourseProposal.utils.jinja_docu_replace import replace_placeholders_with_do
 import json
 from CourseProposal.cv_main import create_course_validation
 import streamlit as st
+from CourseProposal.excel_main import process_excel
 
 async def main(input_tsc) -> None:
     model_choice = st.session_state.get('selected_model', "GPT-4o Mini (Default)")
@@ -155,6 +156,8 @@ async def main(input_tsc) -> None:
     
     # Course Validation Form Process
     await create_course_validation(model_choice=model_choice)
+
+    await process_excel(model_choice=model_choice)
     
 
 # if __name__ == "__main__":
