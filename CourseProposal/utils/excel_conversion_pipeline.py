@@ -32,7 +32,7 @@ def extract_and_concatenate_json_values(json_data, keys_to_extract, new_key_name
                 continue  # Skip to the next key if not found
 
             if isinstance(value, list):
-                concatenated_string += "\n".join(map(str, value)) + "\n\n"  # Map to str to handle non-string list elements if any
+                concatenated_string += "\n\n".join(map(str, value)) + "\n\n"  # Map to str to handle non-string list elements if any
             else:  # If value is not a list (e.g., string, number)
                 concatenated_string += str(value) + "\n\n"  # Ensure it's a string
 
@@ -42,6 +42,44 @@ def extract_and_concatenate_json_values(json_data, keys_to_extract, new_key_name
             print(f"TypeError accessing key '{key_path}': {e}")
 
     output_data = {new_key_name: concatenated_string.rstrip('\n\n')}  # rstrip to remove trailing newline
+    return output_data
+
+def extract_and_concatenate_json_values_singlenewline(json_data, keys_to_extract, new_key_name):
+    """
+    Extracts values from JSON data based on keys, concatenates them into a string with newlines,
+    and returns a dictionary containing the concatenated string under a new key.
+
+    Args:
+        json_data (dict): The JSON data as a dictionary.
+        keys_to_extract (list of str): A list of keys to extract values from. Keys are used directly as in JSON.
+        new_key_name (str): The name of the new key for the concatenated string in the output.
+
+    Returns:
+        dict: A dictionary containing the new key and the concatenated string, or None if input json_data is None.
+    """
+    if json_data is None:
+        return None
+
+    concatenated_string = ""
+    for key_path in keys_to_extract:  # Iterate through keys as they are, NO parsing needed
+        try:
+            value = json_data.get(key_path)  # Use key_path directly as the JSON key
+
+            if value is None:
+                print(f"Warning: Key '{key_path}' not found in JSON data.")
+                continue  # Skip to the next key if not found
+
+            if isinstance(value, list):
+                concatenated_string += "\n".join(map(str, value)) + "\n"  # Map to str to handle non-string list elements if any
+            else:  # If value is not a list (e.g., string, number)
+                concatenated_string += str(value) + "\n"  # Ensure it's a string
+
+        except KeyError:
+            print(f"Error: Key '{key_path}' not found in JSON data.")
+        except TypeError as e:  # Handle cases where indexing might be attempted on non-list
+            print(f"TypeError accessing key '{key_path}': {e}")
+
+    output_data = {new_key_name: concatenated_string.rstrip('\n')}  # rstrip to remove trailing newline
     return output_data
 
 def extract_and_concatenate_json_values_space_seperator(json_data, keys_to_extract, new_key_name):
@@ -116,6 +154,8 @@ def create_course_dataframe(json_data):
     ability_statements = json_data["Learning Outcomes"].get("Ability", [])
     course_outline = json_data["Assessment Methods"].get("Course Outline", {}).get("Learning Units", {})
     tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
+    assessment_methods = json_data["Assessment Methods"].get("Assessment Methods", [])
+
 
     # Initialize lists to hold the data for each row in the DataFrame
     data = []
@@ -144,6 +184,10 @@ def create_course_dataframe(json_data):
                 ka_codes_str = topic_title_full.split('(')[-1].rstrip(')')  # Everything inside (...)
                 ka_codes = [code.strip() for code in ka_codes_str.split(',')]
 
+                if "Case Study" in assessment_methods:
+                    moa = "Others: Case Study"
+                else:
+                    moa = "Practical Exam"
 
                 # Create rows for EACH K and A statement
                 for code in ka_codes:
@@ -171,7 +215,8 @@ def create_course_dataframe(json_data):
                             lo_title_only,
                             f"{topic_num}: {topic_title_short}",
                             a_statement,
-                            "Practical Exam"  # Mode of Assessment for A
+                            # "Practical Exam"  # Mode of Assessment for A
+                            moa
                         ])
 
     # Create the DataFrame
@@ -186,6 +231,36 @@ def create_course_dataframe(json_data):
     ])
 
     return df
+
+def combine_los_and_topics(ensemble_output):
+    """
+    Combines all Learning Outcomes (LOs) and Topics from the ensemble_output into a single string.
+
+    Args:
+        ensemble_output (dict): The ensemble output JSON data.
+
+    Returns:
+        str: A string containing the combined LOs and Topics, separated by newlines.
+    """
+
+    # Extract Learning Outcomes
+    learning_outcomes = ensemble_output["Learning Outcomes"]["Learning Outcomes"]
+    lo_string = "\n".join(learning_outcomes) + "\n\n"  # Combine LOs with newlines
+
+    # Extract Topics and their Details
+    topics_string = ""
+    course_outline = ensemble_output["Assessment Methods"]["Course Outline"]["Learning Units"]
+    for lu_key, lu_content in course_outline.items():
+        for description in lu_content['Description']:
+            topic_title = description['Topic']
+            details = description['Details']
+
+            topics_string += f"{topic_title}:\n"
+            for detail in details:
+                topics_string += f"•\t{detail}\n"
+            topics_string += "\n"  # Add newline after each topic
+
+    return lo_string + topics_string
 
 def create_assessment_dataframe(json_data):
     """
@@ -282,6 +357,7 @@ def create_assessment_dataframe(json_data):
     knowledge_statements = json_data["Learning Outcomes"].get("Knowledge", [])
     ability_statements = json_data["Learning Outcomes"].get("Ability", [])
     tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
+    assessment_methods = json_data["Assessment Methods"].get("Assessment Methods", [])
 
     data = []
 
@@ -308,11 +384,20 @@ def create_assessment_dataframe(json_data):
                         20,
                         k_statement
                     ])
+
+                # add new condition here, if assessment methods contain Case Study, then put the moa as "Others: Case Study"
+                # need to figure out assessment calculation for case study, eg. if there is no practical hours, then the timing should be evenly distributed instead of right now from 2 pools if practical hours are present
+
                 elif code.startswith('A'):
                     a_index = int(code[1:]) - 1
                     a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
-                    moa = "Practical Exam"
-                    duration_minutes = method_durations_per_lu.get(lu_num, {}).get('PP', 0) # Get duration for PP for this LU, default 0
+                    
+                    if "Case Study" in assessment_methods:
+                        moa = "Others: Case Study"
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('CS', 0) # Get duration for PP for this LU, default 0
+                    else:
+                        moa = "Practical Exam"
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('PP', 0) # Get duration for PP for this LU, default 0
 
 
                     data.append([
@@ -372,7 +457,7 @@ def enrich_assessment_dataframe_ka_descriptions(df, excel_data_json_path):
     return df
 
 # main function for this script
-def map_new_key_names_excel(generated_mapping_path, generated_mapping, output_json_file, excel_data_path):
+def map_new_key_names_excel(generated_mapping_path, generated_mapping, output_json_file, excel_data_path, ensemble_output):
     # generated_mapping_path = os.path.join('..', 'json_output', 'generated_mapping.json')
     # generated_mapping = load_json_file(generated_mapping_path)
 
@@ -402,28 +487,34 @@ def map_new_key_names_excel(generated_mapping_path, generated_mapping, output_js
     tcs_code_skill_data = extract_and_concatenate_json_values_space_seperator(generated_mapping, tcs_keys, "#TCS_Code_Skill")
 
     combined_lo = ["#LO[0]", "#LO[1]", "#LO[2]", "#LO[3]", "#LO[4]", "#LO[5]", "#LO[6]", "#LO[7]"]
-    lo_data = extract_and_concatenate_json_values(generated_mapping, combined_lo, "#Combined_LO")
+    lo_data = extract_and_concatenate_json_values_singlenewline(generated_mapping, combined_lo, "#Combined_LO")
 
     course_background = extract_and_concatenate_json_values(
         excel_data[0]["course_overview"],
-        ["description", "benefits", "relevance_and_impact", "target_audience"],
+        ["course_description"],
         "#Course_Background1",
     )
-    # course_background = extract_and_concatenate_json_values(
-    #     excel_data["course_overview"],
-    #     ["description", "benefits", "relevance_and_impact", "target_audience"],
-    #     "#Course_Background1",
-    # )    
-    course_outline_keys = recursive_get_keys(generated_mapping, "#Topics[")
-    print(course_outline_keys)
-    course_outline = extract_and_concatenate_json_values(generated_mapping, course_outline_keys, "#Course_Outline")
+
+    print(f"COURSE BACKGROUND:{course_background}" )
+
+    # include declarations mapping, standard Not Applicable, and We Agree (do this in the excel template bah)
+    # improve formatting of sequencing rationale
+    # course type should be WSQ Course Accreditation Singular (as the standard)
+    # course outline should be all the LOs on top first, then the topics (without the A and K factors)
+    # course_outline_keys = recursive_get_keys(generated_mapping, "#Topics[")
+    # print(course_outline_keys)
+    # course_outline = extract_and_concatenate_json_values(generated_mapping, course_outline_keys, "#Course_Outline")
+
+    course_outline = combine_los_and_topics(ensemble_output)
+    # Wrap the course_outline string in a dictionary
+    course_outline_data = {"#Course_Outline": course_outline}
 
     if sequencing_rationale_data and tcs_code_skill_data: # Check if both data extractions were successful
         # **Update the existing data dictionary**
         existing_data.update(sequencing_rationale_data)
         existing_data.update(tcs_code_skill_data)
         existing_data.update(lo_data)
-        existing_data.update(course_outline)
+        existing_data.update(course_outline_data)
         existing_data.update(course_background)
 
         # **Write the updated dictionary back to the output file**
@@ -574,22 +665,108 @@ def create_instruction_description_dataframe(ensemble_json_path, methods_json_pa
     df = pd.DataFrame(data, columns=["Instructional Method", "Description"])
     return df
 
-# if __name__ == "__main__":
-#     map_new_key_names_excel()
 
-    # # Load your JSON data
-    # ensemble_output_path = os.path.join('..', 'json_output', 'ensemble_output.json')
-    # ensemble_output = load_json_file(ensemble_output_path)
+def create_summary_dataframe(course_df, instructional_df, assessment_df):
+    """
+    Derives a summary dataframe from supporting dataframes:
+      - course_df: contains LU, LO, topics, and applicable K&A statements
+      - instructional_df: contains instructional methods, their durations, and mode of training (MOT)
+      - assessment_df: contains assessment modes, duration, assessor-to-candidate info, and LO#
+      
+    Returns a dataframe with the following columns:
+      LU#, Learning Unit Title, Learning Outcome(s), Topic(s),
+      Instructional Methods (modes of training, duration in minutes),
+      Instructional Duration (in minutes),
+      Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes),
+      Assessment Duration (in minutes)
+    """
 
-    # instructional_methods_path = os.path.join('..', 'json_output', 'instructional_methods.json')
-    # instructional_methods_output = load_json_file(ensemble_output_path)
+    # --- Process Course DataFrame ---
+    def extract_codes(statements_series):
+        """
+        Given a series of "Applicable K&A Statement" strings,
+        extract and return a list of KA codes (e.g., A1, K1) in order of appearance.
+        """
+        codes = []
+        for text in statements_series:
+            # Use regex to find a code at the start (e.g., "A1:" or "K1:")
+            m = re.match(r"^(A\d+|K\d+):", text.strip())
+            if m:
+                codes.append(m.group(1))
+        # Deduplicate while preserving order.
+        seen = set()
+        codes_unique = []
+        for code in codes:
+            if code not in seen:
+                codes_unique.append(code)
+                seen.add(code)
+        return codes_unique
 
-    # # # Create the DataFrame
-    # df = create_assessment_dataframe(ensemble_output)
-    # # # df = create_course_dataframe(ensemble_output)
-    # # df = create_instructional_dataframe(ensemble_output)
-    # # df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
-    # # Print the DataFrame (optional)
-    # print(df)
-    # df.to_csv("create_assessment_dataframe.csv", index=False)
+    # Group by LU# and aggregate relevant fields.
+    course_agg = course_df.groupby("LU#").agg({
+        "Learning Unit Title": "first",
+        "LO#": "first",  # Assuming all rows for a given LU share the same LO#
+        "Learning Outcome": "first",
+        "Topic (T#: Topic title)": lambda x: "\n".join(["- " + str(item) for item in x]),
+        "Applicable K&A Statement": lambda x: extract_codes(x)
+    }).reset_index()
+
+    # Create the formatted Learning Outcome(s) column.
+    course_agg["Learning Outcome(s)"] = course_agg.apply(
+        lambda row: f"{row['LO#']}: {row['Learning Outcome']} ({', '.join(row['Applicable K&A Statement'])})",
+        axis=1
+    )
+    # Rename topics column to "Topic(s)" for clarity.
+    course_agg.rename(columns={"Topic (T#: Topic title)": "Topic(s)"}, inplace=True)
+
+    # --- Process Instructional Methods DataFrame ---
+    # For each LU, concatenate each instructional method row into a string and sum durations.
+    instr_agg = instructional_df.groupby("LU#").apply(lambda g: pd.Series({
+        "Instructional Methods (modes of training, duration in minutes)":
+            "\n".join([f"- {row['Instructional Methods']} ({row['MOT']}: {row['Instructional Duration']})"
+                       for _, row in g.iterrows()]),
+        "Instructional Duration (in minutes)": g["Instructional Duration"].sum()
+    })).reset_index()
+
+    # --- Process Assessment DataFrame ---
+    # Create a LU# column from LO# (assuming LO1 -> LU1, LO2 -> LU2, etc.)
+    assessment_df = assessment_df.copy()
+    assessment_df["LU#"] = assessment_df["LO#"].apply(lambda x: "LU" + x[2:] if isinstance(x, str) else x)
+
+    def agg_assessment(g):
+        """
+        For each group (LU), create a string of assessment modes.
+        Each line is formatted as: " - MOA (Assessors:Candidates, Assessment Duration)"
+        """
+        lines = []
+        for _, row in g.iterrows():
+            ratio = f"{row['Assessors']}:{row['Candidates']}"
+            lines.append(f"- {row['MOA']} ({ratio}, {row['Assessment Duration']})")
+        return "\n".join(lines)
+
+    assess_agg = assessment_df.groupby("LU#").apply(lambda g: pd.Series({
+        "Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)": agg_assessment(g),
+        "Assessment Duration (in minutes)": g["Assessment Duration"].sum()
+    })).reset_index()
+
+    # --- Merge Aggregated Data ---
+    summary_df = course_agg[["LU#", "Learning Unit Title", "Learning Outcome(s)", "Topic(s)"]].merge(
+        instr_agg, on="LU#", how="left"
+    ).merge(
+        assess_agg, on="LU#", how="left"
+    )
+
+    # --- Order Columns as Specified ---
+    summary_df = summary_df[[
+        "LU#",
+        "Learning Unit Title",
+        "Learning Outcome(s)",
+        "Topic(s)",
+        "Instructional Methods (modes of training, duration in minutes)",
+        "Instructional Duration (in minutes)",
+        "Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)",
+        "Assessment Duration (in minutes)"
+    ]]
+
+    return summary_df
 

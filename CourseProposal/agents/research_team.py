@@ -27,6 +27,7 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     clearly and based on the provided course title and industry.
     Do not use any control characters such as newlines.
     Do not mention the course name in your answer.
+    Do not mention the specific industry as well, give a general answer like simply "the industry" or "the sector".
 
     Answer the following question based on the extracted data from the first agent in {ensemble_output}:
     (i) Targeted sector(s) background and needs for the training: Using the Course Title, and the Industry from {ensemble_output.get('Course Information', [])}.
@@ -60,7 +61,7 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     {{
 
     Performance gaps:
-    Learners struggle/are unclear with [specific skill or knowledge gap].
+    Learners are unclear with [specific skill or knowledge gap].
     (perform this analysis for the LOs)
 
     Attributes gained:

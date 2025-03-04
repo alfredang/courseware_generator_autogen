@@ -6,7 +6,21 @@ import zipfile
 import json
 import pandas as pd
 from lxml import etree as ET
-from CourseProposal.utils.excel_conversion_pipeline import create_course_dataframe, create_assessment_dataframe, create_instructional_dataframe, create_instruction_description_dataframe, map_new_key_names_excel, enrich_assessment_dataframe_ka_descriptions
+from CourseProposal.utils.excel_conversion_pipeline import create_course_dataframe, create_assessment_dataframe, create_instructional_dataframe, create_instruction_description_dataframe, map_new_key_names_excel, enrich_assessment_dataframe_ka_descriptions, create_summary_dataframe
+
+def save_dataframe_to_excel(df, filepath):
+    """
+    Saves a Pandas DataFrame to a separate Excel file.
+
+    Args:
+        df (pd.DataFrame): The DataFrame to save.
+        filepath (str): The path to the Excel file to create.
+    """
+    try:
+        df.to_excel(filepath, index=False)  # index=False prevents writing the index to the Excel file
+        print(f"DataFrame saved to {filepath}")
+    except Exception as e:
+        print(f"Error saving DataFrame to Excel: {e}")
 
 def cleanup_old_files(output_excel_path_modified, output_excel_path_preserved):
     """
@@ -156,11 +170,12 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
         if "3 - Instructional Design" in sheet_mapping:
             # Create the DataFrame using your helper function (provided separately)
-            df = create_course_dataframe(ensemble_output)
-            if not df.empty:
+            instructional_df = create_course_dataframe(ensemble_output)
+            if not instructional_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Instructional Design"])
+                save_dataframe_to_excel(instructional_df, "CourseProposal/json_output/course_dataframe.xlsx")
                 # For example, insert starting at row 18 and column 2 (B18)
-                insert_dataframe_into_sheet(sheet_xml_path, start_row=17, start_col=2, df=df)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=17, start_col=2, df=instructional_df)
             else:
                 print("Warning: DataFrame is empty. Nothing to insert.")
         else:
@@ -170,16 +185,17 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
         if "3 - Methodologies" in sheet_mapping:
             # Create the DataFrame using your helper function (provided separately)
-            a_df = create_assessment_dataframe(ensemble_output)
+            methods_df = create_assessment_dataframe(ensemble_output)
             
             # append the K and A descriptions in excel_data.json to the dataframe under the KA column
             # excel_json_data = os.path.join('..', 'json_output', 'excel_data.json')
             excel_json_data = "CourseProposal/json_output/excel_data.json"
-            df = enrich_assessment_dataframe_ka_descriptions(a_df, excel_json_data)
-            if not df.empty:
+            methodologies_df = enrich_assessment_dataframe_ka_descriptions(methods_df, excel_json_data)
+            if not methodologies_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
+                save_dataframe_to_excel(methodologies_df, "CourseProposal/json_output/assessment_dataframe.xlsx")
                 # For example, insert starting at row 18 and column 2 (B18)
-                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=10, df=df)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=10, df=methodologies_df)
             else:
                 print("Warning: DataFrame is empty. Nothing to insert.")
         else:
@@ -188,11 +204,12 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
         if "3 - Methodologies" in sheet_mapping:
             # Create the DataFrame using your helper function (provided separately)
-            df = create_instructional_dataframe(ensemble_output)
-            if not df.empty:
+            instructional_2_df = create_instructional_dataframe(ensemble_output)
+            if not instructional_2_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
+                save_dataframe_to_excel(instructional_2_df, "CourseProposal/json_output/instructional_methods_dataframe.xlsx")
                 # For example, insert starting at row 18 and column 2 (B18)
-                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=2, df=df)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=2, df=instructional_2_df)
             else:
                 print("Warning: DataFrame is empty. Nothing to insert.")
         else:
@@ -205,12 +222,28 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
             ensemble_output_path = "CourseProposal/json_output/ensemble_output.json"
             instructional_methods_path = "CourseProposal/json_output/instructional_methods.json"
             # Create the DataFrame using your helper function (provided separately)
-            df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
+            instructional_description_df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
 
-            if not df.empty:
+            if not instructional_description_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
+                save_dataframe_to_excel(instructional_description_df, "CourseProposal/json_output/instructional_methods_description_dataframe.xlsx")
                 # For example, insert starting at row 18 and column 2 (B18)
-                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=7, df=df)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=7, df=instructional_description_df)
+            else:
+                print("Warning: DataFrame is empty. Nothing to insert.")
+        else:
+            print("Sheet '3 - Methodologies' not found. DataFrame not inserted.")
+
+        # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
+        if "3 - Summary" in sheet_mapping:
+
+            instructional_description_df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
+            summary_df = create_summary_dataframe(instructional_df, instructional_2_df, methods_df)
+            if not summary_df.empty:
+                sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Summary"])
+                save_dataframe_to_excel(summary_df, "CourseProposal/json_output/summary_dataframe.xlsx")
+                # For example, insert starting at row 18 and column 2 (B18)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=2, df=summary_df)
             else:
                 print("Warning: DataFrame is empty. Nothing to insert.")
         else:

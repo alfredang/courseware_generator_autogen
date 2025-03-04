@@ -112,7 +112,6 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
             "Ability": [
             ]
             }}
-        }}
     """
 
     tsc_and_topics_extractor_message = f"""

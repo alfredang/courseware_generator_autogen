@@ -36,12 +36,6 @@ def combine_json_files(file1_path, file2_path):
     return combined_data
 
 async def process_excel(model_choice: str) -> None:
-    # json_data_path = os.path.join('json_output', 'generated_mapping.json')
-    # excel_template_path = os.path.join( 'templates', 'CP_excel_template.xlsx')
-    # output_excel_path_modified = os.path.join( 'output_docs', 'CP_template_updated_cells_output.xlsx') # Intermediate output after cell update
-    # output_excel_path_preserved = os.path.join( 'output_docs', 'CP_template_metadata_preserved.xlsx') # Final output with metadata preserved
-    # ensemble_output_path = os.path.join( 'json_output', 'ensemble_output.json')
-
     json_data_path = "CourseProposal/json_output/generated_mapping.json" 
     excel_template_path = "CourseProposal/templates/CP_excel_template.xlsx"
     output_excel_path_modified = "CourseProposal/output_docs/CP_template_updated_cells_output.xlsx" # Intermediate output after cell update
@@ -52,7 +46,10 @@ async def process_excel(model_choice: str) -> None:
     with open('CourseProposal/json_output/research_output.json', 'r', encoding='utf-8') as f:
         research_output = json.load(f)
 
-    course_agent = create_course_agent(research_output, model_choice=model_choice)
+    with open('CourseProposal/json_output/ensemble_output.json', 'r', encoding='utf-8') as f:
+        ensemble_output = json.load(f)
+
+    course_agent = create_course_agent(ensemble_output, model_choice=model_choice)
     stream = course_agent.run_stream(task=course_task())
     await Console(stream)
 
@@ -96,7 +93,7 @@ async def process_excel(model_choice: str) -> None:
     output_json_file = "CourseProposal/json_output/generated_mapping.json"
     excel_data_path = "CourseProposal/json_output/excel_data.json"
 
-    map_new_key_names_excel(generated_mapping_path, generated_mapping, output_json_file, excel_data_path)
+    map_new_key_names_excel(generated_mapping_path, generated_mapping, output_json_file, excel_data_path, ensemble_output)
     # --- CALL CLEANUP FUNCTION HERE ---
     cleanup_old_files(output_excel_path_modified, output_excel_path_preserved)
 
@@ -106,5 +103,6 @@ async def process_excel(model_choice: str) -> None:
     # Then, preserve metadata, taking the modified file and template, and outputting the final, preserved file
     preserve_excel_metadata(excel_template_path, output_excel_path_modified, output_excel_path_preserved)
 
-# if __name__ == "__main__":
-#     asyncio.run(process_excel(model_choice=))
+if __name__ == "__main__":
+    model_choice = "Gemini-Flash-2.0-Exp"
+    asyncio.run(process_excel(model_choice=model_choice))

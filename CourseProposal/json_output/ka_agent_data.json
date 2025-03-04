@@ -1,17 +1,17 @@
 {
   "KA_Analysis": {
-    "K1": "Classroom and practical sessions allow demonstration and application of script and tool knowledge (K1), enabling assessment through practical exercises and questioning.",
-    "A1": "Practical exercises within the classroom provide opportunities to analyse release components (A1). Facilitated discussions and demonstrations support this analysis.",
-    "K2": "Software configuration procedures (K2) are taught in the classroom and reinforced through practical application, assessed via observation and questioning.",
-    "A2": "Classroom discussions and practical scenarios encourage consideration of stakeholder coordination (A2), with assessment focusing on demonstrated understanding and proposed solutions.",
-    "K3": "The purposes of configuration tests (K3) are explained in the classroom and experienced through practical activities, allowing for observation and questioning-based assessment.",
-    "A3": "Practical exercises let trainees select scripts/tools (A3), evaluated through observing choices and the outcomes of their integration and deployment efforts.",
-    "K4": "Classroom teaching followed by practical work facilitates the interpretation of test results (K4), assessed by observing trainees' conclusions and justifications.",
-    "A4": "Practical sessions directly assess the ability to configure software (A4), with performance evaluated based on successful integration and deployment.",
-    "K5": "Classroom learning introduces elements of the software configuration process (K5). Practical exercises provide a means to test this knowledge in a real-world setting.",
-    "A5": "Executing configuration tests (A5) is directly assessed during practical exercises, where performance is judged by adherence to testing procedures and result accuracy.",
-    "A6": "Practical exercises create opportunities to diagnose issues (A6), with assessment focusing on the effectiveness of troubleshooting steps and problem resolution.",
-    "A7": "Practical work encourages trainees to identify improvements (A7) to processes/code, evaluated through the quality and feasibility of proposed modifications.",
-    "A8": "Implementing modifications (A8) is assessed directly during practical exercises, focusing on the correct application of changes to software and processes."
+    "K1": "For K1: Practical exercises directly assess understanding of script/tool types and usage for integration and deployment.",
+    "A1": "For A1: Analyzing release components is evaluated through practical tasks where trainees identify and examine elements.",
+    "K2": "For K2: Software configuration procedures are directly assessed in practical exercises, where trainees configure software.",
+    "A2": "For A2: Coordination is assessed via practical tasks where trainees must communicate during simulated release scheduling.",
+    "K3": "For K3: Configuration test knowledge is assessed through identifying purposes in practical exercises.",
+    "A3": "For A3: Practical exercises require trainees to choose appropriate scripts/tools, assessing selection skills.",
+    "K4": "For K4: Interpreting configuration test results is assessed by analyzing output during practical exercises.",
+    "A4": "For A4: Software configuration skills are evaluated directly through hands-on configuration tasks in practicals.",
+    "K5": "For K5: Practical tasks will indirectly show knowledge of deployment process elements when trainees perform them.",
+    "A5": "For A5: Practical exercises directly assess executing config tests during hands-on activities.",
+    "A6": "For A6: Practical work and configuration test results are analysed to diagnose issues surfaced from configuration testing",
+    "A7": "For A7: Improvements are identified by trainees during exercises, assessing their analytical and improvement skills.",
+    "A8": "For A8: Implementing modifications is directly assessed by evaluating successful changes made during practicals."
   }
 }

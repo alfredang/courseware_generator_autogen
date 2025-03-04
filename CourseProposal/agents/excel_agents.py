@@ -24,33 +24,39 @@ def ka_task():
     """
     return overview_task
 
-def create_course_agent(research_output, model_choice: str) -> RoundRobinGroupChat:
+def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupChat:
 
     chosen_config = get_model_config(model_choice)
     model_client = ChatCompletionClient.load_component(chosen_config)
 
+    # use ensemble output for the new factors
     # insert research analysts
     about_course_message = f"""
-    As a training consultant focusing on analyzing performance gaps and training needs based on course learning outcomes,
-    your task is to assess the targeted sector(s) background and needs for the training. Your analysis should be structured
-    clearly and based on the provided course title and industry.
-    Do not use any control characters such as newlines.
+    As a digital marketing consultant, your primary role is to assist small business owners in optimizing their websites for SEO and improving their digital marketing strategies to enhance lead generation. You should provide clear, actionable advice tailored to the challenges and opportunities typical for small businesses. Focus on offering strategies that are feasible and effective for smaller budgets and resources. Stay abreast of the latest SEO and digital marketing trends, ensuring your advice is current and practical. When necessary, ask for clarification to understand the specific needs of each business, but also be proactive in filling in general small business scenarios. Personalize your responses to reflect an understanding of the unique dynamics and constraints small businesses face in digital marketing.
+    You will do so based on the course title, learning outcomes (LOs), and the Topics found in {ensemble_output}
+
+    Your task is to create a Course Description in 2 paragraphs for the above factors.
+
+    An example answer is as follows: "This course equips learners with essential GitHub skills, covering version control, repository management, and collaborative workflows. Participants will learn how to create repositories, manage branches, integrate Git scripts, and leverage pull requests to streamline development. Through hands-on exercises, learners will explore GitHub features like issue tracking, code reviews, and discussions to enhance team collaboration.
+
+    The course also covers modern GitHub tools such as GitHub Actions, Copilot, and Codespaces for automation and AI-driven development. Learners will gain expertise in security best practices, including dependency management, code scanning, and authentication protocols. By the end of the course, participants will be able to diagnose configuration issues, optimize deployment processes, and implement software improvements effectively."
+
+    You must start your answer with "This course"
+    You must take into consideration the learning outcomes and topics for the Course Description.
     Do not mention the course name in your answer.
     Do not use more than 300 words, it should be a concise summary of the course and what it has to offer.
+    Do not mention the LOs in your answer.
+    Do not add quotation marks in your answer.
 
     Provide learners with a clear overview of the course:
     Highlight the benefits your course offers including skils, competencies and needs that the course will address
     Explain how the course is relevant to the industry and how it may impact the learner's career in terms of employment/ job upgrading opportunities
     Indicate that the course is for beginner learners.
 
-    Achieve an answer for the following points based on the already synthesized data in {research_output}:
 
     Format your response in the given JSON structure under "course_overview".
     "course_overview": {{
-    "description": ...",
-    "benefits": "...",
-    "relevance_and_impact": "...",
-    "target_audience": "..."
+        course_description: "Your course description here",
         }}
     """
 
@@ -80,14 +86,20 @@ def create_ka_analysis_agent(ensemble_output, instructional_methods_data, model_
     Full list of K factors: {ensemble_output.get('Learning Outcomes', {}).get('Knowledge', [])}
     Full list of A factors: {ensemble_output.get('Learning Outcomes', {}).get('Ability', [])}
     Ensure that ALL of the A and K factors are addressed.
-    Only use the first 2 characters as the key names for your JSON output, like K1 for example. Do not use the full A and K factor description as the key name.
+    Only use the first 2 characters as the key names for your JSON output, like K1 for example. Do not use the full A and K factor description as the key name, afterwards in the value to the key, you must follow the format below, the answer should for example K1: "For K1: example explanation"
+
+    An example explanation for K1 and A1 would look like this:
+    For K1: Candidates will analyze a given software project, set up a GitHub repository, and coordinate release scheduling using GitHub features.
+    For A2: Candidates will select and apply appropriate Git scripts to automate the integration and deployment of a software product.
+
+    K factors must address theory and knowledge, while A factors must address practical application and skills, you must reflect this in your analysis.
 
     For example:
     KA_Analysis: {{
-    K1: [explanation],
-    A1: [explanation],
-    K2: [explanation],
-    A2: [explanation],
+    K1: "For K1: Candidates will analyze a given software project, set up a GitHub repository, and coordinate release scheduling using GitHub features.",
+    A1: "For A2: Candidates will select and apply appropriate Git scripts to automate the integration and deployment of a software product.",
+    K2: "explanation",
+    A2: "explanation",
     ...
     (and so on for however many A and K factors)
     }}
