@@ -38,6 +38,7 @@ def combine_json_files(file1_path, file2_path):
     return combined_data
 
 async def process_excel(model_choice: str) -> None:
+
     json_data_path = "CourseProposal/json_output/generated_mapping.json" 
     excel_template_path = "CourseProposal/templates/CP_excel_template.xlsx"
     output_excel_path_modified = "CourseProposal/output_docs/CP_template_updated_cells_output.xlsx" # Intermediate output after cell update
@@ -47,7 +48,6 @@ async def process_excel(model_choice: str) -> None:
     # Load the existing research_output.json
     with open('CourseProposal/json_output/research_output.json', 'r', encoding='utf-8') as f:
         research_output = json.load(f)
-
     with open('CourseProposal/json_output/ensemble_output.json', 'r', encoding='utf-8') as f:
         ensemble_output = json.load(f)
 
@@ -85,6 +85,20 @@ async def process_excel(model_choice: str) -> None:
         "CourseProposal/json_output/ka_agent_data.json"
     )
 
+    # instructional methods pipeline
+    with open('CourseProposal/json_output/instructional_methods.json', 'r', encoding='utf-8') as f:
+        instructional_methods_descriptions = json.load(f)
+    im_agent = create_instructional_methods_agent(ensemble_output, instructional_methods_descriptions, model_choice=model_choice)
+    stream = im_agent.run_stream(task=im_task())
+    await Console(stream)
+    #TSC JSON management
+    state = await im_agent.save_state()
+    with open("CourseProposal/json_output/im_agent_state.json", "w") as f:
+        json.dump(state, f)
+    ka_agent_data = extract_agent_json("CourseProposal/json_output/im_agent_state.json", "instructional_methods_agent")
+    with open("CourseProposal/json_output/im_agent_data.json", "w", encoding="utf-8") as out:
+        json.dump(ka_agent_data, out, indent=2)    
+
     # Write the combined data to excel_data.json
     with open("CourseProposal/json_output/excel_data.json", "w", encoding="utf-8") as out:
         json.dump(excel_data, out, indent=2)
@@ -105,6 +119,6 @@ async def process_excel(model_choice: str) -> None:
     # Then, preserve metadata, taking the modified file and template, and outputting the final, preserved file
     preserve_excel_metadata(excel_template_path, output_excel_path_modified, output_excel_path_preserved)
 
-if __name__ == "__main__":
-    model_choice = "Gemini-Flash-2.0-Exp"
-    asyncio.run(process_excel(model_choice=model_choice))
+# if __name__ == "__main__":
+#     model_choice = "Gemini-Flash-2.0-Exp"
+#     asyncio.run(process_excel(model_choice=model_choice))

@@ -2,11 +2,11 @@
     "ADuration": [],
     "InstructMethods": [],
     "AssessMethods": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ)",
-        "Practical Performance (PP)"
+        "Case Study (CS)",
+        "Oral Questioning (OQ)"
     ],
     "A_0": [
-        "A1: Analyse release components"
+        "A1: Apply basic risk identification techniques"
     ],
     "A_10": [],
     "A_11": [],
@@ -17,45 +17,37 @@
     "A_16": [],
     "A_17": [],
     "A_1": [
-        "A2: Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
+        "A2: Follow standard operating procedures (SOPs) to identify risks"
     ],
     "A_2": [
-        "A3: Select appropriate scripts and tools for integrating and deploying software products"
+        "A3: Study situations and relate to past experience for identification of risks"
     ],
     "A_3": [
-        "A4: Configure software products to integrate and deploy software releases to various platforms"
+        "A4: Discuss situations with security teams to identify risks"
     ],
-    "A_4": [
-        "A5: Execute configuration tests on platform specific versions of software products in line with testing procedures"
-    ],
-    "A_5": [
-        "A6: Diagnose issues surfaced from configuration testing"
-    ],
-    "A_6": [
-        "A7: Identify potential improvements and modifications to the software configuration and deployment process or the software code"
-    ],
-    "A_7": [
-        "A8: Implement modifications to platform-specific software products and processes"
-    ],
+    "A_4": [],
+    "A_5": [],
+    "A_6": [],
+    "A_7": [],
     "A_8": [],
     "A_9": [],
     "Company": [
-        "Tertiary Infotech Pte Ltd"
+        "QE Safety Consultancy Pte Ltd"
     ],
     "Conclusion_0": [
-        "Overall, the structured sequencing of these learning units is designed to address the performance gaps identified in the infocomm technology industry while equipping learners with the necessary attributes to excel in their roles as software development and configuration management professionals."
+        "Overall, the structured sequencing of these learning units is designed to address the performance gaps while equipping learners with the necessary attributes to excel in their roles related to security risk assessment and mitigation."
     ],
     "CourseTitle": [
-        "Github Foundations Certification Training"
+        "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)"
     ],
     "Hours_0": [
-        7
+        22
     ],
     "Hours_1": [
         2
     ],
     "Hours_2": [
-        16
+        24
     ],
     "Hours_3": [
         "N.A."
@@ -63,27 +55,25 @@
     "Hours_4": [],
     "IM": [
         "Classroom",
-        "Didactic Questioning",
-        "Demonstration",
-        "Practical"
+        "Peer Sharing",
+        "Group Discussion",
+        "Case Study"
     ],
     "KA_0": [
-        "A1, A2"
+        "K2, A1"
     ],
     "KA_1": [
-        "K1, A3"
+        "K3, K4, A2"
     ],
     "KA_2": [
-        "K2, K3, A4, A5"
+        "K5, K6, A3"
     ],
     "KA_3": [
-        "K4, A6"
+        "K1, A4"
     ],
-    "KA_4": [
-        "K5, A7"
-    ],
+    "KA_4": [],
     "K_0": [
-        "K1: Types and usage of scripts and tools for integrating and deploying software products"
+        "K1: Methods of risk analysis"
     ],
     "K_10": [],
     "K_11": [],
@@ -94,82 +84,74 @@
     "K_16": [],
     "K_17": [],
     "K_1": [
-        "K2: Software configuration procedures"
+        "K2: Types of tell-tale signs and symptoms"
     ],
     "K_2": [
-        "K3: Configuration tests and their purposes"
+        "K3: Organisational procedures for security operations"
     ],
     "K_3": [
-        "K4: Interpretation of configuration test results"
+        "K4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers"
     ],
     "K_4": [
-        "K5: Elements of the software configuration and deployment process"
+        "K5: Types of suspicious activities, inappropriate attires, explosives and incendiary devices used by terrorists"
     ],
-    "K_5": [],
+    "K_5": [
+        "K6: Identification of persons"
+    ],
     "K_6": [],
     "K_7": [],
     "K_8": [],
     "K_9": [],
     "LO_0": [
-        "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes."
+        "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats."
     ],
     "LO_1": [
-        "LO2: Select appropriate Git scripts for integrating and deploying software products."
+        "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats."
     ],
     "LO_2": [
-        "LO3: Configure software products and deploy releases using Git configuration tests."
+        "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices."
     ],
     "LO_3": [
-        "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results."
+        "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
     ],
-    "LO_4": [
-        "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements."
-    ],
-    "LO_5": [
-        "LO6: Implement modifications to software products and processes for improved functionality."
-    ],
+    "LO_4": [],
+    "LO_5": [],
     "LO_6": [],
     "LO_7": [],
     "LU_0": [
-        "LU1: Git and GitHub Fundamentals"
+        "LU1: Client Security Needs Analysis"
     ],
     "LU_1": [
-        "LU2: GitHub Repository Management"
+        "LU2: Site Performance Evaluation"
     ],
     "LU_2": [
-        "LU3: Collaborative Workflows on GitHub"
+        "LU3: Corrective Action Implementation"
     ],
     "LU_3": [
-        "LU4: Modern Development Practices"
+        "LU4: Security Assessment Reporting"
     ],
-    "LU_4": [
-        "LU5: GitHub Project Management"
-    ],
-    "LU_5": [
-        "LU6: GitHub Security and Administration"
-    ],
+    "LU_4": [],
+    "LU_5": [],
     "LU_6": [],
     "LU_7": [],
     "LUex_0": [
-        "LU1 introduces the foundational knowledge of version control with Git and the collaborative platform of GitHub. It covers basic Git commands, the GitHub flow, and platform management. This unit sets the stage for understanding how to use Git and GitHub for version control and collaboration. Performance Gap Addressed: Lack of understanding of basic Git commands. Attributes Gained: Foundational understanding of Git and GitHub concepts."
+        "LU1 establishes the groundwork by focusing on identifying and analyzing client security needs and requirements. It covers assessing a client's security status, collecting data on security incidents, and understanding changes in site amenities and environment. This unit lays the foundation for subsequent units by ensuring learners can accurately gauge client-specific security contexts. Performance Gap: Difficulty recognizing tell-tale signs; Attribute Gained: Ability to identify changes in security needs."
     ],
     "LUex_1": [
-        "LU2 builds on the fundamentals by delving into repository management, including creating, cloning, and branching. It covers adding files, managing changes with pull requests, and viewing repository insights. This unit focuses on the practical skills needed to manage code repositories effectively. Performance Gap Addressed: Inability to effectively manage code repositories on GitHub. Attributes Gained: Practical skills in GitHub repository management."
+        "LU2 builds upon LU1 by guiding learners through the process of conducting a site assessment. It involves comparing actual site performance against security operation procedures, examining client security systems, and identifying security risks and threats. This unit provides practical application of the foundational knowledge gained in LU1. Performance Gap: Inconsistent application of SOPs; Attribute Gained: Skill in comparing actual security site performance against security operation procedures."
     ],
     "LUex_2": [
-        "LU3 advances into collaboration features, such as managing issues and discussions, using forking and pull requests, and leveraging GitHub pages. It also covers Markdown features and code reviews, emphasizing teamwork and code quality. Performance Gap Addressed: Inefficient collaboration workflows within development teams. Attributes Gained: Enhanced skills in collaborative development using GitHub."
+        "LU3 transitions from assessment to action, focusing on addressing security deficiencies. Learners will determine risk potential, assess security resources, identify security deficiencies, and recommend corrective measures. This unit emphasizes the application of analytical skills to develop practical solutions. Performance Gap: Lack of proficiency in analyzing situations; Attribute Gained: Competence in defining the potential impact of security deficiencies."
     ],
     "LUex_3": [
-        "LU4 introduces modern development tools and practices, including GitHub Actions, GitHub Copilot, and GitHub Codespaces. This unit focuses on leveraging these tools to automate and streamline the development process. Performance Gap Addressed: Limited adoption of modern development tools. Attributes Gained: Familiarity with and ability to use modern development tools on GitHub."
+        "LU4 integrates all previous learning by focusing on compiling and reporting security assessment findings and recommendations. Learners will prepare comprehensive reports, establish recommendations for security service requirements, and follow up with clients to discuss findings. This unit culminates in the ability to effectively communicate security assessments and proposed actions. Performance Gap: Challenges collaborating with security teams; Attribute Gained: Ability to prepare a complete and accurate account of a security assessment study report."
     ],
-    "LUex_4": [
-        "LU5 covers GitHub Project Management, teaching learners how to create, organize, and automate projects. It explores insights and automation with projects, focusing on efficient project tracking and management. Performance Gap Addressed: Inefficient project management practices. Attributes Gained: Skills in managing projects effectively using GitHub."
-    ],
+    "LUex_4": [],
     "LUex_5": [],
     "LUex_6": [],
     "LUex_7": [],
     "Placeholder_0": [
-        "The infocomm technology industry faces significant challenges in software development and deployment, often stemming from inefficient version control, collaboration, and automation practices. One major performance gap lies in the inconsistent application of version control systems. Many organizations struggle to fully utilize the capabilities of Git and GitHub, leading to issues such as code conflicts, difficulty in tracking changes, and a lack of audit trails. This is frequently seen in teams where developers lack a standardized approach to branching, merging, and resolving conflicts, causing delays in project timelines and increasing the risk of introducing bugs into production code. Furthermore, inadequate collaboration workflows can hinder productivity. Teams often struggle to effectively manage code reviews, handle pull requests, and integrate contributions from multiple developers. Without a streamlined process, bottlenecks can occur, slowing down the development cycle and impeding the ability to deliver timely software updates and features. Another critical challenge is the limited adoption of automation in software configuration and deployment. Many companies still rely on manual processes, which are error-prone, time-consuming, and difficult to scale. The lack of automated testing and deployment pipelines can result in frequent deployment failures, prolonged downtime, and increased operational costs. Moreover, security vulnerabilities can arise from poor dependency management and inadequate code scanning practices. These challenges are exacerbated by the rapid pace of technological advancements, requiring continuous learning and adaptation to new tools and methodologies. The need for improved software configuration management is pressing, especially as companies seek to enhance their DevOps practices and achieve faster, more reliable software releases. The industry requires professionals who can effectively leverage Git and GitHub to streamline development workflows, improve code quality, and enhance collaboration across teams. Overall, these inefficiencies highlight a critical need for comprehensive training and skill development in modern software development practices using industry-standard tools like GitHub.\n\nTo effectively address the identified performance gaps, targeted training is essential in several key areas. Firstly, comprehensive training on Git and GitHub fundamentals is crucial. This includes a deep dive into version control concepts, branching strategies, merging techniques, and conflict resolution. Participants need hands-on experience with basic Git commands and a thorough understanding of GitHub's collaborative platform. The training should cover topics such as creating and managing repositories, cloning repositories, creating and managing branches, and effectively using pull requests for code review and integration. Secondly, training should focus on enhancing collaboration workflows. This involves teaching developers how to effectively manage issues and discussions, utilize forking and pull requests, and leverage GitHub pages for project documentation and communication. Participants should learn how to link pull requests to issues, assign issues to team members, and conduct thorough code reviews to ensure code quality and adherence to coding standards. Emphasis should be placed on establishing clear communication channels and fostering a collaborative culture within development teams. Thirdly, training on automation and continuous integration/continuous deployment (CI/CD) is vital. This includes teaching participants how to use GitHub Actions to automate testing, build processes, and deployment pipelines. The training should cover dependency management, code scanning, and secret scanning to ensure the security and integrity of the software supply chain. Participants should learn how to configure automated security checks and maintain secure GitHub repositories. Furthermore, training on modern development practices such as GitHub Copilot and GitHub Codespaces is necessary to enhance developer productivity and streamline the development process. Finally, the training should address GitHub administration, including user authentication and authorization, to ensure proper access control and security. By providing targeted training in these areas, organizations can equip their developers with the skills and knowledge necessary to overcome the identified challenges and improve software development and deployment practices.\n\nA wide range of job roles within the infocomm technology industry would significantly benefit from comprehensive training. Software Developers, regardless of their specific programming language or area of specialization, would gain invaluable skills in version control, collaboration, and automation. This training would enable them to write cleaner, more maintainable code, collaborate more effectively with team members, and streamline the development process. DevOps Engineers would also greatly benefit, as the training would enhance their ability to build and manage CI/CD pipelines, automate testing and deployment, and ensure the reliability and security of software releases. The training would equip them with the knowledge and skills necessary to optimize the software delivery process and improve overall system performance. Software Architects would gain a deeper understanding of GitHub's capabilities, enabling them to design more robust and scalable software systems. They would be able to leverage GitHub's features to facilitate collaboration, manage code quality, and ensure adherence to architectural principles. System Administrators would benefit from the training by learning how to manage GitHub repositories, configure access controls, and maintain a secure development environment. They would be able to implement best practices for user authentication, authorization, and dependency management. Project Managers would gain a better understanding of the software development lifecycle and how GitHub can be used to track progress, manage issues, and facilitate communication among team members. They would be able to leverage GitHub's project management features to improve project visibility, reduce risks, and ensure timely delivery. Quality Assurance Engineers would benefit from the training by learning how to use GitHub Actions to automate testing, track bugs, and collaborate with developers to resolve issues. They would be able to improve the quality of software releases and reduce the risk of introducing defects into production. Security Engineers would gain valuable skills in code scanning, secret scanning, and dependency management, enabling them to identify and mitigate security vulnerabilities in the software supply chain. They would be able to implement automated security checks and maintain secure GitHub repositories. Therefore, the training would be beneficial to software developers, DevOps engineers, software architects, system administrators, project managers, QA engineers, and security engineers."
+        "SkillsFuture's report Skills Demand For The Future Economy (https://www.skillsfuture.gov.sg/skillsreport) published in 2025, spotlights the priority skills and jobs in demand in three specially selected, emerging, high-growth areas. This report is designed for Singaporeans as a resource for an individual\u2019s skills development journey over the next one to three years.  Singapore's key growth areas (Digital, Green & Care Economy) bring exciting job and skills opportunities. It also introduced the idea of 'priority skills, ' highly transferable skills across job roles within the three economies. In other words, these skills are applicable in many job roles and will contribute significantly to the individual's long-term career versatility. A new dimension on skills demands growth has been added and analysed alongside skills transferability. Demand growth captures the relative scale of the increase in demand for that skill, while transferability captures the scope of the skill's applicability across different job roles. The two-dimensional analysis seeks to provide deeper insights to the reader into the nature of the priority skills identified. \n\nThe industry faces significant challenges related to evolving threat landscapes, technological advancements, and increasing regulatory demands. A primary performance gap stems from the inadequate application of risk identification techniques, leading to failures in detecting early warning signs of potential security breaches. Security personnel often struggle to identify subtle indicators of threats, such as unusual behavior patterns, signs of surveillance, or concealed dangers. This deficiency can be attributed to a lack of comprehensive training in recognizing diverse threat indicators and understanding the methodologies employed by malicious actors. Furthermore, inconsistent adherence to organizational security procedures creates vulnerabilities. Varying interpretations and lax enforcement of standard operating procedures compromise the integrity of security operations, making it easier for threats to exploit weaknesses. The inability to analyze situations effectively and relate them to prior experiences hinders proactive threat mitigation. Security staff may struggle to connect seemingly isolated events to larger security risks, resulting in delayed or inappropriate responses. The absence of robust collaboration and communication among security teams further compounds these issues. Siloed operations and a lack of information sharing impede the development of comprehensive risk assessments and coordinated security strategies, making the sector more susceptible to complex and multifaceted threats. Without addressing these gaps, organizations remain vulnerable to security breaches, reputational damage, and financial losses.\n\nTo address the identified performance gaps, targeted training programs are essential. Comprehensive instruction in risk identification techniques is needed to enhance the ability of security personnel to detect subtle signs and symptoms of potential security threats. This should include training on recognizing various forms of surveillance, suspicious behaviors, and potential indicators of explosive devices or other dangerous materials. Standard operating procedures (SOPs) need reinforcement through practical exercises and scenario-based training to ensure consistent application across the organization. Training should emphasize the importance of adherence to protocols and the consequences of non-compliance. Enhancing analytical skills is crucial for enabling security personnel to effectively assess situations and relate them to prior experiences. This can be achieved through case studies, simulations, and mentorship programs that encourage critical thinking and problem-solving. Collaboration and communication skills must be developed to foster effective teamwork and information sharing among security teams. Training should incorporate team-building exercises, communication workshops, and the establishment of clear communication channels and protocols. Furthermore, continuous professional development is necessary to keep security personnel abreast of evolving threat landscapes, emerging technologies, and updated security procedures. Regular training sessions, workshops, and certifications can ensure that staff maintain their skills and knowledge, enabling them to effectively address emerging security challenges and maintain a proactive security posture. This comprehensive approach to training will enhance the capabilities of security personnel, improving their ability to identify, analyze, and mitigate security risks effectively.\n\nA wide range of job roles within the industry would significantly benefit from the training. Security officers, who are often the first line of defense, would gain enhanced skills in risk identification and threat detection, enabling them to respond more effectively to potential security breaches. Security supervisors and team leaders would benefit from improved analytical and collaborative abilities, allowing them to coordinate security operations and develop comprehensive risk mitigation strategies. Security managers and consultants would gain a deeper understanding of risk analysis methodologies, enabling them to conduct thorough assessments and develop tailored security solutions for clients. Site security assessors and auditors would benefit from the training by gaining the ability to more accurately evaluate security vulnerabilities and recommend effective corrective measures. Corporate security personnel responsible for protecting company assets and employees would also find the training invaluable, as it would equip them with the skills to identify and address internal and external threats. Additionally, law enforcement officers and government security personnel could benefit from the training to enhance their ability to recognize and respond to security risks in public spaces and critical infrastructure. Ultimately, anyone involved in security risk management, threat assessment, or security operations would gain valuable insights and skills from the training, leading to a more secure and resilient sector overall. The training's focus on practical application and real-world scenarios ensures that participants can immediately apply their new knowledge to their respective roles, improving security outcomes across the board."
     ],
     "Placeholder_1": [
         {
@@ -183,11 +165,10 @@
         {
             "type": "bullets",
             "content": [
-                "Learners struggle/are unclear with analyzing the components of GitHub and the roles collaborators play in coordinating release schedules.",
-                "Learners struggle/are unclear with determining the correct Git scripts for integrating and deploying software products, leading to potential inefficiencies.",
-                "Learners struggle/are unclear with setting up software products and using Git configuration tests to deploy releases, potentially causing deployment failures.",
-                "Learners struggle/are unclear with interpreting configuration test results to diagnose issues during GitHub configuration testing, leading to prolonged troubleshooting times.",
-                "Learners struggle/are unclear with identifying areas for improvement in software configuration, deployment processes, and code elements, hindering continuous improvement efforts."
+                "Learners are unclear with identifying potential security threats using basic risk identification techniques.",
+                "Learners struggle to consistently apply organizational security procedures to identify risks such as surveillance and inappropriate behavior.",
+                "Learners lack proficiency in analyzing situations and relating them to prior experiences to detect suspicious activities or devices.",
+                "Learners find it challenging to effectively collaborate with security teams to assess risks using established methods of risk analysis."
             ]
         },
         {
@@ -201,11 +182,10 @@
         {
             "type": "bullets",
             "content": [
-                "Ability to effectively analyze GitHub components and coordinate release scheduling with collaborators to align processes.",
-                "Proficiency in selecting and applying appropriate Git scripts for integrating and deploying software products.",
-                "Ability to expertly configure software products and deploy releases using Git configuration tests.",
-                "Proficiency in diagnosing and resolving issues identified during GitHub configuration testing by accurately interpreting configuration test results.",
-                "Ability to identify and recommend potential improvements to software configuration, deployment processes, and code elements."
+                "Ability to apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
+                "Proficiency in following organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
+                "Skill in analyzing situations and relating them to prior experiences to identify suspicious activities, attire, or explosive devices.",
+                "Competence in collaborating with security teams to assess risks using established methods of risk analysis."
             ]
         },
         {
@@ -215,22 +195,21 @@
         {
             "type": "bullets",
             "content": [
-                "Improved ability to manage and streamline software release cycles, ensuring better coordination and alignment among team members.",
-                "Enhanced efficiency and reduced errors in software integration and deployment processes, ensuring faster and more reliable releases.",
-                "More reliable and consistent software deployments, minimizing downtime and improving overall system stability.",
-                "Faster issue resolution and reduced debugging time, leading to quicker software development cycles and improved team productivity.",
-                "Continuous improvement of software development practices, resulting in higher-quality code and more efficient deployment workflows."
+                "Enhanced ability to proactively identify and mitigate potential security threats, improving overall security posture.",
+                "Improved adherence to organizational security procedures, leading to more consistent and effective security operations.",
+                "Increased confidence in analyzing and responding to suspicious activities, enhancing threat detection capabilities.",
+                "Greater collaboration and communication within security teams, fostering a more coordinated and effective approach to risk assessment."
             ]
         }
     ],
     "Rationale_0": [
-        "For this course, the step-by-step sequencing is crucial for building a strong foundation in Git and GitHub, progressing from basic concepts to more advanced practices. This methodology allows learners to systematically acquire knowledge and skills, ensuring a solid understanding of each topic before moving on to the next, fostering a deeper grasp of software configuration management and collaboration. The progression is designed to enable learners to apply these concepts effectively in real-world software development scenarios."
+        "For this course, a step-by-step curriculum framework is employed to progressively build skills in security risk analysis. The learning units are sequenced to first establish a foundational understanding of client security needs, then progress to site assessment, followed by corrective action implementation, and culminating in security assessment reporting. This arrangement allows learners to gradually develop competence in assessing and addressing security risks in a structured manner."
     ],
     "TCS_0": [
-        "Software Configuration"
+        "Security Risk Analysis Assess and Address Security Risks"
     ],
     "TCS_1": [
-        "ICT-DIT-3014-1.1"
+        "SEC-SRM-3002-1.1"
     ],
     "TopicsEX_0": [],
     "TopicsEX_1": [],
@@ -241,205 +220,157 @@
     "Topics_0": [
         {
             "type": "paragraph",
-            "content": "Topic 1: Introduction to Git and GitHub (A1, A2)"
+            "content": "Topic 1: Assess Clients Security Status (K2, A1)"
         },
         {
             "type": "bullets",
             "content": [
-                "What is vesion control",
-                "Basic Git commands",
-                "What is GitHub?",
-                "Components of the GitHub flow",
-                "GitHub is a collaborative platform",
-                "GitHub platform management"
+                "Identify changes of security needs and requirements of security site arising from changes in site amenities and environment according to organisation procedures",
+                "Collect data from information sources concerning security incidents for analysis of any trends and patterns of occurrences",
+                "Conduct a discussion with the client to identify any security concerns",
+                "Record issues raised and any changes to the clients security needs",
+                "Examine security operations orders and terms of the security services contract with the client according to organisational procedures to assess the clients security status",
+                "Prepare site Assessment work plan to optimise utilisation of resources"
             ]
         },
         {
             "type": "paragraph",
-            "content": "LO1 \u2013 Analyze Github components and coordinate release scheduling with collaborators to align processes."
+            "content": "LO1 \u2013 Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats."
         },
         {
             "type": "paragraph",
-            "content": "A1: Analyse release components"
+            "content": "K2: Types of tell-tale signs and symptoms"
         },
         {
             "type": "paragraph",
-            "content": "A2: Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
+            "content": "A1: Apply basic risk identification techniques"
         }
     ],
     "Topics_1": [
         {
             "type": "paragraph",
-            "content": "Topic 2: Working with GitHub Repository (K1, A3)"
+            "content": "Topic 2: Conduct Site Assessment (K3, K4, A2)"
         },
         {
             "type": "bullets",
             "content": [
-                "Repository management",
-                "Create a new GitHub Repository",
-                "Clone a repository",
-                "Create a new branch",
-                "Add files to a repository",
-                "Manage repository changes by using pull requests on GitHub",
-                "View repository insights"
+                "Carry out site Assessment systematically according to organisational procedures, site Assessment work plan and clients requirements",
+                "Compare actual security site performance against security operation procedures and record any variance accurately",
+                "Examine details of clients security system / equipment and building premises according to organisational procedures to Assess client security status",
+                "Assess the suitability of clients existing security system/ equipment in meeting clients security needs",
+                "Examine the updated floor plan of assignment location to identify building structures and layout",
+                "Identify variance and deviations from the clients security requirements",
+                "Identify security risks raised by environment factors",
+                "Identify security risks and threats to the assignment location"
             ]
         },
         {
             "type": "paragraph",
-            "content": "LO2 \u2013 Select appropriate Git scripts for integrating and deploying software products."
+            "content": "LO2 \u2013 Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats."
         },
         {
             "type": "paragraph",
-            "content": "K1: Types and usage of scripts and tools for integrating and deploying software products"
+            "content": "K3: Organisational procedures for security operations"
         },
         {
             "type": "paragraph",
-            "content": "A3: Select appropriate scripts and tools for integrating and deploying software products"
+            "content": "K4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers"
+        },
+        {
+            "type": "paragraph",
+            "content": "A2: Follow standard operating procedures (SOPs) to identify risks"
         }
     ],
     "Topics_2": [
         {
             "type": "paragraph",
-            "content": "Topic 3: Collaboration Features (K2, K3, A4, A5)"
+            "content": "Topic 3: Address Security Deficiencies (K5, K6, A3)"
         },
         {
             "type": "bullets",
             "content": [
-                "Managing issues and discussions",
-                "Forking and pull requests",
-                "GitHub pages",
-                "Markdown Features",
-                "Link a PR to an Issue",
-                "Identify how to assign Issues.",
-                "Code reviews"
+                "Confirm the accuracy and currency of data related to client security status prior to recommending security options",
+                "Determine risk potential by analysing relevant client security status data",
+                "Assess a range of security resources for suitability and availability against security risks",
+                "Identify any security deficiencies due to manpower and security systems resources and take appropriate corrective measures",
+                "Prevent risk to client operations by addressing deficiencies in existing control mechanisms",
+                "Take appropriate corrective measures to address security deficiencies identified in a security survey of assignment location",
+                "Gauge and define the potential impact of any security deficiencies accurately to prioritise measures to address gaps in security",
+                "Provide recommendations which address clients security deficiencies within the scope of security services contract terms where necessary to appropriate parties to follow up on actions to be taken to address security risks",
+                "Complete analysis and recommendations for the client within an agreed timescale",
+                "Record analysis and recommendations in accordance with organisational procedures"
             ]
         },
         {
             "type": "paragraph",
-            "content": "LO3 \u2013 Configure software products and deploy releases using Git configuration tests."
+            "content": "LO3 \u2013 Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices."
         },
         {
             "type": "paragraph",
-            "content": "K2: Software configuration procedures"
+            "content": "K5: Types of suspicious activities, inappropriate attires, explosives and incendiary devices used by terrorists"
         },
         {
             "type": "paragraph",
-            "content": "K3: Configuration tests and their purposes"
+            "content": "K6: Identification of persons"
         },
         {
             "type": "paragraph",
-            "content": "A4: Configure software products to integrate and deploy software releases to various platforms"
-        },
-        {
-            "type": "paragraph",
-            "content": "A5: Execute configuration tests on platform specific versions of software products in line with testing procedures"
+            "content": "A3: Study situations and relate to past experience for identification of risks"
         }
     ],
     "Topics_3": [
         {
             "type": "paragraph",
-            "content": "Topic 4: Modern Development (K4, A6)"
+            "content": "Topic 4: Submit Findings and Recommendations (K1, A4)"
         },
         {
             "type": "bullets",
             "content": [
-                "GitHub Actions",
-                "GitHub Copilot",
-                "GitHub Codespaces"
+                "Compile and record relevant information accurately and report to appropriate person according to organisational procedures",
+                "Ensure findings and recommendations in the report are clear, logical and consistent with contract terms and conditions",
+                "Make recommendations based on the findings",
+                "Prepare a complete and accurate account of security assessment study report with indemnity specification according to organisation procedures",
+                "Establish recommendations for new and existing security service requirements / appropriate security risk prevention measures supported by relevant documentation",
+                "Outline constraints, limitations and exclusions to security survey and analysis in report and submit a report to the relevant person for approval",
+                "Follow-up and meet with the client to discuss on the site survey findings and seek agreement to proposed security recommendations. Finalise with the client the terms of reference for the next step in preparing operations order",
+                "Implement agreed on terms of reference when security recommendations are accepted",
+                "Carry out any changes and adjustments to recommended actions within agreed terms of reference",
+                "Maintain the confidentiality of all recorded information"
             ]
         },
         {
             "type": "paragraph",
-            "content": "LO4 \u2013 Diagnose issues identified during Github configuration testing by interpreting configuration test results."
+            "content": "LO4 \u2013 Collaborate with security teams to assess risks using established methods of risk analysis."
         },
         {
             "type": "paragraph",
-            "content": "K4: Interpretation of configuration test results"
+            "content": "K1: Methods of risk analysis"
         },
         {
             "type": "paragraph",
-            "content": "A6: Diagnose issues surfaced from configuration testing"
+            "content": "A4: Discuss situations with security teams to identify risks"
         }
     ],
-    "Topics_4": [
-        {
-            "type": "paragraph",
-            "content": "Topic 5: GitHub Project (K5, A7)"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Projects versus Projects Classic",
-                "How to create a project",
-                "How to organize your project",
-                "How to organize and automate your project",
-                "Insight and automation with projects"
-            ]
-        },
-        {
-            "type": "paragraph",
-            "content": "LO5 \u2013 Identify potential improvements to the software configuration, deployment processes, and code elements."
-        },
-        {
-            "type": "paragraph",
-            "content": "K5: Elements of the software configuration and deployment process"
-        },
-        {
-            "type": "paragraph",
-            "content": "A7: Identify potential improvements and modifications to the software configuration and deployment process or the software code"
-        }
-    ],
-    "Topics_5": [
-        {
-            "type": "paragraph",
-            "content": "Topic 6: Privacy, Security and Administration (A8)"
-        },
-        {
-            "type": "bullets",
-            "content": [
-                "Introduction to GitHub administration",
-                "Authenticate and authorize user identities on GitHub",
-                "Dependency management",
-                "Code scanning",
-                "Secret scanning",
-                "How to maintain a secure GitHub repository",
-                "Automated security",
-                "InnerSouce"
-            ]
-        },
-        {
-            "type": "paragraph",
-            "content": "LO6 \u2013 Implement modifications to software products and processes for improved functionality."
-        },
-        {
-            "type": "paragraph",
-            "content": "A8: Implement modifications to platform-specific software products and processes"
-        }
-    ],
+    "Topics_4": [],
+    "Topics_5": [],
     "TotalHours": [],
     "Assessment_0": [
-        "Practical Performance (PP) \u2013 A1, A2"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2\n\nCase Study (CS) \u2013 A1"
     ],
     "Assessment_1": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1\n\nPractical Performance (PP) \u2013 A3"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K3, K4\n\nCase Study (CS) \u2013 A2"
     ],
     "Assessment_2": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2, K3\n\nPractical Performance (PP) \u2013 A4, A5"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5, K6\n\nCase Study (CS) \u2013 A3"
     ],
     "Assessment_3": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K4\n\nPractical Performance (PP) \u2013 A6"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1\n\nCase Study (CS) \u2013 A4"
     ],
-    "Assessment_4": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5\n\nPractical Performance (PP) \u2013 A7"
-    ],
+    "Assessment_4": [],
     "AssessmentJustification": [
         {
             "type": "paragraph",
-            "content": "Practical Performance (PP): A practical Performance (PP) assessment will provide direct evidence of whether candidates have acquired the competency for the ability statements by solving a scenario-based problem."
-        },
-        {
-            "type": "paragraph",
-            "content": "The Practical Performance (PP) assessment allows candidates to demonstrate hands-on skills in using GitHub for software configuration and deployment, aligning with industry best practices. Candidates will complete practical tasks demonstrating their ability to use Git and GitHub for version control, collaboration, and continuous integration/continuous deployment (CI/CD)."
+            "content": "Case Study (CS): A case study (Written Assessment) consists of scenarios that allow an assessment of the candidate's mastery of abilities. The assessor can collect process evidence to assess the candidate's competencies against the learning outcomes. It allows consistent interpretation of evidence and reliable assessment outcomes."
         },
         {
             "type": "paragraph",
@@ -448,12 +379,10 @@
         {
             "type": "bullets",
             "content": [
-                "For LO1: Candidates will analyze a given software project, set up a GitHub repository, and coordinate release scheduling using GitHub features.",
-                "For LO2: Candidates will select and apply appropriate Git scripts to automate the integration and deployment of a software product.",
-                "For LO3: Candidates will configure a software product using Git configuration tests, demonstrating their understanding of testing procedures.",
-                "For LO4: Candidates will diagnose issues identified during configuration testing by interpreting test results in a GitHub environment.",
-                "For LO5: Candidates will identify potential improvements to a given software configuration and deployment process, documenting their recommendations.",
-                "For LO6: Candidates will implement modifications to a software product and its deployment process within a GitHub repository to improve functionality."
+                "For LO1: Candidates will submit a report detailing their application of risk identification techniques to detect potential security threats.",
+                "For LO2: Candidates will provide a written analysis of how organizational procedures are followed to identify risks, including surveillance and inappropriate behavior.",
+                "For LO3: Candidates will submit a detailed analysis of suspicious situations, relating them to prior experiences to identify potential threats.",
+                "For LO4: Candidates will submit a report outlining their collaboration with security teams to assess risks using established methods of risk analysis."
             ]
         },
         {
@@ -463,8 +392,7 @@
         {
             "type": "bullets",
             "content": [
-                "Candidates will submit their GitHub repository links, scripts, configuration files, test results, and documentation outlining their actions and justifications.",
-                "This includes commit histories and pull request details showcasing collaborative efforts."
+                "Candidates will submit their case study reports and any additional supporting documents to the assessors electronically via the designated learning management system."
             ]
         },
         {
@@ -474,9 +402,9 @@
         {
             "type": "bullets",
             "content": [
-                "Functionality and accuracy.",
-                "Efficiency and optimization.",
-                "Collaboration and version control."
+                "Application of Techniques.",
+                "Adherence to Procedures.",
+                "Quality of Risk Analysis."
             ]
         },
         {
@@ -486,78 +414,59 @@
         {
             "type": "bullets",
             "content": [
-                "All submitted evidence, including repository links, scripts, and documentation, will be retained for 3 years for auditing and compliance purposes."
+                "All submitted case study reports and accompanying documentation will be retained for 3 years to ensure compliance with institutional policies and for auditing purposes."
             ]
         }
     ],
     "ADuration_0": [
-        "Practical Performance (PP) \u2013 10 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
     ],
     "ADuration_1": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
     ],
     "ADuration_2": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
     ],
     "ADuration_3": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
     ],
-    "ADuration_4": [
-        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nPractical Performance (PP) \u2013 10 mins"
-    ],
-    "ADuration_5": [
-        "Practical Performance (PP) \u2013 10 mins"
-    ],
+    "ADuration_4": [],
+    "ADuration_5": [],
     "ADurationTotal": [
-        "WA-SAQ \u2013 1 hr\nPP \u2013 1 hr\nTotal \u2013 2 hr"
-    ],
-    "Assessment_5": [
-        "Practical Performance (PP) \u2013 A8"
+        "WA-SAQ \u2013 1 hr\nCS \u2013 1 hr\nTotal \u2013 2 hr"
     ],
     "Sequencing": [
         {
             "type": "bold_paragraph",
-            "content": "LU1: Git and GitHub Fundamentals"
+            "content": "LU1: Client Security Needs Analysis"
         },
         {
             "type": "paragraph",
-            "content": "LU1 introduces the foundational knowledge of version control with Git and the collaborative platform of GitHub. It covers basic Git commands, the GitHub flow, and platform management. This unit sets the stage for understanding how to use Git and GitHub for version control and collaboration. Performance Gap Addressed: Lack of understanding of basic Git commands. Attributes Gained: Foundational understanding of Git and GitHub concepts."
+            "content": "LU1 establishes the groundwork by focusing on identifying and analyzing client security needs and requirements. It covers assessing a client's security status, collecting data on security incidents, and understanding changes in site amenities and environment. This unit lays the foundation for subsequent units by ensuring learners can accurately gauge client-specific security contexts. Performance Gap: Difficulty recognizing tell-tale signs; Attribute Gained: Ability to identify changes in security needs."
         },
         {
             "type": "bold_paragraph",
-            "content": "LU2: GitHub Repository Management"
+            "content": "LU2: Site Performance Evaluation"
         },
         {
             "type": "paragraph",
-            "content": "LU2 builds on the fundamentals by delving into repository management, including creating, cloning, and branching. It covers adding files, managing changes with pull requests, and viewing repository insights. This unit focuses on the practical skills needed to manage code repositories effectively. Performance Gap Addressed: Inability to effectively manage code repositories on GitHub. Attributes Gained: Practical skills in GitHub repository management."
+            "content": "LU2 builds upon LU1 by guiding learners through the process of conducting a site assessment. It involves comparing actual site performance against security operation procedures, examining client security systems, and identifying security risks and threats. This unit provides practical application of the foundational knowledge gained in LU1. Performance Gap: Inconsistent application of SOPs; Attribute Gained: Skill in comparing actual security site performance against security operation procedures."
         },
         {
             "type": "bold_paragraph",
-            "content": "LU3: Collaborative Workflows on GitHub"
+            "content": "LU3: Corrective Action Implementation"
         },
         {
             "type": "paragraph",
-            "content": "LU3 advances into collaboration features, such as managing issues and discussions, using forking and pull requests, and leveraging GitHub pages. It also covers Markdown features and code reviews, emphasizing teamwork and code quality. Performance Gap Addressed: Inefficient collaboration workflows within development teams. Attributes Gained: Enhanced skills in collaborative development using GitHub."
+            "content": "LU3 transitions from assessment to action, focusing on addressing security deficiencies. Learners will determine risk potential, assess security resources, identify security deficiencies, and recommend corrective measures. This unit emphasizes the application of analytical skills to develop practical solutions. Performance Gap: Lack of proficiency in analyzing situations; Attribute Gained: Competence in defining the potential impact of security deficiencies."
         },
         {
             "type": "bold_paragraph",
-            "content": "LU4: Modern Development Practices"
+            "content": "LU4: Security Assessment Reporting"
         },
         {
             "type": "paragraph",
-            "content": "LU4 introduces modern development tools and practices, including GitHub Actions, GitHub Copilot, and GitHub Codespaces. This unit focuses on leveraging these tools to automate and streamline the development process. Performance Gap Addressed: Limited adoption of modern development tools. Attributes Gained: Familiarity with and ability to use modern development tools on GitHub."
-        },
-        {
-            "type": "bold_paragraph",
-            "content": "LU5: GitHub Project Management"
-        },
-        {
-            "type": "paragraph",
-            "content": "LU5 covers GitHub Project Management, teaching learners how to create, organize, and automate projects. It explores insights and automation with projects, focusing on efficient project tracking and management. Performance Gap Addressed: Inefficient project management practices. Attributes Gained: Skills in managing projects effectively using GitHub."
-        },
-        {
-            "type": "bold_paragraph",
-            "content": "LU6: GitHub Security and Administration"
+            "content": "LU4 integrates all previous learning by focusing on compiling and reporting security assessment findings and recommendations. Learners will prepare comprehensive reports, establish recommendations for security service requirements, and follow up with clients to discuss findings. This unit culminates in the ability to effectively communicate security assessments and proposed actions. Performance Gap: Challenges collaborating with security teams; Attribute Gained: Ability to prepare a complete and accurate account of a security assessment study report."
         }
     ]
 }

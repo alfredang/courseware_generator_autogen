@@ -1,17 +1,14 @@
 {
   "KA_Analysis": {
-    "K1": "Practical exercises assess the application of knowledge regarding scripts and tools, and their usage in software integration and deployment. It tests understanding of when and how to use specific tools.",
-    "A1": "Practical exercises provide a direct demonstration of the ability to analyze release components. Assessing the practical application of identifying and understanding the different components of a release.",
-    "K2": "Practical application tests the understanding of software configuration procedures by requiring candidates to execute these procedures, showing they understand each step's purpose and sequence.",
-    "A2": "Practical exercises simulate real-world scenarios requiring coordination. Assessing the ability to communicate effectively and align release activities with stakeholders' needs and timelines.",
-    "K3": "Configuration tests are included to check the candidate knows the configuration tests performed, and their purpose in ensuring the reliability and stability of the software product.",
-    "A3": "Practical assessment demonstrates the ability to choose appropriate scripts and tools. Focusing on effectiveness and suitability for specific integration and deployment tasks, evaluating selection skills.",
-    "K4": "Practical activities ensures the candidate can determine the outcome, issues or successes of testing procedures, and ensures the software is functional after configuration tests.",
-    "A4": "Practical exercises test the ability to configure software. It assesses the ability to translate theoretical knowledge into practical skills in diverse platform configurations.",
-    "K5": "The practical element ensures the candidate understands the software configuration and deployment process, and they have appropriate knowledge to perform actions that will be tested in action.",
-    "A5": "Practical activities demonstrate competency in executing configuration tests. Assessing the ability to follow procedures accurately and efficiently, while understanding the expected outcomes.",
-    "A6": "Practical tests involve identifying the cause and remedy to issues, which allows for assessment of their ability to diagnose effectively. The configuration allows a setting for practical investigation.",
-    "A7": "Practical implementation allows for the ability to determine improvements from the outcome of testing, and their experience, which allows for better modification of software code.",
-    "A8": "The practical element ensures the candidate can properly modify platform-specific software products and processes, while retaining previous functionality and applying improvements."
+    "K1": "Candidates will define and differentiate various risk analysis methods through written responses, demonstrating their understanding of theoretical underpinnings.",
+    "A1": "Participants will conduct practical risk assessments using provided scenarios, submitting reports detailing identified risks and mitigation strategies.",
+    "K2": "Examinee will describe tell-tale signs and symptoms associated with various security threats and breaches in written format, showcasing their theoretical knowledge.",
+    "A2": "Trainees will analyze simulated scenarios, documenting their observations and applying SOPs to detect and report suspicious activities, evaluated on practical application.",
+    "K3": "Learners will outline organizational security procedures in written answers, reflecting comprehension of theoretical protocols and guidelines.",
+    "A3": "Participants will evaluate complex situations using their experience, documenting their approach and risk assessment findings, judged on practical judgment.",
+    "K4": "The test taker will identify signs related to surveillance, intelligence gathering, and potential threats through written explanations, displaying theoretical awareness.",
+    "A4": "Candidates will engage in group exercises, sharing insights and justifying their risk assessments based on collaborative analysis, graded on practical discussion skills.",
+    "K5": "Examinees will describe terrorist tactics, including suspicious activities and devices, via written responses, assessing theoretical recognition.",
+    "K6": "Trainees will explain the process of identifying persons of interest, outlining key indicators and verification methods in their written responses, confirming understanding of concepts."
   }
 }

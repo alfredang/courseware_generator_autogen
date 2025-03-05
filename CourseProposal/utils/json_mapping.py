@@ -95,10 +95,20 @@ def normalize_course_outline(course_outline):
 
 # Define the mapping rules
 def map_values(mapping_source, ensemble_output, research_output):
+    # background_analysis = ""
+    # for key, value in research_output["Background Analysis"].items():
+    #     background_analysis += f"{value.strip()}\n\n"
+    # mapping_source["#Placeholder[0]"] = [background_analysis.strip()]
+        # Define the string to insert at the beginning
+    introductory_string = "SkillsFuture's report Skills Demand For The Future Economy (https://www.skillsfuture.gov.sg/skillsreport) published in 2025, spotlights the priority skills and jobs in demand in three specially selected, emerging, high-growth areas. This report is designed for Singaporeans as a resource for an individual’s skills development journey over the next one to three years.  Singapore's key growth areas (Digital, Green & Care Economy) bring exciting job and skills opportunities. It also introduced the idea of 'priority skills, ' highly transferable skills across job roles within the three economies. In other words, these skills are applicable in many job roles and will contribute significantly to the individual's long-term career versatility. A new dimension on skills demands growth has been added and analysed alongside skills transferability. Demand growth captures the relative scale of the increase in demand for that skill, while transferability captures the scope of the skill's applicability across different job roles. The two-dimensional analysis seeks to provide deeper insights to the reader into the nature of the priority skills identified. \n\n"
+
     background_analysis = ""
     for key, value in research_output["Background Analysis"].items():
         background_analysis += f"{value.strip()}\n\n"
-    mapping_source["#Placeholder[0]"] = [background_analysis.strip()]
+
+    # Insert the introductory string at the beginning
+    background_analysis = introductory_string + background_analysis.strip()
+    mapping_source["#Placeholder[0]"] = [background_analysis]
 
     performance_analysis = "Performance gaps were identified through survey forms distributed to external stakeholders:\n\n"
 

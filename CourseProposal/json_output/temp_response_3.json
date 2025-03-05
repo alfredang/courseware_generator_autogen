@@ -1,22 +1,20 @@
 {
     "course_info": {
-        "Course Title": "Github Foundations Certification Training",
-        "Industry": "Infocomm Technology",
+        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
+        "Industry": "Security",
         "Learning Outcomes": [
-            "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
-            "LO2: Select appropriate Git scripts for integrating and deploying software products.",
-            "LO3: Configure software products and deploy releases using Git configuration tests.",
-            "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
-            "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
-            "LO6: Implement modifications to software products and processes for improved functionality."
+            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
+            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
+            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
+            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
         ],
-        "TSC Title": "Software Configuration",
-        "TSC Code": "ICT-DIT-3014-1.1"
+        "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
+        "TSC Code": "SEC-SRM-3002-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "A significant performance gap exists in the ability to properly configure software products and diagnose issues arising from configuration testing. Many professionals struggle with interpreting test results and identifying the root causes of problems, leading to prolonged debugging cycles and delayed releases. Additionally, security vulnerabilities due to misconfiguration are a constant concern.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course provides a deep dive into configuring software products and interpreting configuration test results, giving participants the skills to diagnose and fix issues quickly. By focusing on testing procedures and helping participants understand test results, this course improves configuration management and reduces the risk of deployment errors. This helps improve software quality and reduces the time it takes to deliver new features."
+            "What are the performance gaps in the industry?": "One area needing improvement is the rapid identification and assessment of potential threats through analysis of past experiences. Many security personnel find it challenging to quickly analyze new situations based on their prior experience, especially regarding potential explosives, suspicious attire, or unusual activities. There is a need to sharpen the ability to draw parallels and make informed judgments swiftly.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "The course sharpens the skills to quickly assess situations and apply knowledge gained from past experiences. This enables individuals to identify potential dangers, such as unusual attire or suspicious items. By honing these analytical skills, security professionals can act more decisively and prevent potential incidents more effectively."
         }
     ]
 }

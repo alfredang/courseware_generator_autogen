@@ -1,30 +1,28 @@
 {
   "analyst_responses": [
     {
-      "What are the performance gaps in the industry?": "Many organizations struggle with coordinating software releases effectively, leading to delays and inconsistencies. This often stems from a lack of clear understanding of the components involved and poor synchronization between development teams and other stakeholders. This lack of coordination affects the speed and reliability of deployments.",
-      "Why do you think this WSQ course will address the training needs for the industry?": "This course offers methods to break down release processes and align team efforts. By teaching how to assess project elements and encouraging greater communication, the training aims to streamline the entire software release lifecycle. This can reduce deployment bottlenecks and ensure that releases are more predictable and timely."
+      "What are the performance gaps in the industry?": "A key challenge is the ability to proactively identify potential security threats. Many professionals struggle to recognize early warning signs and subtle indicators that could signal an impending issue. Often, responses are reactive rather than preventative, leading to increased vulnerability and potential breaches.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "This course equips personnel with the skills to notice abnormalities and relate them to potential risks. By learning to spot tell-tale signs and unusual activities, individuals can enhance their ability to anticipate and mitigate threats before they escalate. This proactive approach strengthens the overall defense posture."
     },
     {
-      "What are the performance gaps in the industry?": "Integrating and deploying software products often involves using a variety of scripts and tools, but many developers lack the expertise to select the most appropriate ones. This can lead to inefficient deployment processes, increased errors, and difficulty in maintaining software quality across different platforms and environments. This impacts developer productivity and the overall reliability of software deployments.",
-      "Why do you think this WSQ course will address the training needs for the industry?": "This course teaches participants to use specific scripts and tools tailored for integrating and deploying software, greatly enhancing their skill set. The course emphasizes choosing the right tools for the job, which leads to more efficient deployments and better overall integration, which reduces deployment issues and improves developer output."
+      "What are the performance gaps in the industry?": "Many organizations face difficulties in consistently applying standardized security procedures. There's often a lack of adherence to established protocols during daily operations, leading to inconsistencies in security practices. Recognizing and responding to behaviors indicative of potential threats, such as surveillance or suspicious demeanor, poses a significant challenge.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes the importance of adhering to established operational protocols and builds the ability to identify security risks. By reinforcing correct procedures and improving threat recognition skills, this training aims to establish a more consistent and reliable security environment."
     },
     {
-      "What are the performance gaps in the industry?": "A significant performance gap exists in the ability to properly configure software products and diagnose issues arising from configuration testing. Many professionals struggle with interpreting test results and identifying the root causes of problems, leading to prolonged debugging cycles and delayed releases. Additionally, security vulnerabilities due to misconfiguration are a constant concern.",
-      "Why do you think this WSQ course will address the training needs for the industry?": "The course provides a deep dive into configuring software products and interpreting configuration test results, giving participants the skills to diagnose and fix issues quickly. By focusing on testing procedures and helping participants understand test results, this course improves configuration management and reduces the risk of deployment errors. This helps improve software quality and reduces the time it takes to deliver new features."
+      "What are the performance gaps in the industry?": "One area needing improvement is the rapid identification and assessment of potential threats through analysis of past experiences. Many security personnel find it challenging to quickly analyze new situations based on their prior experience, especially regarding potential explosives, suspicious attire, or unusual activities. There is a need to sharpen the ability to draw parallels and make informed judgments swiftly.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "The course sharpens the skills to quickly assess situations and apply knowledge gained from past experiences. This enables individuals to identify potential dangers, such as unusual attire or suspicious items. By honing these analytical skills, security professionals can act more decisively and prevent potential incidents more effectively."
     }
   ],
   "course_info": {
-    "Course Title": "Github Foundations Certification Training",
-    "Industry": "Infocomm Technology",
+    "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
+    "Industry": "Security",
     "Learning Outcomes": [
-      "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
-      "LO2: Select appropriate Git scripts for integrating and deploying software products.",
-      "LO3: Configure software products and deploy releases using Git configuration tests.",
-      "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
-      "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
-      "LO6: Implement modifications to software products and processes for improved functionality."
+      "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
+      "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
+      "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
+      "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
     ],
-    "TSC Title": "Software Configuration",
-    "TSC Code": "ICT-DIT-3014-1.1"
+    "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
+    "TSC Code": "SEC-SRM-3002-1.1"
   }
 }

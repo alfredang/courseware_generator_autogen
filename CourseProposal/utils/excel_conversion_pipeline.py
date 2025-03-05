@@ -607,6 +607,7 @@ def create_instructional_dataframe(json_data):
     """
     Creates a DataFrame for instructional methods and durations, ensuring total duration
     matches "Course Duration" - "Assessment Hours" and all durations are in multiples of 5.
+    Treats all instructional methods equally with no special handling for practical hours.
 
     Args:
         json_data (dict): The JSON data containing course information.
@@ -619,14 +620,17 @@ def create_instructional_dataframe(json_data):
     learning_units = json_data["TSC and Topics"]["Learning Units"]
     instructional_methods_input = json_data["Assessment Methods"]["Instructional Methods"]
     ka_mapping = json_data["Learning Outcomes"].get("Knowledge and Ability Mapping", {})
-    classroom_hours = course_info.get("Classroom Hours", 0)
-    practical_hours = course_info.get("Practical Hours", 0) if "Practical Hours" in course_info else 0
+    
+    # We'll use the total instructional time from course duration minus assessment hours
     assessment_hours = course_info.get("Number of Assessment Hours", 0)
     course_duration_hours = course_info.get("Course Duration (Number of Hours)", 0)
 
     # Calculate total instructional hours
     total_instructional_hours = course_duration_hours - assessment_hours
     total_instructional_minutes = total_instructional_hours * 60
+    
+    # Round to nearest multiple of 5
+    total_instructional_minutes = round(total_instructional_minutes / 5) * 5
 
     if isinstance(instructional_methods_input, str):
         instructional_methods_list = [method.strip() for method in instructional_methods_input.split(',')]
@@ -644,7 +648,6 @@ def create_instructional_dataframe(json_data):
 
     data = []
     total_rows = 0
-    practical_rows_count = 0
 
     for lu_index, lu_title in enumerate(learning_units):
         lu_num = f"LU{lu_index + 1}"
@@ -659,114 +662,34 @@ def create_instructional_dataframe(json_data):
             for method in instructional_methods_list:
                 data.append([lu_num, method.strip(), 0, "Classroom Facilitated Training"]) # Initial duration 0
                 total_rows += 1
-                if method.strip() == "Practical":
-                    practical_rows_count += 1
 
     df = pd.DataFrame(data, columns=["LU#", "Instructional Methods", "Instructional Duration", "MOT"])
 
-    # Calculate target totals (in minutes)
-    classroom_minutes_total = classroom_hours * 60
-    practical_minutes_total = practical_hours * 60
-    
-    # Round to nearest multiple of 5 to ensure total is divisible by 5
-    classroom_minutes_total = round(classroom_minutes_total / 5) * 5
-    practical_minutes_total = round(practical_minutes_total / 5) * 5
-    
-    # Calculate raw per-row allocations
-    classroom_rows = total_rows - practical_rows_count
-    classroom_duration_per_row = (classroom_minutes_total // classroom_rows) if classroom_rows > 0 else 0
-    practical_duration_per_practical_row = (practical_minutes_total // practical_rows_count) if practical_rows_count > 0 else 0
-    
-    # Round to nearest multiple of 5
-    classroom_duration_per_row = round(classroom_duration_per_row / 5) * 5
-    practical_duration_per_practical_row = round(practical_duration_per_practical_row / 5) * 5
-
-    # Assign initial durations based on Classroom and Practical Hours
-    for index, row in df.iterrows():
-        if row["Instructional Methods"] == "Practical":
-            df.loc[index, "Instructional Duration"] = int(practical_duration_per_practical_row)
-        else:
-            df.loc[index, "Instructional Duration"] = int(classroom_duration_per_row)
-
-    # Check total classroom and practical durations after initial allocation
-    actual_classroom_minutes = df[df["Instructional Methods"] != "Practical"]["Instructional Duration"].sum()
-    actual_practical_minutes = df[df["Instructional Methods"] == "Practical"]["Instructional Duration"].sum()
-    
-    # Adjust classroom durations if needed
-    if actual_classroom_minutes != classroom_minutes_total and classroom_rows > 0:
-        diff = classroom_minutes_total - actual_classroom_minutes
-        print(f"Adjusting classroom durations by {diff} minutes to match target")
+    # Calculate duration per row (evenly distributed)
+    if total_rows > 0:
+        base_duration_per_row = total_instructional_minutes // total_rows
+        # Round to multiple of 5
+        base_duration_per_row = (base_duration_per_row // 5) * 5
         
-        if diff > 0:  # Need to add minutes
-            # Add in increments of 5
-            classroom_indices = df[df["Instructional Methods"] != "Practical"].index.tolist()
-            remaining_diff = diff
-            while remaining_diff >= 5 and classroom_indices:
-                for idx in classroom_indices:
-                    if remaining_diff >= 5:
-                        df.loc[idx, "Instructional Duration"] += 5
-                        remaining_diff -= 5
-                    else:
-                        break
-                if remaining_diff < 5:
-                    break
-                    
-        elif diff < 0:  # Need to subtract minutes
-            # Subtract in decrements of 5
-            classroom_indices = df[df["Instructional Methods"] != "Practical"].index.tolist()
-            # Sort by duration (largest first)
-            classroom_indices = sorted(classroom_indices, 
-                                      key=lambda idx: df.loc[idx, "Instructional Duration"],
-                                      reverse=True)
-            remaining_diff = abs(diff)
-            while remaining_diff >= 5:
-                for idx in classroom_indices:
-                    if df.loc[idx, "Instructional Duration"] >= 5 and remaining_diff >= 5:
-                        df.loc[idx, "Instructional Duration"] -= 5
-                        remaining_diff -= 5
-                    if remaining_diff < 5:
-                        break
-                if remaining_diff < 5:
-                    break
-    
-    # Adjust practical durations if needed
-    if actual_practical_minutes != practical_minutes_total and practical_rows_count > 0:
-        diff = practical_minutes_total - actual_practical_minutes
-        print(f"Adjusting practical durations by {diff} minutes to match target")
+        # Calculate remainder to distribute
+        remaining_minutes = total_instructional_minutes - (base_duration_per_row * total_rows)
         
-        if diff > 0:  # Need to add minutes
-            practical_indices = df[df["Instructional Methods"] == "Practical"].index.tolist()
-            remaining_diff = diff
-            while remaining_diff >= 5 and practical_indices:
-                for idx in practical_indices:
-                    if remaining_diff >= 5:
-                        df.loc[idx, "Instructional Duration"] += 5
-                        remaining_diff -= 5
-                    else:
-                        break
-                if remaining_diff < 5:
-                    break
+        # Assign base duration to all rows
+        df["Instructional Duration"] = base_duration_per_row
         
-        elif diff < 0:  # Need to subtract minutes
-            practical_indices = df[df["Instructional Methods"] == "Practical"].index.tolist()
-            practical_indices = sorted(practical_indices, 
-                                      key=lambda idx: df.loc[idx, "Instructional Duration"],
-                                      reverse=True)
-            remaining_diff = abs(diff)
-            while remaining_diff >= 5:
-                for idx in practical_indices:
-                    if df.loc[idx, "Instructional Duration"] >= 5 and remaining_diff >= 5:
-                        df.loc[idx, "Instructional Duration"] -= 5
-                        remaining_diff -= 5
-                    if remaining_diff < 5:
-                        break
-                if remaining_diff < 5:
-                    break
+        # Distribute remaining minutes in increments of 5
+        remaining_to_distribute = remaining_minutes
+        row_index = 0
+        
+        while remaining_to_distribute >= 5 and row_index < len(df):
+            df.loc[row_index, "Instructional Duration"] += 5
+            remaining_to_distribute -= 5
+            row_index += 1
     
-    # Final verification against total instructional minutes
+    # Final verification
     total_actual_minutes = df["Instructional Duration"].sum()
     
-    # If there's still a discrepancy with total instructional minutes, make a final adjustment
+    # If there's a discrepancy with total instructional minutes, make adjustments
     if total_actual_minutes != total_instructional_minutes:
         diff = total_instructional_minutes - total_actual_minutes
         print(f"Final adjustment of {diff} minutes needed to match total instructional time")
@@ -796,9 +719,7 @@ def create_instructional_dataframe(json_data):
                     break
         
     # Final verification
-    print(f"Final instructional durations: Classroom={df[df['Instructional Methods'] != 'Practical']['Instructional Duration'].sum()}, " +
-          f"Practical={df[df['Instructional Methods'] == 'Practical']['Instructional Duration'].sum()}, " +
-          f"Total={df['Instructional Duration'].sum()}")
+    print(f"Final total instructional duration: {df['Instructional Duration'].sum()} minutes")
     
     # Check if all durations are multiples of 5
     all_multiples_of_5 = all(duration % 5 == 0 for duration in df["Instructional Duration"])

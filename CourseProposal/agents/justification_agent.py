@@ -16,6 +16,7 @@ def justification_task(ensemble_output):
     1. Based on the extracted data from {ensemble_output}, generate your justifications.
     2. Ensure your responses are structured in JSON format.
     3. Return a full JSON object with all your answers according to the schema.
+    4. You MUST ensure that your response is a valid JSON object, do not make any mistakes that might cause JSON parsing errors.
     """
     return justification_task
 

@@ -22,9 +22,9 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     You are to extract the following variables from {data}:
         1) Course Title
         2) Name of Organisation
-        3) Classroom Hours
+        3) Classroom Hours (can be found under Instructional Duration: xxxx)
         4) Practical Hours (if none found, insert 0)
-        5) Number of Assessment Hours
+        5) Number of Assessment Hours (can be found under Assessment Duration: xxxx)
         6) Course Duration (Number of Hours)
         7) Industry
 

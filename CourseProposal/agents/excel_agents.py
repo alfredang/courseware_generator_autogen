@@ -96,8 +96,10 @@ def create_ka_analysis_agent(ensemble_output, instructional_methods_data, model_
     Ensure that ALL of the A and K factors are addressed.
     Only use the first 2 characters as the key names for your JSON output, like K1 for example. Do not use the full A and K factor description as the key name.
 
+    Do not mention any of the Instructional Methods directly.
     K factors must address theory and knowledge, while A factors must address practical application and skills, you must reflect this in your analysis.
 
+    Follow the suggested answer structure shown below, respective to A and K factors.
     For example:
     KA_Analysis: {{
     K1: "The candidate will respond to a series of [possibly scenario based] short answer questions related to: ",

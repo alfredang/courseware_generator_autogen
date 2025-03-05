@@ -78,6 +78,31 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
 
     }}
 
+    An example output is as follows, you must follow the key names and structure:
+    {{
+    "Performance Gaps": [
+      "Learners are unclear with establishing high-level structures and frameworks for Kubernetes solutions.",
+      "Learners struggle to align technical, functional, and service requirements within Kubernetes-based solution architectures.",
+      "Learners lack the ability to coordinate multiple Kubernetes solution components effectively.",
+      "Learners find it challenging to articulate the value of Kubernetes solutions, particularly regarding coding standards and scalability.",
+      "Learners do not have robust processes for monitoring and testing Kubernetes architectures against business requirements."
+    ],
+    "Attributes Gained": [
+      "Ability to establish high-level structures and frameworks to guide the development of Kubernetes solutions.",
+      "Proficiency in aligning various stakeholder requirements within a Kubernetes architecture.",
+      "Skill in coordinating multiple solution components to ensure compatibility and meet design goals.",
+      "Capability to articulate the value added by Kubernetes solutions to business needs.",
+      "Competence in establishing processes to monitor and validate Kubernetes architectures."
+    ],
+    "Post-Training Benefits to Learners": [
+      "Enhanced ability to design and implement effective Kubernetes solutions that meet organizational needs.",
+      "Improved communication and collaboration among teams due to aligned requirements.",
+      "Increased efficiency in managing Kubernetes components, leading to better application performance.",
+      "Greater understanding of the importance of coding standards and scalability in Kubernetes implementations.",
+      "Reduced risk of application performance issues through established monitoring and testing processes."
+    ]
+  }}
+
     """
 
     sequencing_rationale_message = f"""

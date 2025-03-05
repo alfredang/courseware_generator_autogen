@@ -1,22 +1,20 @@
 {
     "course_info": {
-        "Course Title": "Github Foundations Certification Training",
-        "Industry": "Infocomm Technology",
+        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
+        "Industry": "Security",
         "Learning Outcomes": [
-            "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
-            "LO2: Select appropriate Git scripts for integrating and deploying software products.",
-            "LO3: Configure software products and deploy releases using Git configuration tests.",
-            "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
-            "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
-            "LO6: Implement modifications to software products and processes for improved functionality."
+            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
+            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
+            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
+            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
         ],
-        "TSC Title": "Software Configuration",
-        "TSC Code": "ICT-DIT-3014-1.1"
+        "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
+        "TSC Code": "SEC-SRM-3002-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "Integrating and deploying software products often involves using a variety of scripts and tools, but many developers lack the expertise to select the most appropriate ones. This can lead to inefficient deployment processes, increased errors, and difficulty in maintaining software quality across different platforms and environments. This impacts developer productivity and the overall reliability of software deployments.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course teaches participants to use specific scripts and tools tailored for integrating and deploying software, greatly enhancing their skill set. The course emphasizes choosing the right tools for the job, which leads to more efficient deployments and better overall integration, which reduces deployment issues and improves developer output."
+            "What are the performance gaps in the industry?": "Many organizations face difficulties in consistently applying standardized security procedures. There's often a lack of adherence to established protocols during daily operations, leading to inconsistencies in security practices. Recognizing and responding to behaviors indicative of potential threats, such as surveillance or suspicious demeanor, poses a significant challenge.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes the importance of adhering to established operational protocols and builds the ability to identify security risks. By reinforcing correct procedures and improving threat recognition skills, this training aims to establish a more consistent and reliable security environment."
         }
     ]
 }
