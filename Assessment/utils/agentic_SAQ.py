@@ -1,195 +1,195 @@
+import asyncio
 from llama_index.llms.openai import OpenAI as llama_openai
+from llama_index.postprocessor.flag_embedding_reranker import FlagEmbeddingReranker
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
-from autogen import AssistantAgent, UserProxyAgent
-from autogen.cache import Cache
-import streamlit as st
+from autogen_agentchat.agents import AssistantAgent
+from autogen_core import CancellationToken
+from autogen_agentchat.messages import TextMessage
 import json
-import re
-import pprint
+from utils.helper import parse_json_content
 
-# import os
-# from llama_index.core.response.pprint_utils import pprint_response
-# from llama_index.postprocessor.cohere_rerank import CohereRerank
-
-# api_key = st.secrets["COHERE_API_KEY"]
-# cohere_rerank = CohereRerank(api_key=api_key, top_n=2)
-
-def generate_saq(extracted_data, index, llm_config):
-    openai_api_key = llm_config["config_list"][0]["api_key"]
-
-    system_prompt = """\
-    You are a content retrieval assistant. Your role is to retrieve topic content that aligns strictly with the specified Knowledge Statement.
-
-    Your role:
-    1. Restrict your retrieval strictly to the specified topic provided in the query.
-    2. Retrieve content from the topic that directly aligns with the provided Knowledge Statement.
-    3. If no specific content directly aligns with the Knowledge Statement, provide a general summary of the specified topic instead.
-    4. Include any example/usecase code or equations relevant to the topic or subtopics.
-    5. Prioritize retrieving content that are theoretical.
-    6. Identify and extract the exact inline segments from the provided documents that directly correspond to the content used to generate the given answer. The extracted segments must be verbatim snippets from the documents, ensuring a word-for-word match with the text in the provided documents.
-
-    Ensure that:
-    - (Important) Each retrieved segment is an exact match to a part of the document and is fully contained within the document text.
-    - The relevance of each segment to the Knowledge Statement is clear and directly supports the summary provided.
-    - (Important) If you didn't used the specific document or topic, do not mention it.
-    - If no relevant information is found for the Knowledge Statement, clearly state this and provide a general topic summary instead.
-
-    Restrictions:
-    - Do not include content from other topics or slides outside the specified topic.
-    - Each retrieved segment must explicitly belong to the given topic.
-    - Avoid including assumptions or content outside the scope of the Knowledge Statement.
-
-    You must always provide:
-    1. The retrieved content aligned with the Knowledge Statement.
-    2. A list of verbatim extracted segments that directly support the retrieved content, each labeled with the topic and document it belongs to.
+def get_topics_for_all_k_statements(fg_data):
     """
-    ks_generation_llm = llama_openai(model="gpt-4o-mini", api_key=openai_api_key, system_prompt=system_prompt)
-    ks_generation_query_engine = index.as_query_engine(
+    Retrieve all topics associated with each Knowledge Statement ID.
+
+    :param fg_data: Parsed Facilitator Guide data (as a dictionary)
+    :return: A dictionary where keys are "KID: K Text", and values are lists of associated topic names.
+    """
+    k_to_topics = {}
+
+    for lu in fg_data["learning_units"]:  
+        for topic in lu["topics"]:  
+            for k in topic["tsc_knowledges"]:  
+                k_id = f"{k['id']}: {k['text']}"  
+                if k_id not in k_to_topics:
+                    k_to_topics[k_id] = []
+                k_to_topics[k_id].append(topic["name"])
+
+    return k_to_topics
+
+async def retrieve_content_for_knowledge_statement_async(k_topics, index, premium_mode):
+    """
+    Perform asynchronous index retrieval for all K statements in parallel.
+
+    :param k_topics: Dictionary mapping "KID: K Text" to topic names.
+    :param index: The LlamaIndex vector store index.
+    :return: Dictionary mapping K statements to retrieved content.
+    """
+    reranker = FlagEmbeddingReranker(
+        top_n=10,
+        model="BAAI/bge-reranker-large",
+    )
+
+    query_engine = index.as_query_engine(
         similarity_top_k=10,
-        llm=ks_generation_llm,
-        # response_mode="tree_summarize"
+        verbose=True,
         response_mode="compact",
-        # node_postprocessors=[cohere_rerank],
-    )
-    retrieved_content = retrieve_content_for_knowledge_statement(extracted_data, ks_generation_query_engine)
-
-    user_proxy_agent = UserProxyAgent(
-        name="user_proxy",
-        human_input_mode="NEVER",   
-        max_consecutive_auto_reply=5,
-        is_termination_msg=lambda msg: msg.get("content", "") and "TERMINATE" in msg["content"],
-        code_execution_config={"work_dir": "output", "use_docker": False, "response_format": {"type": "json_object"}}
+        # node_postprocessors=[reranker],
     )
 
-    # Autogen setup
+    async def query_index(k_statement, topics):
+        """Runs an individual query asynchronously using LlamaIndex's `aquery()`."""
+        if not topics:
+            return k_statement, "⚠️ No relevant information found."
+
+        topics_str = ", ".join(topics)
+        query = f"""
+        Show me all module content aligning with {topics_str} in full detail.
+        Retrieve ALL available content as it appears in the source without summarizing or omitting any details.
+        """
+        response = await query_engine.aquery(query)  
+
+        if not response or not response.source_nodes:
+            return k_statement, "⚠️ No relevant information found."
+
+        if premium_mode:
+            markdown_result = "\n\n".join([
+                f"### Page {node.metadata.get('page', 'Unknown')}\n{node.text}"
+                for node in response.source_nodes
+            ])
+        else:
+            markdown_result = "\n\n".join([
+                f"### {node.text}" for node in response.source_nodes
+            ])
+
+        return k_statement, markdown_result  
+
+    tasks = [query_index(k, topics) for k, topics in k_topics.items()]
+    results = await asyncio.gather(*tasks)  
+
+    return dict(results)  
+
+async def generate_saq_for_k(qa_generation_agent, course_title, assessment_duration, k_statement, content):
+    """
+    Generate a question-answer pair for a specific K statement asynchronously.
+
+    :param qa_generation_agent: The Autogen AssistantAgent for question-answer generation.
+    :param course_title: Course title from extracted_data.
+    :param assessment_duration: Duration of the SAQ assessment.
+    :param k_statement: The K statement.
+    :param content: The retrieved content associated with the K statement.
+    :return: Generated question-answer dictionary.
+    """
+    agent_task = f"""
+        Please generate one question-answer pair using the following:
+        - Course Title: '{course_title}'
+        - Assessment duration: '{assessment_duration}',
+        - Knowledge Statement: '{k_statement}'
+        - Retrieved Content: {content}
+
+        Instructions:
+        1. Craft a realistic scenario in 2-3 sentences that provides context related to the retrieved content, but also explicitly addresses the knowledge statement.
+        2. Even if the retrieved content or course title seems unrelated to the knowledge statement, creatively bridge the gap by inferring or using general knowledge. For example, if the content is about Microsoft 365 Copilot and the knowledge statement is about "Organisation's processes," generate a scenario where a department is reexamining its internal workflows using Copilot as a tool.
+        3. Formulate a single, straightforward short-answer question that aligns the knowledge statement with the scenario. The question should prompt discussion on how the elements from the retrieved content could be used to address or improve the area indicated by the knowledge statement.
+        4. Provide concise, practical bullet points as the answer.    
+        Return the question and answer as a JSON object directly.
+    """
+
+    response = await qa_generation_agent.on_messages(
+        [TextMessage(content=agent_task, source="user")], CancellationToken()
+    )
+
+    if not response or not response.chat_message:
+        return None
+
+    # Log the raw response for debugging
+    # print(f"########### Raw Response for {k_statement}: {response.chat_message.content}\n\n###########")
+
+    qa_result = parse_json_content(response.chat_message.content)
+
+    # Directly extract keys from the parsed JSON object:
+    return {
+        "scenario": qa_result.get("scenario", "Scenario not provided."),
+        "question_statement": qa_result.get("question_statement", "Question not provided."),
+        "knowledge_id": k_statement.split(":")[0],
+        "answer": qa_result.get("answer", ["Answer not available."])
+    }
+
+async def generate_saq(extracted_data: FacilitatorGuideExtraction, index, model_client, premium_mode):
+    """
+    Generate SAQ questions and answers asynchronously for all K statements.
+
+    :param extracted_data: Extracted facilitator guide data.
+    :param index: The LlamaIndex vector store index.
+    :param model_client: The model client for question generation.
+    :param premium_mode: Whether to use premium parsing.
+    :return: Dictionary in the correct JSON format.
+    """
+    extracted_data = dict(extracted_data)
+    k_topics = get_topics_for_all_k_statements(extracted_data)
+    k_content_dict = await retrieve_content_for_knowledge_statement_async(k_topics, index, premium_mode)
+
+    # print(json.dumps(k_content_dict, indent=4))  
+
     qa_generation_agent = AssistantAgent(
         name="question_answer_generator",
+        model_client=model_client,
         system_message=f"""
-        You are an expert educator in '{extracted_data.course_title}'. 
-        You will create knowledge-based scenario question-answer pairs based on the retrieved content.
+        You are an expert question-answer crafter with deep domain expertise. Your task is to generate a scenario-based question and answer pair for a given knowledge statement while strictly grounding your response in the provided retrieved content. You must not hallucinate or fabricate details.
 
-        ### Instructions:
-        1. Generate **exactly one** question-and-answer pair per knowledge statement.
-        2. **Scenario Requirements**:
-        - Provide a **2–3 sentence** realistic scenario that offers context.
-        - Describe an industry, organization, or setting related to the knowledge statement.
-        - Include a brief goal or problem the scenario is trying to solve.
-        - Write it in an **"analyze and recommend"** style, aligned with Bloom's Taxonomy Level 3 (Applying).
-        - Example: 
-            "An eCommerce company is considering AI applications but is unsure of the specific areas where AI could make the most impact. Analyze and recommend areas within the eCommerce industry where AI is most applicable."
-        3. **Question Requirements**:
-        - Phrase the question so it aligns with the scenario and Bloom's Taxonomy Level 3 (Applying).
-        - Example:
-            "Which AI applications can be implemented for maximum impact, and how should they be prioritized?"
-        4. **Answer Requirements**:
-        - Short Answer Question (SAQ) style.
-        - Provide 3–4 concise bullet points **only** (no extra commentary).
-        - Each bullet should be a key knowledge point or practical insight.
-        5. **If no relevant content** is found for a given knowledge statement:
-        - "scenario": "No relevant scenario found."
-        - "question_statement": "No relevant content found for this knowledge statement."
-        - "answer": ["No relevant content found."]
-        6. Structure the final output in **valid JSON** with the format:
+        Guidelines:
+        1. Base your response entirely on the retrieved content. If the content does not directly address the knowledge statement, do not invent new details. Instead, use minimal general context only to bridge gaps, but ensure that every key element of the final question and answer is explicitly supported by the retrieved content.
+        2. Craft a realistic scenario in 2-3 sentences that reflects the context from the retrieved content while clearly addressing the given knowledge statement.
+        3. Formulate one direct, simple question that ties the scenario to the knowledge statement. The question should be directly answerable using the retrieved content.
+        4. Provide concise, practical bullet-point answers that list the key knowledge points explicitly mentioned in the retrieved content.         
+        5. Ensure the overall assessment strictly follows the SAQ structure.
+        6. Do not mention about the source of the content in the scenario or question.
+        7. Structure the final output in **valid JSON** with the format:
 
         ```json
         {{
-            "course_title": "<course_title_here>",
-            "duration": "<assessment_duration>",
-            "questions": [
-                {{
-                    "scenario": "<scenario>",
-                    "question_statement": "<question>",
-                    "knowledge_id": "<knowledge_id>",
-                    "answer": [
-                        "<bullet_point_1>",
-                        "<bullet_point_2>",
-                        "<bullet_point_3>"
-                    ]
-                }},
-                ...
+            "scenario": "<scenario>",
+            "question_statement": "<question>",
+            "knowledge_id": "<knowledge_id>",
+            "answer": [
+                "<bullet_point_1>",
+                "<bullet_point_2>",
+                "<bullet_point_3>"
             ]
         }}
         ```
         
         7. Return the JSON between triple backticks followed by 'TERMINATE'.
         """,
-        llm_config=llm_config,
     )
-    assessment_duration = ""
-    for assessment in extracted_data.assessments:
-        if "SAQ" in assessment.code:
-            assessment_duration = assessment.duration
 
-    with Cache.disk() as cache:
-        chat_result = user_proxy_agent.initiate_chat(
-            qa_generation_agent,
-            message=f"""
-            Please generate the questions and answers using the following course title: '{extracted_data.course_title}', 
-            assessment duration: '{assessment_duration}', and topic contents: {retrieved_content}.
-            Ensure suggestive answers are provided as bullet points, concise and practical, covering key aspects of the knowledge statement.
-            Phrase questions in alignment with Bloom's Taxonomy Level: {extracted_data.tsc_proficiency_level}.
-            If any part of an answer cannot be found in the retrieved content, explicitly state that 'The retrieved content does not include that (information).'
-            Bloom's Taxonomy Levels:
-                Level 1: Remembering
-                Level 2: Understanding
-                Level 3: Applying
-                Level 4: Analyzing
-                Level 5: Evaluating
-                Level 6: Creating
-            Return the output in JSON string format with specific detailed answers as bullet points.
-            RETURN 'TERMINATE' once the generation is complete.
-            """,
-            summary_method="reflection_with_llm",
-            cache=cache,
+    assessment_duration = next(
+        (assessment.get("duration", "") for assessment in extracted_data.get("assessments", []) if "SAQ" in assessment.get("code", "")),
+        ""
     )
-    try:
-        last_message_content = chat_result.chat_history[-1].get("content", "")
-        if not last_message_content:
-            print("No content found in the agent's last message.")
-        last_message_content = last_message_content.strip()
-        json_pattern = re.compile(r'```json\s*(\{.*?\})\s*```', re.DOTALL)
-        json_match = json_pattern.search(last_message_content)
-        if json_match:
-            json_str = json_match.group(1)
-            context = json.loads(json_str)
-            print(f"CONTEXT JSON MAPPING: \n\n{context}")
-        pprint.pprint(f"SAQ cost: {chat_result.cost}")
-    except json.JSONDecodeError as e:
-        print(f"Error parsing context JSON: {e}")
-    return context
+    # print(f"############# ASSESSMENT DURATION\n{assessment_duration}\n#############")
+    
+    # Create async tasks for generating a Q&A pair for each knowledge statement
+    tasks = [
+        generate_saq_for_k(qa_generation_agent, extracted_data["course_title"], assessment_duration, k, content)
+        for k, content in k_content_dict.items()
+    ]
+    results = await asyncio.gather(*tasks)
+    questions = [q for q in results if q is not None]
 
-# Retrieve contents for the short answer questions
-def retrieve_content_for_knowledge_statement(extracted_data: FacilitatorGuideExtraction, engine):
-    """
-    Retrieves content related to the knowledge statements from the provided data.
-
-    Args:
-        extracted_data (FacilitatorGuideExtraction): The extracted data instance containing course details.
-
-    Returns:
-        List[Dict]: A list of dictionaries containing retrieved content and associated abilities.
-    """
-    retrieved_content = []
-    for learning_unit in extracted_data.learning_units:
-        for topic in learning_unit.topics:
-            for knowledge in topic.tsc_knowledges:
-                knowledge_id = knowledge.id
-                knowledge_statement = knowledge.text
-                topic_name = topic.name
-                # Query the index to retrieve topic content for this Knowledge Statement
-                response = engine.query(
-                    f"Retrieve the most relevant inline segments aligned to Knowledge Statement: {knowledge_statement}\n"
-                    f"From the given Topic: {topic_name}"        
-                )
-                # pprint_response(response, show_source=True)
-
-                # Add the structured data using Pydantic model
-                try:
-                    retrieved_content.append({
-                        "knowledge_id": knowledge_id,
-                        "knowledge_statement": knowledge_statement,
-                        "retrieved_content": response.response
-                    })
-                except Exception as e:
-                    print(f"Error adding structured data for {knowledge_id}: {e}")
-    return retrieved_content
+    # Return the output with the same structure as before
+    return {
+        "course_title": extracted_data["course_title"],
+        "duration": assessment_duration,
+        "questions": questions
+    }

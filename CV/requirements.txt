@@ -1,4 +1,0 @@
-autogen
-python-dotenv
-pprint
-subprocess

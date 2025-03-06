@@ -1,0 +1,44 @@
+{
+    "Instructional_Methods": [
+        {
+            "Method": "Lecture",
+            "Description": "Lecture is an instructional method commonly used by facilitators to impart knowledge to their learners. A lecture is a prepared oral presentation on a given topic. Lectures comprise content delivery supported by examples to illustrate principles and concepts. The content is generally not lengthy and combines other presentation and application methods. The activities for the lecture include presentation, slideshow and note-taking. \n\nLecturing is an inevitable part of classroom learning. It allows the facilitator to deliver information to learners as planned. This gives excellent control over what is taught and lets the facilitator be the sole source of information to avoid confusion. \n\nThe facilitator can present the material during the lecture and answer learners' questions. Learners can receive, take in and respond. This enhances a well-organised pattern of ideas, enabling learners to better grasp the principles and concepts."
+        },
+        {
+            "Method": "Classroom",
+            "Description": "Lecture is an instructional method commonly used by facilitators to impart knowledge to their learners. A lecture is a prepared oral presentation on a given topic. Lectures comprise content delivery supported by examples to illustrate principles and concepts. The content is generally not lengthy and combines other presentation and application methods. The activities for the lecture include presentation, slideshow and note-taking. \n\nLecturing is an inevitable part of classroom learning. It allows the facilitator to deliver information to learners as planned. This gives excellent control over what is taught and lets the facilitator be the sole source of information to avoid confusion. \n\nThe facilitator can present the material during the lecture and answer learners' questions. Learners can receive, take in and respond. This enhances a well-organised pattern of ideas, enabling learners to better grasp the principles and concepts."
+        },
+        {
+            "Method": "Didactic Questioning",
+            "Description": "Didactic questioning can ensure learners follow the presentation and understand the concepts. \n\nDidactic questioning follows a pre-determined set of questions to lead learners to certain realisations or conclusions or to help them meet a specific learning outcome."
+        },
+        {
+            "Method": "Demonstration",
+            "Description": "Demonstration is an effective instructional method used by facilitators to show learners how to perform specific tasks or complete processes. It is a visual and hands-on approach that can teach various subjects and skills.\n\nThe use of demonstration in teaching has several benefits, including:\n\u2022\t It gives learners a clear and concrete example of performing a task or completing a process.\n\u2022\t It allows learners to see the results of their work in real-time, which can be motivating and rewarding.\n\u2022\t It encourages active participation and engagement from learners, which can help to improve learning outcomes.\n\nIt helps learners to understand complex concepts and processes by breaking them down into smaller, more manageable steps."
+        },
+        {
+            "Method": "Practical",
+            "Description": "Practical is an instructional method that allows learners to apply what they have learned in a real-world context, which can help reinforce their understanding of the material.\n\nThe use of the practice in teaching has several benefits, including:\n\u2022\t It can help to reinforce learning by providing learners with feedback on their performance and identifying areas where they need to improve.\n\u2022\t It helps learners develop their skills and knowledge by providing opportunities to apply what they have learned in a real-world context.\n\u2022\t It can help build learners’ confidence by allowing them to practice and refine their skills.\n\u2022\t It can help to prepare learners for future challenges by providing them with the skills and knowledge they need to succeed."
+        },
+        {
+            "Method": "Practice",
+            "Description": "Practical is an instructional method that allows learners to apply what they have learned in a real-world context, which can help reinforce their understanding of the material.\n\nThe use of the practice in teaching has several benefits, including:\n\u2022\t It can help to reinforce learning by providing learners with feedback on their performance and identifying areas where they need to improve.\n\u2022\t It helps learners develop their skills and knowledge by providing opportunities to apply what they have learned in a real-world context.\n\u2022\t It can help build learners’ confidence by allowing them to practice and refine their skills.\n\u2022\t It can help to prepare learners for future challenges by providing them with the skills and knowledge they need to succeed."
+        },
+        {
+            "Method": "Peer Sharing",
+            "Description": "Peer Sharing is conducted in a group size of 3 to 5 pax. Peer sharing is an instructional technique that involves learners sharing their ideas, experiences, and perspectives in a structured and facilitated manner.\n\nFacilitators will provide a clear prompt or question via a case study, encouraging learners to share their ideas and perspectives.\n\nPeer sharing fosters a collaborative learning environment where learners can work together to retain content and learn from each other."
+        },
+        {
+            "Method": "Role Play",
+            "Description": "Role play can simulate the real-life application of learning where learners will be able to learn and apply concepts directly in a low-risk setting. Role-play could be between the facilitator and the learner or between learners playing the staff and customer role. The rest of the class will be observing the role-play.\n\nAfter the role-play, the facilitator will conduct a debrief session to discuss what worked well and what could be improved. He will encourage learners to reflect on their experiences and share insights."
+        },
+        {
+            "Method": "Group Discussion",
+            "Description": "Group Discussion is conducted in a group size of 3 to 5 pax. It is an exchange of ideas on a topic facilitated by the facilitator or a learner (group member). It can be totally unstructured and spontaneous or highly structured.\n\nGroup discussions allow learners to share ideas and thoughts on the principles and concepts learned. Facilitators manage the flow of the discussion, ensuring that all learners can speak, and that the conversation remains focused and productive.\n\nBy providing opportunities for learners to apply and discuss what they have learned in new situations, they can enhance their understanding and retention of the material."
+        },
+        {
+            "Method": "Case Study",
+            "Description": "Learners, either individually or in groups, are to analyse a case – a written account of a work situation, and present findings and recommendations.\n\nCase studies enable discussions on principles and concepts to be brought down to a reasonable level of concreteness."
+        }
+    ]
+}

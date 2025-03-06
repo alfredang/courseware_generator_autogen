@@ -1,12 +1,12 @@
 # app.py
 import streamlit as st
 from streamlit_option_menu import option_menu
-import cp_generation as cp_generation
 import Assessment.assessment_generation as assessment_generation
 import Courseware.courseware_generation  as courseware_generation
 import Brochure.brochure_generation as brochure_generation
 import AnnexAssessment.annex_assessment as annex_assessment
-import SupDocs.sup_doc as sup_doc
+import CourseProposal.app as course_proposal_app
+# import CourseProposal_excel.app as course_proposal_excel_app
 # import Slides.slide_generation as slide_generation
 # from Slides.slide_generation import render_slide_generation_ui
 
@@ -16,21 +16,18 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     selected = option_menu(
         "Tertiary Infotech",  # Title of the sidebar
-        ["Generate CP", "Generate AP/FG/LG/LP", "Generate Assessment", "Generate Slides", "Generate Brochure","Add Assessment to AP", "Check Documents"],  # Options
-        icons=["filetype-doc", "file-earmark-richtext", "clipboard-check", "filetype-pptx", "files-alt", "folder-symlink", "files-alt"],  # Icon names
+        ["Generate CP", "Generate AP/FG/LG/LP", "Generate Assessment", "Generate Slides", "Generate Brochure","Add Assessment to AP"],  # Options
+        icons=["filetype-doc", "file-earmark-richtext", "clipboard-check", "filetype-pptx", "files-alt", "folder-symlink"],  # Icon names
         menu_icon="boxes",  # Icon for the sidebar title
         default_index=0,  # Default selected item
     )
 
 # Display the selected app
 if selected == "Generate CP":
-    cp_generation.app()  # Display CP Generation app
+    course_proposal_app.app()  # Display CP Generation app
 
 elif selected == "Generate AP/FG/LG/LP":
     courseware_generation.app()  # Display Courseware Generation app
-
-elif selected == "Check Documents":
-    sup_doc.app()
 
 elif selected == "Generate Assessment":
     assessment_generation.app()
@@ -39,7 +36,7 @@ elif selected == "Generate Assessment":
 elif selected == "Generate Slides":
     # slide_generation.app()  # Display Courseware Generation app
     st.title("Generate Slides")
-    st.write("This section allows you to create slides.")
+    st.write("Slides Generation not available.")
 
 elif selected == "Generate Brochure":
     brochure_generation.app() # Display Brochure Generation app

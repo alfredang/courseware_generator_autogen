@@ -1,0 +1,20 @@
+{
+    "course_info": {
+        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
+        "Industry": "Security",
+        "Learning Outcomes": [
+            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
+            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
+            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
+            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+        ],
+        "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
+        "TSC Code": "SEC-SRM-3002-1.1"
+    },
+    "analyst_responses": [
+        {
+            "What are the performance gaps in the industry?": "A notable deficiency lies in the ability to thoroughly analyze security situations and apply prior experiences to new, evolving threats. Many professionals find it challenging to connect seemingly unrelated events to identify underlying risks. The ability to think critically and adapt to novel situations is crucial. Moreover, collaboration between security teams is often fragmented.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course promotes a holistic approach to security by teaching individuals how to relate current situations to past experiences, thereby enhancing their ability to identify subtle patterns and risks. It also fosters collaboration among security teams, ensuring comprehensive risk analysis, and facilitates effective communication, which ensures that different perspectives and expertise contribute to a more robust security framework. This can allow the teams to address complex risks and implement preventive strategies."
+        }
+    ]
+}

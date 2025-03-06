@@ -43,13 +43,6 @@ class CaseStudy(BaseModel):
     scenario: str
     questions: List[CaseStudyQuestion]
 
-# Define a Pydantic model for the Knowledge Statement and its Retrieved Content
-class KnowledgeStatementContent(BaseModel):
-    knowledge_id: str = Field(..., description="The ID of the Knowledge Statement, e.g., K1, K2.")
-    knowledge_statement: str = Field(..., description="The text of the Knowledge Statement.")
-    topic_name: str = Field(..., description="The name of the topic associated with this Knowledge Statement.")
-    retrieved_content: str = Field(..., description="The content retrieved for this Knowledge Statement.")
-
 # Define the WSQ model for structured output
 class WSQ(BaseModel):
     knowledge_id: str = Field(..., description="The ID of the Knowledge Statement, e.g., K1, K2.")

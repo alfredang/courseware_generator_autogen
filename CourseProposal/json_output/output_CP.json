@@ -1,0 +1,366 @@
+{
+    "Course_Proposal_Form": {
+        "null": [
+            "COURSE PROPOSAL (CP) Form",
+            "Instructions to Applicants",
+            "You may submit your application for 1 of the following 2 types of courses by filling up the relevant segments in the Course Proposal Form (CP). Each course application is to be accompanied by 1 CP Form.",
+            "(A) WSQ Singular Course",
+            "(B) WSQ Integrated Course*",
+            "*WSQ Integrated course refers to a course application with more than 1 Technical Skills and Competencies",
+            "(TSC) but not leading to a full qualification.",
+            "For application of WSQ Full Qualification, please click here:",
+            "https://www.tpgateway.gov.sg/plan-courses/course-accreditation select \u201cWhat do I need for the application? s/no b.\u201d"
+        ],
+        "Part 1:  Particulars of Course": [
+            {
+                "table": [
+                    [
+                        "Application Reference Number as generated in TPGateway",
+                        "[Please insert the number (E.g.: TPG-2022xxxxx) here during CP clarification.]"
+                    ],
+                    [
+                        "Type of Course Application you are applying",
+                        "(A) WSQ Singular Course \n(B) WSQ Integrated Course \n[Please select 1 option only]"
+                    ],
+                    [
+                        "Name of your Organisation \n(As registered with the Accounting and Corporate Regulatory Authority [ACRA])",
+                        "#Company"
+                    ],
+                    [
+                        "Course Title",
+                        "#CourseTitle"
+                    ],
+                    [
+                        "Technical Skills and Competency (TSC)/Critical Core Skill Title(s) (CCS) that your Course is being mapped to (As per title in the TSC / CCS Document)",
+                        "TSC/CCS code"
+                    ],
+                    [
+                        "#TCS[0]",
+                        "#TCS[1]"
+                    ]
+                ]
+            },
+            {
+                "table": [
+                    [
+                        "Breakdown of Course Components (in hours1)"
+                    ],
+                    [
+                        "Classroom facilitation",
+                        "#Hours[0]"
+                    ],
+                    [
+                        "Workplace learning: On-the-Job (OJT)2",
+                        "N.A."
+                    ],
+                    [
+                        "Practicum3",
+                        "N.A."
+                    ],
+                    [
+                        "Practical4",
+                        "#Hours[3]"
+                    ],
+                    [
+                        "E-learning",
+                        "Synchronous",
+                        "N.A."
+                    ],
+                    [
+                        "E-learning",
+                        "Asynchronous",
+                        "N.A."
+                    ],
+                    [
+                        "Assessment \n(Note: Training Providers are to ensure there are at least 2 modes of assessment for each course application).\nSome of the examples include:\nWork-related Projects/Assignments/Presentation \nWritten Assessment\nOral Questioning\nSimulation(e.g. Role Play etc)",
+                        "#Hours[1]"
+                    ],
+                    [
+                        "Total Duration (in hours1)",
+                        "#Hours[2]"
+                    ]
+                ]
+            },
+            "Note:",
+            "Hours indicated must align with Section 3E and Training Partners Gateway application form. Blended learning is the use of an appropriate mix of classroom learning, e-learning (e.g., Learning Management System or technology-enabled learning e.g., virtual reality) and workplace learning (e.g. OJT or practicum) to improve learning efficacy and accessibility.",
+            "Training Providers are only required to submit the OJT Task Analysis form which is downloadable from https://www.tpgateway.gov.sg/plan-courses/course-accreditation and select \u201cWhat do I need for the application?\u201d s/no d to complete the Form.",
+            "Practicum training refers to structured supervised training carried out in a controlled environment outside the workplace that allows trainees to have supervised practical application of the training.",
+            "Practical work is defined as learning through hands-on activities within an environment designed to mirror real work applications with the intent to improve specific skills. Examples include chefs practising their culinary skills in a kitchen within the training institution; nursing professionals learning to handle medical equipment within a simulated healthcare setting; and aircraft engineers learning how to solder."
+        ],
+        "Part 2:  Background": [
+            {
+                "table": [
+                    [
+                        "To provide an overview of the research that was conducted to determine the need for the course. This section must cover:"
+                    ],
+                    [
+                        "Targeted sector(s) background and needs for the training.\nSkillsFuture\u2019s report Skills Demand For The Future Economy (https://www.skillsfuture.gov.sg/skillsreport) published in 2022, spotlights the priority skills and jobs in demand in three specially selected, emerging, high-growth areas. This report is designed for Singaporeans as a resource for an individual\u2019s skills development journey over the next one to three years.  Singapore\u2019s key growth areas (Digital, Green & Care Economy) bring exciting job and skills opportunities. It also introduced the idea of \u2018priority skills, ' highly transferable skills across job roles within the three economies. In other words, these skills are applicable in many job roles and will contribute significantly to the individual\u2019s long-term career versatility. A new dimension on skills demands growth has been added and analysed alongside skills transferability. Demand growth captures the relative scale of the increase in demand for that skill, while transferability captures the scope of the skill\u2019s applicability across different job roles. The two-dimensional analysis seeks to provide deeper insights to the reader into the nature of the priority skills identified. \n\n#Placeholder[0]"
+                    ],
+                    [
+                        "Performance gaps that the course will address. Please elaborate how the performance gaps were identified (e.g., market research, focus group discussions, surveys etc) and how the attributes gained post training would benefit learners.\n#Placeholder[1]"
+                    ]
+                ]
+            }
+        ],
+        "Part 3:\tCurriculum Design": [
+            {
+                "table": [
+                    [
+                        "Course Learning Outcome  \nOutline what the learner will achieve from the completion of this course. These outcomes are a general description of his/her newly acquired level of skills, Knowledge (K) and Abilities (A) (i.e.  What can he/she do? What does he/she know?).\n(Please ensure these outcomes address the Performance gaps as indicated in Part 2ii.)\n\nSequencing of Learning Units / Modules\nProvide rationale to explain how and why the learning units (LUs)/learning outcomes (LOs) are being sequenced in a particular manner to achieve the course objectives. \n(Please ensure that the LUs and LOs stated here aligns with Part 3C.)"
+                    ]
+                ]
+            },
+            {
+                "table": [
+                    [
+                        "Please explain the rationale for sequencing.\n\n#Rationale[0]\n\n\n#LU[0]\n#LUex[0]\n\n#LU[1]\n#LUex[1]\n\n#LU[2]\n#LUex[2]\n\n#LU[3]\n#LUex[3]\n#LU[4]\n#LUex[4]\n\n#LU[5]\n#LUex[5]\n\n#LU[6]\n#LUex[6]\n\n#LU[7]\n#LUex[7]\n\n#Conclusion[0]"
+                    ],
+                    [
+                        "Learning Units (LUs)",
+                        "TPs to indicate topics covered under each LU and state Learning Outcomes (LOs)\n[Against each LO, please indicate the topics and list down the numbering and description for the \u201cK\u201d and \u201cA\u201d Statements in the TSC/CCS document]"
+                    ],
+                    [
+                        "#LU[0]",
+                        "#Topics[0]\n#TopicsEX[0]\n\n#LO[0]\n\n#K[0]\n#K[1]\n#K[2]\n\n#A[0]\n#A[1]\n#A[2]"
+                    ],
+                    [
+                        "#LU[1]",
+                        "#Topics[1]\n#TopicsEX[1]\n\n#LO[1]\n\n#K[3]\n#K[4]\n#K[5]\n\n#A[3]\n#A[4]\n#A[5]"
+                    ],
+                    [
+                        "#LU[2]",
+                        "#Topics[2]\n#TopicsEX[2]\n\n#LO[2]\n\n#K[6]\n#K[7]\n#K[8]\n\n#A[6]\n#A[7]\n#A[8]"
+                    ],
+                    [
+                        "#LU[3]",
+                        "#Topics[3]\n#TopicsEX[3]\n\n#LO[3]\n\n#K[9]\n#K[10]\n#K[11]\n\n#A[9]\n#A[10]\n#A[11]"
+                    ],
+                    [
+                        "#LU[4]",
+                        "#Topics[4]\n#TopicsEX[4]\n\n#LO[4]\n\n#K[12]\n#K[13]\n#K[14]\n\n#A[12]\n#A[13]\n#A[14]"
+                    ],
+                    [
+                        "#LU[5]",
+                        "#Topics[5]\n#TopicsEX[5]\n\n#LO[5]\n\n#K[15]\n#K[16]\n#K[17]\n\n#A[15]\n#A[16]\n#A[17]"
+                    ]
+                ]
+            },
+            "*add/delete table rows as necessary",
+            {
+                "table": [
+                    [
+                        "C. Curriculum Key Features\nThis table outlines the important features of the curriculum design that underpin the course. It articulates the coherence between the instructional methods, assessment methods and intended learning outcomes, based on Bigg\u2019s Model of Constructive Alignment."
+                    ],
+                    [
+                        "S/N",
+                        "LUs",
+                        "LOs*",
+                        "Assessment Methods*",
+                        "Assessment\nDuration\n(minutes/hours)",
+                        "Instructional Methods",
+                        "Duration for Instructional Method1\n(minutes/hours)"
+                    ],
+                    [
+                        "S/N",
+                        "LUs",
+                        "LOs*",
+                        "Assessment Methods*",
+                        "Assessment\nDuration\n(minutes/hours)",
+                        "Instructional Methods",
+                        "CR",
+                        "Sync\ne-learning",
+                        "Async\ne-learning",
+                        "PP",
+                        "OJT"
+                    ],
+                    [
+                        "1",
+                        "#LU[0]",
+                        "#LO[0]\n\n(#KA[0])",
+                        "#Assessment",
+                        "#ADuration",
+                        "#IM",
+                        "",
+                        "NA"
+                    ],
+                    [
+                        "2",
+                        "#LU[1]",
+                        "#LO[1]\n\n(#KA[1])",
+                        "#Assessment",
+                        "#ADuration",
+                        "#IM",
+                        "",
+                        "NA"
+                    ],
+                    [
+                        "3",
+                        "#LU[2]",
+                        "#LO[2]\n\n(#KA[2])",
+                        "#Assessment",
+                        "#ADuration",
+                        "#IM",
+                        "",
+                        "NA"
+                    ],
+                    [
+                        "4",
+                        "#LU[3]",
+                        "#LO[3]\n\n(#KA[3])",
+                        "#Assessment",
+                        "#ADuration",
+                        "#IM",
+                        "",
+                        "NA"
+                    ],
+                    [
+                        "Total Delivery Hours",
+                        "#TotalHours",
+                        "",
+                        "#Hours[0]",
+                        "NA",
+                        "#Hours[4]"
+                    ]
+                ]
+            },
+            "* To list down the Knowledge & Abilities numbering only (e.g., K1, K2, A1, A2).  It is not required to state the full description of the Knowledge and Ability statements here.",
+            {
+                "table": [
+                    [
+                        "CR \u2013 Classroom learning",
+                        "Sync e-learning \u2013 Synchronous e-learning",
+                        "Async e-learning \u2013 Asynchronous e-learning",
+                        "PP \u2013 Practical / Practicum",
+                        "OJT \u2013 On-the-job Training"
+                    ]
+                ]
+            },
+            "D. Details of Instructional Methods Proposed",
+            {
+                "table": [
+                    [
+                        "Instructional Methods",
+                        "Trainer-to-learner ratio\n(Indicate min and max ratio)",
+                        "Elaborate on appropriateness of instructional methods"
+                    ],
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "E. Details of Assessment Methods Proposed",
+            {
+                "table": [
+                    [
+                        "Assessment Methods\n(e.g., open/closed book assessment, summative/continuous assessment)",
+                        "Assessor-to-candidate ratio\n(Indicate min and max ratio)",
+                        "Elaborate on appropriateness of assessment methods"
+                    ],
+                    [
+                        ""
+                    ]
+                ]
+            },
+            "This additional section is to be completed only by Training Providers appointed under the Critical Core Skills Call-for-Proposal:",
+            {
+                "table": [
+                    [
+                        "1. Please indicate the *thematic focus area(s) to which this course is aligned."
+                    ],
+                    [
+                        "2. Please provide details of the experiential learning (including actual practice and immersion for soft skills acquisition) incorporated within your course design."
+                    ]
+                ]
+            },
+            "*This refers to the 3 pre-defined themes for CCS courses stipulated under the CFP requirements: (A) CCS for Career-Learning-Planning; (B) CCS to Support Change Management at the Workplace; and (C) CCS for Business Resilience. The thematic focus areas have been introduced to guide TPs in developing CCS modules for more effective outcomes, while adopting more innovative curriculum and instructional design. Each course should typically be aligned to one thematic focus area."
+        ],
+        "Part 4:\tFacilities and Resources": [
+            {
+                "table": [
+                    [
+                        "Classroom Facilitation/Assessment\nProvide images and the details of the facility and equipment supporting the delivery and assessment specific for the applied course."
+                    ],
+                    [
+                        ""
+                    ],
+                    [
+                        "Workplace Learning/Assessment\nProvide images and the details of the facility and equipment supporting the delivery/assessment."
+                    ],
+                    [
+                        "Synchronous and Asynchronous E-Learning/E-Assessment\nProvide details on the system capability to authenticate learners\u2019 identities."
+                    ],
+                    [
+                        "Provide details on the system capability to validate attendance records & track learners\u2019 progress.\nNote: Administrator rights to Learning Management System (LMS) to be granted to SSG, if applicable."
+                    ],
+                    [
+                        "Provide details of how the trainer/instructor support is available for trainee who need further clarification or assistance."
+                    ],
+                    [
+                        "Provide details of how the technical helpdesk support is available."
+                    ],
+                    [
+                        "Provide details of the authentication process to verify trainee identity, enable the conduct of e-assessments and ensure accuracy and authenticity of the assessment results."
+                    ],
+                    [
+                        "Note: The 2 criteria listed below are applicable only for Asynchronous E-Learning application for evaluation on Absentee Payroll (AP) funding eligibility. Training Providers are required to provide the following information: The information provided is applicable to all subsequent course runs.\nState Asynchronous E-Learning duration; and\nIndicate if Asynchronous E-Learning duration is part of the training duration."
+                    ],
+                    [
+                        "Provide details on the course commencement date, course end date and the estimated number of learning hours expected to complete the course."
+                    ],
+                    [
+                        "Provide details on the instructor facilitation (conducted online without the need for such facilitation to be real-time or face-to-face)."
+                    ]
+                ]
+            }
+        ],
+        "Part 5:\tMonitoring and Evaluation": [
+            {
+                "table": [
+                    [
+                        "Tracking of Outcomes\nIndicate how the learning outcomes will be measured and tracked using Kirkpatrick\u2019s four levels of evaluation model."
+                    ],
+                    [
+                        "TP to provide details on 4 levels of Kirkpatrick\u2019s evaluation model where applicable:\n\nFor Training Providers appointed under the Critical Core Skills Call-for-Proposal, please put a tick () in the box below:\n We hereby commit to adhering to the outcomes stipulated under the deliverables for the CCS CFP."
+                    ]
+                ]
+            }
+        ],
+        "Part 6:\tAudit Outcome of SSG\u2019s Evaluation": [
+            {
+                "table": [
+                    [
+                        "Overall Assessment"
+                    ],
+                    [
+                        ""
+                    ],
+                    [
+                        "Status of Accreditation"
+                    ],
+                    [
+                        "Pass Audit      Fail Audit"
+                    ],
+                    [
+                        "",
+                        "Name of Officer",
+                        "Designation",
+                        "Division",
+                        "Date"
+                    ],
+                    [
+                        "Audited by:",
+                        ""
+                    ],
+                    [
+                        "Recommended by:",
+                        ""
+                    ],
+                    [
+                        "Approved by:",
+                        ""
+                    ]
+                ]
+            }
+        ]
+    }
+}

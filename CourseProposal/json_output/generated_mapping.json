@@ -1,0 +1,233 @@
+{
+    "#ADuration": [],
+    "#InstructMethods": [],
+    "#AssessMethods": [
+        "Case Study (CS)",
+        "Oral Questioning (OQ)"
+    ],
+    "#A[0]": [
+        "A1: Apply basic risk identification techniques"
+    ],
+    "#A[10]": [],
+    "#A[11]": [],
+    "#A[12]": [],
+    "#A[13]": [],
+    "#A[14]": [],
+    "#A[15]": [],
+    "#A[16]": [],
+    "#A[17]": [],
+    "#A[1]": [
+        "A2: Follow standard operating procedures (SOPs) to identify risks"
+    ],
+    "#A[2]": [
+        "A3: Study situations and relate to past experience for identification of risks"
+    ],
+    "#A[3]": [
+        "A4: Discuss situations with security teams to identify risks"
+    ],
+    "#A[4]": [],
+    "#A[5]": [],
+    "#A[6]": [],
+    "#A[7]": [],
+    "#A[8]": [],
+    "#A[9]": [],
+    "#Company": [
+        "QE Safety Consultancy Pte Ltd"
+    ],
+    "#Conclusion[0]": [
+        "Overall, the structured sequencing of these learning units is designed to address the identified performance gaps in security risk analysis, enabling learners to systematically assess, address, and report on security risks. The step-by-step approach ensures a thorough understanding of risk analysis methodologies and enhances practical application in real-world security scenarios."
+    ],
+    "#CourseTitle": [
+        "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)"
+    ],
+    "#Hours[0]": [
+        22
+    ],
+    "#Hours[1]": [
+        2
+    ],
+    "#Hours[2]": [
+        24
+    ],
+    "#Hours[3]": [
+        "N.A."
+    ],
+    "#Hours[4]": [],
+    "#IM": [
+        "Classroom",
+        "Peer Sharing",
+        "Group Discussion",
+        "Case Study"
+    ],
+    "#KA[0]": [
+        "K2, A1"
+    ],
+    "#KA[1]": [
+        "K3, K4, A2"
+    ],
+    "#KA[2]": [
+        "K5, K6, A3"
+    ],
+    "#KA[3]": [
+        "K1, A4"
+    ],
+    "#KA[4]": [],
+    "#K[0]": [
+        "K1: Methods of risk analysis"
+    ],
+    "#K[10]": [],
+    "#K[11]": [],
+    "#K[12]": [],
+    "#K[13]": [],
+    "#K[14]": [],
+    "#K[15]": [],
+    "#K[16]": [],
+    "#K[17]": [],
+    "#K[1]": [
+        "K2: Types of tell-tale signs and symptoms"
+    ],
+    "#K[2]": [
+        "K3: Organisational procedures for security operations"
+    ],
+    "#K[3]": [
+        "K4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers"
+    ],
+    "#K[4]": [
+        "K5: Types of suspicious activities, inappropriate attire, explosives and incendiary devices used by terrorists"
+    ],
+    "#K[5]": [
+        "K6: Identification of persons"
+    ],
+    "#K[6]": [],
+    "#K[7]": [],
+    "#K[8]": [],
+    "#K[9]": [],
+    "#LO[0]": [
+        "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats."
+    ],
+    "#LO[1]": [
+        "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats."
+    ],
+    "#LO[2]": [
+        "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices."
+    ],
+    "#LO[3]": [
+        "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+    ],
+    "#LO[4]": [],
+    "#LO[5]": [],
+    "#LO[6]": [],
+    "#LO[7]": [],
+    "#LU[0]": [
+        "LU1: Client Security Needs Assessment"
+    ],
+    "#LU[1]": [
+        "LU2: Security Site Performance Analysis"
+    ],
+    "#LU[2]": [
+        "LU3: Corrective Measures Implementation"
+    ],
+    "#LU[3]": [
+        "LU4: Security Assessment Reporting"
+    ],
+    "#LU[4]": [],
+    "#LU[5]": [],
+    "#LU[6]": [],
+    "#LU[7]": [],
+    "#LUex[0]": [
+        "LU1 establishes the groundwork by focusing on the initial assessment of client security needs and requirements. It covers identifying changes in security needs, collecting data on security incidents, and discussing concerns with clients. This unit is crucial as it sets the stage for understanding the client's specific context and requirements before conducting a site assessment. Performance Gap and Attributes Gained: Addresses the inability to apply basic risk identification techniques by enabling application of these techniques."
+    ],
+    "#LUex[1]": [
+        "Building upon the initial assessment, LU2 delves into conducting a systematic site assessment to analyze security performance against established procedures. This unit involves examining the client's security system, identifying variances, and recognizing environmental risks. It allows learners to apply organizational procedures in a practical setting and identify potential security gaps. Performance Gap and Attributes Gained: Overcomes difficulty in applying organizational protocols by providing proficiency in following SOPs."
+    ],
+    "#LUex[2]": [
+        "LU3 focuses on addressing security deficiencies identified during the site assessment. Learners will determine risk potential, assess security resources, and take corrective measures to mitigate risks. This unit involves analyzing client security data and providing recommendations to address security deficiencies. Performance Gap and Attributes Gained: Reduces difficulty in relating situations to past incidents by fostering skill in applying past experiences."
+    ],
+    "#LUex[3]": [
+        "The final unit, LU4, covers the compilation, reporting, and presentation of security assessment findings and recommendations. Learners will prepare a comprehensive security assessment report, outline constraints, and follow up with the client to discuss the findings and recommendations. This unit ensures that learners can effectively communicate their findings and collaborate with security teams. Performance Gap and Attributes Gained: Improves ineffective collaboration with security teams by enhancing capability to discuss situations with them."
+    ],
+    "#LUex[4]": [],
+    "#LUex[5]": [],
+    "#LUex[6]": [],
+    "#LUex[7]": [],
+    "#Placeholder[0]": [
+        "SkillsFuture's report Skills Demand For The Future Economy (https://www.skillsfuture.gov.sg/skillsreport) published in 2025, spotlights the priority skills and jobs in demand in three specially selected, emerging, high-growth areas. This report is designed for Singaporeans as a resource for an individual\u2019s skills development journey over the next one to three years.  Singapore's key growth areas (Digital, Green & Care Economy) bring exciting job and skills opportunities. It also introduced the idea of 'priority skills, ' highly transferable skills across job roles within the three economies. In other words, these skills are applicable in many job roles and will contribute significantly to the individual's long-term career versatility. A new dimension on skills demands growth has been added and analysed alongside skills transferability. Demand growth captures the relative scale of the increase in demand for that skill, while transferability captures the scope of the skill's applicability across different job roles. The two-dimensional analysis seeks to provide deeper insights to the reader into the nature of the priority skills identified. \n\nThe industry faces significant challenges in maintaining robust security risk analysis practices due to evolving threat landscapes and increasing sophistication of security breaches. One major performance gap stems from the difficulty in adapting traditional security measures to modern, dynamic environments. Many security professionals struggle to identify and assess risks associated with emerging technologies and cyber-physical systems, leading to vulnerabilities in critical infrastructure and sensitive data. Furthermore, there's often a disconnect between theoretical risk assessments and practical implementation, where security protocols are either inadequately enforced or fail to address the specific needs and contexts of different operational settings. This is compounded by a shortage of skilled personnel capable of conducting comprehensive risk analyses and translating them into actionable security plans. The reliance on outdated methodologies and a lack of continuous professional development also contribute to the stagnation of risk analysis capabilities within organizations. The absence of effective communication and collaboration between security teams and other departments results in fragmented security efforts, where risks are not holistically addressed across the entire organization. The increasing regulatory requirements and compliance standards further exacerbate these challenges, as organizations struggle to keep pace with the evolving legal landscape and implement adequate measures to ensure compliance. Ultimately, these gaps result in increased vulnerability to security incidents, financial losses, and reputational damage.\n\nAnother critical challenge is the human element in security breaches. Employees, whether through negligence or lack of awareness, often become the weakest link in an organization's security chain. Social engineering attacks, phishing scams, and insider threats exploit human vulnerabilities, bypassing even the most sophisticated technological defenses. Many organizations fail to provide adequate training to their employees on recognizing and responding to these threats, leading to a higher susceptibility to security breaches. Additionally, the rapid adoption of remote work arrangements has further complicated security efforts, as employees may use unsecured networks and devices, increasing the risk of data leaks and unauthorized access. The lack of clear policies and procedures for remote work, coupled with insufficient monitoring and enforcement, creates significant vulnerabilities. Moreover, the increasing complexity of IT systems and networks makes it difficult for security professionals to identify and address potential vulnerabilities. The proliferation of interconnected devices and cloud-based services expands the attack surface, providing more opportunities for malicious actors to exploit weaknesses. The lack of automation and integration in security tools hinders the ability to detect and respond to threats in a timely manner. As a result, organizations often struggle to maintain a proactive security posture and are forced to react to incidents after they have already occurred. The financial constraints faced by many organizations also limit their ability to invest in advanced security technologies and training programs, further exacerbating the challenges.\n\nFinally, the integration of physical and cybersecurity domains presents a unique set of challenges. Traditionally, these domains have operated in silos, with separate teams and security protocols. However, modern threats often blur the lines between physical and cyber realms, requiring a more holistic and integrated approach to security. For example, a physical security breach could be used to gain access to an organization's network, or a cyberattack could disrupt physical security systems such as surveillance cameras and access control systems. Many organizations lack the expertise and resources to effectively integrate these two domains, leading to gaps in security coverage. The lack of coordination and communication between physical and cybersecurity teams hinders the ability to respond effectively to incidents that span both domains. Additionally, the increasing use of Internet of Things (IoT) devices in physical security systems introduces new vulnerabilities, as these devices are often poorly secured and can be easily compromised. The absence of standardized security protocols for IoT devices further complicates the integration of physical and cybersecurity domains. As a result, organizations must address these challenges by fostering collaboration between different teams, implementing integrated security solutions, and developing comprehensive security strategies that encompass both physical and cyber aspects.\n\nTo address the identified performance gaps, comprehensive training programs are essential to equip security professionals with the necessary skills and knowledge. Firstly, training should focus on enhancing the ability to identify and assess emerging threats, including those related to cyber-physical systems, IoT devices, and cloud-based services. This involves providing in-depth knowledge of current threat actors, their tactics, and the vulnerabilities they exploit. Hands-on exercises and simulations can help participants develop practical skills in threat identification and risk assessment. Secondly, training should emphasize the importance of translating risk assessments into actionable security plans. This includes teaching participants how to develop and implement security policies, procedures, and controls that are tailored to the specific needs and contexts of different operational settings. The training should also cover the principles of security architecture and design, enabling participants to create robust and resilient security systems. Furthermore, training programs must address the human element in security breaches. This involves providing employees with comprehensive training on recognizing and responding to social engineering attacks, phishing scams, and insider threats. The training should also cover the importance of data privacy and security best practices. Regular refresher courses and awareness campaigns can help reinforce these concepts and keep employees up-to-date on the latest threats.\n\nIn addition to technical skills, training should also focus on developing soft skills such as communication, collaboration, and critical thinking. Security professionals must be able to effectively communicate risk assessments and security plans to stakeholders across the organization, including senior management, IT staff, and end-users. They must also be able to collaborate effectively with different teams to ensure that security efforts are coordinated and aligned. Critical thinking skills are essential for analyzing complex security scenarios and making informed decisions. Furthermore, training should cover the latest regulatory requirements and compliance standards. This includes providing participants with a thorough understanding of relevant laws and regulations, as well as best practices for achieving compliance. The training should also cover the principles of security auditing and assessment, enabling participants to evaluate the effectiveness of security controls and identify areas for improvement. The training should be continuously updated to reflect the evolving regulatory landscape. Moreover, training programs should incorporate real-world case studies and simulations to provide participants with practical experience in dealing with security incidents. This includes simulating different types of attacks, such as ransomware, data breaches, and denial-of-service attacks, and providing participants with the opportunity to respond to these incidents in a controlled environment. The training should also cover the principles of incident response and recovery, enabling participants to develop effective incident response plans and procedures.\n\nFinally, training should address the integration of physical and cybersecurity domains. This involves providing participants with a comprehensive understanding of the interdependencies between these two domains and the potential risks that arise from their integration. The training should also cover the principles of converged security management, enabling participants to develop and implement security strategies that encompass both physical and cyber aspects. Furthermore, training should focus on developing the skills necessary to integrate security tools and technologies across physical and cyber domains. This includes integrating video surveillance systems with intrusion detection systems, and integrating access control systems with identity management systems. The training should also cover the principles of security information and event management (SIEM), enabling participants to collect and analyze security data from different sources to detect and respond to threats. Continuous professional development is crucial to keep security professionals abreast of the latest threats and technologies. This includes providing opportunities for ongoing training, certifications, and participation in industry conferences and events. Organizations should also encourage security professionals to pursue advanced degrees and certifications in relevant fields such as cybersecurity, risk management, and information security.\n\nNumerous job roles across various sectors would significantly benefit from enhanced capabilities in security risk analysis. Primarily, security managers and officers responsible for overseeing security operations and implementing security measures would gain substantial advantages. This training equips them with the tools and knowledge to conduct thorough site assessments, identify vulnerabilities, and develop effective risk mitigation strategies. Security consultants, who advise organizations on security best practices and risk management, would also find this training invaluable in enhancing their expertise and providing more comprehensive and informed recommendations to their clients. IT professionals, including system administrators, network engineers, and cybersecurity analysts, would benefit from a deeper understanding of security risk analysis to better protect their organizations' IT infrastructure and data. The training would enable them to identify potential threats and vulnerabilities in IT systems and networks and implement appropriate security controls.\n\nFurthermore, facility managers and operations managers responsible for the physical security of buildings and facilities would gain valuable insights into identifying and addressing security deficiencies. They would learn how to conduct site assessments, evaluate security systems, and implement corrective measures to enhance physical security. Compliance officers and risk managers, who ensure that organizations comply with relevant security regulations and standards, would also benefit from this training. It would provide them with a comprehensive understanding of security risk analysis methodologies and enable them to develop and implement effective compliance programs. Additionally, human resources professionals, who play a critical role in employee training and awareness, would benefit from the training to better understand security risks and develop effective security awareness programs for employees. They would learn how to identify potential security threats related to human behavior and implement measures to mitigate these risks. Project managers involved in implementing new security systems or projects would also find the training beneficial. It would enable them to incorporate security risk analysis into project planning and ensure that security considerations are adequately addressed throughout the project lifecycle.\n\nLastly, law enforcement and emergency response personnel would benefit from understanding security risk analysis techniques, particularly in the context of identifying potential threats and vulnerabilities in public spaces and critical infrastructure. The ability to assess and address security risks is critical for maintaining public safety and preventing terrorist attacks. Executive management and board members also benefit indirectly. While they may not perform the detailed analysis themselves, understanding the principles of security risk analysis allows them to make informed decisions about security investments and resource allocation, ensuring that security is prioritized at the highest levels of the organization. Overall, any professional whose work involves assessing, mitigating, or managing security risks would find this training beneficial in enhancing their skills and contributing to a more secure environment. This includes roles in government agencies, private sector companies, and non-profit organizations, highlighting the broad applicability of security risk analysis skills across various sectors."
+    ],
+    "#Placeholder[1]": [
+        "Performance gaps were identified through survey forms distributed to external stakeholders:\n\nPerformance Gaps:\n\u2022\tLearners are unclear with methods to accurately detect subtle indicators and early warning signs of potential security threats, impacting proactive risk management.\n\u2022\tLearners struggle to consistently apply organizational protocols for identifying diverse security risks, especially in complex or ambiguous situations.\n\u2022\tLearners find it difficult to relate current situations to past incidents to recognize suspicious activities and potential threats such as concealed explosives, hindering accurate risk assessments.\n\u2022\tLearners lack proficiency in effectively using established risk analysis methodologies when collaborating with security teams, leading to inconsistent risk evaluations.\n\nThrough targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:\n\nAttributes Gained:\n\u2022\tAbility to apply basic risk identification techniques effectively.\n\u2022\tProficiency in following standard operating procedures (SOPs) for identifying risks.\n\u2022\tSkill in studying situations and relating them to past experiences for risk identification.\n\u2022\tCapability to discuss situations with security teams to identify risks.\n\nPost-Training Benefits to Learners:\n\u2022\tEnhanced ability to proactively identify potential security threats, reducing incident response times and improving overall security.\n\u2022\tImproved consistency and accuracy in risk identification, ensuring comprehensive coverage of potential threats.\n\u2022\tGreater confidence in assessing and responding to suspicious activities and potential threats, leading to better decision-making.\n\u2022\tIncreased effectiveness in collaborating with security teams to conduct thorough risk analyses, ensuring comprehensive risk evaluations."
+    ],
+    "#Rationale[0]": [
+        "For this course, a step-by-step sequencing methodology is employed to ensure participants progressively develop the necessary skills and knowledge in security risk analysis. The course begins with foundational concepts and advances towards practical application and reporting, enabling learners to build upon their understanding and apply their skills in real-world scenarios. This approach allows for a structured learning experience where each unit builds on the previous one, fostering a comprehensive grasp of risk analysis and mitigation."
+    ],
+    "#TCS[0]": [
+        "Security Risk Analysis Assess and Address Security Risks"
+    ],
+    "#TCS[1]": [
+        "SEC-SRM-3002-1.1"
+    ],
+    "#TopicsEX[0]": [],
+    "#TopicsEX[1]": [],
+    "#TopicsEX[2]": [],
+    "#TopicsEX[3]": [],
+    "#TopicsEX[4]": [],
+    "#TopicsEX[5]": [],
+    "#Topics[0]": [
+        "Topic 1: Assess Clients Security Status (K2, A1)\n\u2022\tIdentify changes of security needs and requirements of security site arising from changes in site amenities and environment according to organisation procedures\n\u2022\tCollect data from information sources concerning security incidents for analysis of any trends and patterns of occurrences\n\u2022\tConduct a discussion with the client to identify any security concerns\n\u2022\tRecord issues raised and any changes to the clients security needs\n\u2022\tExamine security operations orders and terms of the security services contract with the client according to organisational procedures to assess the clients security status\n\u2022\tPrepare site Assessment work plan to optimise utilisation of resources\n\nLO1 \u2013 Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.\n\n\nK2: Types of tell-tale signs and symptoms\n\nA1: Apply basic risk identification techniques\n\n"
+    ],
+    "#Topics[1]": [
+        "Topic 2: Conduct Site Assessment (K3, K4, A2)\n\u2022\tCarry out site Assessment systematically according to organisational procedures, site Assessment work plan and clients requirements\n\u2022\tCompare actual security site performance against security operation procedures and record any variance accurately\n\u2022\tExamine details of clients security system / equipment and building premises according to organisational procedures to Assess client security status\n\u2022\tAssess the suitability of clients existing security system/ equipment in meeting clients security needs\n\u2022\tExamine the updated floor plan of assignment location to identify building structures and layout\n\u2022\tIdentify variance and deviations from the clients security requirements\n\u2022\tIdentify security risks raised by environment factors\n\u2022\tIdentify security risks and threats to the assignment location\n\nLO2 \u2013 Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.\n\n\nK3: Organisational procedures for security operations\n\nK4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers\n\nA2: Follow standard operating procedures (SOPs) to identify risks\n\n"
+    ],
+    "#Topics[2]": [
+        "Topic 3: Address Security Deficiencies (K5, K6, A3)\n\u2022\tConfirm the accuracy and currency of data related to client security status prior to recommending security options\n\u2022\tDetermine risk potential by analysing relevant client security status data\n\u2022\tAssess a range of security resources for suitability and availability against security risks\n\u2022\tIdentify any security deficiencies due to manpower and security systems resources and take appropriate corrective measures\n\u2022\tPrevent risk to client operations by addressing deficiencies in existing control mechanisms\n\u2022\tTake appropriate corrective measures to address security deficiencies identified in a security survey of assignment location\n\u2022\tGauge and define the potential impact of any security deficiencies accurately to prioritise measures to address gaps in security\n\u2022\tProvide recommendations which address clients security deficiencies within the scope of security services contract terms where necessary to appropriate parties to follow up on actions to be taken to address security risks\n\u2022\tComplete analysis and recommendations for the client within an agreed timescale\n\u2022\tRecord analysis and recommendations in accordance with organisational procedures\n\nLO3 \u2013 Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.\n\n\nK5: Types of suspicious activities, inappropriate attire, explosives and incendiary devices used by terrorists\n\nK6: Identification of persons\n\nA3: Study situations and relate to past experience for identification of risks\n\n"
+    ],
+    "#Topics[3]": [
+        "Topic 4: Submit Findings and Recommendations (K1, A4)\n\u2022\tCompile and record relevant information accurately and report to appropriate person according to organisational procedures\n\u2022\tEnsure findings and recommendations in the report are clear, logical and consistent with contract terms and conditions\n\u2022\tMake recommendations based on the findings\n\u2022\tPrepare a complete and accurate account of security assessment study report with indemnity specification according to organisation procedures\n\u2022\tEstablish recommendations for new and existing security service requirements / appropriate security risk prevention measures supported by relevant documentation\n\u2022\tOutline constraints, limitations and exclusions to security survey and analysis in report and submit a report to the relevant person for approval\n\u2022\tFollow-up and meet with the client to discuss on the site survey findings and seek agreement to proposed security recommendations. Finalise with the client the terms of reference for the next step in preparing operations order\n\u2022\tImplement agreed on terms of reference when security recommendations are accepted\n\u2022\tCarry out any changes and adjustments to recommended actions within agreed terms of reference\n\u2022\tMaintain the confidentiality of all recorded information\n\nLO4 \u2013 Collaborate with security teams to assess risks using established methods of risk analysis.\n\n\nK1: Methods of risk analysis\n\nA4: Discuss situations with security teams to identify risks\n\n"
+    ],
+    "#Topics[4]": [],
+    "#Topics[5]": [],
+    "#TotalHours": [],
+    "#Assessment[0]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K2\n\nCase Study (CS) \u2013 A1"
+    ],
+    "#Assessment[1]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K3, K4\n\nCase Study (CS) \u2013 A2"
+    ],
+    "#Assessment[2]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K5, K6\n\nCase Study (CS) \u2013 A3"
+    ],
+    "#Assessment[3]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 K1\n\nCase Study (CS) \u2013 A4"
+    ],
+    "#Assessment[4]": [],
+    "#AssessmentJustification": [
+        "Case Study (CS):\nA case study (Written Assessment) consists of scenarios that allow an assessment of the candidate's mastery of abilities. The assessor can collect process evidence to assess the candidate's competencies against the learning outcomes. It allows consistent interpretation of evidence and reliable assessment outcomes.\n\nType of Evidence:\n\u2022\tFor LO1: Candidates will submit a report detailing their application of risk identification techniques to detect potential security threats in a given scenario.\n\u2022\tFor LO2: Candidates will analyze a scenario involving potential security breaches and submit a report detailing adherence to organizational procedures for risk identification.\n\u2022\tFor LO3: Candidates will provide a written analysis of a complex situation, identifying suspicious activities and potential threats based on prior experiences.\n\u2022\tFor LO4: Candidates will develop a collaborative risk assessment report, demonstrating the use of established methods of risk analysis within a security team context.\nManner of Submission:\n\u2022\tCandidates will submit their case study reports and any additional supporting documents to the assessors electronically via the designated learning management system.\nMarking Process: \n\u2022\tRisk Identification Accuracy\n\u2022\tProcedural Adherence\n\u2022\tAnalysis Depth\nRetention Period:\n\u2022\tAll submitted case study reports and accompanying documentation will be retained for 3 years to ensure compliance with institutional policies and for auditing purposes.\n"
+    ],
+    "#ADuration[0]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
+    ],
+    "#ADuration[1]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
+    ],
+    "#ADuration[2]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
+    ],
+    "#ADuration[3]": [
+        "Written Assessment - Short-Answer Questions (WA-SAQ) \u2013 15 mins\n\nCase Study (CS) \u2013 15 mins"
+    ],
+    "#ADuration[4]": [],
+    "#ADuration[5]": [],
+    "#ADurationTotal": [
+        "WA-SAQ \u2013 1 hr\nCS \u2013 1 hr\nTotal \u2013 2 hr"
+    ],
+    "#Sequencing": [
+        "LU1: Client Security Needs Assessment\nLU1 establishes the groundwork by focusing on the initial assessment of client security needs and requirements. It covers identifying changes in security needs, collecting data on security incidents, and discussing concerns with clients. This unit is crucial as it sets the stage for understanding the client's specific context and requirements before conducting a site assessment. Performance Gap and Attributes Gained: Addresses the inability to apply basic risk identification techniques by enabling application of these techniques.",
+        "LU2: Security Site Performance Analysis\nBuilding upon the initial assessment, LU2 delves into conducting a systematic site assessment to analyze security performance against established procedures. This unit involves examining the client's security system, identifying variances, and recognizing environmental risks. It allows learners to apply organizational procedures in a practical setting and identify potential security gaps. Performance Gap and Attributes Gained: Overcomes difficulty in applying organizational protocols by providing proficiency in following SOPs.",
+        "LU3: Corrective Measures Implementation\nLU3 focuses on addressing security deficiencies identified during the site assessment. Learners will determine risk potential, assess security resources, and take corrective measures to mitigate risks. This unit involves analyzing client security data and providing recommendations to address security deficiencies. Performance Gap and Attributes Gained: Reduces difficulty in relating situations to past incidents by fostering skill in applying past experiences.",
+        "LU4: Security Assessment Reporting\nThe final unit, LU4, covers the compilation, reporting, and presentation of security assessment findings and recommendations. Learners will prepare a comprehensive security assessment report, outline constraints, and follow up with the client to discuss the findings and recommendations. This unit ensures that learners can effectively communicate their findings and collaborate with security teams. Performance Gap and Attributes Gained: Improves ineffective collaboration with security teams by enhancing capability to discuss situations with them."
+    ],
+    "#Sequencing_rationale": "For this course, a step-by-step sequencing methodology is employed to ensure participants progressively develop the necessary skills and knowledge in security risk analysis. The course begins with foundational concepts and advances towards practical application and reporting, enabling learners to build upon their understanding and apply their skills in real-world scenarios. This approach allows for a structured learning experience where each unit builds on the previous one, fostering a comprehensive grasp of risk analysis and mitigation.\n\nLU1: Client Security Needs Assessment\nLU1 establishes the groundwork by focusing on the initial assessment of client security needs and requirements. It covers identifying changes in security needs, collecting data on security incidents, and discussing concerns with clients. This unit is crucial as it sets the stage for understanding the client's specific context and requirements before conducting a site assessment. Performance Gap and Attributes Gained: Addresses the inability to apply basic risk identification techniques by enabling application of these techniques.\n\nLU2: Security Site Performance Analysis\nBuilding upon the initial assessment, LU2 delves into conducting a systematic site assessment to analyze security performance against established procedures. This unit involves examining the client's security system, identifying variances, and recognizing environmental risks. It allows learners to apply organizational procedures in a practical setting and identify potential security gaps. Performance Gap and Attributes Gained: Overcomes difficulty in applying organizational protocols by providing proficiency in following SOPs.\n\nLU3: Corrective Measures Implementation\nLU3 focuses on addressing security deficiencies identified during the site assessment. Learners will determine risk potential, assess security resources, and take corrective measures to mitigate risks. This unit involves analyzing client security data and providing recommendations to address security deficiencies. Performance Gap and Attributes Gained: Reduces difficulty in relating situations to past incidents by fostering skill in applying past experiences.\n\nLU4: Security Assessment Reporting\nThe final unit, LU4, covers the compilation, reporting, and presentation of security assessment findings and recommendations. Learners will prepare a comprehensive security assessment report, outline constraints, and follow up with the client to discuss the findings and recommendations. This unit ensures that learners can effectively communicate their findings and collaborate with security teams. Performance Gap and Attributes Gained: Improves ineffective collaboration with security teams by enhancing capability to discuss situations with them.\n\nOverall, the structured sequencing of these learning units is designed to address the identified performance gaps in security risk analysis, enabling learners to systematically assess, address, and report on security risks. The step-by-step approach ensures a thorough understanding of risk analysis methodologies and enhances practical application in real-world security scenarios.",
+    "#TCS_Code_Skill": "SEC-SRM-3002-1.1 Security Risk Analysis Assess and Address Security Risks ",
+    "#Combined_LO": "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.\nLO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.\nLO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.\nLO4: Collaborate with security teams to assess risks using established methods of risk analysis.",
+    "#Course_Outline": "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.\nLO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.\nLO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.\nLO4: Collaborate with security teams to assess risks using established methods of risk analysis.\n\nTopic 1: Assess Clients Security Status (K2, A1):\n\u2022\tIdentify changes of security needs and requirements of security site arising from changes in site amenities and environment according to organisation procedures\n\u2022\tCollect data from information sources concerning security incidents for analysis of any trends and patterns of occurrences\n\u2022\tConduct a discussion with the client to identify any security concerns\n\u2022\tRecord issues raised and any changes to the clients security needs\n\u2022\tExamine security operations orders and terms of the security services contract with the client according to organisational procedures to assess the clients security status\n\u2022\tPrepare site Assessment work plan to optimise utilisation of resources\n\nTopic 2: Conduct Site Assessment (K3, K4, A2):\n\u2022\tCarry out site Assessment systematically according to organisational procedures, site Assessment work plan and clients requirements\n\u2022\tCompare actual security site performance against security operation procedures and record any variance accurately\n\u2022\tExamine details of clients security system / equipment and building premises according to organisational procedures to Assess client security status\n\u2022\tAssess the suitability of clients existing security system/ equipment in meeting clients security needs\n\u2022\tExamine the updated floor plan of assignment location to identify building structures and layout\n\u2022\tIdentify variance and deviations from the clients security requirements\n\u2022\tIdentify security risks raised by environment factors\n\u2022\tIdentify security risks and threats to the assignment location\n\nTopic 3: Address Security Deficiencies (K5, K6, A3):\n\u2022\tConfirm the accuracy and currency of data related to client security status prior to recommending security options\n\u2022\tDetermine risk potential by analysing relevant client security status data\n\u2022\tAssess a range of security resources for suitability and availability against security risks\n\u2022\tIdentify any security deficiencies due to manpower and security systems resources and take appropriate corrective measures\n\u2022\tPrevent risk to client operations by addressing deficiencies in existing control mechanisms\n\u2022\tTake appropriate corrective measures to address security deficiencies identified in a security survey of assignment location\n\u2022\tGauge and define the potential impact of any security deficiencies accurately to prioritise measures to address gaps in security\n\u2022\tProvide recommendations which address clients security deficiencies within the scope of security services contract terms where necessary to appropriate parties to follow up on actions to be taken to address security risks\n\u2022\tComplete analysis and recommendations for the client within an agreed timescale\n\u2022\tRecord analysis and recommendations in accordance with organisational procedures\n\nTopic 4: Submit Findings and Recommendations (K1, A4):\n\u2022\tCompile and record relevant information accurately and report to appropriate person according to organisational procedures\n\u2022\tEnsure findings and recommendations in the report are clear, logical and consistent with contract terms and conditions\n\u2022\tMake recommendations based on the findings\n\u2022\tPrepare a complete and accurate account of security assessment study report with indemnity specification according to organisation procedures\n\u2022\tEstablish recommendations for new and existing security service requirements / appropriate security risk prevention measures supported by relevant documentation\n\u2022\tOutline constraints, limitations and exclusions to security survey and analysis in report and submit a report to the relevant person for approval\n\u2022\tFollow-up and meet with the client to discuss on the site survey findings and seek agreement to proposed security recommendations. Finalise with the client the terms of reference for the next step in preparing operations order\n\u2022\tImplement agreed on terms of reference when security recommendations are accepted\n\u2022\tCarry out any changes and adjustments to recommended actions within agreed terms of reference\n\u2022\tMaintain the confidentiality of all recorded information\n\n",
+    "#Course_Background1": "This course is designed to equip individuals with the fundamental skills and knowledge necessary for security risk analysis within various environments. Participants will learn to identify potential security threats by recognizing tell-tale signs, suspicious activities, and environmental factors indicative of risk. Through practical exercises and case studies, learners will understand how to conduct site assessments, analyze security system performance, and identify deficiencies in existing security measures. \n\nFurthermore, the course emphasizes the importance of collaboration with security teams and effective communication of findings and recommendations. Learners will develop the ability to assess client security needs, propose corrective measures, and prepare comprehensive security assessment reports. This course is ideal for individuals seeking to enter or advance their careers in the security industry, enhancing their ability to contribute to a safer and more secure environment and upgrade their skills in security risk management, aligning with industry best practices."
+}

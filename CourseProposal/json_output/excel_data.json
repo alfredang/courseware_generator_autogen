@@ -1,0 +1,23 @@
+[
+  {
+    "course_overview": {
+      "course_description": "This course is designed to equip individuals with the fundamental skills and knowledge necessary for security risk analysis within various environments. Participants will learn to identify potential security threats by recognizing tell-tale signs, suspicious activities, and environmental factors indicative of risk. Through practical exercises and case studies, learners will understand how to conduct site assessments, analyze security system performance, and identify deficiencies in existing security measures. \n\nFurthermore, the course emphasizes the importance of collaboration with security teams and effective communication of findings and recommendations. Learners will develop the ability to assess client security needs, propose corrective measures, and prepare comprehensive security assessment reports. This course is ideal for individuals seeking to enter or advance their careers in the security industry, enhancing their ability to contribute to a safer and more secure environment and upgrade their skills in security risk management, aligning with industry best practices."
+    }
+  },
+  {
+    "KA_Analysis": {
+      "K1": "The candidate will respond to questions related to methods of risk analysis, demonstrating understanding of different approaches.",
+      "A1": "The candidate will perform risk identification techniques on scenarios and submit a report demonstrating their analysis.",
+      "K2": "The candidate will describe types of tell-tale signs and symptoms, demonstrating knowledge of indicators.",
+      "A2": "The candidate will identify risks in simulated scenarios, following SOPs and documenting the process.",
+      "K3": "The candidate will outline organisational procedures for security operations, reflecting understanding of protocols.",
+      "A3": "The candidate will analyze real-world case studies, relating them to past experiences to identify potential risks.",
+      "K4": "The candidate will explain signs of surveillance and inappropriate demeanors, showing awareness of potential threats.",
+      "A4": "The candidate will participate in team discussions, sharing observations and contributing to risk identification.",
+      "K5": "The candidate will identify types of suspicious activities and devices, demonstrating knowledge of terrorist tactics.",
+      "K6": "The candidate will describe proper protocols for the identification of persons, and the different methodologies.",
+      "A5": "N/A",
+      "A6": "N/A"
+    }
+  }
+]

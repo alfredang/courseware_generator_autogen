@@ -1,249 +1,303 @@
-import os
+# agentic_PP.py
 import re
-import json
-import pprint
-from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
-from autogen import AssistantAgent, UserProxyAgent
-from autogen.cache import Cache
+import asyncio
+import streamlit as st
+from autogen_agentchat.agents import AssistantAgent
+from autogen_core import CancellationToken
+from autogen_agentchat.messages import TextMessage
 from llama_index.llms.openai import OpenAI as llama_openai
+from utils.helper import parse_json_content  # Ensure this helper is available
 
-def generate_pp(extracted_data, index, llm_config):
-    openai_api_key = llm_config["config_list"][0]["api_key"]
-    system_prompt = """\
-    You are an instructional design assistant tasked with generating concise, realistic, and practical scenario-based question-answer pairs for educational purposes.
-
-    Your role:
-    1. **Generate a real-world scenario** for the given Course Title and Learning Outcome (LO). The scenario must:
-    - Be concise while clearly describing the organizational challenges or context.
-    - Align directly with the Learning Outcome and be applicable to the associated abilities.
-    - Highlight specific organizational data, challenges, and objectives to ensure relevance and practicality.
-
-    2. Use only the information relevant to the specified Learning Unit, Learning Outcome, and its abilities. Do not include information from unrelated topics.
-
-    3. Ensure that:
-    - Each scenario and question-answer pair is realistic, aligned to Bloom's Taxonomy level for the LO, and practically applicable.
-    - If no relevant content exists, create a general scenario that remains educationally valuable and tied to the broader course theme.
-
-    4. **Output Format:**
-    - The practical performance scenario have to be at least 500 words long.
-    - You will output your response in the following format. For example:
-    TechFusion, a leading software solutions provider, has been approached by a global bank to develop a new mobile banking application. The bank wants to offer its customers a seamless, secure, and intuitive banking experience on their smartphones. Given the competitive landscape, the bank emphasizes the need for rapid delivery without compromising on quality. TechFusion has recently adopted Agile methodologies with Scrum and DevOps practices and sees this project as an opportunity to showcase its capabilities in these areas.
-
-    **Restrictions:**
-    - Do not include content from other topics or unrelated slides.
-    - Do not invent abilities or knowledge outside the scope of the LO and its associated abilities.
+def clean_markdown(text: str) -> str:
     """
-
-    scenario_llm = llama_openai(model="gpt-4o-mini", api_key=openai_api_key, system_prompt=system_prompt)
-
-    scenario_query_engine = index.as_query_engine(
-        similarity_top_k=10,
-        llm=scenario_llm,
-        response_mode="compact",
-    )
-    # Generate the shared scenario
-    scenario = generate_pp_scenario(extracted_data, scenario_query_engine)
-
-    system_prompt = """\
-    You are a content retrieval assistant. Your role is to retrieve topic content that aligns strictly with the specified Learning Outcome (LO) and its associated abilities.
-
-    Your role:
-    1. Restrict your retrieval strictly to the specified topic provided in the query.
-    2. Retrieve content from the topic that directly aligns with the provided Learning Outcome (LO) and its abilities.
-    3. If no specific content directly aligns with the Learning Outcome or abilities, provide a general summary of the topic instead.
-    4. Include any example/usecase code or equations relevant to the topic or subtopics.
-    5. Prioritize retrieving content that are practical.
-    6. Identify and extract the exact inline segments from the provided documents that directly correspond to the content used to generate the summary. The extracted segments must be verbatim snippets from the documents, ensuring a word-for-word match with the text in the provided documents.
-
-    Ensure that:
-    - (Important) Each retrieved segment is an exact match to a part of the document and is fully contained within the document text.
-    - The relevance of each segment to the Learning Outcome or abilities is clear and directly supports the summary provided.
-    - (Important) If you didn't use the specific document or topic, do not mention it.
-    - If no relevant information is found for the Learning Outcome, clearly state this and provide a general topic summary instead.
-
-    Restrictions:
-    - Do not include content from other topics or slides outside the specified topic.
-    - Each retrieved segment must explicitly belong to the given topic.
-    - Avoid including assumptions or content outside the scope of the Learning Outcome and abilities.
-
-    You must always provide:
-    1. The retrieved content aligned with the Learning Outcome and abilities.
-    2. A list of verbatim extracted segments that directly support the retrieved content, each labeled with the topic and document it belongs to.
-    """
-
-    lo_retriever_llm = llama_openai(model="gpt-4o-mini", api_key=openai_api_key, system_prompt=system_prompt)
-    qa_generation_query_engine = index.as_query_engine(
-        similarity_top_k=10,
-        llm=lo_retriever_llm,
-        response_mode="tree_summarize",
-    )
-    retrieved_content = retrieve_content_for_learning_outcomes(extracted_data, qa_generation_query_engine)
+    Removes markdown bold formatting (**text**) and other unnecessary markdown symbols.
     
-    user_proxy_agent = UserProxyAgent(
-        name="user_proxy",
-        human_input_mode="NEVER",
-        max_consecutive_auto_reply=5,
-        is_termination_msg=lambda msg: msg.get("content", "") and "TERMINATE" in msg["content"],
-        code_execution_config={"work_dir": "output", "use_docker": False, "response_format": {"type": "json_object"}}
-    )
-
-    # Autogen setup
-    qa_generation_agent = AssistantAgent(
-        name="question_answer_generator",
-        system_message=f"""
-        You are an expert educator in '{extracted_data.course_title}'. You will create scenario-based practical performance assessment (PPA) question-answer pairs based on course data.
-        The data will include:
-        - A scenario
-        - Retrieved content aligned with learning outcomes and abilities
-
-        ### Instructions:
-        1. Use the provided scenario and retrieved content to generate **one practical question-answer pair per learning outcome.**
-
-        2. **Question Requirements:**
-        - Each question must describe a hands-on task or practical activity related to the scenario.
-        - Ensure the task can be performed based on the scenario's context without assuming learners have additional information.
-        - For coding courses, specify programming tasks with clear starting points. For non-coding courses, describe actions such as planning, decision-making, evaluating data, or implementing processes.
-        - Ensure the question ends with "Take snapshots of your commands at each step and paste them below."
-
-        3. **Answer Requirements:**
-        - **Provide the exact solutions** (e.g., final code, commands, outputs, or tangible deliverables) rather than describing how to capture the snapshots.
-        - If there is relevant text or direct quotes from the retrieved content, include them verbatim with proper citations, for example, "(Source: [retrieved_content_reference])".
-        - Each answer should contain only the final (correct) output or solution. Avoid step-by-step instructions on capturing or documenting the process.
-        - If any part of an answer cannot be found in the retrieved content, explicitly state that 'The retrieved content does not include that (information).'
-
-        4. Structure the final output in valid JSON with the following format:
-        
-        ```json
-        {{
-            "course_title": "<course_title_here>",
-            "duration": "<assessment_duration_here>",
-            "scenario": "<scenario_here>",
-            "questions": [
-                {{
-                    "question_statement": "<question_text>",
-                    "answer": ["<list_of exact final solutions or outputs>"],
-                    "ability_id": ["<list_of_ability_ids>"]
-                }},
-                ...
-            ]
-        }}
-        ```
-        5. Ensure the generated practical tasks align strictly with the retrieved content and abilities. If there is relevant text or direct quotes from the retrieved content, include them verbatim. Use a format like “(Source: [retrieved_content_reference])” where needed.
-        6. Return the JSON between triple backticks followed by 'TERMINATE'.
-        """,
-        llm_config=llm_config,
-    )
-    assessment_duration = ""
-    for assessment in extracted_data.assessments:
-        if "PP" in assessment.code:
-            assessment_duration = assessment.duration
-
-    with Cache.disk() as cache:
-        chat_result = user_proxy_agent.initiate_chat(
-            qa_generation_agent,
-            message=f"""
-            Please generate practical performance assessment questions using the following course title: '{extracted_data.course_title}', 
-            assessment duration: '{assessment_duration}', scenario: '{scenario}', and topic contents: {retrieved_content}.
-            Phrase your question in alignment with Bloom's Taxonomy Level: {extracted_data.tsc_proficiency_level}.
-            Example Bloom's Taxonomy Levels:
-                - Level 1: Remembering
-                - Level 2: Understanding
-                - Level 3: Applying
-                - Level 4: Analyzing
-                - Level 5: Evaluating
-                - Level 6: Creating
-            Ensure the question ends with "Take snapshots of your commands at each step and paste them below."
-            Ensure the answer begins with "The snapshot should include: " and specifies only practical steps to test hands-on skills without any writing or documenting.
-            RETURN 'TERMINATE' once the generation is done.
-            """,
-            summary_method="reflection_with_llm",
-            cache=cache,
-    )
-    try:
-        last_message_content = chat_result.chat_history[-1].get("content", "")
-        if not last_message_content:
-            print("No content found in the agent's last message.")
-        last_message_content = last_message_content.strip()
-        json_pattern = re.compile(r'```json\s*(\{.*?\})\s*```', re.DOTALL)
-        json_match = json_pattern.search(last_message_content)
-        if json_match:
-            json_str = json_match.group(1)
-            context = json.loads(json_str)
-            print(f"CONTEXT JSON MAPPING: \n\n{context}")
-        pprint.pprint(f"PP cost: {chat_result.cost}")
-    except json.JSONDecodeError as e:
-        print(f"Error parsing context JSON: {e}")
-
-    return context
-
-# Generate a detailed scenario for the case study
-def generate_pp_scenario(data: FacilitatorGuideExtraction, engine) -> str:
-    """
-    Generates a concise, realistic scenario for the practical performance.
     Args:
-        course_title (str): The title of the course.
-        learning_outcomes (List[str]): A list of learning outcomes.
-
+        text (str): The text containing markdown formatting.
+        
     Returns:
-        str: A concise scenario for the case study.
+        str: The cleaned text.
     """
-    
-    # Retrieve the course title and bloom taxonomy level
-    course_title = data.course_title
-    bloom_taxonomy_level = data.tsc_proficiency_level
+    if not text:
+        return text
+    cleaned_text = re.sub(r'\*\*(.*?)\*\*', r'\1', text)  # Remove bold (**text**)
+    cleaned_text = re.sub(r'__([^_]+)__', r'\1', cleaned_text)  # Remove underlined text
+    cleaned_text = re.sub(r'[*_`]', '', cleaned_text)  # Remove *, _, ` (italic, inline code)
+    return cleaned_text.strip()
 
-    # Extract the learning outcomes as a list of strings
-    learning_outcomes = [lu.learning_outcome for lu in data.learning_units]
-    abilities = [ability.text for lu in data.learning_units for topic in lu.topics for ability in topic.tsc_abilities]
+def extract_learning_outcome_id(lo_text: str) -> str:
+    """
+    Extracts the learning outcome id (e.g., 'LO4') from a learning outcome string.
+    Handles formats like 'LO4: Description' or 'LO4 - Description'.
+    """
+    pattern = r"^(LO\d+)(?:[:\s-]+)"
+    match = re.match(pattern, lo_text, re.IGNORECASE)
+    return match.group(1) if match else ""
+
+async def retrieve_content_for_learning_outcomes(extracted_data, engine, premium_mode=False):
+    """
+    Asynchronously retrieves all content for topics under each learning unit.
+    
+    For each learning unit, this function builds a query to extract all available 
+    content for the associated topics without summarizing or omitting details.
+    
+    Args:
+        extracted_data (dict): The extracted data instance containing "learning_units".
+        engine: The query engine supporting asynchronous queries (aquery).
+        premium_mode (bool): Whether to format the retrieved content in premium mode.
+    
+    Returns:
+        List[Dict]: A list of dictionaries with keys:
+                    "learning_outcome", "learning_outcome_id", "abilities",
+                    "ability_texts", and "retrieved_content".
+    """
+    async def query_learning_unit(learning_unit):
+        learning_outcome = learning_unit["learning_outcome"]
+        lo_id = extract_learning_outcome_id(learning_outcome)
+        ability_ids = []
+        ability_texts = []
+        topics_names = []
+        for topic in learning_unit["topics"]:
+            ability_ids.extend([ability["id"] for ability in topic["tsc_abilities"]])
+            ability_texts.extend([ability["text"] for ability in topic["tsc_abilities"]])
+            topics_names.append(topic["name"])
+        
+        if not topics_names:
+            return learning_outcome, {
+                "learning_outcome": learning_outcome,
+                "learning_outcome_id": lo_id,
+                "abilities": ability_ids,
+                "ability_texts": ability_texts,
+                "retrieved_content": "⚠️ No relevant information found."
+            }
+        
+        topics_str = ", ".join(topics_names)
+        query = f"""
+        Show me all module content aligning with the following topics: {topics_str}
+        for the Learning Outcome: {learning_outcome}.
+        Retrieve ALL available content as it appears in the source without summarizing or omitting any details.
+        """
+        
+        response = await engine.aquery(query)
+        if not response or not getattr(response, "source_nodes", None) or not response.source_nodes:
+            content = "⚠️ No relevant information found."
+        else:
+            if premium_mode:
+                content = "\n\n".join([
+                    f"### Page {node.metadata.get('page', 'Unknown')}\n{node.text}"
+                    for node in response.source_nodes
+                ])
+            else:
+                content = "\n\n".join([
+                    f"### {node.text}" for node in response.source_nodes
+                ])
+        return learning_outcome, {
+            "learning_outcome": learning_outcome,
+            "learning_outcome_id": lo_id,
+            "abilities": ability_ids,
+            "ability_texts": ability_texts,
+            "retrieved_content": content
+        }
+    
+    tasks = [query_learning_unit(lu) for lu in extracted_data["learning_units"]]
+    results = await asyncio.gather(*tasks)
+    return [result[1] for result in results]
+
+async def generate_pp_scenario(data, model_client) -> str:
+    """
+    Uses the autogen agent to generate a realistic practical performance assessment scenario.
+    
+    Args:
+        data (FacilitatorGuideExtraction): The extracted course data.
+        model_client: The model client used to initialize the agent.
+    
+    Returns:
+        str: The generated scenario.
+    """
+    course_title = data["course_title"]
+
+    learning_outcomes = [lu["learning_outcome"] for lu in data["learning_units"]]
+    abilities = [ability["text"] for lu in data["learning_units"] for topic in lu["topics"] for ability in topic["tsc_abilities"]]
     
     outcomes_text = "\n".join([f"- {lo}" for lo in learning_outcomes])
     abilities_text = "\n".join([f"- {ability}" for ability in abilities])
-
-    prompt = (
-        f"You are tasked with designing a realistic practical performance assessment scenario for the course '{course_title}'.\n\n"
-        f"The scenario should align with the following:\n\n"
-        f"Learning Outcomes:\n{outcomes_text}\n\n"
-        f"Abilities:\n{abilities_text}\n\n"
-        f"Bloom's Taxonomy Level:\n{bloom_taxonomy_level}\n\n"
-        "The scenario should describe a company or organization facing practical challenges and provide context for the learners to apply their skills.\n"
-        "Ensure the scenario is concise (1 paragraph), realistic, and action-oriented, focusing on the summary of tasks learners must perform without requiring extensive deliverables."
-    )
-    response = engine.query(prompt)
-    return response.response.strip()
-
-def retrieve_content_for_learning_outcomes(extracted_data, engine):
+    
+    agent_task = f"""
+    You are tasked with designing a realistic practical performance assessment scenario for the course '{course_title}'.
+    
+    The scenario should align with the following:
+    
+    Learning Outcomes:
+    {outcomes_text}
+    
+    Abilities:
+    {abilities_text}
+    
+    The scenario should describe a company or organization facing practical challenges and provide background context aligning to the Learning Outcomes and abilities.
+    End the scenario by stating the learner's role in the company.
+    Ensure the scenario is concise (1 paragraph), realistic, and action-oriented.
     """
-    Retrieves content related to the learning outcomes and abilities from the provided data.
+    
+    # Instantiate the autogen agent for scenario generation
+    scenario_agent = AssistantAgent(
+        name="scenario_generator",
+        model_client=model_client,
+        system_message="You are an expert in instructional design. Create a concise, realistic scenario based on the provided course details."
+    )
+    
+    response = await scenario_agent.on_messages(
+        [TextMessage(content=agent_task, source="user")],
+        CancellationToken()
+    )
+    
+    scenario = response.chat_message.content.strip()
+    return scenario
+
+async def generate_pp_for_lo(qa_generation_agent, course_title, assessment_duration, scenario, learning_outcome, learning_outcome_id, retrieved_content, ability_ids, ability_texts):
+    """
+    Generate a question-answer pair for a specific Learning Outcome asynchronously.
+    
+    Args:
+        qa_generation_agent: The Autogen AssistantAgent for question-answer generation.
+        course_title: Course title.
+        assessment_duration: Duration of the assessment.
+        scenario: The shared scenario for the practical performance assessment.
+        learning_outcome: The Learning Outcome statement.
+        learning_outcome_id: The identifier for the Learning Outcome (e.g., LO1).
+        retrieved_content: The retrieved content associated with the learning outcome.
+        ability_ids: A list of ability identifiers associated with this learning outcome.
+        ability_texts: A list of ability statements associated with this learning outcome.
+        
+    Returns:
+        Generated question-answer dictionary with keys: learning_outcome_id, question_statement, answer, ability_id.
+    """
+    agent_task = f"""
+        Generate one practical performance assessment question-answer pair using the following details:
+        - Course Title: '{course_title}'
+        - Assessment Duration: '{assessment_duration}'
+        - Scenario: '{scenario}'
+        - Learning Outcome: '{learning_outcome}'
+        - Learning Outcome ID: '{learning_outcome_id}'
+        - Associated Ability IDs: {', '.join(ability_ids)}
+        - Associated Ability Statements: {', '.join(ability_texts)}
+        - Retrieved Content: {retrieved_content}
+        
+        Instructions:
+        1. Formulate a direct, hands-on task question in 2 sentences maximum without any prefatory phrases.
+        2. The question must end with "Take snapshots of your commands at each step and paste them below."
+        4. The answer must start with "The snapshot should include: " followed solely by the final output or solution; do not include any written explanation or narrative.
+        5. Include the learning outcome id in your response as "learning_outcome_id".
+        6. Include the ability ids in your response as "ability_id".
+        7. Return your output in valid JSON.
+    """
+
+    response = await qa_generation_agent.on_messages(
+        [TextMessage(content=agent_task, source="user")], CancellationToken()
+    )
+
+    if not response or not response.chat_message:
+        return None
+
+    qa_result = parse_json_content(response.chat_message.content)
+    
+    return {
+        "learning_outcome_id": qa_result.get("learning_outcome_id", learning_outcome_id),
+        "question_statement": qa_result.get("question_statement", "Question not provided."),
+        "answer": qa_result.get("answer", ["Answer not available."]),
+        "ability_id": qa_result.get("ability_id", ability_ids)
+    }
+
+async def generate_pp(extracted_data, index, model_client, premium_mode):
+    """
+    Generate practical performance assessment questions and answers asynchronously for all learning outcomes.
 
     Args:
-        extracted_data (FacilitatorGuideExtraction): The extracted data instance containing course details.
+        extracted_data: Extracted facilitator guide data.
+        index: The LlamaIndex vector store index.
+        model_client: The model client for question generation.
 
     Returns:
-        List[Dict]: A list of dictionaries containing retrieved content and associated abilities.
+        Dictionary in the correct JSON format with keys: course_title, duration, scenario, questions.
     """
-    retrieved_content = []
-
-    for learning_unit in extracted_data.learning_units:
-        learning_outcome = learning_unit.learning_outcome
-        associated_abilities = []
-        ability_ids = []
-        for topic in learning_unit.topics:
-            associated_abilities.extend(topic.tsc_abilities)
-            ability_ids.extend([ability.id for ability in topic.tsc_abilities])
-
-        # Define the content retrieval prompt
-        retrieval_prompt = (
-            f"Retrieve the most relevant inline segments aligned to Learning Outcome: {learning_outcome}\n"
-            f"Associated Abilities:\n"
-            + "\n".join([f"- [{ability.id}] {ability.text}" for ability in associated_abilities])
-            + f"\nFrom the given Topics: {', '.join([topic.name for topic in learning_unit.topics])}"
-        )
-
-        response = engine.query(retrieval_prompt)
-        retrieved_content.append({
-            "learning_outcome": learning_outcome,
-            "abilities": ability_ids,
-            "retrieved_content": response.response
-        })
+    openai_api_key = st.secrets["OPENAI_API_KEY"]
+    extracted_data = dict(extracted_data)
     
-    return retrieved_content
+    scenario = await generate_pp_scenario(extracted_data, model_client)
+
+    # Create a query engine for retrieving content related to learning outcomes
+    lo_retriever_llm = llama_openai(
+        model="gpt-4o-mini", 
+        api_key=openai_api_key, 
+        system_prompt="You are a content retrieval assistant. Retrieve inline segments that align strictly with the specified topics."
+    )
+    qa_generation_query_engine = index.as_query_engine(
+        similarity_top_k=10,
+        llm=lo_retriever_llm,
+        response_mode="compact",
+    )
+    lo_content_dict = await retrieve_content_for_learning_outcomes(extracted_data, qa_generation_query_engine, premium_mode)
+
+    # Autogen setup for generating question-answer pairs per Learning Outcome
+    qa_generation_agent = AssistantAgent(
+        name="question_answer_generator",
+        model_client=model_client,
+        system_message=f"""
+        You are an expert question-answer crafter with deep domain expertise. Your task is to generate a practical performance assessment question and answer pair for a given Learning Outcome and its associated abilities, strictly grounded in the provided retrieved content.
+        
+        Guidelines:
+        1. Base your response exclusively on the retrieved content.
+        2. Generate a direct, hands-on task question in 2 sentences maximum without any prefatory phrases.
+        3. The question must end with "Take snapshots of your commands at each step and paste them below."
+        4. The answer should start with "The snapshot should include: " followed solely by the exact final output or solution.
+        5. Include the learning outcome id in your response as "learning_outcome_id".
+        6. Return your output in valid JSON with the following format:
+        
+        ```json
+        {{
+            "learning_outcome_id": "<learning_outcome_id>",
+            "question_statement": "<question_text>",
+            "answer": ["<final output or solution>"],
+            "ability_id": ["<list_of_ability_ids>"]
+        }}
+        ```
+        
+        Return the JSON between triple backticks followed by 'TERMINATE'.
+        """
+    )
+    
+    assessment_duration = ""
+    for assessment in extracted_data["assessments"]:
+        if "PP" in assessment["code"]:
+            assessment_duration = assessment["duration"]
+            break
+
+    # Create async tasks for generating a Q&A pair for each Learning Outcome
+    tasks = []
+    for item in lo_content_dict:
+        learning_outcome = item["learning_outcome"]
+        learning_outcome_id = item.get("learning_outcome_id", "")
+        retrieved_content = item["retrieved_content"]
+        ability_ids = item.get("abilities", [])
+        ability_texts = item.get("ability_texts", [])
+        tasks.append(generate_pp_for_lo(
+            qa_generation_agent, 
+            extracted_data["course_title"], 
+            assessment_duration, 
+            scenario, 
+            learning_outcome, 
+            learning_outcome_id,
+            retrieved_content,
+            ability_ids,
+            ability_texts
+        ))
+    
+    results = await asyncio.gather(*tasks)
+    questions = [q for q in results if q is not None]
+
+    # Return the final structured output
+    return {
+        "course_title": extracted_data["course_title"],
+        "duration": assessment_duration,
+        "scenario": scenario,
+        "questions": questions
+    }
