@@ -36,6 +36,42 @@ gpt_4o_config = {
     }
 }
 
+
+gpt_o1_config = {
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+        "model": "gpt-o1",
+        "api_key": OPENAI_API_KEY,
+        # "seed": 42,
+        "temperature": 0.2,
+        "response_format": {"type": "json_object"},
+    }
+}
+
+# GPT-4o
+gpt_o1_mini_config = {
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+        "model": "gpt-o1-mini",
+        "api_key": OPENAI_API_KEY,
+        # "seed": 42,
+        "temperature": 0.2,
+        "response_format": {"type": "json_object"},
+    }
+}
+
+gpt_o3_mini_config = {
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+        "model": "gpt-o3-mini",
+        "api_key": OPENAI_API_KEY,
+        # "seed": 42,
+        "temperature": 0.2,
+        "response_format": {"type": "json_object"},
+    }
+}
+
+
 # DeepSeek
 deepseek_config = {
     "provider": "OpenAIChatCompletionClient",
@@ -76,6 +112,9 @@ MODEL_CHOICES = {
     "DeepSeek-V3": deepseek_config,
     "Gemini-Flash-2.0-Exp": gemini_config,
     "GPT-4o": gpt_4o_config,
+    "GPT-o1": gpt_o1_config,
+    "GPT-o1-Mini": gpt_o1_mini_config,
+    "GPT-o3-Mini": gpt_o3_mini_config
 }
 
 def get_model_config(choice: str) -> dict:
