@@ -36,8 +36,8 @@ from autogen_ext.models.openai import OpenAIChatCompletionClient
 from utils.helper import save_uploaded_file, parse_json_content
 
 # Initialize session state variables
-if 'processing_done' not in st.session_state:
-    st.session_state['processing_done'] = False
+if 'courseware_processing_done' not in st.session_state:
+    st.session_state['courseware_processing_done'] = False
 if 'lg_output' not in st.session_state:
     st.session_state['lg_output'] = None
 if 'ap_output' not in st.session_state:
@@ -51,7 +51,7 @@ if 'context' not in st.session_state:
 if 'asr_output' not in st.session_state:
     st.session_state['asr_output'] = None
 if 'selected_model' not in st.session_state:
-    st.session_state['selected_model'] = "Gemini"
+    st.session_state['selected_model'] = "Gemini-Flash-2.0-Exp"
 
 ############################################################
 # 1. Pydantic Models
@@ -403,7 +403,7 @@ def app():
             model_info = selected_config["config"].get("model_info", None)
 
             # Conditionally set response_format: use structured output only for valid OpenAI models.
-            if st.session_state['selected_model'] in ["DeepSeek", "Gemini"]:
+            if st.session_state['selected_model'] in ["DeepSeek-V3", "Gemini-Flash-2.0-Exp"]:
                 cp_response_format = None  # DeepSeek and Gemini might not support structured output this way.
                 lp_response_format = None
             else:
@@ -537,14 +537,14 @@ def app():
                     except Exception as e:
                         st.error(f"Error generating Facilitator's Guide: {e}")
                 
-                st.session_state['processing_done'] = True  # Indicate that processing is done
+                st.session_state['courseware_processing_done'] = True  # Indicate that processing is done
 
             else:
                 st.error("Context is empty. Cannot proceed with document generation.")
         else:
             st.error("Please upload a CP document and select a Name of Organisation.")
  
-    if st.session_state.get('processing_done'):
+    if st.session_state.get('courseware_processing_done'):
         st.subheader("Download Generated Documents")
 
         # Ensure 'context' exists in session state

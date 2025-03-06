@@ -40,8 +40,8 @@ if 'index' not in st.session_state:
     st.session_state['index'] = None
 if 'fg_data' not in st.session_state:
     st.session_state['fg_data'] = None
-if 'processing_done' not in st.session_state:
-    st.session_state['processing_done'] = False
+if 'assessment_processing_done' not in st.session_state:
+    st.session_state['assessment_processing_done'] = False
 if 'saq_output' not in st.session_state:
     st.session_state['saq_output'] = None
 if 'pp_output' not in st.session_state:
@@ -50,10 +50,10 @@ if 'cs_output' not in st.session_state:
     st.session_state['cs_output'] = None
 if "premium_parsing" not in st.session_state:
     st.session_state["premium_parsing"] = False
-if 'generated_files' not in st.session_state:
-    st.session_state['generated_files'] = {}
+if 'assessment_generated_files' not in st.session_state:
+    st.session_state['assessment_generated_files'] = {}
 if 'selected_model' not in st.session_state:
-    st.session_state['selected_model'] = "GPT-4o-Mini"
+    st.session_state['selected_model'] = "Gemini-Flash-2.0-Exp"
 ################################################################################
 # Helper function for robust text extraction from slide pages.
 ################################################################################
@@ -297,7 +297,7 @@ def app():
     model_info = selected_config["config"].get("model_info", None)
 
     # Conditionally set response_format: use structured output only for valid OpenAI models.
-    if st.session_state['selected_model'] in ["DeepSeek", "Gemini"]:
+    if st.session_state['selected_model'] in ["DeepSeek-V3", "Gemini-Flash-2.0-Exp"]:
         fg_response_format = None  # DeepSeek and Gemini might not support structured output this way.
     else:
         fg_response_format = FacilitatorGuideExtraction  # For structured CP extractio
@@ -374,8 +374,8 @@ def app():
     cs = st.checkbox("Case Study (CS)")
 
     if st.button("Generate Assessments"):
-        st.session_state['generated_files'] = {}
-        st.session_state['processing_done'] = False
+        st.session_state['assessment_generated_files'] = {}
+        st.session_state['assessment_processing_done'] = False
 
         if not st.session_state['fg_data'] or not st.session_state['index']:
             st.error("❌ Please parse the documents first.")
@@ -393,8 +393,6 @@ def app():
                 return
             
             st.success("✅ Proceeding with assessment generation...")
-            parsed_fg = st.session_state['fg_data']
-            st.json(parsed_fg)
             try:
                 with st.spinner("Generating Assessments..."):
                     index = st.session_state['index']
@@ -404,35 +402,48 @@ def app():
                             # print(saq_context)
                             st.success("✅ Successfully retrieved SAQ context")
                             files = generate_documents(saq_context, assessment_type, "output")
-                            st.session_state['generated_files'][assessment_type] = files
+                            st.session_state['assessment_generated_files'][assessment_type] = files
                         elif assessment_type == "PP":
                             print(st.session_state['fg_data'])
                             pp_context = asyncio.run(generate_pp(st.session_state['fg_data'], index, model_client, premium_parsing))
                             files = generate_documents(pp_context, assessment_type, "output")
-                            st.session_state['generated_files'][assessment_type] = files
+                            st.session_state['assessment_generated_files'][assessment_type] = files
                         elif assessment_type == "CS":
                             cs_context = asyncio.run(generate_cs(st.session_state['fg_data'], index, model_client, premium_parsing))
                             files = generate_documents(cs_context, assessment_type, "output")
-                            st.session_state['generated_files'][assessment_type] = files
+                            st.session_state['assessment_generated_files'][assessment_type] = files
 
-                if st.session_state['generated_files']:
-                    st.session_state['processing_done'] = True
+                if st.session_state['assessment_generated_files']:
+                    st.session_state['assessment_processing_done'] = True
                     st.success("✅ Assessments successfully generated!")
 
             except Exception as e:
                 st.error(f"Error generating assessments: {e}")
 
-    if st.session_state.get('processing_done'):
+    if st.session_state.get('assessment_processing_done'):
         st.subheader("Download Generated Documents")
-        for assessment_type, file_paths in st.session_state['generated_files'].items():
-            q_path = file_paths['QUESTION']
-            a_path = file_paths['ANSWER']
-            course_title = st.session_state['fg_data'].get("course_title", "Course Title")
+        # Check if generated_files exists and has content
+        if 'assessment_generated_files' in st.session_state and st.session_state['assessment_generated_files']:
+            for assessment_type, file_paths in st.session_state['assessment_generated_files'].items():
+                q_path = file_paths.get('QUESTION')
+                a_path = file_paths.get('ANSWER')
+                
+                # Get course title safely
+                course_title = "Course Title"
+                if st.session_state.get('fg_data'):
+                    course_title = st.session_state['fg_data'].get("course_title", "Course Title")
 
-            if os.path.exists(q_path):
-                with open(q_path, "rb") as f:
-                    st.download_button(f"Download {assessment_type} Questions", f.read(), f"{assessment_type} - {course_title}.docx")
+                # Only try to open files that exist
+                if q_path and os.path.exists(q_path):
+                    with open(q_path, "rb") as f:
+                        st.download_button(f"Download {assessment_type} Questions", 
+                                        f.read(), 
+                                        f"{assessment_type} - {course_title}.docx")
 
-            if os.path.exists(a_path):
-                with open(a_path, "rb") as f:
-                    st.download_button(f"Download {assessment_type} Answers", f.read(), f"Answer to {assessment_type} - {course_title}.docx")
+                if a_path and os.path.exists(a_path):
+                    with open(a_path, "rb") as f:
+                        st.download_button(f"Download {assessment_type} Answers", 
+                                        f.read(), 
+                                        f"Answer to {assessment_type} - {course_title}.docx")
+        else:
+            st.info("No files have been generated yet. Please generate assessments first.")

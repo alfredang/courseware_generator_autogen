@@ -73,10 +73,10 @@ deepseek_config = {
 }
 # Map user-friendly names to configs
 MODEL_CHOICES = {
-    "Gemini": default_config,
+    "Gemini-Flash-2.0-Exp": default_config,
     "GPT-4o": gpt_4o_config,
     "GPT-4o-mini": gpt_4o_mini_config,
-    "DeepSeek": deepseek_config,
+    "DeepSeek-V3": deepseek_config,
 }
 
 def get_model_config(choice: str) -> dict:
