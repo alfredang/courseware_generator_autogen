@@ -17,7 +17,7 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     selected = option_menu(
         "Tertiary Infotech",  # Title of the sidebar
-        ["Generate CP", "Generate AP/FG/LG/LP", "Generate Assessment", "Generate Slides", "Generate Brochure","Add Assessment to AP"],  # Options
+        ["Generate CP", "Generate AP/FG/LG/LP", "Generate Assessment", "Generate Slides", "Generate Brochure","Add Assessment to AP", "Check Documents"],  # Options
         icons=["filetype-doc", "file-earmark-richtext", "clipboard-check", "filetype-pptx", "files-alt", "folder-symlink"],  # Icon names
         menu_icon="boxes",  # Icon for the sidebar title
         default_index=0,  # Default selected item
