@@ -40,7 +40,7 @@ gpt_4o_config = {
 gpt_o1_config = {
     "provider": "OpenAIChatCompletionClient",
     "config": {
-        "model": "gpt-o1",
+        "model": "o1",
         "api_key": OPENAI_API_KEY,
         # "seed": 42,
         "temperature": 0.2,
@@ -52,7 +52,7 @@ gpt_o1_config = {
 gpt_o1_mini_config = {
     "provider": "OpenAIChatCompletionClient",
     "config": {
-        "model": "gpt-o1-mini",
+        "model": "o1-mini",
         "api_key": OPENAI_API_KEY,
         # "seed": 42,
         "temperature": 0.2,
@@ -63,7 +63,7 @@ gpt_o1_mini_config = {
 gpt_o3_mini_config = {
     "provider": "OpenAIChatCompletionClient",
     "config": {
-        "model": "gpt-o3-mini",
+        "model": "o3-mini",
         "api_key": OPENAI_API_KEY,
         # "seed": 42,
         "temperature": 0.2,
