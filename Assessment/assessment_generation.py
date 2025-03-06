@@ -377,7 +377,7 @@ def app():
         st.session_state['assessment_generated_files'] = {}
         st.session_state['assessment_processing_done'] = False
 
-        if not st.session_state['fg_data'] or not st.session_state['index']:
+        if not st.session_state.get('fg_data') or not st.session_state.get('index'):
             st.error("❌ Please parse the documents first.")
             return
         else:
