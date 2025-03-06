@@ -28,7 +28,7 @@
       "K2: Types of tell-tale signs and symptoms",
       "K3: Organisational procedures for security operations",
       "K4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers",
-      "K5: Types of suspicious activities, inappropriate attires, explosives and incendiary devices used by terrorists",
+      "K5: Types of suspicious activities, inappropriate attire, explosives and incendiary devices used by terrorists",
       "K6: Identification of persons",
       "TSC Abilities",
       "A1: Apply basic risk identification techniques",
@@ -37,7 +37,7 @@
       "A4: Discuss situations with security teams to identify risks",
       "Learning Units"
     ],
-    "LU1: Client Security Needs Analysis (K2, A1)": [
+    "LU1: Client Security Needs Assessment (K2, A1)": [
       "Topic 1: Assess Clients Security Status (K2, A1)",
       "Identify changes of security needs and requirements of security site arising from changes in site amenities and environment according to organisation procedures",
       "Collect data from information sources concerning security incidents for analysis of any trends and patterns of occurrences",
@@ -46,7 +46,7 @@
       "Examine security operations orders and terms of the security services contract with the client according to organisational procedures to assess the clients security status",
       "Prepare site Assessment work plan to optimise utilisation of resources"
     ],
-    "LU2: Site Performance Evaluation (K3, K4, A2)": [
+    "LU2: Security Site Performance Analysis (K3, K4, A2)": [
       "Topic 2: Conduct Site Assessment (K3, K4, A2)",
       "Carry out site Assessment systematically according to organisational procedures, site Assessment work plan and clients requirements",
       "Compare actual security site performance against security operation procedures and record any variance accurately",
@@ -57,7 +57,7 @@
       "Identify security risks raised by environment factors",
       "Identify security risks and threats to the assignment location"
     ],
-    "LU3: Corrective Action Implementation (K5, K6, A3)": [
+    "LU3: Corrective Measures Implementation (K5, K6, A3)": [
       "Topic 3: Address Security Deficiencies (K5, K6, A3)",
       "Confirm the accuracy and currency of data related to client security status prior to recommending security options",
       "Determine risk potential by analysing relevant client security status data",

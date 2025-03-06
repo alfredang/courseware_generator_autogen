@@ -186,8 +186,15 @@ def create_course_dataframe(json_data):
 
                 if "Case Study" in assessment_methods:
                     moa = "Others: Case Study"
+                elif "Role Play" in assessment_methods:
+                    moa = "Role Play"
                 else:
                     moa = "Practical Exam"
+                
+                if "Oral Questioning" in assessment_methods:
+                    moa_k = "Oral Questioning"
+                else:
+                    moa_k = "Written Exam"                
 
                 # Create rows for EACH K and A statement
                 for code in ka_codes:
@@ -202,7 +209,8 @@ def create_course_dataframe(json_data):
                             lo_title_only,
                             f"{topic_num}: {topic_title_short}",
                             k_statement,
-                            "Written Exam"  # Mode of Assessment for K
+                            # "Written Exam"  # Mode of Assessment for K
+                            moa_k
                         ])
                     elif code.startswith('A'):
                         a_index = int(code[1:]) - 1
@@ -290,10 +298,10 @@ def create_assessment_dataframe(json_data):
     assessment_method_names = {
         "WA-SAQ": "Written Exam", # Changed to match desired MOA in dataframe
         "PP": "Practical Exam",    # Changed to match desired MOA in dataframe
-        "CS": "Case Study",
+        "CS": "Others: Case Study",
         "OQ": "Oral Questioning",
         "Written Assessment - Short-Answer Questions (WA-SAQ) - Individual, Summative, Open book": "Written Assessment - Short-Answer Questions",
-        "RP": "Role Play"
+        "RP": "Others: Role Play"
     }
 
     num_assessment_hours = json_data["Course Information"].get("Number of Assessment Hours", 0)
@@ -321,19 +329,23 @@ def create_assessment_dataframe(json_data):
         a_codes_in_lu = [item for item in lu_data_ka if item.startswith('A')]
 
         if k_codes_in_lu:
-            if "WA-SAQ" in normalized_assessment_methods: # Check if WA-SAQ is available
-                 methods_in_lu.append('WA-SAQ')
-            elif "Written Assessment" in assessment_methods_list: # Fallback to full name if abbr. not found
-                 methods_in_lu.append('Written Assessment') # Use full name
+            # For K factors, prioritize Oral Questioning if available, otherwise use WA-SAQ
+            if "OQ" in normalized_assessment_methods:
+                methods_in_lu.append('OQ')
+            elif "WA-SAQ" in normalized_assessment_methods:
+                methods_in_lu.append('WA-SAQ')
+            elif "Written Assessment" in assessment_methods_list:
+                methods_in_lu.append('Written Assessment') # Use full name
 
         if a_codes_in_lu:
-            available_methods_for_a = [method for method in ['PP', 'CS', 'OQ', 'RP'] if method in normalized_assessment_methods]
+            # For A factors, prioritize methods in this order: RP, CS, PP, OQ
+            method_priority = ['RP', 'CS', 'PP', 'OQ']
+            available_methods_for_a = [method for method in method_priority if method in normalized_assessment_methods]
             if available_methods_for_a:
                 methods_in_lu.append(available_methods_for_a[0])
 
         lu_assessment_methods[lu_key] = methods_in_lu
         methods_used.update(methods_in_lu)
-
 
     num_methods_used = len(methods_used)
     method_total_duration = total_assessment_minutes // num_methods_used if num_methods_used > 0 else 0
@@ -372,38 +384,43 @@ def create_assessment_dataframe(json_data):
                 if code.startswith('K'):
                     k_index = int(code[1:]) - 1
                     k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
-                    moa = "Written Exam"
-                    duration_minutes = method_durations_per_lu.get(lu_num, {}).get('WA-SAQ', 0) # Get duration for WA-SAQ for this LU, default 0
-
+                    
+                    # For K factors: Use Oral Questioning if available, otherwise use Written Exam
+                    if "Oral Questioning" in assessment_methods:
+                        moa = "Oral Questioning"
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('OQ', 0)
+                    else:
+                        moa = "Written Exam"
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('WA-SAQ', 0)
 
                     data.append([
                         lo_num,
                         moa,
-                        duration_minutes, # Insert duration in minutes as integer
+                        duration_minutes,
                         1,
                         20,
                         k_statement
                     ])
 
-                # add new condition here, if assessment methods contain Case Study, then put the moa as "Others: Case Study"
-                # need to figure out assessment calculation for case study, eg. if there is no practical hours, then the timing should be evenly distributed instead of right now from 2 pools if practical hours are present
-
                 elif code.startswith('A'):
                     a_index = int(code[1:]) - 1
                     a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
                     
-                    if "Case Study" in assessment_methods:
+                    # For A factors: Prioritize in this order: Role Play, Case Study, Practical Exam
+                    if "Role Play" in assessment_methods:
+                        moa = "Others: Role Play"
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('RP', 0)
+                    elif "Case Study" in assessment_methods:
                         moa = "Others: Case Study"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('CS', 0) # Get duration for PP for this LU, default 0
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('CS', 0)
                     else:
                         moa = "Practical Exam"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('PP', 0) # Get duration for PP for this LU, default 0
-
+                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('PP', 0)
 
                     data.append([
                         lo_num,
                         moa,
-                        duration_minutes, # Insert duration in minutes as integer
+                        duration_minutes,
                         1,
                         20,
                         a_statement
@@ -442,8 +459,8 @@ def create_assessment_dataframe(json_data):
             remaining_diff = diff
             increment = 5
             
-            # Prioritize adjusting written exam rows first, then practical exam rows
-            for assessment_type in ["Written Exam", "Practical Exam", "Others: Case Study"]:
+            # Prioritize adjusting assessment types in this order
+            for assessment_type in ["Written Exam", "Practical Exam", "Others: Case Study", "Oral Questioning", "Others: Role Play"]:
                 type_rows = df[df["MOA"] == assessment_type].index.tolist()
                 
                 if not type_rows or remaining_diff <= 0:
@@ -469,7 +486,7 @@ def create_assessment_dataframe(json_data):
             
             # Prioritize reducing from the rows with the largest durations
             while remaining_diff > 0:
-                # Get indices of rows with duration >= 5 (to avoid zeroing out any row)
+                # Get indices of rows with duration >= 10 (to avoid zeroing out any row)
                 eligible_rows = df[df["Assessment Duration"] >= 10].index.tolist()
                 
                 if not eligible_rows:
@@ -809,7 +826,7 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
       Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes),
       Assessment Duration (in minutes)
     """
-
+    
     # --- Process Course DataFrame ---
     def extract_codes(statements_series):
         """
@@ -818,7 +835,6 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
         """
         codes = []
         for text in statements_series:
-            # Use regex to find a code at the start (e.g., "A1:" or "K1:")
             m = re.match(r"^(A\d+|K\d+):", text.strip())
             if m:
                 codes.append(m.group(1))
@@ -858,14 +874,16 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
     })).reset_index()
 
     # --- Process Assessment DataFrame ---
-    # Create a LU# column from LO# (assuming LO1 -> LU1, LO2 -> LU2, etc.)
+    # Normalize the LU# key using regex so that, for example, "LO04" becomes "LU4"
     assessment_df = assessment_df.copy()
-    assessment_df["LU#"] = assessment_df["LO#"].apply(lambda x: "LU" + x[2:] if isinstance(x, str) else x)
+    assessment_df["LU#"] = assessment_df["LO#"].apply(
+        lambda x: re.sub(r'^LO0*', 'LU', x) if isinstance(x, str) else x
+    )
 
     def agg_assessment(g):
         """
         For each group (LU), create a string of assessment modes.
-        Each line is formatted as: " - MOA (Assessors:Candidates, Assessment Duration)"
+        Each line is formatted as: "- MOA (Assessors:Candidates, Assessment Duration)"
         """
         lines = []
         for _, row in g.iterrows():

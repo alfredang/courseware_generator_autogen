@@ -20,7 +20,7 @@
             "K2: Types of tell-tale signs and symptoms",
             "K3: Organisational procedures for security operations",
             "K4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers",
-            "K5: Types of suspicious activities, inappropriate attires, explosives and incendiary devices used by terrorists",
+            "K5: Types of suspicious activities, inappropriate attire, explosives and incendiary devices used by terrorists",
             "K6: Identification of persons"
         ],
         "Ability": [
@@ -64,9 +64,9 @@
             "Topic 4: Submit Findings and Recommendations (K1, A4)"
         ],
         "Learning Units": [
-            "LU1: Client Security Needs Analysis",
-            "LU2: Site Performance Evaluation",
-            "LU3: Corrective Action Implementation",
+            "LU1: Client Security Needs Assessment",
+            "LU2: Security Site Performance Analysis",
+            "LU3: Corrective Measures Implementation",
             "LU4: Security Assessment Reporting"
         ]
     },

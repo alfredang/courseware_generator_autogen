@@ -194,6 +194,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
             if not instructional_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Instructional Design"])
                 save_dataframe_to_excel(instructional_df, "CourseProposal/json_output/course_dataframe.xlsx")
+                print(instructional_df)
                 # For example, insert starting at row 18 and column 2 (B18)
                 insert_dataframe_into_sheet(sheet_xml_path, start_row=17, start_col=2, df=instructional_df)
             else:
@@ -211,6 +212,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
             # excel_json_data = os.path.join('..', 'json_output', 'excel_data.json')
             excel_json_data = "CourseProposal/json_output/excel_data.json"
             methodologies_df = enrich_assessment_dataframe_ka_descriptions(methods_df, excel_json_data)
+            print(methodologies_df)
             if not methodologies_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
                 save_dataframe_to_excel(methodologies_df, "CourseProposal/json_output/assessment_dataframe.xlsx")
@@ -228,6 +230,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
             if not instructional_2_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
                 save_dataframe_to_excel(instructional_2_df, "CourseProposal/json_output/instructional_methods_dataframe.xlsx")
+                print(instructional_2_df)
                 # For example, insert starting at row 18 and column 2 (B18)
                 insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=2, df=instructional_2_df)
             else:
@@ -243,7 +246,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
             instructional_methods_path = "CourseProposal/json_output/im_agent_data.json"
             # Create the DataFrame using your helper function (provided separately)
             instructional_description_df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
-
+            print(instructional_description_df)
             if not instructional_description_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Methodologies"])
                 save_dataframe_to_excel(instructional_description_df, "CourseProposal/json_output/instructional_methods_description_dataframe.xlsx")
@@ -268,7 +271,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
                 print(f"Total Instructional Duration: {total_instructional_duration}")
                 print(f"Total Assessment Duration: {total_assessment_duration}")
                 print(f"Total Course Duration: {total_course_duration}")
-
+                print(summary_df)
                 # Write the total durations to specific cells in the Summary sheet
                 update_cell_in_sheet(sheet_xml_path, "G4", total_instructional_duration)
                 update_cell_in_sheet(sheet_xml_path, "I4", total_assessment_duration) 

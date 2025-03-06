@@ -13,8 +13,8 @@
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "Many organizations face difficulties in consistently applying standardized security procedures. There's often a lack of adherence to established protocols during daily operations, leading to inconsistencies in security practices. Recognizing and responding to behaviors indicative of potential threats, such as surveillance or suspicious demeanor, poses a significant challenge.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "The course emphasizes the importance of adhering to established operational protocols and builds the ability to identify security risks. By reinforcing correct procedures and improving threat recognition skills, this training aims to establish a more consistent and reliable security environment."
+            "What are the performance gaps in the industry?": "One critical area needing improvement is the consistent application of security protocols across various operational settings. Differing interpretations and adherence to procedures can create vulnerabilities exploited by malicious actors. A lack of consistent protocol application leads to confusion and ineffective response during critical moments. Personnel also sometimes miss crucial details when identifying threats due to lack of experience.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "The course provides participants with a structured approach to identifying risks, leveraging both theoretical knowledge and practical experience, and will help to learn to recognize potential threats within organizational procedures. Emphasis is placed on analyzing diverse scenarios, which fosters an environment for experience-based judgement to promote proactive risk management, thereby decreasing security lapses from inconsistent implementations."
         }
     ]
 }
