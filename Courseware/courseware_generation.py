@@ -323,7 +323,7 @@ async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient)
 
 # Streamlit App
 def app():
-    st.title("Courseware Document Generator")
+    st.title("📄 Courseware Document Generator")
     
     # ================================================================
     # MODEL SELECTION FEATURE

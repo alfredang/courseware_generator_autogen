@@ -707,7 +707,7 @@ def app():
     and answers into the annex of the assessment plan document.
     """
     st.title("📄 Integrate Assessment to Annex of AP")
-    st.header("Instructions:")
+    st.subheader("Instructions:")
     st.markdown("""
     Enter the exact course folder name from Google Drive. The app will integrate assessment questions 
     and answers into the annex of the assessment plan document.

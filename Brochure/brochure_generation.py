@@ -1,5 +1,3 @@
-# brochure_generation.py
-
 import re
 import streamlit as st
 from typing import List, Dict
@@ -24,6 +22,10 @@ SCOPES = [
     'https://www.googleapis.com/auth/drive',
     'https://www.googleapis.com/auth/documents',
 ]
+
+# Constants for folder IDs
+TEMPLATES_FOLDER_ID = "1dNdgyMxOt2z5ftzjwuBky73gxFgIXiqg"  # Templates folder
+WSQ_DOCUMENTS_FOLDER_ID = "1Rt6x1TQn1QAE-lYWRCnhNOmeUNhDQ0tR"  # 1 WSQ Document folder
 
 # Data models
 class CourseTopic(BaseModel):
@@ -52,6 +54,8 @@ class CourseData(BaseModel):
 class BrochureResponse(BaseModel):
     course_title: str
     file_url: str
+    error: str = None
+    exists: bool = False
 
 def scrape_course_data(url: str) -> CourseData:
     options = webdriver.ChromeOptions()
@@ -180,11 +184,36 @@ def scrape_course_data(url: str) -> CourseData:
     finally:
         driver.quit()
 
-def generate_brochure_wrapper(data: CourseData) -> BrochureResponse:
-    brochure_info = generate_brochure(data)  # Now returns a dictionary
-    course_title = brochure_info.get("course_title")
-    shareable_link = brochure_info.get("shareable_link")
-    return BrochureResponse(course_title=course_title, file_url=shareable_link)
+def generate_brochure_wrapper(data: CourseData, course_folder_name: str) -> BrochureResponse:
+    try:
+        brochure_info = generate_brochure(data, course_folder_name)  # Now returns a dictionary
+        
+        # Handle error cases
+        if "error" in brochure_info:
+            error_message = brochure_info.get("error")
+            course_title = brochure_info.get("course_title", data.course_title)
+            return BrochureResponse(course_title=course_title, file_url="", error=error_message)
+        
+        # Handle success case
+        course_title = brochure_info.get("course_title")
+        shareable_link = brochure_info.get("shareable_link")
+        
+        # Handle existing file case
+        if "exists" in brochure_info and brochure_info["exists"]:
+            return BrochureResponse(
+                course_title=course_title, 
+                file_url=shareable_link,
+                exists=True
+            )
+        
+        return BrochureResponse(course_title=course_title, file_url=shareable_link)
+    except Exception as e:
+        # Catch any unexpected errors and wrap them in the response
+        return BrochureResponse(
+            course_title=data.course_title, 
+            file_url="", 
+            error=f"Unexpected error in brochure generation: {str(e)}"
+        )
 
 def authenticate():
     creds = None
@@ -198,16 +227,58 @@ def authenticate():
         st.error(f"An error occurred during authentication: {e}")
         return None
 
-def copy_template(drive_service, template_id, new_title):
+def find_folder(drive_service, parent_folder_id, folder_name):
+    """Find a folder by name in a parent folder. Returns None if not found."""
+    # Use a specific query to find the exact folder
+    query = f"name = '{folder_name}' and '{parent_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+    response = drive_service.files().list(
+        q=query,
+        spaces='drive',
+        fields='files(id, name)',
+        pageSize=5  # Increased to handle possible duplicate names
+    ).execute()
+    
+    items = response.get('files', [])
+    if items:
+        # If multiple folders with the same name exist, use the first one
+        print(f"Found existing folder: {folder_name} (ID: {items[0]['id']})")
+        return items[0]['id']
+    
+    # Return None if folder doesn't exist
+    print(f"Folder not found: {folder_name} in parent folder: {parent_folder_id}")
+    return None
+
+def copy_template(drive_service, template_id, new_title, destination_folder_id):
+    """Copy a template document to a specific destination folder without overwriting existing files."""
     try:
-        body = {'name': new_title}
+        # First check if a file with the same name already exists in the destination folder
+        query = f"name = '{new_title}' and '{destination_folder_id}' in parents and mimeType='application/vnd.google-apps.document' and trashed = false"
+        response = drive_service.files().list(
+            q=query,
+            spaces='drive',
+            fields='files(id, name)',
+            pageSize=1
+        ).execute()
+        
+        existing_files = response.get('files', [])
+        if existing_files:
+            print(f"Document '{new_title}' already exists in folder {destination_folder_id}. Using existing document.")
+            return existing_files[0]['id']
+        
+        # If no existing file, create a new copy
+        body = {
+            'name': new_title,
+            'parents': [destination_folder_id]
+        }
+        
         new_doc = drive_service.files().copy(
             fileId=template_id, body=body
         ).execute()
-        print(f"Created document with ID: {new_doc.get('id')}")
+        
+        print(f"Created document with ID: {new_doc.get('id')} in folder: {destination_folder_id}")
         return new_doc.get('id')
     except HttpError as error:
-        print(f"An error occurred: {error}")
+        print(f"An error occurred while copying template: {error}")
         return None
 
 def find_placeholders(docs_service, document_id):
@@ -303,29 +374,80 @@ def replace_placeholders_in_doc(docs_service, document_id, replacements):
     except HttpError as error:
         print(f"An error occurred during placeholder replacement: {error}")
 
-def generate_brochure(data: CourseData):
+def generate_brochure(data: CourseData, course_folder_name: str):
     creds = authenticate()
     docs_service = build('docs', 'v1', credentials=creds)
     drive_service = build('drive', 'v3', credentials=creds)
     
-    # Find the template document
+    # Find the template document in the Templates folder
     template_name = '(Template) WSQ - Course Title Brochure'
-    query = f"name = '{template_name}' and mimeType='application/vnd.google-apps.document'"
+    query = f"name = '{template_name}' and mimeType='application/vnd.google-apps.document' and '{TEMPLATES_FOLDER_ID}' in parents and trashed = false"
     response = drive_service.files().list(
         q=query,
         spaces='drive',
         fields='files(id, name)',
         pageSize=1
     ).execute()
+    
     items = response.get('files', [])
     if not items:
-        print("Template document not found.")
-        return
-    template_id = items[0]['id']
+        print("Template document not found in the Templates folder.")
+        return {"error": "Template document not found in Templates folder", "course_title": data.course_title}
     
-    # Check if a document with the same name already exists
+    template_id = items[0]['id']
+    print(f"Found template document: {template_name} (ID: {template_id})")
+    
+    # Verify the WSQ Documents folder exists
+    try:
+        wsq_folder = drive_service.files().get(fileId=WSQ_DOCUMENTS_FOLDER_ID, fields="name").execute()
+        print(f"Found WSQ Documents folder: {wsq_folder.get('name')} (ID: {WSQ_DOCUMENTS_FOLDER_ID})")
+    except HttpError as error:
+        print(f"Error accessing WSQ Documents folder: {error}")
+        return {"error": "Cannot access WSQ Documents folder", "course_title": data.course_title}
+    
+    # Find the course folder in WSQ Documents - do NOT create if it doesn't exist
+    course_folder_id = find_folder(drive_service, WSQ_DOCUMENTS_FOLDER_ID, course_folder_name)
+    if not course_folder_id:
+        return {"error": f"Course folder '{course_folder_name}' not found in WSQ Documents folder", "course_title": data.course_title}
+    
+    # Find the Brochure folder within the course folder - do NOT create if it doesn't exist
+    brochure_folder_id = find_folder(drive_service, course_folder_id, "Brochure")
+    if not brochure_folder_id:
+        return {"error": f"Brochure folder not found in {course_folder_name}", "course_title": data.course_title}
+    
+    # Check if a brochure already exists in the destination folder
     new_title = f"{data.course_title} Brochure"
-    new_doc_id = copy_template(drive_service, template_id, new_title)
+    try:
+        query = f"name = '{new_title}' and mimeType='application/vnd.google-apps.document' and '{brochure_folder_id}' in parents and trashed = false"
+        response = drive_service.files().list(
+            q=query,
+            spaces='drive',
+            fields='files(id, name)',
+            pageSize=1
+        ).execute()
+        
+        existing_files = response.get('files', [])
+        if existing_files:
+            existing_file_id = existing_files[0]['id']
+            print(f"Found existing brochure: {new_title} (ID: {existing_file_id})")
+            return {
+                "course_title": data.course_title,
+                "shareable_link": f"https://docs.google.com/document/d/{existing_file_id}/edit",
+                "exists": True
+            }
+    except Exception as e:
+        print(f"Error checking for existing brochure: {e}")
+        # Continue execution even if check fails
+    
+    # Copy the template to the Brochure folder with a new name - never overwrite existing files
+    try:
+        new_doc_id = copy_template(drive_service, template_id, new_title, brochure_folder_id)
+        if not new_doc_id:
+            return {"error": "Failed to create document", "course_title": data.course_title}
+        print(f"Successfully copied template to: {new_title} (ID: {new_doc_id})")
+    except Exception as e:
+        print(f"Error copying template: {e}")
+        return {"error": f"Error copying template: {str(e)}", "course_title": data.course_title}
     
     # Build replacements
     replacements = {}
@@ -370,6 +492,7 @@ def generate_brochure(data: CourseData):
         mapping['Course_Topics'] = topics_text.strip()
     else:
         mapping['Course_Topics'] = 'Not Applicable'
+        
     # Find placeholders in the document
     placeholders = find_placeholders(docs_service, new_doc_id)
     print(f"Placeholders found in document: {placeholders}")
@@ -379,17 +502,18 @@ def generate_brochure(data: CourseData):
 
     if not replacements:
         print("No matching placeholders found. Skipping update.")
-        return new_doc_id
+        return {
+            "course_title": data_dict.get('course_title', 'Unknown Course Title'),
+            "shareable_link": f"https://docs.google.com/document/d/{new_doc_id}/edit"
+        }
 
     # Replace placeholders
     replace_placeholders_in_doc(docs_service, new_doc_id, replacements)
     
-    # Get the shareable link for the document
-    shareable_link = f"https://drive.google.com/file/d/{new_doc_id}/view"
-
+    # Return course title and shareable link
     return {
         "course_title": data_dict.get('course_title', 'Unknown Course Title'),
-        "shareable_link": shareable_link
+        "shareable_link": f"https://docs.google.com/document/d/{new_doc_id}/edit"
     }
 
 # Streamlit app
@@ -401,17 +525,41 @@ def app():
     left_col, right_col = st.columns([1, 1])  # Adjust column ratio (e.g., 1:2 for a wider right column)
 
     with left_col:
-        st.header("Instructions:")
+        st.subheader("Instructions:")
         st.markdown("""
-        Enter a valid course URL from the Tertiary Courses website, and click "Generate Brochure" to scrape the data and generate a brochure.
+        #### 🌐 Course URL and Folder Selection Instructions
+
+        1. **Enter a valid course URL from the Tertiary Courses website**  
+        - Format: `https://www.tertiarycourses.com.sg/[course_title].html`  
+
+        2. **Enter the Course Folder name from the `1 WSQ Documents` directory**  
+        - Format: `TGS-[Course Code] - [Course Title]`  
+
+        3. **Click "Generate Brochure"** to scrape data and generate the course brochure automatically.  
         """)
+
         
         # URL input
         course_url = st.text_input("Enter the Course URL:")
+        
+        # Course folder name input
+        course_folder_name = st.text_input("Enter the Course Folder name:")
+        
+        # Add a warning about folder requirements
+        st.warning("⚠️ Important: Both the _**Course Folder**_ and its _**Brochure**_ subfolder must already exist. This app will NOT create any folders.")
 
         if st.button("Generate Brochure"):
             if not course_url:
                 st.error("Please provide a valid URL.")
+                return
+                
+            if not course_folder_name:
+                st.error("Please provide a Course Folder name.")
+                return
+                
+            # Basic validation for folder name
+            if any(char in course_folder_name for char in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']):
+                st.error("Course folder name contains invalid characters. Please avoid using: / \\ : * ? \" < > |")
                 return
 
             try:
@@ -420,54 +568,144 @@ def app():
                     course_data = scrape_course_data(course_url)
                     st.success("Course data scraped successfully!")
                     st.session_state['course_data'] = course_data.to_dict()  # Save scraped data to session state
-                    print(course_data)
-                creds = None
+                
                 with st.spinner("Authenticating with Google Drive..."):
                     creds = authenticate()
-
-                # Check if a brochure for the course already exists
-                with st.spinner("Checking for existing brochure in Google Drive..."):
-                    drive_service = build('drive', 'v3', credentials=creds)
-                    
-                    existing_title = f"{course_data.course_title} Brochure"
-                    query = f"name = '{existing_title}' and mimeType='application/vnd.google-apps.document' and trashed = false"
-                    response = drive_service.files().list(
-                        q=query,
-                        spaces='drive',
-                        fields='files(id, name)',
-                        pageSize=1
-                    ).execute()
-                    existing_docs = response.get('files', [])
-
-                    if existing_docs:
-                        # If a document with the same title exists, show an alert
-                        existing_doc_id = existing_docs[0]['id']
-                        shareable_link = f"https://drive.google.com/file/d/{existing_doc_id}/view"
-                        st.warning(
-                            f"""A brochure for the course \"{course_data.course_title}\" already exists.
-                            \n[View existing brochure]({shareable_link})
-                            """
-                        )
+                    if not creds:
+                        st.error("Authentication failed. Please check your credentials.")
                         return
-                # Step 2: Display the scraped JSON
+                        
+                drive_service = build('drive', 'v3', credentials=creds)
+                
+                # Step 2: Check if the Course Folder exists in "1 WSQ Documents"
+                with st.spinner(f"Checking if the folder '{course_folder_name}' exists..."):
+                    try:
+                        drive_service = build('drive', 'v3', credentials=creds)
+                        
+                        # Check if the course folder exists
+                        query = f"name = '{course_folder_name}' and '{WSQ_DOCUMENTS_FOLDER_ID}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+                        response = drive_service.files().list(
+                            q=query,
+                            spaces='drive',
+                            fields='files(id, name)',
+                            pageSize=1
+                        ).execute()
+                        
+                        course_folders = response.get('files', [])
+                        if not course_folders:
+                            st.error(f"Error: Folder '{course_folder_name}' not found in '1 WSQ Documents'. Please verify the folder name and try again.")
+                            return
+                            
+                        course_folder_id = course_folders[0]['id']
+                        
+                        # Check if Brochure folder exists within the course folder
+                        query = f"name = 'Brochure' and '{course_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+                        response = drive_service.files().list(
+                            q=query,
+                            spaces='drive',
+                            fields='files(id, name)',
+                            pageSize=1
+                        ).execute()
+                        
+                        brochure_folders = response.get('files', [])
+                        if not brochure_folders:
+                            st.error(f"Error: 'Brochure' folder not found within '{course_folder_name}'. Please create this folder first.")
+                            return
+                    except Exception as e:
+                        st.error(f"Error checking folders: {e}")
+                        return
+                    
+                # Step 3: Check if a Brochure folder exists and if it already contains a brochure for this course
+                with st.spinner("Checking for existing brochure..."):
+                    # First, find the course folder ID
+                    if course_folders:
+                        course_folder_id = course_folders[0]['id']
+                        
+                        # Check if Brochure folder exists
+                        query = f"name = 'Brochure' and '{course_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
+                        response = drive_service.files().list(
+                            q=query,
+                            spaces='drive',
+                            fields='files(id, name)',
+                            pageSize=1
+                        ).execute()
+                        
+                        brochure_folders = response.get('files', [])
+                        if brochure_folders:
+                            brochure_folder_id = brochure_folders[0]['id']
+                            
+                            # Check if a brochure with the same name already exists
+                            brochure_name = f"{course_data.course_title} Brochure"
+                            query = f"name = '{brochure_name}' and '{brochure_folder_id}' in parents and mimeType='application/vnd.google-apps.document' and trashed = false"
+                            response = drive_service.files().list(
+                                q=query,
+                                spaces='drive',
+                                fields='files(id, name)',
+                                pageSize=1
+                            ).execute()
+                            
+                            existing_brochures = response.get('files', [])
+                            if existing_brochures:
+                                existing_brochure_id = existing_brochures[0]['id']
+                                shareable_link = f"https://docs.google.com/document/d/{existing_brochure_id}/edit"
+                                
+                                st.warning(
+                                    f"""A brochure for the course \"{course_data.course_title}\" already exists in the folder path:
+                                    1 WSQ Documents > {course_folder_name} > Brochure
+                                    \n[View existing brochure]({shareable_link})
+                                    """
+                                )
+                                
+                                # Still display the scraped data
+                                with right_col:
+                                    st.json(st.session_state['course_data'], expanded=1)
+                                
+                                return
+                
+                # Display the scraped JSON
                 with right_col:
                     st.json(st.session_state['course_data'], expanded=1)
-
                 
-                # Step 3: Generate brochure
+                # Step 4: Generate brochure
                 try:
                     with st.spinner("Generating brochure..."):
                         # Convert the dictionary back to a CourseData object
                         course_data = CourseData(**st.session_state['course_data'])
-                        response = generate_brochure_wrapper(course_data)
+                        response = generate_brochure_wrapper(course_data, course_folder_name)
                     
-                    # Remove the need for extract_tool_response by directly setting session state
+                    # Check if there was an error or if brochure already exists
+                    if hasattr(response, 'error') and response.error is not None:
+                        st.error(f"Error: {response.error}")
+                        return
+                        
+                    if hasattr(response, 'exists') and response.exists:
+                        st.warning(
+                            f"""A brochure for the course \"{response.course_title}\" already exists in the folder path:
+                            1 WSQ Documents > {course_folder_name} > Brochure
+                            
+                            The existing file will not be overwritten to prevent data loss.
+                            \n[View existing brochure]({response.file_url})
+                            """
+                        )
+                        # Still set session state so the "View Brochure" button works
+                        st.session_state['course_title'] = response.course_title
+                        st.session_state['file_url'] = response.file_url
+                        return
+                    
+                    # Set session state with response data
                     st.session_state['course_title'] = response.course_title
                     st.session_state['file_url'] = response.file_url
-                    st.success(f"The brochure for the course \"{response.course_title}\" has been successfully generated.")
+                    
+                    st.success(
+                        f"""The brochure for the course \"{response.course_title}\" has been successfully generated and saved to:
+                        1 WSQ Documents > {course_folder_name} > Brochure
+                        """
+                    )
 
                 except Exception as e:
-                    st.error(f"An error occurred: {e}")
+                    st.error(f"An error occurred while generating the brochure: {e}")
+                    if "not found" in str(e).lower():
+                        st.error("One or more required folders were not found. Please ensure both the course folder and Brochure subfolder exist.")
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")

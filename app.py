@@ -8,8 +8,6 @@ import AnnexAssessment.annex_assessment as annex_assessment
 import CourseProposal.app as course_proposal_app
 import SupDocs.sup_doc as sup_doc
 # import CourseProposal_excel.app as course_proposal_excel_app
-# import Slides.slide_generation as slide_generation
-# from Slides.slide_generation import render_slide_generation_ui
 
 st.set_page_config(layout="wide")
 
@@ -17,8 +15,8 @@ st.set_page_config(layout="wide")
 with st.sidebar:
     selected = option_menu(
         "Tertiary Infotech",  # Title of the sidebar
-        ["Generate CP", "Generate AP/FG/LG/LP", "Generate Assessment", "Generate Slides", "Generate Brochure","Add Assessment to AP", "Check Documents"],  # Options
-        icons=["filetype-doc", "file-earmark-richtext", "clipboard-check", "filetype-pptx", "files-alt", "folder-symlink"],  # Icon names
+        ["Generate CP", "Generate AP/FG/LG/LP", "Generate Assessment", "Generate Brochure","Add Assessment to AP", "Check Documents"],  # Options
+        icons=["filetype-doc", "file-earmark-richtext", "clipboard-check", "files-alt", "folder-symlink"],  # Icon names
         menu_icon="boxes",  # Icon for the sidebar title
         default_index=0,  # Default selected item
     )
@@ -33,11 +31,6 @@ elif selected == "Generate AP/FG/LG/LP":
 elif selected == "Generate Assessment":
     assessment_generation.app()
     # Add Assessment Generation-specific functionality here
-
-elif selected == "Generate Slides":
-    # slide_generation.app()  # Display Courseware Generation app
-    st.title("Generate Slides")
-    st.write("Slides Generation not available.")
 
 elif selected == "Check Documents":
     sup_doc.app()
