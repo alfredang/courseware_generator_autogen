@@ -1,11 +1,7 @@
 # agentic_PP.py
-import os
 import re
-import json
-import pprint
 import asyncio
 import streamlit as st
-from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken
 from autogen_agentchat.messages import TextMessage
@@ -107,7 +103,7 @@ async def retrieve_content_for_learning_outcomes(extracted_data, engine, premium
     results = await asyncio.gather(*tasks)
     return [result[1] for result in results]
 
-async def generate_pp_scenario(data: FacilitatorGuideExtraction, model_client) -> str:
+async def generate_pp_scenario(data, model_client) -> str:
     """
     Uses the autogen agent to generate a realistic practical performance assessment scenario.
     
@@ -211,7 +207,7 @@ async def generate_pp_for_lo(qa_generation_agent, course_title, assessment_durat
         "ability_id": qa_result.get("ability_id", ability_ids)
     }
 
-async def generate_pp(extracted_data: FacilitatorGuideExtraction, index, model_client, premium_mode):
+async def generate_pp(extracted_data, index, model_client, premium_mode):
     """
     Generate practical performance assessment questions and answers asynchronously for all learning outcomes.
 
@@ -227,7 +223,6 @@ async def generate_pp(extracted_data: FacilitatorGuideExtraction, index, model_c
     extracted_data = dict(extracted_data)
     
     scenario = await generate_pp_scenario(extracted_data, model_client)
-    print(f"#################### SCENARIO ###################\n\n{scenario}")
 
     # Create a query engine for retrieving content related to learning outcomes
     lo_retriever_llm = llama_openai(

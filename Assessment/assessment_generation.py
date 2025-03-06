@@ -29,8 +29,8 @@ from Assessment.utils.agentic_CS import generate_cs
 from Assessment.utils.agentic_PP import generate_pp
 from Assessment.utils.agentic_SAQ import generate_saq
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
+from Assessment.utils.model_configs import MODEL_CHOICES, get_model_config
 from autogen_ext.models.openai import OpenAIChatCompletionClient
-from utils.model_configs import MODEL_CHOICES, get_model_config
 from utils.helper import parse_json_content
 
 ################################################################################
@@ -122,6 +122,9 @@ async def interpret_fg(fg_data, model_client):
                 {{"code": "PP", "duration": "0.5 hr"}}
                 {{"code": "CS", "duration": "30 mins"}}
             * Interpret abbreviations of assessment methods to their correct types (e.g., "WA-SAQ," "PP," "CS").
+
+            Use this JSON schema:
+            {json.dumps(FacilitatorGuideExtraction.model_json_schema(), indent=2)}
         """
     )
 
@@ -144,12 +147,13 @@ async def interpret_fg(fg_data, model_client):
 ################################################################################
 # Parse Slide Deck Document
 ################################################################################
-def parse_slides(slides_path, LLAMA_CLOUD_API_KEY, OPENAI_API_KEY, premium_mode=False):
+def parse_slides(slides_path, LLAMA_CLOUD_API_KEY, LVM_API_KEY, LVM_NAME, premium_mode=False,):
     nest_asyncio.apply()
 
     total_pages = get_pdf_page_count(slides_path)
     target_pages = f"17-{total_pages - 6}"
-    # print(f"Target pages: {target_pages}")
+
+    OPENAI_API_KEY = st.secrets["OPENAI_API_KEY"]
 
     embed_model = OpenAIEmbedding(model="text-embedding-3-large", api_key=OPENAI_API_KEY)
     llm = llama_openai(model="gpt-4o-mini", api_key=OPENAI_API_KEY)
@@ -173,8 +177,8 @@ def parse_slides(slides_path, LLAMA_CLOUD_API_KEY, OPENAI_API_KEY, premium_mode=
         parser = LlamaParse(
             result_type="markdown",
             use_vendor_multimodal_model=True,
-            vendor_multimodal_model_name="openai-gpt-4o-mini",
-            vendor_multimodal_api_key=OPENAI_API_KEY,
+            vendor_multimodal_model_name=LVM_NAME,
+            vendor_multimodal_api_key=LVM_API_KEY,
             invalidate_cache=True,
             verbose=True,
             num_workers=8,
@@ -194,11 +198,12 @@ def parse_slides(slides_path, LLAMA_CLOUD_API_KEY, OPENAI_API_KEY, premium_mode=
             verbose=True,
             num_workers=8,
             target_pages=target_pages,
-            invalidate_cache=True
+            invalidate_cache=True,
+            api_key=LLAMA_CLOUD_API_KEY
         ).load_data(slides_path)
         page_nodes = get_page_nodes(documents)
         node_parser = MarkdownElementNodeParser(
-           llm=llama_openai(model="gpt-4o-mini"), num_workers=8
+           llm=llm, num_workers=8
         )
         nodes = node_parser.get_nodes_from_documents(documents)
         base_nodes, objects = node_parser.get_nodes_and_objects(nodes)
@@ -286,6 +291,7 @@ def app():
     model_name = selected_config["config"]["model"]
     temperature = selected_config["config"].get("temperature", 0)
     base_url = selected_config["config"].get("base_url", None)
+    llama_name = selected_config["config"].get("llama_name", None)
 
     # Extract model_info from the selected configuration (if provided)
     model_info = selected_config["config"].get("model_info", None)
@@ -337,8 +343,6 @@ def app():
                 if not st.session_state['fg_data']:
                     fg_data = parse_fg(fg_filepath, LLAMA_API_KEY)
                     st.session_state['fg_data'] = asyncio.run(interpret_fg(fg_data, structured_model_client))
-                    parsed_fg = st.session_state.get('fg_data')
-                st.json(parsed_fg)
                 st.success("✅ Successfully parsed the Facilitator Guide.")
         
             with st.spinner("Parsing Slide Deck..."):
@@ -347,7 +351,8 @@ def app():
                         slides_filepath,
                         LLAMA_API_KEY,
                         api_key,
-                        premium_parsing
+                        llama_name,
+                        premium_parsing,
                     )
                 st.success("✅ Successfully parsed the Slide Deck.")
 
@@ -388,10 +393,10 @@ def app():
                 return
             
             st.success("✅ Proceeding with assessment generation...")
-
+            parsed_fg = st.session_state['fg_data']
+            st.json(parsed_fg)
             try:
                 with st.spinner("Generating Assessments..."):
-
                     index = st.session_state['index']
                     for assessment_type in selected_types:
                         if assessment_type == "WA (SAQ)":

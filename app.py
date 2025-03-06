@@ -1,10 +1,10 @@
 # app.py
 import streamlit as st
 from streamlit_option_menu import option_menu
-# import Assessment.assessment_generation as assessment_generation
-# import Courseware.courseware_generation  as courseware_generation
-# import Brochure.brochure_generation as brochure_generation
-# import AnnexAssessment.annex_assessment as annex_assessment
+import Assessment.assessment_generation as assessment_generation
+import Courseware.courseware_generation  as courseware_generation
+import Brochure.brochure_generation as brochure_generation
+import AnnexAssessment.annex_assessment as annex_assessment
 import CourseProposal.app as course_proposal_app
 # import CourseProposal_excel.app as course_proposal_excel_app
 # import Slides.slide_generation as slide_generation

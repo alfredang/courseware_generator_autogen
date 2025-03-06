@@ -6,6 +6,7 @@ from Courseware.utils.agentic_AP import generate_assessment_documents
 from Courseware.utils.timetable_generator import generate_timetable
 from Courseware.utils.agentic_LP import generate_lesson_plan
 from Courseware.utils.agentic_FG import generate_facilitators_guide
+from Courseware.utils.model_configs import MODEL_CHOICES, get_model_config
 import os
 import re
 import json 
@@ -32,7 +33,6 @@ from autogen_core import CancellationToken
 from autogen_ext.code_executors.local import LocalCommandLineCodeExecutor
 from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_ext.models.openai import OpenAIChatCompletionClient
-from utils.model_configs import MODEL_CHOICES, get_model_config
 from utils.helper import save_uploaded_file, parse_json_content
 
 # Initialize session state variables
@@ -51,7 +51,7 @@ if 'context' not in st.session_state:
 if 'asr_output' not in st.session_state:
     st.session_state['asr_output'] = None
 if 'selected_model' not in st.session_state:
-    st.session_state['selected_model'] = "GPT-4o"
+    st.session_state['selected_model'] = "Gemini"
 
 ############################################################
 # 1. Pydantic Models
@@ -332,7 +332,7 @@ def app():
     model_choice = st.selectbox(
         "Select LLM Model:",
         options=list(MODEL_CHOICES.keys()),
-        index=0  # default: "GPT-4o Mini (Default)"
+        index=0 # Select Default
     )
     st.session_state['selected_model'] = model_choice
 

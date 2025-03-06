@@ -342,7 +342,7 @@ def generate_brochure(data: CourseData):
         'TSC_Framework': data_dict.get('tsc_framework', 'Not Applicable'),
         'GST_Excl_Price': data_dict.get('gst_exclusive_price', 'Not Applicable'),
         'GST_Incl_Price': data_dict.get('gst_inclusive_price', 'Not Applicable'),
-        'Duration_Hrs': data_dict.get('duration_has', 'Not Applicable'),
+        'Duration_Hrs': data_dict.get('duration_hrs', 'Not Applicable'),
         'Session_Days': data_dict.get('session_days', 'Not Applicable'),
         
         'Course_URL': data_dict.get('course_url', 'Not Applicable'),
@@ -391,25 +391,6 @@ def generate_brochure(data: CourseData):
         "course_title": data_dict.get('course_title', 'Unknown Course Title'),
         "shareable_link": shareable_link
     }
-
-def extract_tool_response(chat_content):
-    """
-    Extracts course title and file URL from the tool response.
-    """
-    try:
-        # Parse the JSON content
-        content = dict(chat_content)
-        parsed_content = json.loads(content)
-        course_title = parsed_content.get("course_title", "Unknown Course Title")
-        file_url = parsed_content.get("file_url", None)
-        
-        if course_title and file_url:
-            return course_title, file_url
-
-    except Exception as e:
-        print(f"Error extracting tool response: {e}")
-    return None, None
-
 
 # Streamlit app
 def app():
@@ -476,19 +457,17 @@ def app():
                 # Step 3: Generate brochure
                 try:
                     with st.spinner("Generating brochure..."):
-                        response = generate_brochure_wrapper(json.dumps(st.session_state['course_data']))
+                        # Convert the dictionary back to a CourseData object
+                        course_data = CourseData(**st.session_state['course_data'])
+                        response = generate_brochure_wrapper(course_data)
                     
+                    # Remove the need for extract_tool_response by directly setting session state
+                    st.session_state['course_title'] = response.course_title
+                    st.session_state['file_url'] = response.file_url
+                    st.success(f"The brochure for the course \"{response.course_title}\" has been successfully generated.")
+
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
-
-                # Step 4: Extract tool response
-                course_title, file_url = extract_tool_response(response)
-                if course_title and file_url:
-                    st.session_state['course_title'] = course_title
-                    st.session_state['file_url'] = file_url
-                    st.success(f"The brochure for the course \"{course_title}\" has been successfully generated.")
-                else:
-                    st.error("The tool response did not contain valid data.")
 
             except Exception as e:
                 st.error(f"An error occurred: {e}")
