@@ -54,6 +54,7 @@ if 'assessment_generated_files' not in st.session_state:
     st.session_state['assessment_generated_files'] = {}
 if 'selected_model' not in st.session_state:
     st.session_state['selected_model'] = "Gemini-Flash-2.0-Exp"
+
 ################################################################################
 # Helper function for robust text extraction from slide pages.
 ################################################################################
@@ -76,7 +77,6 @@ def get_page_nodes(docs, separator="\n---\n"):
                 metadata=deepcopy(doc.metadata),
             )
             nodes.append(node)
-
     return nodes
 
 def get_pdf_page_count(pdf_path):
@@ -268,6 +268,7 @@ def generate_documents(context: dict, assessment_type: str, output_dir: str) -> 
 ################################################################################
 def app():
     st.title("📄 Assessment Generator")
+    
     st.subheader("Model Selection")
     model_choice = st.selectbox(
         "Select LLM Model:",
@@ -275,7 +276,7 @@ def app():
         index=0  # default: "GPT-4o Mini (Default)"
     )
     st.session_state['selected_model'] = model_choice
-    
+
     st.subheader("Step 1: Upload Relevant Documents")
     st.write("Upload your Facilitator Guide (.docx) and Trainer Slide Deck (.pdf) to generate assessments.")
     fg_doc_file = st.file_uploader("Upload Facilitator Guide (.docx)", type=["docx"])
@@ -300,14 +301,14 @@ def app():
     if st.session_state['selected_model'] in ["DeepSeek-V3", "Gemini-Flash-2.0-Exp"]:
         fg_response_format = None  # DeepSeek and Gemini might not support structured output this way.
     else:
-        fg_response_format = FacilitatorGuideExtraction  # For structured CP extractio
+        fg_response_format = FacilitatorGuideExtraction  # For structured extraction
 
     structured_model_client = OpenAIChatCompletionClient(
         model=model_name,
         api_key=api_key,
         temperature=temperature,
         base_url=base_url,
-        response_format=fg_response_format,  # Only set for valid OpenAI models
+        response_format=fg_response_format,
         model_info=model_info,
     )
 
@@ -340,20 +341,18 @@ def app():
             slides_filepath = utils.save_uploaded_file(slide_deck_file, "data")
 
             with st.spinner("Parsing FG Document..."):
-                if not st.session_state['fg_data']:
-                    fg_data = parse_fg(fg_filepath, LLAMA_API_KEY)
-                    st.session_state['fg_data'] = asyncio.run(interpret_fg(fg_data, structured_model_client))
+                fg_data = parse_fg(fg_filepath, LLAMA_API_KEY)
+                st.session_state['fg_data'] = asyncio.run(interpret_fg(fg_data, structured_model_client))
                 st.success("✅ Successfully parsed the Facilitator Guide.")
         
             with st.spinner("Parsing Slide Deck..."):
-                if not st.session_state['index']:
-                    st.session_state['index'] = parse_slides(
-                        slides_filepath,
-                        LLAMA_API_KEY,
-                        api_key,
-                        llama_name,
-                        premium_parsing,
-                    )
+                st.session_state['index'] = parse_slides(
+                    slides_filepath,
+                    LLAMA_API_KEY,
+                    api_key,
+                    llama_name,
+                    premium_parsing,
+                )
                 st.success("✅ Successfully parsed the Slide Deck.")
 
         except Exception as e:
@@ -365,7 +364,6 @@ def app():
                 os.remove(fg_filepath)
             if slides_filepath and os.path.exists(slides_filepath):
                 os.remove(slides_filepath)
-
 
     st.subheader("Step 3: Generate Assessments")
     st.write("Select the type of assessment to generate:")
@@ -399,12 +397,10 @@ def app():
                     for assessment_type in selected_types:
                         if assessment_type == "WA (SAQ)":
                             saq_context = asyncio.run(generate_saq(st.session_state['fg_data'], index, model_client, premium_parsing))
-                            # print(saq_context)
                             st.success("✅ Successfully retrieved SAQ context")
                             files = generate_documents(saq_context, assessment_type, "output")
                             st.session_state['assessment_generated_files'][assessment_type] = files
                         elif assessment_type == "PP":
-                            print(st.session_state['fg_data'])
                             pp_context = asyncio.run(generate_pp(st.session_state['fg_data'], index, model_client, premium_parsing))
                             files = generate_documents(pp_context, assessment_type, "output")
                             st.session_state['assessment_generated_files'][assessment_type] = files
@@ -422,28 +418,38 @@ def app():
 
     if st.session_state.get('assessment_processing_done'):
         st.subheader("Download Generated Documents")
-        # Check if generated_files exists and has content
         if 'assessment_generated_files' in st.session_state and st.session_state['assessment_generated_files']:
             for assessment_type, file_paths in st.session_state['assessment_generated_files'].items():
                 q_path = file_paths.get('QUESTION')
                 a_path = file_paths.get('ANSWER')
                 
-                # Get course title safely
                 course_title = "Course Title"
                 if st.session_state.get('fg_data'):
                     course_title = st.session_state['fg_data'].get("course_title", "Course Title")
 
-                # Only try to open files that exist
                 if q_path and os.path.exists(q_path):
                     with open(q_path, "rb") as f:
                         st.download_button(f"Download {assessment_type} Questions", 
-                                        f.read(), 
-                                        f"{assessment_type} - {course_title}.docx")
+                                           f.read(), 
+                                           f"{assessment_type} - {course_title}.docx")
 
                 if a_path and os.path.exists(a_path):
                     with open(a_path, "rb") as f:
                         st.download_button(f"Download {assessment_type} Answers", 
-                                        f.read(), 
-                                        f"Answer to {assessment_type} - {course_title}.docx")
+                                           f.read(), 
+                                           f"Answer to {assessment_type} - {course_title}.docx")
         else:
             st.info("No files have been generated yet. Please generate assessments first.")
+
+    ############################################################################
+    # Reset Button at the Bottom
+    ############################################################################
+    if st.button("Reset Course Data", type="primary"):
+        st.session_state['index'] = None
+        st.session_state['fg_data'] = None
+        st.session_state['assessment_processing_done'] = False
+        st.session_state['assessment_generated_files'] = {}
+        st.session_state['saq_output'] = None
+        st.session_state['pp_output'] = None
+        st.session_state['cs_output'] = None
+        st.success("Course data has been reset.")
