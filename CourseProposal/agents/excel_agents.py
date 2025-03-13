@@ -63,6 +63,7 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
 
 
     Format your response in the given JSON structure under "course_overview".
+    Your output MUST be as follows, with course_description being the only key-value pair under "course_overview":
     "course_overview": {{
         course_description: "Your course description here",
         }}

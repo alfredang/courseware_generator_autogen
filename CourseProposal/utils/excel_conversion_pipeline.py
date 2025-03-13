@@ -156,7 +156,6 @@ def create_course_dataframe(json_data):
     tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
     assessment_methods = json_data["Assessment Methods"].get("Assessment Methods", [])
 
-
     # Initialize lists to hold the data for each row in the DataFrame
     data = []
 

@@ -106,11 +106,28 @@ gemini_config = {
     }
 }
 
+# Gemini
+gemini_flash_config = {
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+        "model": "gemini-2.0-flash-lite",
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "api_key": GEMINI_API_KEY,
+        "model_info": {
+            "family": "unknown",
+            "function_calling": False,
+            "json_output": True,
+            "vision": False
+        }
+    }
+}
+
 # Map user-friendly names to configs
 MODEL_CHOICES = {
     "GPT-4o-Mini": default_config,
     "DeepSeek-V3": deepseek_config,
     "Gemini-Flash-2.0-Exp": gemini_config,
+    "Gemini-Flash-2.0-Lite": gemini_flash_config,
     "GPT-4o": gpt_4o_config,
     "GPT-o1": gpt_o1_config,
     "GPT-o1-Mini": gpt_o1_mini_config,
