@@ -52,6 +52,9 @@ from typing import Optional, List, Dict, Any
 from pydantic import Field
 from llama_index.core.schema import NodeWithScore
 import traceback
+from agents.content_team import create_content
+from agents.tsc_extractor import tsc_team_task, create_tsc_agent
+from utils.document_parser import parse_document
 
 config, embed_model = load_shared_resources()
 llm = Gemini(
@@ -511,6 +514,24 @@ class PydanticWorkflow(Workflow):
 # or use a custom synthesizer with a custom synthesizer prompt
 
 async def main():
+
+    # processing input TSC into JSON
+    model_choice = st.session_state.get('selected_model', "GPT-4o Mini (Default)")
+    parse_document(input_tsc, "json_output/output_TSC.json")    
+
+    with open("json_output/output_TSC.json", 'r', encoding='utf-8') as file:
+        tsc_data = json.load(file)        
+
+    create_tsc_agent(tsc_data=tsc_data, model_choice=model_choice)
+    stream = tsc_agent.run_stream(task=tsc_agent_task(tsc_data))
+    await Console(stream)
+    state = await tsc_agent.save_state()
+    with open("json_output/tsc_agent_state.json", "w") as f:
+        json.dump(state, f)
+    tsc_data = extract_agent_json(file_path="json_output/tsc_agent_state.json", agent_name="tsc_prepper_agent")
+    with open("json_output/parsed_TSC.json", "w", encoding="utf-8") as out:
+        json.dump(tsc_data, out, indent=2)
+
     # Load data *once* outside the workflow loop
     lu_data = load_json_file("output_json/parsed_TSC.json")
     learning_units = LearningUnits.model_validate(lu_data)
@@ -577,7 +598,13 @@ async def main():
         print(f"Error saving updated data: {str(e)}")
 
     print(f"Processed {len(processed_units)}/{len(learning_units.root)} learning units")
+    
+    await create_content()
 
 if __name__ == "__main__":
     import asyncio
     asyncio.run(main())
+
+# TODO: add streamlit pages for this, one step process, upload TSC then download the documents
+# TODO: write functions to handle creation of docx files for the assessment papers
+# TODO: write RAGAS evaluation functions for the retrieval portion of the RAG workflow

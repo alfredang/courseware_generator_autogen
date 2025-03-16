@@ -21,116 +21,132 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
         1. Ensure that the LOs (Learning Outcomes) are mapped.
         2. Ensure that the K (Knowledge) factors are mapped to the LOs.
         3. Ensure that the A (Ability) are mapped to the LOs.
-        4. Ensure that the Course Title is mapped.
-        5. Return a full JSON object with all the extracted data according to the schema.
+        4. Return a full JSON object with all the extracted data according to the schema.
 
         An example JSON schema looks like this, with the LUs as a key-value pair:
         {{
-        "TSC_Form": {{
-            "Learning Outcomes": [
-                "LO1: Establish high-level structures and frameworks for Kubernetes solutions using appropriate processes and tools.",
-                "LO2: Align technical, functional, and service requirements within Kubernetes-based solution architectures.",
-                "LO3: Coordinate multiple Kubernetes solution components to ensure compatibility and meet design framework goals.",
-                "LO4: Articulate the value of Kubernetes solutions by addressing coding standards, scalability, and reusability.",
-                "LO5: Establish monitoring and testing processes to validate Kubernetes architectures against business requirements."
-            ],
-            "Knowledge": [
-                "K1: Process for refining solution architecture",
-                "K2: Applications of tools and modelling techniques for creation of solution architecture",
-                "K3: Technical, functional and service considerations",
-                "K4: Considerations for multiple aspects of the overall solution including performance, security, latency and other relevant aspect for the solution",
-                "K5: Standards for coding, scalability, integration and reusability",
-                "K6: Compatibility among multiple solution architecture components and design activities",
-                "K7: Techniques to measure a solution's value-add"
-            ],
-            "Ability": [
-                "A1: Establish high level structures and frameworks to guide the development of IT solutions incorporating various processes, hardware and software components",
-                "A2: Determine relevant design tools or modelling techniques required to develop a solution architecture and blueprint",
-                "A3: Align requirements of various internal and external stakeholders, as well as technical, functional and service requirements within a solution architecture",
-                "A4: Coordinate multiple solution architecture components and design activities, ensuring consistency and compatibility within a target framework",
-                "A5: Articulate value added by the solution to the business needs",
-                "A6: Establish processes to regularly monitor, test and review solution architecture against business requirements"
-            ],
-    }}
+        
+            "LU1: Git and GitHub Fundamentals (A1, A2)": {{
+            "LO": "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
+            "Abilities": {{
+                "A1": "Analyse release components",
+                "A2": "Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
+            }},
+            "Knowledge": {}
+            }},
+            "LU2: GitHub Repository Management (K1, A3)": {{
+            "LO": "LO2: Select appropriate Git scripts for integrating and deploying software products.",
+            "Abilities": {{
+                "A3": "Select appropriate scripts and tools for integrating and deploying software products"
+            }},
+            "Knowledge": {{
+                "K1": "Types and usage of scripts and tools for integrating and deploying software products"
+            }}
+            }},
+            "LU3: Collaborative Workflows on GitHub (K2, K3, A4, A5)": {{
+            "LO": "LO3: Configure software products and deploy releases using Git configuration tests.",
+            "Abilities": {{
+                "A4": "Configure software products to integrate and deploy software releases to various platforms",
+                "A5": "Execute configuration tests on platform specific versions of software products in line with testing procedures"
+            }},
+            "Knowledge": {{
+                "K2": "Software configuration procedures",
+                "K3": "Configuration tests and their purposes"
+            }}
+            }},
+            "LU4: Modern GitHub Development Practices (K4, A6)": {{
+            "LO": "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
+            "Abilities": {{
+                "A6": "Diagnose issues surfaced from configuration testing"
+            }},
+            "Knowledge": {{
+                "K4": "Interpretation of configuration test results"
+            }}
+            }},
+            "LU5: GitHub Project Automation (K5, A7)": {{
+            "LO": "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
+            "Abilities": {{
+                "A7": "Identify potential improvements and modifications to the software configuration and deployment process or the software code"
+            }},
+            "Knowledge": {{
+                "K5": "Elements of the software configuration and deployment process"
+            }}
+            }},
+            "LU6: GitHub Security and Administration (A8)": {{
+            "LO": "LO6: Implement modifications to software products and processes for improved functionality.",
+            "Abilities": {{
+                "A8": "Implement modifications to platform-specific software products and processes"
+            }},
+            "Knowledge": {}
+            }}
+        
         }}
         """
 
     tsc_prepper_message = f"""
-        You are to parse and correct spelling mistakes from {tsc_data}:
-        The requirements are as follows:
-        1. If there are no LU's present, summarize a LU from each Topics and name them sequentially. The LUs should NOT have the same name as the topics. Ignore this instruction if there are LUs present.
-        2. Ensure that any mention of "Topic" is followed by a number and a colon.
-        2.5. Ensure that any mention of "LU" is followed by a number and a colon.
-        2.6. Ensure that the A and K factors are followed by a number and a colon.
-        3. Ensure that the K and A factors are correctly mapped to the LUs in brackets.
-        4. Catch and amend any spelling errors to the following words:
-        Instructional Methods:
-        - Didactic Questioning
-        - Demonstration
-        - Practical
-        - Peer Sharing
-        - Role Play
-        - Group Discussion
-        - Case Study
-        Assessment Methods:
-        - Written Assessment
-        - Practical Performance
-        - Case Study
-        - Oral Questioning
-        - Role Play
-
-        For example, "case studies" is WRONG, "Case Study" is CORRECT.
+        You are to parse the response from the previous agent and ensure that the extracted data is correctly mapped to the LUs.
+        You are to ensure that the response is in valid JSON format in order to prevent JSON parsing errors downstream.
+        You are to return the parsed data (with modifications - if any) in your response as a full JSON object according to the schema.
 
         An example JSON schema looks like this, with the LUs as a key-value pair:
         {{
-            "Course_Proposal_Form": {{
-                "null": [
-                    "Title: Hands-on AI-Assisted Programming Made Simple with GitHub Copilot",
-                    "Organization: Tertiary Infotech Pte Ltd",
-                    "Learning Outcomes:",
-                    "LO1: Identify gaps in existing programming workflows and propose AI-assisted solutions using GitHub Copilot to enhance efficiency.",
-                    "LO2: Explore and apply emerging AI programming tools, including GitHub Copilot, to streamline organizational coding processes.",
-                    "Couse Duration: 1 days (8 hrs)",
-                    "Instructional Methods:",
-                    "Classroom: 3 hours",
-                    "Practical: 4 hours",
-                    "Didactic Questioning",
-                    "Demonstration",
-                    "Assessment Methods:",
-                    "Written Assessment (0.5 hr)",
-                    "Practical Performance (0.5 hr)",
-                    "TSC Mapping:",
-                    "TSC Title: Digital Technology Adoption and Innovation",
-                    "TSC Code: ACC-ICT-3004-1.1",
-                    "TSC Knowledge:",
-                    "K1: Relevant systems and software",
-                    "K2: Organisation's processes",
-                    "K3: Strengths and weaknesses of existing software and systems",
-                    "K4: Emerging technological trends such as block chain, machine learning, artificial intelligence,",
-                    "TSC Abilities:",
-                    "A1: Identify issues in the existing software and systems",
-                    "A2: Seek potential IT solutions to resolve issues or for systems upgrading",
-                    "A3: Propose to management on suitable IT solutions for the organisation",
-                    "A4: Keep up to date with new technologies and systems",
-                    "Learning Units"
-                ],
-                "LU1: Introduction to Copilot (K1, K3, A1, A3)": [
-                    "Topic 1: Getting Started  with Github Copilot (K1, K3, A1, A3)",
-                    "What is Github Copilot?",
-                    "How Github Copilot enhances software development efficiency?",
-                    "Install Github Copilot on Visual Studio Code",
-                    "Explore Github Copilot features"
-                ],
-                "LU2: Coding with Github Copilot (K2, K4, A2, A4)": [
-                    "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)",
-                    "Github Copilot for HTML",
-                    "Github Copilot for Python",
-                    "Github Copilot for Javascript",
-                    "Github Copilot for REST API",
-                    "Other emerging AI tools for software development"
-                ]
+        
+            "LU1: Git and GitHub Fundamentals (A1, A2)": {{
+            "LO": "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
+            "Abilities": {{
+                "A1": "Analyse release components",
+                "A2": "Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
+            }},
+            "Knowledge": {}
+            }},
+            "LU2: GitHub Repository Management (K1, A3)": {{
+            "LO": "LO2: Select appropriate Git scripts for integrating and deploying software products.",
+            "Abilities": {{
+                "A3": "Select appropriate scripts and tools for integrating and deploying software products"
+            }},
+            "Knowledge": {{
+                "K1": "Types and usage of scripts and tools for integrating and deploying software products"
             }}
+            }},
+            "LU3: Collaborative Workflows on GitHub (K2, K3, A4, A5)": {{
+            "LO": "LO3: Configure software products and deploy releases using Git configuration tests.",
+            "Abilities": {{
+                "A4": "Configure software products to integrate and deploy software releases to various platforms",
+                "A5": "Execute configuration tests on platform specific versions of software products in line with testing procedures"
+            }},
+            "Knowledge": {{
+                "K2": "Software configuration procedures",
+                "K3": "Configuration tests and their purposes"
+            }}
+            }},
+            "LU4: Modern GitHub Development Practices (K4, A6)": {{
+            "LO": "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
+            "Abilities": {{
+                "A6": "Diagnose issues surfaced from configuration testing"
+            }},
+            "Knowledge": {{
+                "K4": "Interpretation of configuration test results"
+            }}
+            }},
+            "LU5: GitHub Project Automation (K5, A7)": {{
+            "LO": "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
+            "Abilities": {{
+                "A7": "Identify potential improvements and modifications to the software configuration and deployment process or the software code"
+            }},
+            "Knowledge": {{
+                "K5": "Elements of the software configuration and deployment process"
+            }}
+            }},
+            "LU6: GitHub Security and Administration (A8)": {{
+            "LO": "LO6: Implement modifications to software products and processes for improved functionality.",
+            "Abilities": {{
+                "A8": "Implement modifications to platform-specific software products and processes"
+            }},
+            "Knowledge": {}
+            }}
+        
         }}
+
         """
 
     tsc_parser_agent = AssistantAgent(

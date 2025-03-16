@@ -54,29 +54,6 @@ def debug_model_response(content, qa_result):
         print("WARNING: Missing question_statement in parsed result!")
     print("----- END DEBUG -----\n")
 
-# def parse_json_content(content):
-#     # Check if the content is wrapped in ``````
-#     json_pattern = re.compile(r'```json\s*(\{.*?\})\s*```', re.DOTALL)
-#     match = json_pattern.search(content)
-    
-#     if match:
-#         # If ```json ``` is present, extract the JSON content
-#         json_str = match.group(1)
-#     else:
-#         # If no ```json ```, assume the entire content is JSON
-#         json_str = content
-    
-#     # Remove any leading/trailing whitespace
-#     json_str = json_str.strip()
-    
-#     try:
-#         # Parse the JSON string
-#         parsed_json = json.loads(json_str)
-#         return parsed_json
-#     except json.JSONDecodeError as e:
-#         print(f"Error parsing JSON: {e}")
-#         return None
-
 def parse_json_content(content):
     """More robust JSON parsing function"""
     # First try to extract JSON from markdown code blocks
@@ -314,23 +291,6 @@ async def generate_pp_from_tsc(tsc_data: Dict, model_client) -> Dict:
         for ability in abilities:
             all_citations.extend(ability["citations"])
         
-        # agent_task = f"""
-        # Generate one practical performance assessment question-answer pair using the following details:
-        # - Learning Objective: '{learning_objective}'
-        # - Learning Objective ID: '{lu_id}'
-        # - Associated Ability IDs: {', '.join(ability_ids)}
-        # - Associated Ability Statements: {', '.join(ability_texts)}
-        # - Scenario: '{scenario}'
-        # - Citations: {json.dumps(all_citations, indent=2)}
-        
-        # Instructions:
-        # 1. Create a direct, hands-on GitHub-related coding task in 2-3 sentences.
-        # 2. The task should require writing, modifying, or executing Git commands or scripts.
-        # 3. The question must end with "Take snapshots of your commands at each step and paste them below."
-        # 4. The answer should start with "The snapshot should include: " followed by the expected output.
-        # 5. Return your output in valid JSON format.
-        # """
-        
         agent_task = f"""
         Generate one practical performance assessment question-answer pair using the following details:
         - Learning Objective: '{learning_objective}'
@@ -465,7 +425,7 @@ async def generate_assessments_from_tsc(tsc_json_path: str, model_client):
     
     return assessments
 
-async def main():
+async def create_content():
     # # Initialize the model client (replace with your preferred client)
     # model_client = GPTAssistantAgent.create_assistant(
     #     name="Assessment Generator",
@@ -505,5 +465,5 @@ async def main():
     
     print("Assessments generated successfully!")
 
-if __name__ == "__main__":
-    asyncio.run(main())
+# if __name__ == "__main__":
+#     asyncio.run(create_content())
