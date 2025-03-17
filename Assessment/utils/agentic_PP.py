@@ -10,13 +10,13 @@ from utils.helper import parse_json_content  # Ensure this helper is available
 
 def clean_markdown(text: str) -> str:
     """
-    Removes markdown bold formatting (**text**) and other unnecessary markdown symbols.
-    
+    Removes markdown formatting, such as bold (**text**) and other special characters.
+
     Args:
-        text (str): The text containing markdown formatting.
-        
+        text (str): The input string with markdown formatting.
+
     Returns:
-        str: The cleaned text.
+        str: The cleaned text without markdown symbols.
     """
     if not text:
         return text
@@ -27,8 +27,17 @@ def clean_markdown(text: str) -> str:
 
 def extract_learning_outcome_id(lo_text: str) -> str:
     """
-    Extracts the learning outcome id (e.g., 'LO4') from a learning outcome string.
-    Handles formats like 'LO4: Description' or 'LO4 - Description'.
+    Extracts the learning outcome ID (e.g., 'LO4') from a given learning outcome string.
+
+    Supports formats such as:
+    - 'LO4: Description'
+    - 'LO4 - Description'
+
+    Args:
+        lo_text (str): The full learning outcome text.
+
+    Returns:
+        str: The extracted learning outcome ID (e.g., 'LO4') or an empty string if not found.
     """
     pattern = r"^(LO\d+)(?:[:\s-]+)"
     match = re.match(pattern, lo_text, re.IGNORECASE)
@@ -36,20 +45,23 @@ def extract_learning_outcome_id(lo_text: str) -> str:
 
 async def retrieve_content_for_learning_outcomes(extracted_data, engine, premium_mode=False):
     """
-    Asynchronously retrieves all content for topics under each learning unit.
-    
-    For each learning unit, this function builds a query to extract all available 
-    content for the associated topics without summarizing or omitting details.
-    
+    Retrieves relevant course content for each learning outcome based on its topics.
+
+    Queries a content retrieval engine to extract relevant material associated with 
+    each learning unit's topics.
+
     Args:
-        extracted_data (dict): The extracted data instance containing "learning_units".
-        engine: The query engine supporting asynchronous queries (aquery).
-        premium_mode (bool): Whether to format the retrieved content in premium mode.
-    
+        extracted_data (dict): The extracted course data with learning units and topics.
+        engine: Query engine instance for retrieving content.
+        premium_mode (bool): If True, includes page metadata in the retrieved content.
+
     Returns:
-        List[Dict]: A list of dictionaries with keys:
-                    "learning_outcome", "learning_outcome_id", "abilities",
-                    "ability_texts", and "retrieved_content".
+        list: A list of dictionaries, each containing:
+            - "learning_outcome" (str): The learning outcome text.
+            - "learning_outcome_id" (str): The extracted learning outcome ID.
+            - "abilities" (list): List of ability IDs linked to the learning outcome.
+            - "ability_texts" (list): List of ability descriptions.
+            - "retrieved_content" (str): The retrieved course content.
     """
     async def query_learning_unit(learning_unit):
         learning_outcome = learning_unit["learning_outcome"]
@@ -105,14 +117,17 @@ async def retrieve_content_for_learning_outcomes(extracted_data, engine, premium
 
 async def generate_pp_scenario(data, model_client) -> str:
     """
-    Uses the autogen agent to generate a realistic practical performance assessment scenario.
-    
+    Generates a practical performance assessment scenario based on course details.
+
+    The scenario provides a real-world context for a hands-on assessment aligned 
+    with the learning outcomes and abilities.
+
     Args:
-        data (FacilitatorGuideExtraction): The extracted course data.
-        model_client: The model client used to initialize the agent.
-    
+        data (dict): The extracted course data.
+        model_client: The model client used for text generation.
+
     Returns:
-        str: The generated scenario.
+        str: A generated practical performance scenario.
     """
     course_title = data["course_title"]
 
@@ -155,21 +170,28 @@ async def generate_pp_scenario(data, model_client) -> str:
 
 async def generate_pp_for_lo(qa_generation_agent, course_title, assessment_duration, scenario, learning_outcome, learning_outcome_id, retrieved_content, ability_ids, ability_texts):
     """
-    Generate a question-answer pair for a specific Learning Outcome asynchronously.
-    
+    Generates a question-answer pair for a specific Learning Outcome.
+
+    This function creates a hands-on, practical performance assessment question
+    that requires learners to complete a task and capture snapshots of their steps.
+
     Args:
-        qa_generation_agent: The Autogen AssistantAgent for question-answer generation.
-        course_title: Course title.
-        assessment_duration: Duration of the assessment.
-        scenario: The shared scenario for the practical performance assessment.
-        learning_outcome: The Learning Outcome statement.
-        learning_outcome_id: The identifier for the Learning Outcome (e.g., LO1).
-        retrieved_content: The retrieved content associated with the learning outcome.
-        ability_ids: A list of ability identifiers associated with this learning outcome.
-        ability_texts: A list of ability statements associated with this learning outcome.
-        
+        qa_generation_agent: The Autogen AssistantAgent for generating questions.
+        course_title (str): The course title.
+        assessment_duration (str): The total duration for the practical assessment.
+        scenario (str): The case study scenario used for context.
+        learning_outcome (str): The learning outcome text.
+        learning_outcome_id (str): The identifier for the learning outcome (e.g., 'LO1').
+        retrieved_content (str): Relevant course content for this learning outcome.
+        ability_ids (list): List of ability identifiers.
+        ability_texts (list): List of ability statements.
+
     Returns:
-        Generated question-answer dictionary with keys: learning_outcome_id, question_statement, answer, ability_id.
+        dict: A structured dictionary containing:
+            - "learning_outcome_id" (str): The ID of the learning outcome.
+            - "question_statement" (str): The practical performance question.
+            - "answer" (list[str]): A list containing the expected outcome statement.
+            - "ability_id" (list): The ability IDs linked to this question.
     """
     agent_task = f"""
         Generate one practical performance assessment question-answer pair using the following details:
@@ -209,15 +231,25 @@ async def generate_pp_for_lo(qa_generation_agent, course_title, assessment_durat
 
 async def generate_pp(extracted_data, index, model_client, premium_mode):
     """
-    Generate practical performance assessment questions and answers asynchronously for all learning outcomes.
+    Generates a full practical performance assessment, including a scenario and multiple questions.
+
+    This function:
+    - Creates a practical performance scenario based on the course content.
+    - Retrieves relevant material for each learning outcome.
+    - Generates hands-on, task-based questions with required snapshots.
 
     Args:
-        extracted_data: Extracted facilitator guide data.
-        index: The LlamaIndex vector store index.
-        model_client: The model client for question generation.
+        extracted_data (dict): Extracted facilitator guide data containing learning outcomes.
+        index: The knowledge retrieval index used for retrieving course content.
+        model_client: The language model client used for generation.
+        premium_mode (bool): If True, includes additional metadata in content retrieval.
 
     Returns:
-        Dictionary in the correct JSON format with keys: course_title, duration, scenario, questions.
+        dict: A structured dictionary containing:
+            - "course_title" (str): The course title.
+            - "duration" (str): The assessment duration.
+            - "scenario" (str): The generated practical scenario.
+            - "questions" (list[dict]): A list of generated questions with answers.
     """
     openai_api_key = st.secrets["OPENAI_API_KEY"]
     extracted_data = dict(extracted_data)

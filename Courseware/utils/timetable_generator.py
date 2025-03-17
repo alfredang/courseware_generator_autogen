@@ -6,6 +6,26 @@ from autogen_agentchat.messages import TextMessage
 from utils.helper import parse_json_content
 
 def extract_unique_instructional_methods(course_context):
+    """
+    Extracts and processes unique instructional method combinations from the provided course context.
+
+    This function retrieves instructional methods from each Learning Unit (LU) in the course context,
+    applies corrections for known replacements, and groups them into predefined valid instructional method
+    pairs. If no predefined pairs exist, it generates custom pairings.
+
+    Args:
+        course_context (dict):
+            A dictionary containing course details, including a list of Learning Units with instructional methods.
+
+    Returns:
+        set:
+            A set of unique instructional method combinations, formatted as strings.
+
+    Raises:
+        KeyError:
+            If "Learning_Units" is missing or incorrectly formatted in the course context.
+    """
+
     unique_methods = set()
 
     # Define valid instructional method pairs (including "Role Play")
@@ -58,7 +78,33 @@ def extract_unique_instructional_methods(course_context):
     return unique_methods
 
 async def generate_timetable(context, num_of_days, model_client):
+    """
+    Generates a structured lesson plan timetable based on the provided course context.
 
+    This function uses an AI assistant agent to create a timetable that adheres to WSQ course structure rules.
+    It ensures balanced topic distribution across the specified number of days, maintains session timing integrity,
+    and applies predefined instructional methods.
+
+    Args:
+        context (dict): 
+            A dictionary containing course details, including Learning Units, Learning Outcomes, 
+            and Assessment Methods.
+        num_of_days (int): 
+            The number of days over which the course timetable should be distributed.
+        model_client: 
+            An AI model client instance used to generate the lesson plan.
+
+    Returns:
+        dict: 
+            A dictionary containing the generated lesson plan under the key `"lesson_plan"`, 
+            structured as a list of sessions for each day.
+
+    Raises:
+        Exception:
+            If the generated timetable response is missing the required `"lesson_plan"` key or 
+            fails to parse correctly.
+    """
+    
     list_of_im = extract_unique_instructional_methods(context)
 
     timetable_generator_agent = AssistantAgent(

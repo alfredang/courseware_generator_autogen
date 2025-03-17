@@ -10,10 +10,18 @@ from utils.helper import parse_json_content
 
 def get_topics_for_all_k_statements(fg_data):
     """
-    Retrieve all topics associated with each Knowledge Statement ID.
+    Retrieves all topics associated with each Knowledge Statement (K statement).
 
-    :param fg_data: Parsed Facilitator Guide data (as a dictionary)
-    :return: A dictionary where keys are "KID: K Text", and values are lists of associated topic names.
+    This function extracts the relationships between knowledge statements (K statements)
+    and the topics they appear under in the Facilitator Guide.
+
+    Args:
+        fg_data (dict): Parsed Facilitator Guide data.
+
+    Returns:
+        dict: A dictionary where:
+            - Keys are "KID: K Text" (e.g., "K1: Understanding XYZ").
+            - Values are lists of associated topic names.
     """
     k_to_topics = {}
 
@@ -29,11 +37,18 @@ def get_topics_for_all_k_statements(fg_data):
 
 async def retrieve_content_for_knowledge_statement_async(k_topics, index, premium_mode):
     """
-    Perform asynchronous index retrieval for all K statements in parallel.
+    Retrieves course content relevant to each Knowledge Statement (K statement) asynchronously.
 
-    :param k_topics: Dictionary mapping "KID: K Text" to topic names.
-    :param index: The LlamaIndex vector store index.
-    :return: Dictionary mapping K statements to retrieved content.
+    Uses LlamaIndex to fetch all available module content aligned with the topics 
+    associated with each K statement.
+
+    Args:
+        k_topics (dict): A mapping of "KID: K Text" to topic names.
+        index: The LlamaIndex vector store index for content retrieval.
+        premium_mode (bool): If True, formats retrieved content with additional metadata.
+
+    Returns:
+        dict: A dictionary mapping K statements to their retrieved content.
     """
     reranker = FlagEmbeddingReranker(
         top_n=10,
@@ -81,14 +96,26 @@ async def retrieve_content_for_knowledge_statement_async(k_topics, index, premiu
 
 async def generate_saq_for_k(qa_generation_agent, course_title, assessment_duration, k_statement, content):
     """
-    Generate a question-answer pair for a specific K statement asynchronously.
+    Generates a short-answer question (SAQ) and answer pair for a given Knowledge Statement.
 
-    :param qa_generation_agent: The Autogen AssistantAgent for question-answer generation.
-    :param course_title: Course title from extracted_data.
-    :param assessment_duration: Duration of the SAQ assessment.
-    :param k_statement: The K statement.
-    :param content: The retrieved content associated with the K statement.
-    :return: Generated question-answer dictionary.
+    The function:
+    - Creates a contextual scenario relevant to the K statement.
+    - Generates a clear, direct short-answer question.
+    - Provides concise, practical bullet points as the expected answer.
+
+    Args:
+        qa_generation_agent: The Autogen AssistantAgent for question-answer generation.
+        course_title (str): The course title.
+        assessment_duration (str): Duration of the SAQ assessment.
+        k_statement (str): The full K statement (e.g., "K1: Understanding XYZ").
+        content (str): Retrieved module content relevant to the K statement.
+
+    Returns:
+        dict: A structured dictionary containing:
+            - "scenario" (str): The generated scenario.
+            - "question_statement" (str): The generated SAQ question.
+            - "knowledge_id" (str): Extracted K statement ID.
+            - "answer" (list[str]): A list of bullet points as the correct answer.
     """
     agent_task = f"""
         Please generate one question-answer pair using the following:
@@ -127,13 +154,24 @@ async def generate_saq_for_k(qa_generation_agent, course_title, assessment_durat
 
 async def generate_saq(extracted_data: FacilitatorGuideExtraction, index, model_client, premium_mode):
     """
-    Generate SAQ questions and answers asynchronously for all K statements.
+    Generates a full set of short-answer questions (SAQs) and answers for a course.
 
-    :param extracted_data: Extracted facilitator guide data.
-    :param index: The LlamaIndex vector store index.
-    :param model_client: The model client for question generation.
-    :param premium_mode: Whether to use premium parsing.
-    :return: Dictionary in the correct JSON format.
+    This function:
+    - Extracts all K statements from the Facilitator Guide.
+    - Retrieves relevant module content for each K statement.
+    - Generates an SAQ question-answer pair for each K statement.
+
+    Args:
+        extracted_data (dict): Parsed Facilitator Guide data.
+        index: The LlamaIndex vector store index for content retrieval.
+        model_client: The model client for question generation.
+        premium_mode (bool): If True, enhances content retrieval with additional metadata.
+
+    Returns:
+        dict: A structured dictionary containing:
+            - "course_title" (str): The course title.
+            - "duration" (str): The assessment duration.
+            - "questions" (list[dict]): A list of generated SAQ questions with answers.
     """
     extracted_data = dict(extracted_data)
     k_topics = get_topics_for_all_k_statements(extracted_data)

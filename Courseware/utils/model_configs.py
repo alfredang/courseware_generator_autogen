@@ -81,6 +81,19 @@ MODEL_CHOICES = {
 
 def get_model_config(choice: str) -> dict:
     """
-    Return the chosen model config dict, or default_config if unknown.
+    Retrieves the configuration dictionary for the specified AI model.
+
+    This function returns the configuration settings for a selected model 
+    from the `MODEL_CHOICES` dictionary. If the model is not found, it 
+    defaults to the Gemini-Flash-2.0-Exp configuration.
+
+    Args:
+        choice (str): 
+            The name of the AI model as selected by the user.
+
+    Returns:
+        dict: 
+            A dictionary containing the model's configuration settings, 
+            including model type, API key, response format, and additional parameters.
     """
     return MODEL_CHOICES.get(choice, default_config)

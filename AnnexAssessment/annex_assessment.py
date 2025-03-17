@@ -12,11 +12,13 @@ from docx import Document
 from docxcompose.composer import Composer
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
+from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.shared import Pt, Inches
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from pydantic import BaseModel, ValidationError
 from typing import Optional, List
+from openai import OpenAI
 
 ###############################################################################
 # 0. DATA MODEL & OPENAI CLASSIFICATION
@@ -35,9 +37,18 @@ class FileClassification(BaseModel):
 def classify_files_with_openai(file_metadata: List[dict]) -> List[FileClassification]:
     """
     Uses OpenAI to classify files into assessment plan, question paper, or answer paper.
-    Returns a list of FileClassification objects (only for relevant files).
+
+    This function sends a prompt to the OpenAI API (using the GPT-4o-mini model) with the metadata of files
+    from a WSQ course folder and expects a JSON array as a response. It then parses the JSON, filters for files 
+    that are relevant (i.e. assessment plans, question papers, or answer papers), and returns a list of 
+    FileClassification objects.
+
+    Args:
+        file_metadata (List[dict]): A list of dictionaries containing file metadata (e.g., file id and file name).
+
+    Returns:
+        List[FileClassification]: A list of classified files.
     """
-    from openai import OpenAI
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
     # Prepare file metadata for OpenAI
@@ -120,7 +131,11 @@ def classify_files_with_openai(file_metadata: List[dict]) -> List[FileClassifica
 
 def authenticate():
     """
-    Authenticate with Google using credentials from Streamlit secrets.
+    Authenticates with Google using credentials from Streamlit secrets.
+
+    Returns:
+        google.oauth2.service_account.Credentials: A credentials object for accessing Google services.
+        Returns None if authentication fails.
     """
     try:
         creds = service_account.Credentials.from_service_account_info(
@@ -135,7 +150,17 @@ def authenticate():
 def download_file(file_id, file_name, drive_service, download_dir="./downloads"):
     """
     Downloads a file (Google Doc or Word .docx) from Google Drive.
-    Returns the local path to the downloaded file, or None if skipped.
+
+    The function exports Google Docs as .docx files and downloads files using the Google Drive API.
+
+    Args:
+        file_id (str): The unique ID of the file to download.
+        file_name (str): The name of the file.
+        drive_service: The Google Drive API service instance.
+        download_dir (str, optional): The local directory to store downloaded files (default is "./downloads").
+
+    Returns:
+        str or None: The local file path to the downloaded file, or None if the file type is unsupported.
     """
     if not os.path.exists(download_dir):
         os.makedirs(download_dir, exist_ok=True)
@@ -170,7 +195,14 @@ def download_file(file_id, file_name, drive_service, download_dir="./downloads")
 def parse_version(version_str: Optional[str]) -> tuple:
     """
     Extracts a (major, minor) tuple from a version string like 'v2.1' or 'v1'.
-    Returns (0,0) for invalid or missing versions.
+
+    If the version string is invalid or missing, returns (0, 0).
+
+    Args:
+        version_str (Optional[str]): The version string to parse.
+
+    Returns:
+        tuple: A tuple (major, minor) as integers.
     """
     if version_str:
         match = re.match(r"v(\d+)(\.\d+)?", version_str.lower())
@@ -183,8 +215,15 @@ def parse_version(version_str: Optional[str]) -> tuple:
 
 def select_latest_version(file_classifications: List[FileClassification]) -> Optional[FileClassification]:
     """
-    Given a list of FileClassification objects, returns the one with the highest 'version'.
+    Selects and returns the FileClassification with the highest version number.
+
+    Args:
+        file_classifications (List[FileClassification]): A list of FileClassification objects.
+
+    Returns:
+        Optional[FileClassification]: The file with the highest version, or None if the list is empty.
     """
+
     sorted_files = sorted(
         file_classifications,
         key=lambda f: parse_version(f.version),
@@ -195,7 +234,13 @@ def select_latest_version(file_classifications: List[FileClassification]) -> Opt
 
 def select_latest_assessment_plan(file_classifications: List[FileClassification]) -> Optional[FileClassification]:
     """
-    Among the classifications, picks the latest version of an assessment plan.
+    Selects the latest version of an assessment plan from a list of FileClassification objects.
+
+    Args:
+        file_classifications (List[FileClassification]): A list of FileClassification objects.
+
+    Returns:
+        Optional[FileClassification]: The latest assessment plan, or None if none are found.
     """
     plans = [f for f in file_classifications if f.is_assessment_plan]
     return select_latest_version(plans)
@@ -203,8 +248,17 @@ def select_latest_assessment_plan(file_classifications: List[FileClassification]
 
 def build_method_data(file_classifications: List[FileClassification], abbreviations: List[str]) -> dict:
     """
-    Builds a dictionary of {abbr: {"question": {...}, "answer": {...}}}
-    picking the latest version for question and answer papers.
+    Builds a dictionary mapping assessment method abbreviations to the latest question and answer files.
+
+    For each abbreviation, this function filters the file classifications for matching question and answer papers,
+    selects the latest versions, and stores them in a nested dictionary.
+
+    Args:
+        file_classifications (List[FileClassification]): A list of FileClassification objects.
+        abbreviations (List[str]): A list of assessment method abbreviations (e.g., ["WA (SAQ)", "PP"]).
+
+    Returns:
+        dict: A dictionary of the form {abbr: {"question": {...}, "answer": {...}}}.
     """
     method_data = {}
 
@@ -238,8 +292,13 @@ def build_method_data(file_classifications: List[FileClassification], abbreviati
 
 def delete_irrelevant_files(download_dir="./downloads", keep_filename=None):
     """
-    Delete all files in 'download_dir' except the 'keep_filename'.
-    If 'keep_filename' is None, everything is removed.
+    Deletes all files in the specified download directory except for a given filename.
+
+    If keep_filename is None, deletes all files.
+
+    Args:
+        download_dir (str, optional): The directory containing downloaded files (default is "./downloads").
+        keep_filename (Optional[str]): The filename to keep.
     """
     for file_name in os.listdir(download_dir):
         file_path = os.path.join(download_dir, file_name)
@@ -258,11 +317,24 @@ def delete_irrelevant_files(download_dir="./downloads", keep_filename=None):
 
 def process_course_folder(course_folder_id, drive_service, abbreviations):
     """
-    1) Looks for 'Assessment Plan' and 'Assessment' subfolders.
-    2) Classifies files in both folders using OpenAI.
-    3) Selects the latest assessment plan.
-    4) Builds the method_data dictionary for Q&A docs by abbreviations.
-    Returns {"assessment_plan": {...}, "method_data": {...}} or None if no plan found.
+    Processes the course folder by classifying files in its 'Assessment Plan' and 'Assessment' subfolders.
+
+    Steps:
+      1. Retrieves all subfolders within the given course folder.
+      2. Looks for the 'Assessment Plan' folder and downloads its files.
+      3. Classifies the files using OpenAI and selects the latest assessment plan.
+      4. Looks for the 'Assessment' folder, classifies its files, and builds method data for Q&A documents.
+
+    Args:
+        course_folder_id (str): The ID of the course folder.
+        drive_service: The Google Drive API service instance.
+        abbreviations (List[str]): A list of assessment method abbreviations.
+
+    Returns:
+        dict or None: A dictionary containing:
+            - "assessment_plan": { "id": <file_id>, "name": <file_name> }
+            - "method_data": A dictionary of method data.
+        Returns None if no valid assessment plan is identified.
     """
     # Retrieve subfolders
     subfolders = drive_service.files().list(
@@ -347,13 +419,21 @@ def process_course_folder(course_folder_id, drive_service, abbreviations):
 ###############################################################################
 # 3. MERGING DOCUMENTS INTO ANNEX & VERSION UPDATES
 ###############################################################################
-from docx.enum.table import WD_TABLE_ALIGNMENT
 
 def insert_centered_header(doc, text, annex_label):
     """
-    Inserts a right-aligned paragraph with 'Annex D' above a centered header.
-    The header is centered both vertically and horizontally using a single-cell table.
+    Inserts a centered header with a specified annex label and text into a Word document.
+
+    The header is inserted using a single-cell table that is centered horizontally and vertically.
     A page break is added after the table.
+
+    Args:
+        doc (Document): The python-docx Document object to modify.
+        text (str): The header text to insert.
+        annex_label (str): The annex label (e.g., "Annex A").
+
+    Returns:
+        None
     """
 
     # Insert the centered header using a single-cell table...
@@ -387,10 +467,22 @@ def insert_centered_header(doc, text, annex_label):
 
 def insert_answers_under_heading(plan_path, heading_map, method_data):
     """
-    Inserts question and answer papers into the annex of the plan document.
-    - heading_map: dict that maps some textual heading to the abbreviation.
-    - method_data: output from build_method_data (dict of abbr -> question/answer).
-    Returns (updated_doc_path, changes_made).
+    Inserts question and answer documents into the annex section of the assessment plan.
+
+    This function:
+      - Reads the base plan document.
+      - Appends headers and corresponding Q&A documents using a mapping of headings to assessment abbreviations.
+      - Saves the updated document.
+
+    Args:
+        plan_path (str): The file path to the assessment plan document.
+        heading_map (dict): A dictionary mapping heading text to assessment method abbreviations.
+        method_data (dict): The dictionary produced by build_method_data containing Q&A file info.
+
+    Returns:
+        tuple: A tuple (updated_doc_path, changes_made) where:
+            - updated_doc_path (str) is the path to the modified document.
+            - changes_made (bool) indicates if any Q&A documents were appended.
     """
     base_doc = Document(plan_path)
     composer = Composer(base_doc)
@@ -447,7 +539,20 @@ def insert_answers_under_heading(plan_path, heading_map, method_data):
 
 def update_cover_page_version(doc_path):
     """
-    Increments the 'Version X' text on the cover page, if found, to 'Version X+1.0'.
+    Increments the version number on the cover page of a document.
+
+    The function searches for a paragraph starting with "Version", parses the current version,
+    increments it by one major version (e.g., from "Version 1.0" to "Version 2.0"), updates the text,
+    and saves the document with a new filename suffixed with "_Updated".
+
+    Args:
+        doc_path (str): The file path to the document to update.
+
+    Returns:
+        str: The file path to the updated document.
+
+    Raises:
+        ValueError: If no "Version" text is found or the version format is invalid.
     """
     doc = Document(doc_path)
     updated = False
@@ -485,7 +590,15 @@ def update_cover_page_version(doc_path):
 
 def update_version_number(last_version_str):
     """
-    Converts a last_version_str like '1.0' or '2.1' to the next major version: '2.0' or '3.0'.
+    Calculates the next major version from a version string.
+
+    Converts a version string like '1.0' or '2.1' to the next major version (e.g., '2.0' or '3.0').
+
+    Args:
+        last_version_str (str): The current version string.
+
+    Returns:
+        str: The next major version string.
     """
     try:
         last_version = float(last_version_str)
@@ -496,17 +609,32 @@ def update_version_number(last_version_str):
 
 def get_annex_label(index: int) -> str:
     """
-    Returns 'Annex A' for index=0, 'Annex B' for index=1, etc.
-    If index goes beyond 25, you may need to handle it differently (e.g., AA).
+    Returns an annex label based on the provided index.
+
+    For example, index=0 returns "Annex A", index=1 returns "Annex B", etc.
+
+    Args:
+        index (int): The zero-based index.
+
+    Returns:
+        str: The annex label.
     """
     letter = chr(ord("A") + index)
     return f"Annex {letter}"
 
 def update_version_control_record(doc_path, changes, developer="Tertiary Infotech"):
     """
-    Appends a new row in the first table to track version updates.
-    Expects the first table to be the Version Control table with columns:
-    [Version, Effective Date, Changes, Developer].
+    Appends a new row to the version control table in the document to track changes.
+
+    The table is expected to have the columns: Version, Effective Date, Changes, Developer.
+
+    Args:
+        doc_path (str): The file path to the document.
+        changes (str): A description of the changes made.
+        developer (str, optional): The name of the developer making the update (default is "Tertiary Infotech").
+
+    Returns:
+        None
     """
     doc = Document(doc_path)
 
@@ -541,10 +669,16 @@ def update_version_control_record(doc_path, changes, developer="Tertiary Infotec
 
 def bump_filename_version(doc_path):
     """
-    Bumps the numeric version in the filename itself:
-      e.g. 'xxx_v2.docx' => 'xxx_v3.docx'
-    For fractional versions, it increments the float by +1.0 (v2.1 => v3.1).
-    If no version is found, doc_path is unchanged.
+    Increments the numeric version in the filename.
+
+    For example, renames 'xxx_v2.docx' to 'xxx_v3.docx'. For fractional versions (e.g., v2.1),
+    increments the float by +1.0 (e.g., v2.1 becomes v3.1). If no version is found, returns the original path.
+
+    Args:
+        doc_path (str): The original file path.
+
+    Returns:
+        str: The new file path with an updated version number.
     """
     base, ext = os.path.splitext(doc_path)
     pattern = r'(?:-|_)v(\d+(\.\d+)*)'
@@ -578,8 +712,16 @@ def bump_filename_version(doc_path):
 
 def upload_updated_doc(drive_service, file_id, local_doc_path, original_filename):
     """
-    Upload the updated doc to Google Drive, removing any '_Answers_Only' or '_Updated'
-    from the final name.
+    Uploads an updated document to Google Drive, cleaning up the filename by removing specific suffixes.
+
+    Args:
+        drive_service: The Google Drive API service instance.
+        file_id (str): The ID of the file to update.
+        local_doc_path (str): The local path of the updated document.
+        original_filename (str): The original filename.
+
+    Returns:
+        dict: The updated file metadata as returned by the Drive API.
     """
     base_name, ext = os.path.splitext(original_filename)
     # Remove suffixes for cleanliness
@@ -608,8 +750,16 @@ def upload_updated_doc(drive_service, file_id, local_doc_path, original_filename
 
 def track_edited_assessment_plan(course_title, excel_file="edited_assessment_plans.xlsx"):
     """
-    Tracks edited assessment plans in an Excel file.
-    Appends a new entry with the course title using pandas.concat.
+    Records the editing of an assessment plan by appending a new entry to an Excel file.
+
+    If the Excel file does not exist, it is created with the appropriate headers.
+
+    Args:
+        course_title (str): The title of the course whose assessment plan was edited.
+        excel_file (str, optional): The path to the Excel file (default is "edited_assessment_plans.xlsx").
+
+    Returns:
+        None
     """
     # Check if the Excel file exists
     if not os.path.exists(excel_file):
@@ -631,13 +781,26 @@ def track_edited_assessment_plan(course_title, excel_file="edited_assessment_pla
 
 
 ###############################################################################
-# 4. MAIN FUNCTION
+# 5. MAIN FUNCTION
 ###############################################################################
 
 def process_course_folder_direct(course_folder_id, drive_service, abbreviations):
     """
-    Directly processes the 'Assessment Plan' and 'Assessment' folders from the specified course folder ID.
-    Ensures folder names are stripped and case-insensitive.
+    Processes the 'Assessment Plan' and 'Assessment' subfolders in a course folder.
+
+    The function:
+      - Retrieves subfolders within the given course folder.
+      - Looks for an 'Assessment Plan' folder and selects the latest valid plan.
+      - Retrieves an 'Assessment' folder (if available) and builds a dictionary of Q&A files for each assessment type.
+      - Returns a dictionary with keys "assessment_plan" and "method_data".
+
+    Args:
+        course_folder_id (str): The ID of the course folder.
+        drive_service: The Google Drive API service instance.
+        abbreviations (List[str]): A list of assessment method abbreviations to filter files.
+
+    Returns:
+        dict or None: A dictionary with processed data, or None if no valid assessment plan is found.
     """
     # Define the target folder names
     target_folders = {"assessment plan": None, "assessment": None}
@@ -703,8 +866,19 @@ def process_course_folder_direct(course_folder_id, drive_service, abbreviations)
 
 def app():
     """
-    Streamlit app to process a course folder by its name, integrating assessment questions
-    and answers into the annex of the assessment plan document.
+    Streamlit application to process a course folder and integrate assessment Q&A into the annex of the assessment plan document.
+
+    The app performs the following steps:
+      1. Authenticates with Google Drive.
+      2. Prompts the user to enter a course folder name.
+      3. Searches for the course folder within "1 WSQ Documents".
+      4. Processes the course folder to classify and select files from the 'Assessment Plan' and 'Assessment' subfolders.
+      5. Downloads the assessment plan and Q&A files.
+      6. Merges the Q&A documents into the annex of the assessment plan.
+      7. Updates the filename/version and uploads the updated document back to Google Drive.
+
+    Returns:
+        None
     """
     st.title("📄 Integrate Assessment to Annex of AP")
     st.subheader("Instructions:")

@@ -5,6 +5,38 @@ from docx.shared import Inches
 from docxtpl import InlineImage
 
 def retrieve_excel_data(context: dict, sfw_dataset_dir: str) -> dict:
+    """
+    Retrieve course-related data from an Excel dataset based on the provided TSC Code.
+
+    This function reads an Excel file and extracts relevant information from the "TSC_K&A" sheet 
+    using the TSC Code present in the `context` dictionary. The retrieved data, including 
+    sector, category, proficiency level, and description, is added to the `context` dictionary.
+
+    Args:
+        context (dict): 
+            A dictionary containing course details, including the key `"TSC_Code"`, which 
+            is used to filter the dataset.
+        sfw_dataset_dir (str): 
+            The file path to the Excel dataset containing the "TSC_K&A" sheet.
+
+    Returns:
+        dict: 
+            The updated `context` dictionary containing additional retrieved information:
+
+            - `"TSC_Sector"` (str): The sector associated with the TSC Code.
+            - `"TSC_Sector_Abbr"` (str): The sector abbreviation derived from the TSC Code.
+            - `"TSC_Category"` (str): The category of the TSC.
+            - `"Proficiency_Level"` (str): The proficiency level required for the TSC.
+            - `"Proficiency_Description"` (str): A description of the proficiency level.
+    
+    Raises:
+        FileNotFoundError: 
+            If the specified Excel file does not exist.
+        KeyError: 
+            If expected column names (e.g., "TSC Code", "Sector") are missing in the dataset.
+        ValueError: 
+            If the provided TSC Code is not found in the dataset.
+    """
     # Load the Excel file
     excel_data = pd.ExcelFile(sfw_dataset_dir)
     

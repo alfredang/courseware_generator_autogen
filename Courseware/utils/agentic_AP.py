@@ -32,16 +32,30 @@ class EvidenceGatheringPlan(BaseModel):
 
 async def extract_assessment_evidence(structured_data, model_client):   
     """
-    Extract structured data from the raw JSON input using an interpreter agent.
+    Extracts structured assessment evidence data from course details using an AI agent.
+
+    This function processes course learning outcomes, topics, and assessment methods 
+    to generate a structured justification for assessment evidence, submission, marking process, 
+    and retention periods.
 
     Args:
-        raw_data (dict): The raw unstructured data to be processed.
-        llm_config (dict): Configuration for the language model.
+        structured_data (dict): 
+            The original structured data containing course details.
+        model_client: 
+            An AI model client instance used to extract structured assessment evidence.
 
     Returns:
-        dict: Structured data extracted from the raw input.
+        dict: 
+            A dictionary containing the structured assessment evidence details.
+
+    Raises:
+        json.JSONDecodeError: 
+            If the AI-generated response is not valid JSON.
+        Exception: 
+            If the AI response is missing required fields.
     """
-        # Build extracted content inline
+    
+    # Build extracted content inline
     lines = []
     learning_units = structured_data.get("Learning_Units", [])
 
@@ -191,15 +205,23 @@ async def extract_assessment_evidence(structured_data, model_client):
 
 def combine_assessment_methods(structured_data, evidence_data):
     """
-    Combine evidence data into structured_data under Assessment_Methods_Details.
+    Merges assessment evidence details into the structured data under 'Assessment_Methods_Details'.
+
+    This function updates the existing assessment method details in the structured data 
+    with extracted evidence-related information, including evidence type, submission method, 
+    marking process, and retention period.
 
     Args:
-        structured_data (dict): The original structured data.
-        evidence_data (dict): The detailed evidence data to combine.
+        structured_data (dict): 
+            The original structured course data.
+        evidence_data (dict): 
+            The extracted assessment evidence details.
 
     Returns:
-        dict: Updated structured data with evidence details merged into Assessment_Methods_Details.
+        dict: 
+            Updated structured data with merged assessment evidence details.
     """
+
     # Extract evidence data for assessment methods
     evidence_methods = evidence_data.get("assessment_methods", {})
 
@@ -247,6 +269,21 @@ ASR_TEMPLATE_DIR = "Courseware/input/Template/ASR_TGS-Ref-No_Course-Title_v1.doc
 
 # Check if assessment methods already contain necessary details
 def is_evidence_extracted(context):
+    """
+    Checks whether all necessary assessment evidence fields are already present in the context.
+
+    This function verifies if evidence-related fields such as "Evidence", "Submission", 
+    "Marking_Process", and "Retention_Period" are available for each assessment method.
+
+    Args:
+        context (dict): 
+            The course context dictionary containing assessment method details.
+
+    Returns:
+        bool: 
+            True if all required fields are present, False otherwise.
+    """
+
     for method in context.get("Assessment_Methods_Details", []):
         method_abbr = method.get("Method_Abbreviation")
         # Skip checking for WA-SAQ entirely, as it is hardcoded in the template.
@@ -262,6 +299,32 @@ def is_evidence_extracted(context):
     return True
 
 def generate_assessment_plan(context: dict, name_of_organisation, sfw_dataset_dir) -> str:
+    """
+    Generates an Assessment Plan (AP) document by populating a DOCX template with course assessment details.
+
+    This function retrieves assessment-related data, including structured assessment evidence, 
+    inserts an organization's logo, and saves the populated Assessment Plan document.
+
+    Args:
+        context (dict): 
+            The structured course data including assessment methods.
+        name_of_organisation (str): 
+            The name of the organization, used to retrieve and insert the corresponding logo.
+        sfw_dataset_dir (str): 
+            The file path to the Excel dataset containing additional course-related data.
+
+    Returns:
+        str: 
+            The file path of the generated Assessment Plan document.
+
+    Raises:
+        FileNotFoundError: 
+            If the template file or organization's logo file is missing.
+        KeyError: 
+            If required assessment details are missing.
+        IOError: 
+            If there are issues with reading/writing the document.
+    """
 
     if not is_evidence_extracted(context):
         print("Extracting missing assessment evidence...")
@@ -295,6 +358,29 @@ def generate_assessment_plan(context: dict, name_of_organisation, sfw_dataset_di
     return output_path  # Return the path to the temporary file
 
 def generate_asr_document(context: dict, name_of_organisation) -> str:
+    """
+    Generates an Assessment Summary Report (ASR) document.
+
+    This function populates an ASR DOCX template with the given course context 
+    and organization's details before saving the document.
+
+    Args:
+        context (dict): 
+            The structured course data used for the summary report.
+        name_of_organisation (str): 
+            The name of the organization, used to include the correct details in the document.
+
+    Returns:
+        str: 
+            The file path of the generated Assessment Summary Report document.
+
+    Raises:
+        FileNotFoundError: 
+            If the template file is missing.
+        IOError: 
+            If there are issues with reading/writing the document.
+    """
+
     doc = DocxTemplate(ASR_TEMPLATE_DIR)
     context['Name_of_Organisation'] = name_of_organisation
 
@@ -308,6 +394,31 @@ def generate_asr_document(context: dict, name_of_organisation) -> str:
     return output_path  # Return the path to the temporary file
 
 def generate_assessment_documents(context: dict, name_of_organisation, sfw_dataset_dir=None):
+    """
+    Generates both the Assessment Plan (AP) and Assessment Summary Report (ASR) documents.
+
+    This function first ensures that assessment evidence is extracted and merged into 
+    the structured course data. It then generates the corresponding DOCX files.
+
+    Args:
+        context (dict): 
+            The structured course data including assessment methods.
+        name_of_organisation (str): 
+            The name of the organization, used for document customization.
+        sfw_dataset_dir (str, optional): 
+            The file path to the Excel dataset containing course-related data. 
+            Defaults to a predefined dataset file.
+
+    Returns:
+        tuple:
+            - `str`: File path of the generated Assessment Plan document.
+            - `str`: File path of the generated Assessment Summary Report document.
+
+    Raises:
+        Exception: 
+            If any issue occurs during the document generation process.
+    """
+    
     try:
         # Use the provided template directory or default
         if sfw_dataset_dir is None:

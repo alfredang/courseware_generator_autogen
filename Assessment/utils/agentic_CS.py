@@ -11,8 +11,17 @@ from utils.helper import parse_json_content  # Ensure this helper is available
 
 def extract_learning_outcome_id(lo_text: str) -> str:
     """
-    Extracts the learning outcome id (e.g., 'LO4') from a learning outcome string.
-    Handles formats like 'LO4: Description' or 'LO4 - Description'.
+    Extracts the learning outcome ID (e.g., 'LO4') from a learning outcome string.
+
+    This function identifies and extracts an ID from formats like:
+    - 'LO4: Description'
+    - 'LO4 - Description'
+
+    Args:
+        lo_text (str): The full learning outcome text.
+
+    Returns:
+        str: The extracted learning outcome ID (e.g., 'LO4'), or an empty string if not found.
     """
     pattern = r"^(LO\d+)(?:[:\s-]+)"
     match = re.match(pattern, lo_text, re.IGNORECASE)
@@ -20,16 +29,23 @@ def extract_learning_outcome_id(lo_text: str) -> str:
 
 async def retrieve_content_for_learning_outcomes(extracted_data, engine, premium_mode=False):
     """
-    Asynchronously retrieves all content for topics under each learning unit.
-    
-    For each learning unit, builds a query to extract all available content for the associated topics.
-    
-    Returns a list of dictionaries with keys:
-      - "learning_outcome"
-      - "learning_outcome_id"
-      - "abilities" (list of ability IDs)
-      - "ability_texts" (list of ability statements)
-      - "retrieved_content"
+    Retrieves relevant content for each learning outcome based on its associated topics.
+
+    Queries a content retrieval engine to extract all available course material that aligns 
+    with the topics under each learning unit.
+
+    Args:
+        extracted_data (dict): Extracted data containing learning units and topics.
+        engine: Query engine instance for retrieving content.
+        premium_mode (bool): If True, includes page metadata in the retrieved content.
+
+    Returns:
+        list: A list of dictionaries, each containing:
+            - "learning_outcome" (str): The learning outcome text.
+            - "learning_outcome_id" (str): The extracted learning outcome ID.
+            - "abilities" (list): List of ability IDs associated with the learning outcome.
+            - "ability_texts" (list): List of ability descriptions.
+            - "retrieved_content" (str): The retrieved content from the engine.
     """
     async def query_learning_unit(learning_unit):
         learning_outcome = learning_unit["learning_outcome"]
@@ -84,7 +100,19 @@ async def retrieve_content_for_learning_outcomes(extracted_data, engine, premium
     return [result[1] for result in results]
 
 async def generate_cs_scenario(data: FacilitatorGuideExtraction, model_client) -> str:
+    """
+    Generates a realistic case study scenario for a given course.
 
+    The scenario aligns with the learning outcomes and required abilities. It is at least 
+    250 words long and presents a real-world organizational challenge relevant to the course.
+
+    Args:
+        data (FacilitatorGuideExtraction): Extracted course data containing learning outcomes and abilities.
+        model_client: Language model client used to generate the scenario.
+
+    Returns:
+        str: A case study scenario description.
+    """
     course_title = data["course_title"]
 
     learning_outcomes = [lu["learning_outcome"] for lu in data["learning_units"]]
@@ -127,19 +155,28 @@ async def generate_cs_scenario(data: FacilitatorGuideExtraction, model_client) -
 
 async def generate_cs_for_lo(qa_generation_agent, course_title, assessment_duration, scenario, learning_outcome, learning_outcome_id, retrieved_content, ability_ids, ability_texts):
     """
+    Generates a case study question-answer pair for a specific learning outcome.
+
+    The generated question and answer are based on the provided case study scenario, 
+    relevant learning outcome, and retrieved course content.
+
     Args:
-        qa_generation_agent: The Autogen AssistantAgent for question-answer generation.
-        course_title: Course title.
-        assessment_duration: Duration of the assessment.
-        scenario: The shared scenario for the case study assessment.
-        learning_outcome: The Learning Outcome statement.
-        learning_outcome_id: The identifier for the Learning Outcome (e.g., LO1).
-        retrieved_content: The retrieved content associated with the learning outcome.
-        ability_ids: A list of ability identifiers associated with this learning outcome.
-        ability_texts: A list of ability statements associated with this learning outcome.
-        
+        qa_generation_agent: The Autogen AssistantAgent for generating questions and answers.
+        course_title (str): The course title.
+        assessment_duration (str): The duration of the assessment.
+        scenario (str): The shared case study scenario.
+        learning_outcome (str): The learning outcome text.
+        learning_outcome_id (str): The identifier for the learning outcome (e.g., 'LO1').
+        retrieved_content (str): The retrieved content for this learning outcome.
+        ability_ids (list): List of ability identifiers.
+        ability_texts (list): List of ability statements.
+
     Returns:
-        Generated question-answer dictionary with keys: learning_outcome_id, question_statement, answer, ability_id.
+        dict: A structured dictionary containing:
+            - "learning_outcome_id" (str): The ID of the learning outcome.
+            - "question_statement" (str): The generated case study question.
+            - "answer" (list[str]): The detailed case study solution.
+            - "ability_id" (list): The associated ability IDs.
     """
 
     agent_task = f"""
@@ -181,9 +218,25 @@ async def generate_cs_for_lo(qa_generation_agent, course_title, assessment_durat
 
 async def generate_cs(extracted_data: FacilitatorGuideExtraction, index, model_client, premium_mode):
     """
-    Generate case study assessment questions and answers asynchronously for all learning outcomes.
+    Generates a full case study assessment, including a scenario and multiple questions.
 
-    Returns a dictionary with keys: course_title, duration, scenario, questions.
+    This function:
+    - Creates a case study scenario based on the course's learning outcomes and abilities.
+    - Retrieves relevant content for each learning outcome.
+    - Generates scenario-based questions and answers for each learning outcome.
+
+    Args:
+        extracted_data (FacilitatorGuideExtraction): Extracted course data with learning units.
+        index: The knowledge retrieval index used for retrieving course content.
+        model_client: The language model client used for generation.
+        premium_mode (bool): If True, includes additional metadata in content retrieval.
+
+    Returns:
+        dict: A structured dictionary containing:
+            - "course_title" (str): The course title.
+            - "duration" (str): The assessment duration.
+            - "scenario" (str): The generated case study scenario.
+            - "questions" (list[dict]): A list of generated questions with answers.
     """
     openai_api_key = st.secrets["OPENAI_API_KEY"]
     extracted_data = dict(extracted_data)

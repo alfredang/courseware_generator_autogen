@@ -1,6 +1,5 @@
-#############################
 # courseware_generation.py
-#############################
+
 from Courseware.utils.agentic_LG import generate_learning_guide
 from Courseware.utils.agentic_AP import generate_assessment_documents
 from Courseware.utils.timetable_generator import generate_timetable
@@ -118,6 +117,22 @@ class LessonPlan(BaseModel):
 # 2. Course Proposal Document Parsing
 ############################################################
 def parse_cp_document(input_file):
+    """
+    Parses a Course Proposal (CP) document and extracts structured data.
+
+    This function reads a `.docx` file, extracts text and tables, 
+    and organizes them into a structured dictionary format.
+
+    Args:
+        input_file (str or file-like object): 
+            The path to the CP document or an uploaded file object.
+
+    Returns:
+        dict: 
+            A dictionary containing extracted course proposal details, 
+            categorized into different sections.
+    """
+
     doc = Document(input_file)
     data = {"Course_Proposal_Form": {}}
 
@@ -150,6 +165,28 @@ def parse_cp_document(input_file):
 # 2. Web Scrape TGS and UEN information from MySkillsFuture portal
 ############################################################
 def web_scrape(course_title: str, name_of_org: str) -> str:
+    """
+    Scrapes TGS Ref No and UEN from the MySkillsFuture portal.
+
+    This function automates a browser session using Selenium, searches for the 
+    given course title, and extracts relevant identifiers from the first matching course.
+
+    Args:
+        course_title (str): 
+            The title of the course to search for.
+        name_of_org (str): 
+            The name of the organization offering the course.
+
+    Returns:
+        dict or str: 
+            A dictionary containing `TGS_Ref_No` and `UEN` if found,
+            otherwise, a string indicating that no matching course was found.
+
+    Raises:
+        WebDriverException: 
+            If there is an issue initializing or running the browser.
+    """
+    
     # Format the course title for the URL
     formatted_course_title = urllib.parse.quote(course_title)
     search_url = f"https://www.myskillsfuture.gov.sg/content/portal/en/portal-search/portal-search.html?q={formatted_course_title}"
@@ -220,6 +257,28 @@ def web_scrape(course_title: str, name_of_org: str) -> str:
 # 3. Interpret Course Proposal Data
 ############################################################
 async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient) -> dict:
+    """
+    Interprets and extracts structured data from a raw Course Proposal (CP) document.
+
+    This function processes raw CP data using an AI model to extract 
+    structured information such as course details, learning units, topics, 
+    assessment methods, and instructional methods.
+
+    Args:
+        raw_data (dict): 
+            The unstructured data extracted from the CP document.
+        model_client (OpenAIChatCompletionClient): 
+            The AI model client used for structured data extraction.
+
+    Returns:
+        dict: 
+            A structured dictionary containing course details.
+
+    Raises:
+        Exception: 
+            If the AI-generated response does not contain the expected fields.
+    """
+
     # Interpreter Agent with structured output enforcement
     interpreter = AssistantAgent(
         name="Interpreter",
@@ -322,6 +381,27 @@ async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient)
 
 # Streamlit App
 def app():
+    """
+    Streamlit web application for generating courseware documents.
+
+    This function serves as the entry point for the user interface,
+    allowing users to upload a Course Proposal document, select 
+    their organization, and generate various courseware documents.
+
+    The app guides users through:
+    - Uploading a Course Proposal (CP) document.
+    - Selecting an organization from a predefined list.
+    - Uploading an optional updated Skills Framework (SFw) dataset.
+    - Selecting documents to generate (Learning Guide, Lesson Plan, etc.).
+    - Processing and downloading the generated documents.
+
+    Raises:
+        ValueError: 
+            If required input fields are missing.
+        Exception: 
+            If any step in the document generation process fails.
+    """
+
     st.title("📄 Courseware Document Generator")
     
     # ================================================================

@@ -57,6 +57,27 @@ class BrochureResponse(BaseModel):
     exists: bool = False
 
 def scrape_course_data(url: str) -> CourseData:
+    """
+    Scrapes course details from a given course webpage.
+
+    This function extracts key course information, including title, description, 
+    learning outcomes, pricing, session duration, TSC details, and WSQ funding.
+
+    Args:
+        url (str): 
+            The URL of the course page to scrape.
+
+    Returns:
+        CourseData: 
+            A structured object containing the extracted course details.
+
+    Raises:
+        WebDriverException: 
+            If Selenium fails to load the page.
+        NoSuchElementException: 
+            If expected elements are not found on the webpage.
+    """
+
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
@@ -184,6 +205,24 @@ def scrape_course_data(url: str) -> CourseData:
         driver.quit()
 
 def generate_brochure_wrapper(data: CourseData, course_folder_name: str) -> BrochureResponse:
+    """
+    Wrapper function to generate a Google Docs brochure for a given course.
+
+    This function integrates with `generate_brochure` to create a brochure document,
+    handling errors and pre-existing file cases.
+
+    Args:
+        data (CourseData): 
+            Structured course data used to populate the brochure template.
+        course_folder_name (str): 
+            The folder name under "1 WSQ Documents" where the brochure should be stored.
+
+    Returns:
+        BrochureResponse: 
+            A structured response indicating the generated file URL, 
+            existing brochure status, or any errors encountered.
+    """
+
     try:
         brochure_info = generate_brochure(data, course_folder_name)  # Now returns a dictionary
         
@@ -215,6 +254,17 @@ def generate_brochure_wrapper(data: CourseData, course_folder_name: str) -> Broc
         )
 
 def authenticate():
+    """
+    Authenticates with Google Drive and Docs using a service account.
+
+    Returns:
+        google.auth.credentials.Credentials: 
+            The authenticated credentials for accessing Google services.
+
+    Raises:
+        Exception: 
+            If authentication fails due to incorrect credentials.
+    """
     creds = None
     try:
         creds = service_account.Credentials.from_service_account_info(
@@ -227,7 +277,22 @@ def authenticate():
         return None
 
 def find_folder(drive_service, parent_folder_id, folder_name):
-    """Find a folder by name in a parent folder. Returns None if not found."""
+    """
+    Finds a specific folder within a given parent folder on Google Drive.
+
+    Args:
+        drive_service: 
+            The Google Drive API service instance.
+        parent_folder_id (str): 
+            The ID of the parent folder where the search should occur.
+        folder_name (str): 
+            The exact name of the folder to search for.
+
+    Returns:
+        str or None: 
+            The folder ID if found, otherwise None.
+    """
+    
     # Use a specific query to find the exact folder
     query = f"name = '{folder_name}' and '{parent_folder_id}' in parents and mimeType = 'application/vnd.google-apps.folder' and trashed = false"
     response = drive_service.files().list(
@@ -248,7 +313,27 @@ def find_folder(drive_service, parent_folder_id, folder_name):
     return None
 
 def copy_template(drive_service, template_id, new_title, destination_folder_id):
-    """Copy a template document to a specific destination folder without overwriting existing files."""
+    """
+    Copies a Google Docs template to a specified destination folder.
+
+    If a document with the same name already exists in the destination folder, 
+    it will not create a duplicate.
+
+    Args:
+        drive_service: 
+            The Google Drive API service instance.
+        template_id (str): 
+            The ID of the template document to copy.
+        new_title (str): 
+            The name of the new document to be created.
+        destination_folder_id (str): 
+            The ID of the folder where the new document should be stored.
+
+    Returns:
+        str or None: 
+            The ID of the newly created document or the existing document if it already exists.
+    """
+
     try:
         # First check if a file with the same name already exists in the destination folder
         query = f"name = '{new_title}' and '{destination_folder_id}' in parents and mimeType='application/vnd.google-apps.document' and trashed = false"
@@ -281,6 +366,23 @@ def copy_template(drive_service, template_id, new_title, destination_folder_id):
         return None
 
 def find_placeholders(docs_service, document_id):
+    """
+    Identifies placeholders in a Google Docs template.
+
+    This function scans the document for text enclosed in curly braces `{}` 
+    and returns a list of placeholders.
+
+    Args:
+        docs_service: 
+            The Google Docs API service instance.
+        document_id (str): 
+            The ID of the document to scan.
+
+    Returns:
+        set: 
+            A set of unique placeholders found in the document.
+    """
+
     doc = docs_service.documents().get(documentId=document_id).execute()
     placeholders = set()
 
@@ -309,8 +411,33 @@ def find_placeholders(docs_service, document_id):
 
 def find_text_range(docs_service, document_id, search_text):
     """
-    Find the start and end indices of the given text in the document.
+    Finds the start and end indices of a given text in a Google Docs document.
+
+    This function retrieves the document content and scans its paragraphs 
+    to locate the specified search text. It returns the start and end character 
+    indices if found.
+
+    Args:
+        docs_service: 
+            The Google Docs API service instance.
+        document_id (str): 
+            The ID of the Google Docs document.
+        search_text (str): 
+            The exact text string to search for within the document.
+
+    Returns:
+        tuple:
+            - `int`: The start index of the search text within the document.
+            - `int`: The end index of the search text within the document.
+            - Returns `(None, None)` if the text is not found.
+
+    Raises:
+        HttpError: 
+            If there is an issue retrieving the document.
+        KeyError: 
+            If the expected content structure is not found in the document response.
     """
+    
     doc = docs_service.documents().get(documentId=document_id).execute()
     content = doc.get('body', {}).get('content', [])
     for element in content:
@@ -327,6 +454,25 @@ def find_text_range(docs_service, document_id, search_text):
     return None, None
 
 def replace_placeholders_in_doc(docs_service, document_id, replacements):
+    """
+    Replaces placeholders in a Google Docs template with actual course data.
+
+    This function processes a document and replaces all `{placeholders}` 
+    with corresponding values from the provided dictionary.
+
+    Args:
+        docs_service: 
+            The Google Docs API service instance.
+        document_id (str): 
+            The ID of the document to modify.
+        replacements (dict): 
+            A dictionary where keys are placeholder names and values are their replacements.
+
+    Raises:
+        HttpError: 
+            If the update request fails due to an API issue.
+    """
+
     try:
         requests = []
 
@@ -374,6 +520,27 @@ def replace_placeholders_in_doc(docs_service, document_id, replacements):
         print(f"An error occurred during placeholder replacement: {error}")
 
 def generate_brochure(data: CourseData, course_folder_name: str):
+    """
+    Generates a Google Docs brochure for a given course.
+
+    This function:
+    1. Searches for a predefined template.
+    2. Copies the template to the correct course folder.
+    3. Replaces placeholders with actual course details.
+    4. Returns a shareable link to the generated brochure.
+
+    Args:
+        data (CourseData): 
+            The structured course data to populate the template.
+        course_folder_name (str): 
+            The name of the course folder where the brochure should be stored.
+
+    Returns:
+        dict: 
+            A dictionary containing the generated document's shareable link 
+            or an error message if the process fails.
+    """
+
     creds = authenticate()
     docs_service = build('docs', 'v1', credentials=creds)
     drive_service = build('drive', 'v3', credentials=creds)
@@ -517,6 +684,23 @@ def generate_brochure(data: CourseData, course_folder_name: str):
 
 # Streamlit app
 def app():
+    """
+    Streamlit web application for generating course brochures.
+
+    This function provides a user interface for:
+    - Entering a course URL and folder name.
+    - Scraping course data.
+    - Authenticating with Google Drive.
+    - Checking for existing course brochures.
+    - Generating new brochures if needed.
+
+    Raises:
+        ValueError: 
+            If required input fields are missing.
+        Exception: 
+            If any step in the brochure generation process fails.
+    """
+
     # Enable wide mode for the layout
     st.title("📄 Brochure Generator")
 

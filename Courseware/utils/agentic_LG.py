@@ -14,14 +14,29 @@ LG_TEMPLATE_DIR = "Courseware/input/Template/LG_TGS-Ref-No_Course-Title_v1.docx"
 
 async def generate_content(context, model_client):
     """
-    Generate a Learning Guide document based on the provided Course Proposal (CP) document.
+    Generates a Course Overview and Learning Outcome description for a Learning Guide.
+
+    This function uses an AI assistant to generate structured content for a Learning Guide 
+    based on the provided course information. The generated text is strictly formatted 
+    according to predefined rules, ensuring precise word counts and appropriate structuring.
 
     Args:
-        context (dict): The structured course information.
-        name_of_organisation (str): Name of the organisation (used for logos and other settings).
+        context (dict): 
+            A dictionary containing structured course information.
+        model_client: 
+            An AI model client instance used to generate the learning content.
 
     Returns:
-        str: Path to the generated Learning Guide document.
+        dict: 
+            An updated context dictionary containing:
+            - `"Course_Overview"` (str): A detailed introduction to the course.
+            - `"LO_Description"` (str): A concise and measurable learning outcome description.
+
+    Raises:
+        json.JSONDecodeError: 
+            If the AI response does not contain valid JSON content.
+        Exception: 
+            If the response lacks the required keys `"Course_Overview"` or `"LO_Description"`.
     """
 
     # 4. Content Generator Agent
@@ -82,6 +97,32 @@ async def generate_content(context, model_client):
     return context
 
 def generate_learning_guide(context: dict, name_of_organisation: str, model_client) -> str:
+    """
+    Generates a Learning Guide document by populating a DOCX template with course content.
+
+    This function retrieves AI-generated course descriptions, inserts them into a Learning Guide template, 
+    and adds the organization's logo before saving the document.
+
+    Args:
+        context (dict): 
+            A dictionary containing course details to be included in the Learning Guide.
+        name_of_organisation (str): 
+            The name of the organization, used to retrieve and insert the corresponding logo.
+        model_client: 
+            An AI model client instance used for content generation.
+
+    Returns:
+        str: 
+            The file path of the generated Learning Guide document.
+
+    Raises:
+        FileNotFoundError: 
+            If the template file or the organization's logo file is missing.
+        KeyError: 
+            If required keys such as `"Course_Overview"` or `"LO_Description"` are missing.
+        IOError: 
+            If there are issues with reading/writing the document.
+    """
 
     content_response = asyncio.run(generate_content(context, model_client))
     context["Course_Overview"] = content_response.get("Course_Overview") 
