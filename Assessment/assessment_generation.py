@@ -3,20 +3,15 @@ import nest_asyncio
 import os
 import asyncio
 import json
-import shutil
 import pymupdf
 import tempfile
 from copy import deepcopy
 from llama_index.llms.openai import OpenAI as llama_openai
-from openai import OpenAI
 from llama_index.core import (
     Settings,
-    StorageContext,
-    SummaryIndex,
     VectorStoreIndex,
-    load_index_from_storage,
 )
-from llama_index.core.schema import Document, TextNode
+from llama_index.core.schema import TextNode
 from llama_index.core.node_parser import MarkdownElementNodeParser
 from docxtpl import DocxTemplate
 from llama_index.embeddings.openai import OpenAIEmbedding

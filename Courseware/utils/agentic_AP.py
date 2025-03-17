@@ -1,8 +1,6 @@
 # agentic_AP.py
-import os
-import re
+
 import tempfile
-import pandas as pd
 import streamlit as st
 import json
 import asyncio
@@ -12,10 +10,8 @@ from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.messages import TextMessage
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from autogen_core import CancellationToken
-from PIL import Image
-from docx.shared import Inches
-from docxtpl import DocxTemplate, InlineImage
-from Courseware.utils.helper import retrieve_excel_data
+from docxtpl import DocxTemplate
+from Courseware.utils.helper import retrieve_excel_data, process_logo_image
 
 class AssessmentMethod(BaseModel):
     evidence: Union[str, List[str]]
@@ -285,41 +281,10 @@ def generate_assessment_plan(context: dict, name_of_organisation, sfw_dataset_di
     doc = DocxTemplate(AP_TEMPLATE_DIR)
 
     context = retrieve_excel_data(context, sfw_dataset_dir)
-    logo_filename = name_of_organisation.lower().replace(" ", "_") + ".jpg"
-    logo_path = f"Courseware/utils/logo/{logo_filename}"
-
-    if not os.path.exists(logo_path):
-        raise FileNotFoundError(f"Logo file not found for organisation: {name_of_organisation}")
-
-    # Open the logo image to get its dimensions
-    image = Image.open(logo_path)
-    width_px, height_px = image.size  # Get width and height in pixels
-    
-    # Define maximum dimensions (in inches)
-    max_width_inch = 7  # Adjust as needed
-    max_height_inch = 2.5  # Adjust as needed
-
-    # Get DPI and calculate current dimensions in inches
-    dpi = image.info.get('dpi', (96, 96))  # Default to 96 DPI if not specified
-    width_inch = width_px / dpi[0]
-    height_inch = height_px / dpi[1]
-
-    # Scale dimensions if they exceed the maximum
-    width_ratio = max_width_inch / width_inch if width_inch > max_width_inch else 1
-    height_ratio = max_height_inch / height_inch if height_inch > max_height_inch else 1
-    scaling_factor = min(width_ratio, height_ratio)
-
-    # Apply scaling
-    width_docx = Inches(width_inch * scaling_factor)
-    height_docx = Inches(height_inch * scaling_factor)
-
-    # Create an InlineImage object with the desired dimensions
-    logo_image = InlineImage(doc, logo_path, width=width_docx, height=height_docx)
 
     # Add the logo to the context
-    context['company_logo'] = logo_image
+    context['company_logo'] = process_logo_image(doc, name_of_organisation)
     context['Name_of_Organisation'] = name_of_organisation
-    print(f"##########\n\n{context}\n\n")
     doc.render(context, autoescape=True)
 
     # Use a temporary file to save the document

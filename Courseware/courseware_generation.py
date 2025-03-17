@@ -23,15 +23,11 @@ from docx.oxml.table import CT_Tbl
 from docx.table import Table
 from selenium import webdriver
 from bs4 import BeautifulSoup
-from pydantic import BaseModel, Field, ValidationError, field_validator
+from pydantic import BaseModel
 from typing import List, Optional
-from autogen_agentchat.agents import AssistantAgent, CodeExecutorAgent
-from autogen_agentchat.conditions import TextMentionTermination, MaxMessageTermination
+from autogen_agentchat.agents import AssistantAgent
 from autogen_agentchat.messages import TextMessage
-from autogen_agentchat.ui import Console
 from autogen_core import CancellationToken
-from autogen_ext.code_executors.local import LocalCommandLineCodeExecutor
-from autogen_agentchat.teams import RoundRobinGroupChat
 from autogen_ext.models.openai import OpenAIChatCompletionClient
 from utils.helper import save_uploaded_file, parse_json_content
 
@@ -220,6 +216,9 @@ def web_scrape(course_title: str, name_of_org: str) -> str:
     finally:
         driver.quit()
 
+############################################################
+# 3. Interpret Course Proposal Data
+############################################################
 async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient) -> dict:
     # Interpreter Agent with structured output enforcement
     interpreter = AssistantAgent(
@@ -337,13 +336,14 @@ def app():
     st.session_state['selected_model'] = model_choice
 
     # ================================================================
-    # Rest of your UI components
-    # ================================================================
     # Step 1: Upload Course Proposal (CP) Document
+    # ================================================================
     st.subheader("Step 1: Upload Course Proposal (CP) Document")
     cp_file = st.file_uploader("Upload Course Proposal (CP) Document", type=["docx"])
 
+    # ================================================================
     # Step 2: Select Name of Organisation
+    # ================================================================
     st.subheader("Step 2: Select Name of Organisation")
 
     organisations = [
@@ -367,7 +367,9 @@ def app():
 
     selected_org = st.selectbox("Select Name of Organisation", organisations)
 
+    # ================================================================
     # Step 3 (Optional): Upload Updated SFW Dataset
+    # ================================================================
     st.subheader("Step 3 (Optional): Upload Updated Skills Framework (SFw) Dataset")
     sfw_file = st.file_uploader("Upload Updated SFw Dataset (Excel File)", type=["xlsx"])
     if sfw_file:
@@ -376,19 +378,20 @@ def app():
     else:
         sfw_data_dir = "Courseware/input/dataset/Sfw_dataset-2022-03-30 copy.xlsx"
 
+    # ================================================================
     # Step 4: Select Document(s) to Generate using Checkboxes
+    # ================================================================
     st.subheader("Step 4: Select Document(s) to Generate")
     generate_lg = st.checkbox("Learning Guide (LG)")
     generate_ap = st.checkbox("Assessment Plan (AP)")
     generate_lp = st.checkbox("Lesson Plan (LP)")
     generate_fg = st.checkbox("Facilitator's Guide (FG)")
 
-    # Step 4: Generate Documents
+    # ================================================================
+    # Step 5: Generate Documents
+    # ================================================================
     if st.button("Generate Documents"):
         if cp_file is not None and selected_org:
-            # --------------------------------------------------------
-            # Use the selected model configuration for all autogen agents
-            # --------------------------------------------------------
             # Use the selected model configuration for all autogen agents
             selected_config = get_model_config(st.session_state['selected_model'])
             api_key = selected_config["config"].get("api_key")
@@ -449,7 +452,6 @@ def app():
             try:
                 with st.spinner('Extracting Information from Course Proposal...'):
                     context = asyncio.run(interpret_cp(raw_data=raw_data, model_client=openai_struct_model_client))
-                    # st.markdown(f"###CONTEXT\n\n{context}")
 
             except Exception as e:
                 st.error(f"Error extracting Course Proposal: {e}")

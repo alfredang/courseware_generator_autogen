@@ -1,7 +1,5 @@
 # timetable_generator.py
 
-import re
-import json
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken
 from autogen_agentchat.messages import TextMessage
