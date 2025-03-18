@@ -1,64 +1,44 @@
-from pydantic import BaseModel, Field, RootModel  # Import RootModel
-from typing import Dict, List, Optional
+from pydantic import BaseModel, Field, RootModel
+from typing import Dict, List, Optional, Union, Any
 import json
+import asyncio
+import traceback
+import streamlit as st
+
 from llama_index.core.workflow import (
     Event,
     StartEvent,
     StopEvent,
     Workflow,
     step,
-)
-import asyncio
-from config_loader import load_shared_resources
-from llama_index.llms.gemini import Gemini
-from llama_index.core.workflow import Event
-from llama_index.core.schema import NodeWithScore
-from llama_index.core.prompts import PromptTemplate
-from llama_index.core import SimpleDirectoryReader, VectorStoreIndex
-from llama_index.core.workflow import (
     Context,
-    Workflow,
-    StartEvent,
-    StopEvent,
-    step,
 )
 from llama_index.core.schema import (
     MetadataMode,
     NodeWithScore,
     TextNode,
 )
+from llama_index.core.prompts import PromptTemplate
 from llama_index.core.response_synthesizers import (
     ResponseMode,
     get_response_synthesizer,
 )
-from typing import Union, List
 from llama_index.core.node_parser import SentenceSplitter
-from llama_index.llms.gemini import Gemini
-from redisvl.schema import IndexSchema
-from config_loader import load_shared_resources
-import asyncio
-from llama_index.core import VectorStoreIndex, PromptTemplate
-from llama_index.core.llms import ChatMessage
 from llama_index.vector_stores.redis import RedisVectorStore
-from redisvl.schema import IndexSchema
-from llama_index.core.query_pipeline import (
-    QueryPipeline,
-    CustomQueryComponent
-)
-from llama_index.llms.gemini import Gemini
+from llama_index.core import VectorStoreIndex
 from llama_index.core.retrievers import VectorIndexRetriever
-from llama_index.core.query_pipeline.components.input import InputComponent
-from typing import Optional, List, Dict, Any
-from pydantic import Field
-from llama_index.core.schema import NodeWithScore
-import traceback
+
+from redisvl.schema import IndexSchema
+
+from config_loader import load_shared_resources
+from llama_index.llms.gemini import Gemini
+
 from agents.content_team import create_content
 from agents.tsc_extractor import tsc_team_task, create_tsc_agent
 from utils.document_parser import parse_document
 from utils.jinja_docu_replace import create_documents
-import streamlit as st
-from autogen_agentchat.ui import Console
 from utils.helpers import extract_agent_json
+from autogen_agentchat.ui import Console
 
 config, embed_model = load_shared_resources()
 llm = Gemini(
