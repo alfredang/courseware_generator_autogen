@@ -16,7 +16,7 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
     model_client = ChatCompletionClient.load_component(chosen_config)
 
     tsc_parser_agent_message = f"""
-        You are to parse and extract the prepared TSC Form from the tsc_prepper_agent.
+        You are to parse and extract the given TSC form into the schema as specified below.
         The requirements are as follows:
         1. Ensure that the LOs (Learning Outcomes) are mapped.
         2. Ensure that the K (Knowledge) factors are mapped to the LOs.

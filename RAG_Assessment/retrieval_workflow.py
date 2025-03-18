@@ -56,6 +56,7 @@ from agents.content_team import create_content
 from agents.tsc_extractor import tsc_team_task, create_tsc_agent
 from utils.document_parser import parse_document
 from utils.jinja_docu_replace import create_documents
+import streamlit as st
 
 config, embed_model = load_shared_resources()
 llm = Gemini(
@@ -448,23 +449,23 @@ class PydanticWorkflow(Workflow):
 # or use a custom synthesizer
 # or use a custom synthesizer with a custom synthesizer prompt
 
-async def create_tsc_assessments():
+async def create_tsc_assessments(input_tsc):
 
     # processing input TSC into JSON
     model_choice = st.session_state.get('selected_model', "GPT-4o Mini (Default)")
-    parse_document(input_tsc, "json_output/output_TSC.json")    
+    parse_document(input_tsc, "output_json/output_TSC.json")    
 
-    with open("json_output/output_TSC.json", 'r', encoding='utf-8') as file:
+    with open("output_json/output_TSC.json", 'r', encoding='utf-8') as file:
         tsc_data = json.load(file)        
 
     create_tsc_agent(tsc_data=tsc_data, model_choice=model_choice)
-    stream = tsc_agent.run_stream(task=tsc_agent_task(tsc_data))
+    stream = create_tsc_agent.run_stream(task=tsc_agent_task(tsc_data))
     await Console(stream)
-    state = await tsc_agent.save_state()
-    with open("json_output/tsc_agent_state.json", "w") as f:
+    state = await create_tsc_agent.save_state()
+    with open("output_json/tsc_agent_state.json", "w") as f:
         json.dump(state, f)
-    tsc_data = extract_agent_json(file_path="json_output/tsc_agent_state.json", agent_name="tsc_prepper_agent")
-    with open("json_output/parsed_TSC.json", "w", encoding="utf-8") as out:
+    tsc_data = extract_agent_json(file_path="output_json/tsc_agent_state.json", agent_name="tsc_prepper_agent")
+    with open("output_json/parsed_TSC.json", "w", encoding="utf-8") as out:
         json.dump(tsc_data, out, indent=2)
 
     # Load data *once* outside the workflow loop
@@ -538,8 +539,8 @@ async def create_tsc_assessments():
 
     create_documents()
 
-if __name__ == "__main__":
-    asyncio.run(create_tsc_assessments())
+# if __name__ == "__main__":
+#     asyncio.run(create_tsc_assessments())
 
 
 # TODO: add streamlit pages for this, one step process, upload TSC then download the documents

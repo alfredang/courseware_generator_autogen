@@ -12,9 +12,14 @@ def parse_document(input_docx, output_json):
     # Load the document
     doc = Document(input_docx)
     
+    # # Initialize containers
+    # data = {
+    #     "Course_Proposal_Form": {}
+    # }
+    
     # Initialize containers
     data = {
-        "Course_Proposal_Form": {}
+        "TSC_Form": {}
     }
     
     # Function to parse tables with advanced duplication check

@@ -168,15 +168,13 @@ elif page == "Document Generation":
         
         if process_button:
             with tempfile.TemporaryDirectory() as temp_dir:
+                # Save with proper extension - this is key!
                 file_path = os.path.join(temp_dir, tsc_file.name)
                 with open(file_path, "wb") as f:
                     f.write(tsc_file.getvalue())
                 
                 os.makedirs("json_output", exist_ok=True)
                 os.makedirs("output_json", exist_ok=True)
-                
-                with open("input_tsc", "wb") as f:
-                    f.write(tsc_file.getvalue())
                 
                 progress_text = st.empty()
                 progress_bar = st.progress(0)
@@ -185,7 +183,9 @@ elif page == "Document Generation":
                 progress_bar.progress(25)
                 
                 try:
-                    asyncio.run(create_tsc_assessments())
+                    # Pass the actual file path with extension
+                    asyncio.run(create_tsc_assessments(file_path))
+
                     
                     progress_text.text("Generating documents...")
                     progress_bar.progress(75)
