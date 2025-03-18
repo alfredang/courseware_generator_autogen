@@ -157,7 +157,8 @@ async def main(input_tsc) -> None:
     # Course Validation Form Process
     await create_course_validation(model_choice=model_choice)
 
-    await process_excel(model_choice=model_choice)
+    # uncomment when ready to insert excel processing
+    # await process_excel(model_choice=model_choice)
     
 
 # if __name__ == "__main__":
