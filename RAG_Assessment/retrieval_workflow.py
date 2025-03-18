@@ -57,6 +57,8 @@ from agents.tsc_extractor import tsc_team_task, create_tsc_agent
 from utils.document_parser import parse_document
 from utils.jinja_docu_replace import create_documents
 import streamlit as st
+from autogen_agentchat.ui import Console
+from utils.helpers import extract_agent_json
 
 config, embed_model = load_shared_resources()
 llm = Gemini(
@@ -458,10 +460,10 @@ async def create_tsc_assessments(input_tsc):
     with open("output_json/output_TSC.json", 'r', encoding='utf-8') as file:
         tsc_data = json.load(file)        
 
-    create_tsc_agent(tsc_data=tsc_data, model_choice=model_choice)
-    stream = create_tsc_agent.run_stream(task=tsc_agent_task(tsc_data))
+    tsc_agent = create_tsc_agent(tsc_data=tsc_data, model_choice=model_choice)
+    stream = tsc_agent.run_stream(task=tsc_team_task(tsc_data))
     await Console(stream)
-    state = await create_tsc_agent.save_state()
+    state = await tsc_agent.save_state()
     with open("output_json/tsc_agent_state.json", "w") as f:
         json.dump(state, f)
     tsc_data = extract_agent_json(file_path="output_json/tsc_agent_state.json", agent_name="tsc_prepper_agent")

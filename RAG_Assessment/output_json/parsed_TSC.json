@@ -1,55 +1,55 @@
 {
-    "LU1: Git and GitHub Fundamentals (A1, A2)": {
-      "LO": "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
-      "Abilities": {
-        "A1": "Analyse release components",
-        "A2": "Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
-      },
-      "Knowledge": {}
+  "LU1: Introduction to Git and GitHub (A1, A2)": {
+    "LO": "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
+    "Abilities": {
+      "A1": "Analyse release components",
+      "A2": "Coordinate with relevant stakeholders on release scheduling to align release processes and procedures"
     },
-    "LU2: GitHub Repository Management (K1, A3)": {
-      "LO": "LO2: Select appropriate Git scripts for integrating and deploying software products.",
-      "Abilities": {
-        "A3": "Select appropriate scripts and tools for integrating and deploying software products"
-      },
-      "Knowledge": {
-        "K1": "Types and usage of scripts and tools for integrating and deploying software products"
-      }
+    "Knowledge": {}
+  },
+  "LU2: Working with GitHub Repository (K1, A3)": {
+    "LO": "LO2: Select appropriate Git scripts for integrating and deploying software products.",
+    "Abilities": {
+      "A3": "Select appropriate scripts and tools for integrating and deploying software products"
     },
-    "LU3: Collaborative Workflows on GitHub (K2, K3, A4, A5)": {
-      "LO": "LO3: Configure software products and deploy releases using Git configuration tests.",
-      "Abilities": {
-        "A4": "Configure software products to integrate and deploy software releases to various platforms",
-        "A5": "Execute configuration tests on platform specific versions of software products in line with testing procedures"
-      },
-      "Knowledge": {
-        "K2": "Software configuration procedures",
-        "K3": "Configuration tests and their purposes"
-      }
-    },
-    "LU4: Modern GitHub Development Practices (K4, A6)": {
-      "LO": "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
-      "Abilities": {
-        "A6": "Diagnose issues surfaced from configuration testing"
-      },
-      "Knowledge": {
-        "K4": "Interpretation of configuration test results"
-      }
-    },
-    "LU5: GitHub Project Automation (K5, A7)": {
-      "LO": "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
-      "Abilities": {
-        "A7": "Identify potential improvements and modifications to the software configuration and deployment process or the software code"
-      },
-      "Knowledge": {
-        "K5": "Elements of the software configuration and deployment process"
-      }
-    },
-    "LU6: GitHub Security and Administration (A8)": {
-      "LO": "LO6: Implement modifications to software products and processes for improved functionality.",
-      "Abilities": {
-        "A8": "Implement modifications to platform-specific software products and processes"
-      },
-      "Knowledge": {}
+    "Knowledge": {
+      "K1": "Types and usage of scripts and tools for integrating and deploying software products"
     }
+  },
+  "LU3: Collaboration Features (K2, K3, A4, A5)": {
+    "LO": "LO3: Configure software products and deploy releases using Git configuration tests.",
+    "Abilities": {
+      "A4": "Configure software products to integrate and deploy software releases to various platforms",
+      "A5": "Execute configuration tests on platform specific versions of software products in line with testing procedures"
+    },
+    "Knowledge": {
+      "K2": "Software configuration procedures",
+      "K3": "Configuration tests and their purposes"
+    }
+  },
+  "LU4: Modern Development (K4, A6)": {
+    "LO": "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
+    "Abilities": {
+      "A6": "Diagnose issues surfaced from configuration testing"
+    },
+    "Knowledge": {
+      "K4": "Interpretation of configuration test results"
+    }
+  },
+  "LU5: GitHub Project (K5, A7)": {
+    "LO": "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
+    "Abilities": {
+      "A7": "Identify potential improvements and modifications to the software configuration and deployment process or the software code"
+    },
+    "Knowledge": {
+      "K5": "Elements of the software configuration and deployment process"
+    }
+  },
+  "LU6: Privacy, Security and Administration (A8)": {
+    "LO": "LO6: Implement modifications to software products and processes for improved functionality.",
+    "Abilities": {
+      "A8": "Implement modifications to platform-specific software products and processes"
+    },
+    "Knowledge": {}
   }
+}

@@ -1,5 +1,5 @@
 {
-  "LU1: Git and GitHub Fundamentals (A1, A2)": {
+  "LU1: Introduction to Git and GitHub (A1, A2)": {
     "LO": "LO1: Analyze Github components and coordinate release scheduling with collaborators to align processes.",
     "Abilities": {
       "A1": "Analyse release components",
@@ -7,20 +7,20 @@
     },
     "Knowledge": {},
     "Keywords": [
-      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **GitHub**\n2.  **Release Management**\n3.  **Release Scheduling**\n4.  **Collaboration**\n5.  **Release Components**\n6.  **Stakeholders**\n7.  **Process Alignment**"
+      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **GitHub**\n2.  **Release Scheduling**\n3.  **Release Components**\n4.  **Collaboration**\n5.  **Stakeholders**\n6.  **Release Processes**\n7.  **Alignment**"
     ],
     "Retrieval_Metadata": null,
     "Question": "No question found in response",
-    "Answer": "I am sorry, but I am unable to create a question and answer based on the provided context. The source material is a table of contents for a book about Git, and does not contain enough information to formulate a question and answer.\n",
+    "Answer": "I am sorry, but I am unable to create a question and answer based on the provided context. The provided source is a table of contents and does not contain enough information to formulate a question and answer.\n",
     "RetrievedSources": [
       {
         "text": "# Table of Contents\n\n|License|1|\n|---|---|\n|Preface by Scott Chacon|2|\n|Preface by Ben Straub|3|\n|Dedications|4|\n|Contributors|5|\n|Introduction|8|\n|Getting Started|10|\n|About Version Control|10|\n|A Short History of Git|14|\n|What is Git?|14|\n|The Command Line|18|\n|Installing Git|18|\n|First-Time Git Setup|21|\n|Getting Help|24|\n|Summary|25|\n|Git Basics|26|\n|Getting a Git Repository|26|\n|Recording Changes to the Repository|28|\n|Viewing the Commit History|40|\n|Undoing Things|46|\n|Working with Remotes|50|\n|Tagging|55|\n|Git Aliases|60|\n|Summary|62|\n|Git Branching|63|\n|Branches in a Nutshell|63|\n|Basic Branching and Merging|70|\n|Branch Management|79|\n|Branching Workflows|82|\n|Remote Branches|85|\n|Rebasing|95|\n|Summary|104|\n|Git on the Server|105|\n|The Protocols|105|\n|Getting Git on a Server|110|\n|Generating Your SSH Public Key|112|\n|Setting Up the Server|113|\n|Git Daemon|116|",
-        "score": "0.724242389202",
+        "score": "0.7226648926729999",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       },
       {
         "text": "# Git Internals\n\nYou may have skipped to this chapter from a much earlier chapter, or you may have gotten here after sequentially reading the entire book up to this point \u2014 in either case, this is where we\u2019ll go over the inner workings and implementation of Git. We found that understanding this information was fundamentally important to appreciating how useful and powerful Git is, but others have argued to us that it can be confusing and unnecessarily complex for beginners. Thus, we\u2019ve made this discussion the last chapter in the book so you could read it early or later in your learning process. We leave it up to you to decide.\n\nNow that you\u2019re here, let\u2019s get started. First, if it isn\u2019t yet clear, Git is fundamentally a content-addressable filesystem with a VCS user interface written on top of it. You\u2019ll learn more about what this means in a bit.\n\nIn the early days of Git (mostly pre 1.5), the user interface was much more complex because it emphasized this filesystem rather than a polished VCS. In the last few years, the UI has been refined until it\u2019s as clean and easy to use as any system out there; however, the stereotype lingers about the early Git UI that was complex and difficult to learn.\n\nThe content-addressable filesystem layer is amazingly cool, so we\u2019ll cover that first in this chapter; then, you\u2019ll learn about the transport mechanisms and the repository maintenance tasks that you may eventually have to deal with.\n\n# Plumbing and Porcelain\n\nThis book covers primarily how to use Git with 30 or so subcommands such as checkout, branch, remote, and so on. But because Git was initially a toolkit for a version control system rather than a full user-friendly VCS, it has a number of subcommands that do low-level work and were designed to be chained together UNIX-style or called from scripts. These commands are generally referred to as Git\u2019s \u201cplumbing\u201d commands, while the more user-friendly commands are called \u201cporcelain\u201d commands.\n\nAs you will have noticed by now, this book\u2019s first nine chapters deal almost exclusively with porcelain commands. But in this chapter, you\u2019ll be dealing mostly with the lower-level plumbing commands, because they give you access to the inner workings of Git, and help demonstrate how and why Git does what it does. Many of these commands aren\u2019t meant to be used manually on the command line, but rather to be used as building blocks for new tools and custom scripts.\n\nWhen you run git init in a new or existing directory, Git creates the .git directory, which is where almost everything that Git stores and manipulates is located. If you want to back up or clone your repository, copying this single directory elsewhere gives you nearly everything you need. This entire chapter basically deals with what you can see in this directory. Here\u2019s what a newly-initialized .git directory typically looks like:\n\n$ ls -F1\nconfig\ndescription\nHEAD",
-        "score": "0.714168131351",
+        "score": "0.714989364147",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       }
     ],
@@ -30,7 +30,7 @@
       "Source 3: When you run git init in a new or existing directory, Git creates the .git directory, which is where..."
     ]
   },
-  "LU2: GitHub Repository Management (K1, A3)": {
+  "LU2: Working with GitHub Repository (K1, A3)": {
     "LO": "LO2: Select appropriate Git scripts for integrating and deploying software products.",
     "Abilities": {
       "A3": "Select appropriate scripts and tools for integrating and deploying software products"
@@ -39,20 +39,20 @@
       "K1": "Types and usage of scripts and tools for integrating and deploying software products"
     },
     "Keywords": [
-      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Git Scripts**\n2.  **Integration**\n3.  **Deployment**\n4.  **Automation**\n5.  **Software Products**\n6.  **CI/CD (Continuous Integration/Continuous Deployment)**\n7.  **Tools**"
+      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Git Scripts**\n2.  **Integration**\n3.  **Deployment**\n4.  **Software Products**\n5.  **Automation**\n6.  **CI/CD (Continuous Integration/Continuous Deployment)**\n7.  **Tools**"
     ],
     "Retrieval_Metadata": null,
-    "Question": "What topics are covered in Chapter 8 of the Pro Git book?",
+    "Question": "What topics are covered in Chapter 8 of the provided document?",
     "Answer": "Chapter 8 covers configuring your custom Git environment, including setting up hook scripts to enforce or encourage customized policies and using environment configuration settings [4]. It also covers building your own set of scripts to enforce a custom committing policy [4].",
     "RetrievedSources": [
       {
         "text": "# Git Internals\n\nYou may have skipped to this chapter from a much earlier chapter, or you may have gotten here after sequentially reading the entire book up to this point \u2014 in either case, this is where we\u2019ll go over the inner workings and implementation of Git. We found that understanding this information was fundamentally important to appreciating how useful and powerful Git is, but others have argued to us that it can be confusing and unnecessarily complex for beginners. Thus, we\u2019ve made this discussion the last chapter in the book so you could read it early or later in your learning process. We leave it up to you to decide.\n\nNow that you\u2019re here, let\u2019s get started. First, if it isn\u2019t yet clear, Git is fundamentally a content-addressable filesystem with a VCS user interface written on top of it. You\u2019ll learn more about what this means in a bit.\n\nIn the early days of Git (mostly pre 1.5), the user interface was much more complex because it emphasized this filesystem rather than a polished VCS. In the last few years, the UI has been refined until it\u2019s as clean and easy to use as any system out there; however, the stereotype lingers about the early Git UI that was complex and difficult to learn.\n\nThe content-addressable filesystem layer is amazingly cool, so we\u2019ll cover that first in this chapter; then, you\u2019ll learn about the transport mechanisms and the repository maintenance tasks that you may eventually have to deal with.\n\n# Plumbing and Porcelain\n\nThis book covers primarily how to use Git with 30 or so subcommands such as checkout, branch, remote, and so on. But because Git was initially a toolkit for a version control system rather than a full user-friendly VCS, it has a number of subcommands that do low-level work and were designed to be chained together UNIX-style or called from scripts. These commands are generally referred to as Git\u2019s \u201cplumbing\u201d commands, while the more user-friendly commands are called \u201cporcelain\u201d commands.\n\nAs you will have noticed by now, this book\u2019s first nine chapters deal almost exclusively with porcelain commands. But in this chapter, you\u2019ll be dealing mostly with the lower-level plumbing commands, because they give you access to the inner workings of Git, and help demonstrate how and why Git does what it does. Many of these commands aren\u2019t meant to be used manually on the command line, but rather to be used as building blocks for new tools and custom scripts.\n\nWhen you run git init in a new or existing directory, Git creates the .git directory, which is where almost everything that Git stores and manipulates is located. If you want to back up or clone your repository, copying this single directory elsewhere gives you nearly everything you need. This entire chapter basically deals with what you can see in this directory. Here\u2019s what a newly-initialized .git directory typically looks like:\n\n$ ls -F1\nconfig\ndescription\nHEAD",
-        "score": "0.777049601078",
+        "score": "0.778315424919",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       },
       {
         "text": "# Introduction\n\nYou\u2019re about to spend several hours of your life reading about Git. Let\u2019s take a minute to explain what we have in store for you. Here is a quick summary of the ten chapters and three appendices of this book.\n\n# Chapter 1\n\nIn Chapter 1, we\u2019re going to cover Version Control Systems (VCSs) and Git basics \u2014 no technical stuff, just what Git is, why it came about in a land full of VCSs, what sets it apart, and why so many people are using it. Then, we\u2019ll explain how to download Git and set it up for the first time if you don\u2019t already have it on your system.\n\n# Chapter 2\n\nIn Chapter 2, we will go over basic Git usage \u2014 how to use Git in the 80% of cases you\u2019ll encounter most often. After reading this chapter, you should be able to clone a repository, see what has happened in the history of the project, modify files, and contribute changes. If the book spontaneously combusts at this point, you should already be pretty useful wielding Git in the time it takes you to go pick up another copy.\n\n# Chapter 3\n\nChapter 3 is about the branching model in Git, often described as Git\u2019s killer feature. Here you\u2019ll learn what truly sets Git apart from the pack. When you\u2019re done, you may feel the need to spend a quiet moment pondering how you lived before Git branching was part of your life.\n\n# Chapter 4\n\nChapter 4 will cover Git on the server. This chapter is for those of you who want to set up Git inside your organization or on your own personal server for collaboration. We will also explore various hosted options if you prefer to let someone else handle that for you.\n\n# Chapter 5\n\nChapter 5 will go over in full detail various distributed workflows and how to accomplish them with Git. When you are done with this chapter, you should be able to work expertly with multiple remote repositories, use Git over email and deftly juggle numerous remote branches and contributed patches.\n\n# Chapter 6\n\nChapter 6 covers the GitHub hosting service and tooling in depth. We cover signing up for and managing an account, creating and using Git repositories, common workflows to contribute to projects and to accept contributions to yours, GitHub\u2019s programmatic interface and lots of little tips to make your life easier in general.\n\n# Chapter 7\n\nChapter 7 is about advanced Git commands. Here you will learn about topics like mastering the scary 'reset' command, using binary search to identify bugs, editing history, revision selection in detail, and a lot more. This chapter will round out your knowledge of Git so that you are truly a master.\n\n# Chapter 8\n\nChapter 8 is about configuring your custom Git environment. This includes setting up hook scripts to enforce or encourage customized policies and using environment configuration settings so you can work the way you want to. We will also cover building your own set of scripts to enforce a custom committing policy.\n\n# Chapter 9\n\nChapter 9 deals with Git and other VCSs. This includes using Git in a Subversion (SVN) world and converting projects from other VCSs to Git. A lot of organizations still use SVN and are not about to change, but by this point you\u2019ll have learned the incredible power of Git \u2014 and this chapter shows you how to cope if you still have to use a SVN server. We also cover how to import projects from",
-        "score": "0.753562808037",
+        "score": "0.754770159721",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       }
     ],
@@ -63,7 +63,7 @@
       "Source 4: # Chapter 7\n\nChapter 7 is about advanced Git commands. Here you will learn about topics like masteri..."
     ]
   },
-  "LU3: Collaborative Workflows on GitHub (K2, K3, A4, A5)": {
+  "LU3: Collaboration Features (K2, K3, A4, A5)": {
     "LO": "LO3: Configure software products and deploy releases using Git configuration tests.",
     "Abilities": {
       "A4": "Configure software products to integrate and deploy software releases to various platforms",
@@ -77,8 +77,8 @@
       "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Git Configuration**\n2.  **Software Deployment**\n3.  **Configuration Tests**\n4.  **Release Management**\n5.  **Platform Integration**\n6.  **Software Configuration**\n7.  **Testing Procedures**"
     ],
     "Retrieval_Metadata": null,
-    "Question": "What topics are covered in Chapter 7 and Chapter 8 of the provided text?",
-    "Answer": "Chapter 7 covers advanced Git commands, including the 'reset' command, binary search for bug identification, history editing, and revision selection [2]. Chapter 8 covers configuring your custom Git environment, including setting up hook scripts and using environment configuration settings [2].",
+    "Question": "What topics are covered in Chapter 8 of the book?",
+    "Answer": "Chapter 8 is about configuring your custom Git environment, including setting up hook scripts to enforce or encourage customized policies and using environment configuration settings [2]. It also covers building your own set of scripts to enforce a custom committing policy [2].",
     "RetrievedSources": [
       {
         "text": "# Introduction\n\nYou\u2019re about to spend several hours of your life reading about Git. Let\u2019s take a minute to explain what we have in store for you. Here is a quick summary of the ten chapters and three appendices of this book.\n\n# Chapter 1\n\nIn Chapter 1, we\u2019re going to cover Version Control Systems (VCSs) and Git basics \u2014 no technical stuff, just what Git is, why it came about in a land full of VCSs, what sets it apart, and why so many people are using it. Then, we\u2019ll explain how to download Git and set it up for the first time if you don\u2019t already have it on your system.\n\n# Chapter 2\n\nIn Chapter 2, we will go over basic Git usage \u2014 how to use Git in the 80% of cases you\u2019ll encounter most often. After reading this chapter, you should be able to clone a repository, see what has happened in the history of the project, modify files, and contribute changes. If the book spontaneously combusts at this point, you should already be pretty useful wielding Git in the time it takes you to go pick up another copy.\n\n# Chapter 3\n\nChapter 3 is about the branching model in Git, often described as Git\u2019s killer feature. Here you\u2019ll learn what truly sets Git apart from the pack. When you\u2019re done, you may feel the need to spend a quiet moment pondering how you lived before Git branching was part of your life.\n\n# Chapter 4\n\nChapter 4 will cover Git on the server. This chapter is for those of you who want to set up Git inside your organization or on your own personal server for collaboration. We will also explore various hosted options if you prefer to let someone else handle that for you.\n\n# Chapter 5\n\nChapter 5 will go over in full detail various distributed workflows and how to accomplish them with Git. When you are done with this chapter, you should be able to work expertly with multiple remote repositories, use Git over email and deftly juggle numerous remote branches and contributed patches.\n\n# Chapter 6\n\nChapter 6 covers the GitHub hosting service and tooling in depth. We cover signing up for and managing an account, creating and using Git repositories, common workflows to contribute to projects and to accept contributions to yours, GitHub\u2019s programmatic interface and lots of little tips to make your life easier in general.\n\n# Chapter 7\n\nChapter 7 is about advanced Git commands. Here you will learn about topics like mastering the scary 'reset' command, using binary search to identify bugs, editing history, revision selection in detail, and a lot more. This chapter will round out your knowledge of Git so that you are truly a master.\n\n# Chapter 8\n\nChapter 8 is about configuring your custom Git environment. This includes setting up hook scripts to enforce or encourage customized policies and using environment configuration settings so you can work the way you want to. We will also cover building your own set of scripts to enforce a custom committing policy.\n\n# Chapter 9\n\nChapter 9 deals with Git and other VCSs. This includes using Git in a Subversion (SVN) world and converting projects from other VCSs to Git. A lot of organizations still use SVN and are not about to change, but by this point you\u2019ll have learned the incredible power of Git \u2014 and this chapter shows you how to cope if you still have to use a SVN server. We also cover how to import projects from",
@@ -97,7 +97,7 @@
       "Source 3: # Table of Contents\n\n|License|1|\n|---|---|\n|Preface by Scott Chacon|2|\n|Preface by Ben Straub|3|\n|De..."
     ]
   },
-  "LU4: Modern GitHub Development Practices (K4, A6)": {
+  "LU4: Modern Development (K4, A6)": {
     "LO": "LO4: Diagnose issues identified during Github configuration testing by interpreting configuration test results.",
     "Abilities": {
       "A6": "Diagnose issues surfaced from configuration testing"
@@ -106,20 +106,20 @@
       "K4": "Interpretation of configuration test results"
     },
     "Keywords": [
-      "Here are 6 keywords highly relevant to the learning unit:\n\n1.  **GitHub Configuration Testing**\n2.  **Test Result Interpretation**\n3.  **Issue Diagnosis**\n4.  **Configuration Errors**\n5.  **Troubleshooting**\n6.  **Debugging**"
+      "Here are 6 keywords highly relevant to the learning unit:\n\n1.  **Configuration Testing**\n2.  **Test Results Interpretation**\n3.  **Issue Diagnosis**\n4.  **GitHub Configuration**\n5.  **Troubleshooting**\n6.  **Error Analysis**"
     ],
     "Retrieval_Metadata": null,
     "Question": "The provided sources do not contain information about setting up a GitHub account. Therefore, the answer remains the same.\n\n What is the first step in setting up a GitHub account?",
-    "Answer": "The first thing you need to do is set up a free user account [1]. You can do this by visiting https://github.com, choosing a username, providing an email address and a password, and clicking the \"Sign up for GitHub\" button [1].",
+    "Answer": "The first step is to visit https://github.com, choose a username, provide an email address and password, and click the \"Sign up for GitHub\" button [1].",
     "RetrievedSources": [
       {
         "text": "# GitHub\n\nGitHub is the single largest host for Git repositories, and is the central point of collaboration for millions of developers and projects. A large percentage of all Git repositories are hosted on GitHub, and many open-source projects use it for Git hosting, issue tracking, code review, and other things. So while it\u2019s not a direct part of the Git open source project, there\u2019s a good chance that you\u2019ll want or need to interact with GitHub at some point while using Git professionally.\n\nThis chapter is about using GitHub effectively. We\u2019ll cover signing up for and managing an account, creating and using Git repositories, common workflows to contribute to projects and to accept contributions to yours, GitHub\u2019s programmatic interface and lots of little tips to make your life easier in general.\n\nIf you are not interested in using GitHub to host your own projects or to collaborate with other projects that are hosted on GitHub, you can safely skip to Git Tools.\n\n# Interfaces Change\n\nIt\u2019s important to note that like many active websites, the UI elements in these screenshots are bound to change over time. Hopefully the general idea of what we\u2019re trying to accomplish here will still be there, but if you want more up to date versions of these screens, the online versions of this book may have newer screenshots.\n\n# Account Setup and Configuration\n\nThe first thing you need to do is set up a free user account. Simply visit https://github.com, choose a user name that isn\u2019t already taken, provide an email address and a password, and click the big green \u201cSign up for GitHub\u201d button.",
-        "score": "0.752983152866",
+        "score": "0.722726821899",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       },
       {
         "text": "# Table of Contents\n\n|License|1|\n|---|---|\n|Preface by Scott Chacon|2|\n|Preface by Ben Straub|3|\n|Dedications|4|\n|Contributors|5|\n|Introduction|8|\n|Getting Started|10|\n|About Version Control|10|\n|A Short History of Git|14|\n|What is Git?|14|\n|The Command Line|18|\n|Installing Git|18|\n|First-Time Git Setup|21|\n|Getting Help|24|\n|Summary|25|\n|Git Basics|26|\n|Getting a Git Repository|26|\n|Recording Changes to the Repository|28|\n|Viewing the Commit History|40|\n|Undoing Things|46|\n|Working with Remotes|50|\n|Tagging|55|\n|Git Aliases|60|\n|Summary|62|\n|Git Branching|63|\n|Branches in a Nutshell|63|\n|Basic Branching and Merging|70|\n|Branch Management|79|\n|Branching Workflows|82|\n|Remote Branches|85|\n|Rebasing|95|\n|Summary|104|\n|Git on the Server|105|\n|The Protocols|105|\n|Getting Git on a Server|110|\n|Generating Your SSH Public Key|112|\n|Setting Up the Server|113|\n|Git Daemon|116|",
-        "score": "0.723592340946",
+        "score": "0.719889640808",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       }
     ],
@@ -128,7 +128,7 @@
       "Source 2: # Table of Contents\n\n|License|1|\n|---|---|\n|Preface by Scott Chacon|2|\n|Preface by Ben Straub|3|\n|De..."
     ]
   },
-  "LU5: GitHub Project Automation (K5, A7)": {
+  "LU5: GitHub Project (K5, A7)": {
     "LO": "LO5: Identify potential improvements to the software configuration, deployment processes, and code elements.",
     "Abilities": {
       "A7": "Identify potential improvements and modifications to the software configuration and deployment process or the software code"
@@ -137,21 +137,20 @@
       "K5": "Elements of the software configuration and deployment process"
     },
     "Keywords": [
-      "Here are 7 keywords highly relevant to the learning unit:\n\n1.  **Software Improvement** (Broad",
-      "encompassing the objective)\n2.  **Configuration Optimization** (Focuses on configuration aspect)\n3.  **Deployment Enhancement** (Focuses on deployment aspect)\n4.  **Code Refactoring** (Implies code improvement)\n5.  **Process Analysis** (Highlights the need to analyze existing processes)\n6.  **Software Modifications** (Directly relates to the ability)\n7.  **Efficiency Gains** (Implies the goal of improvements)"
+      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Software Improvement** (Core concept)\n2.  **Configuration Optimization** (Focus on configuration)\n3.  **Deployment Enhancement** (Focus on deployment)\n4.  **Code Refactoring** (Focus on code)\n5.  **Process Analysis** (Implied by improvement)\n6.  **Software Modifications** (Directly related to the ability)\n7.  **Efficiency Gains** (Implied by improvement and optimization)"
     ],
     "Retrieval_Metadata": null,
-    "Question": "What is the purpose of the `.git` directory created by `git init` and where can I learn more about Git basics?",
-    "Answer": "Almost everything that Git stores and manipulates is located in the `.git` directory [2]. You can learn more about Git basics in the \"Git Basics\" section of the book [3].",
+    "Question": "The provided sources do not contain information that would allow for a refined answer to the question.\n\n What is stored in the `.git` directory created by `git init`?",
+    "Answer": "The `.git` directory is where almost everything that Git stores and manipulates is located [2]. Copying this directory allows you to back up or clone your repository [2].",
     "RetrievedSources": [
       {
         "text": "# Git Internals\n\nYou may have skipped to this chapter from a much earlier chapter, or you may have gotten here after sequentially reading the entire book up to this point \u2014 in either case, this is where we\u2019ll go over the inner workings and implementation of Git. We found that understanding this information was fundamentally important to appreciating how useful and powerful Git is, but others have argued to us that it can be confusing and unnecessarily complex for beginners. Thus, we\u2019ve made this discussion the last chapter in the book so you could read it early or later in your learning process. We leave it up to you to decide.\n\nNow that you\u2019re here, let\u2019s get started. First, if it isn\u2019t yet clear, Git is fundamentally a content-addressable filesystem with a VCS user interface written on top of it. You\u2019ll learn more about what this means in a bit.\n\nIn the early days of Git (mostly pre 1.5), the user interface was much more complex because it emphasized this filesystem rather than a polished VCS. In the last few years, the UI has been refined until it\u2019s as clean and easy to use as any system out there; however, the stereotype lingers about the early Git UI that was complex and difficult to learn.\n\nThe content-addressable filesystem layer is amazingly cool, so we\u2019ll cover that first in this chapter; then, you\u2019ll learn about the transport mechanisms and the repository maintenance tasks that you may eventually have to deal with.\n\n# Plumbing and Porcelain\n\nThis book covers primarily how to use Git with 30 or so subcommands such as checkout, branch, remote, and so on. But because Git was initially a toolkit for a version control system rather than a full user-friendly VCS, it has a number of subcommands that do low-level work and were designed to be chained together UNIX-style or called from scripts. These commands are generally referred to as Git\u2019s \u201cplumbing\u201d commands, while the more user-friendly commands are called \u201cporcelain\u201d commands.\n\nAs you will have noticed by now, this book\u2019s first nine chapters deal almost exclusively with porcelain commands. But in this chapter, you\u2019ll be dealing mostly with the lower-level plumbing commands, because they give you access to the inner workings of Git, and help demonstrate how and why Git does what it does. Many of these commands aren\u2019t meant to be used manually on the command line, but rather to be used as building blocks for new tools and custom scripts.\n\nWhen you run git init in a new or existing directory, Git creates the .git directory, which is where almost everything that Git stores and manipulates is located. If you want to back up or clone your repository, copying this single directory elsewhere gives you nearly everything you need. This entire chapter basically deals with what you can see in this directory. Here\u2019s what a newly-initialized .git directory typically looks like:\n\n$ ls -F1\nconfig\ndescription\nHEAD",
-        "score": "0.603767156601",
+        "score": "0.619930565357",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       },
       {
         "text": "# Table of Contents\n\n|License|1|\n|---|---|\n|Preface by Scott Chacon|2|\n|Preface by Ben Straub|3|\n|Dedications|4|\n|Contributors|5|\n|Introduction|8|\n|Getting Started|10|\n|About Version Control|10|\n|A Short History of Git|14|\n|What is Git?|14|\n|The Command Line|18|\n|Installing Git|18|\n|First-Time Git Setup|21|\n|Getting Help|24|\n|Summary|25|\n|Git Basics|26|\n|Getting a Git Repository|26|\n|Recording Changes to the Repository|28|\n|Viewing the Commit History|40|\n|Undoing Things|46|\n|Working with Remotes|50|\n|Tagging|55|\n|Git Aliases|60|\n|Summary|62|\n|Git Branching|63|\n|Branches in a Nutshell|63|\n|Basic Branching and Merging|70|\n|Branch Management|79|\n|Branching Workflows|82|\n|Remote Branches|85|\n|Rebasing|95|\n|Summary|104|\n|Git on the Server|105|\n|The Protocols|105|\n|Getting Git on a Server|110|\n|Generating Your SSH Public Key|112|\n|Setting Up the Server|113|\n|Git Daemon|116|",
-        "score": "0.6032222509380001",
+        "score": "0.612084984779",
         "metadata": "{'file_path': 'C:\\\\Users\\\\marcu\\\\OneDrive\\\\Documents\\\\GitHub\\\\courseware_autogen\\\\RAG_Assessment\\\\rag_chain\\\\data\\\\progit.pdf', 'file_name': 'progit.pdf', 'file_type': 'application/pdf', 'file_size': 18832353, 'creation_date': '2025-03-03', 'last_modified_date': '2025-03-03'}"
       }
     ],
@@ -161,17 +160,17 @@
       "Source 3: # Table of Contents\n\n|License|1|\n|---|---|\n|Preface by Scott Chacon|2|\n|Preface by Ben Straub|3|\n|De..."
     ]
   },
-  "LU6: GitHub Security and Administration (A8)": {
+  "LU6: Privacy, Security and Administration (A8)": {
     "LO": "LO6: Implement modifications to software products and processes for improved functionality.",
     "Abilities": {
       "A8": "Implement modifications to platform-specific software products and processes"
     },
     "Knowledge": {},
     "Keywords": [
-      "Here are 6 keywords highly relevant to the learning unit:\n\n1.  **Software Modification**\n2.  **Implementation**\n3.  **Platform-Specific**\n4.  **Functionality Improvement**\n5.  **Process Modification**\n6.  **Software Updates**"
+      "Here are 6 keywords highly relevant to the Learning Unit:\n\n1.  **Software Modification**\n2.  **Implementation**\n3.  **Platform-Specific**\n4.  **Functionality Improvement**\n5.  **Process Modification**\n6.  **Software Updates**"
     ],
     "Retrieval_Metadata": null,
-    "Question": "The provided sources do not contain information that would allow me to refine the existing answer. Therefore, I will repeat the existing answer.\n\n What is stored in the `.git` directory created by `git init`?",
+    "Question": "The provided sources do not contain information that would allow me to refine the existing answer.\n\n What is stored in the `.git` directory created by `git init`?",
     "Answer": "The `.git` directory is where almost everything that Git stores and manipulates is located [2]. Copying this directory allows you to back up or clone your repository [2].",
     "RetrievedSources": [
       {
