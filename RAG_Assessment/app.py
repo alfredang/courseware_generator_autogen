@@ -35,7 +35,7 @@ st.title("RAG Assessment Tool")
 # Move navigation to the sidebar
 page = st.sidebar.radio(
     "Navigation",
-    ["Document Indexing", "Document Querying", "Document Generation"],
+    ["Document Indexing", "Document Querying", "Document Generation", "Evaluation"],
     index=0
 )
 
@@ -215,3 +215,64 @@ elif page == "Document Generation":
                 except Exception as e:
                     st.error(f"Error during document generation: {str(e)}")
                     st.error("Check logs for more details")
+
+elif page == "Evaluation":
+    def evaluation_page():
+        st.title("RAG System Evaluation")
+        st.write("""
+        Evaluate the performance of the RAG system by analyzing retrieval quality, 
+        assessment quality, and conducting ablation studies.
+        """)
+        
+        # Check if evaluation results exist
+        eval_file = "evaluation_results/evaluation_results.json"
+        report_file = "evaluation_results/evaluation_report.html"
+        
+        if os.path.exists(eval_file):
+            st.success("✅ Previous evaluation results found.")
+            
+            # Display metrics
+            with open(eval_file, "r") as f:
+                results = json.load(f)
+            
+            retrieval_summary = results.get("retrieval", {}).get("summary", {})
+            assessment_summary = results.get("assessment", {}).get("summary", {})
+            
+            col1, col2 = st.columns(2)
+            
+            with col1:
+                st.subheader("Retrieval Quality")
+                st.metric("Average Relevance", f"{retrieval_summary.get('avg_relevance', 0):.3f}")
+                st.metric("Avg Information Density", f"{retrieval_summary.get('avg_info_density', 0):.3f}")
+                st.metric("Avg Sources per Unit", f"{retrieval_summary.get('avg_source_count', 0):.1f}")
+            
+            with col2:
+                st.subheader("Assessment Quality")
+                st.metric("Total Questions", assessment_summary.get('total_questions', 0))
+                st.metric("Avg Questions per Unit", f"{assessment_summary.get('avg_questions_per_unit', 0):.1f}")
+                st.metric("Learning Units with Questions", assessment_summary.get('total_learning_units_with_questions', 0))
+            
+            # Offer report download
+            if os.path.exists(report_file):
+                with open(report_file, "r") as f:
+                    report_content = f.read()
+                st.download_button(
+                    "Download Full HTML Report", 
+                    report_content, 
+                    "evaluation_report.html", 
+                    "text/html"
+                )
+        
+        # Run new evaluation button
+        if st.button("Run New Evaluation"):
+            with st.spinner("Running evaluation - this may take a few minutes..."):
+                try:
+                    from evaluate import run_evaluation
+                    import asyncio
+                    results = asyncio.run(run_evaluation())
+                    st.success("✅ Evaluation completed successfully!")
+                    st.rerun()  # Refresh the page to show new results
+                except Exception as e:
+                    st.error(f"Error running evaluation: {str(e)}")
+                    st.exception(e)
+    evaluation_page()

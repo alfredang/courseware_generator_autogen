@@ -1,0 +1,355 @@
+{
+  "retrieval": {
+    "summary": {
+      "avg_relevance": 0.3468625524214336,
+      "avg_info_density": 0.5486130399677164,
+      "avg_source_count": 4.666666666666667,
+      "avg_source_length": 1939.4861111111113,
+      "total_learning_units_evaluated": 6
+    },
+    "learning_units": {
+      "LU1": {
+        "lu_name": "LU1",
+        "sources_count": 4,
+        "avg_relevance": 0.39222999662160873,
+        "avg_info_density": 0.5946069191339586,
+        "avg_source_length": 1812.75,
+        "source_details": [
+          {
+            "relevance": 0.4316258728504181,
+            "info_density": 0.6031007751937985,
+            "length": 2271,
+            "text_preview": "macOS, it\u2019s on a separate tab.\n\n- On the right is a diff view, which shows what\u2019s changed in your wo..."
+          },
+          {
+            "relevance": 0.3315066993236542,
+            "info_density": 0.5898580121703854,
+            "length": 2906,
+            "text_preview": "# Git Internals\n\nYou may have skipped to this chapter from a much earlier chapter, or you may have g..."
+          },
+          {
+            "relevance": 0.360967755317688,
+            "info_density": 0.5862068965517242,
+            "length": 476,
+            "text_preview": "# Summary\n\nYou\u2019ve seen a number of advanced tools that allow you to manipulate your commits and stag..."
+          },
+          {
+            "relevance": 0.4448196589946747,
+            "info_density": 0.5992619926199262,
+            "length": 1598,
+            "text_preview": "# GitHub\n\nGitHub is the single largest host for Git repositories, and is the central point of collab..."
+          }
+        ]
+      },
+      "LU2": {
+        "lu_name": "LU2",
+        "sources_count": 6,
+        "avg_relevance": 0.369219313065211,
+        "avg_info_density": 0.5698825269674249,
+        "avg_source_length": 1748.1666666666667,
+        "source_details": [
+          {
+            "relevance": 0.3897141218185425,
+            "info_density": 0.6470588235294118,
+            "length": 323,
+            "text_preview": "# Summary\n\nYou should feel fairly comfortable contributing to a project in Git as well as maintainin..."
+          },
+          {
+            "relevance": 0.334391325712204,
+            "info_density": 0.6202312138728324,
+            "length": 2283,
+            "text_preview": "# Appendix B: Embedding Git in your Applications\n\nIf your application is for developers, chances are..."
+          },
+          {
+            "relevance": 0.3860565721988678,
+            "info_density": 0.5743016759776537,
+            "length": 3025,
+            "text_preview": "# Git and Other Systems\n\nThe world isn\u2019t perfect. Usually, you can\u2019t immediately switch every projec..."
+          },
+          {
+            "relevance": 0.34542781114578247,
+            "info_density": 0.5837696335078535,
+            "length": 2216,
+            "text_preview": "# Appendix A: Git in Other Environments\n\nIf you read through the whole book, you\u2019ve learned a lot ab..."
+          },
+          {
+            "relevance": 0.3609676957130432,
+            "info_density": 0.5862068965517242,
+            "length": 476,
+            "text_preview": "# Summary\n\nYou\u2019ve seen a number of advanced tools that allow you to manipulate your commits and stag..."
+          },
+          {
+            "relevance": 0.3987583518028259,
+            "info_density": 0.4077269183650741,
+            "length": 2166,
+            "text_preview": "# Objective\n\ngit is fully interoperable with Swift, so don\u2019t fear if you\u2019ve left Objective-C behind...."
+          }
+        ]
+      },
+      "LU3": {
+        "lu_name": "LU3",
+        "sources_count": 6,
+        "avg_relevance": 0.3048440118630727,
+        "avg_info_density": 0.479720640441236,
+        "avg_source_length": 1993.6666666666667,
+        "source_details": [
+          {
+            "relevance": 0.28114837408065796,
+            "info_density": 0.5990909090909091,
+            "length": 2664,
+            "text_preview": "# Customizing Git\n\nSo far, we\u2019ve covered the basics of how Git works and how to use it, and we\u2019ve in..."
+          },
+          {
+            "relevance": 0.21720173954963684,
+            "info_density": 0.5877984084880636,
+            "length": 2235,
+            "text_preview": "hooks/\n\ninfo/\n\nobjects/\n\nrefs/\n\nDepending on your version of Git, you may see some additional conten..."
+          },
+          {
+            "relevance": 0.376104474067688,
+            "info_density": 0.5338129496402878,
+            "length": 723,
+            "text_preview": "# Preface by Ben Straub\n\nThe first edition of this book is what got me hooked on Git. This was my in..."
+          },
+          {
+            "relevance": 0.39457711577415466,
+            "info_density": 0.48434221146085554,
+            "length": 1724,
+            "text_preview": "# Preparing a Release\n\nNow you want to release a build. One of the things you\u2019ll want to do is creat..."
+          },
+          {
+            "relevance": 0.3912748396396637,
+            "info_density": 0.49378356564797243,
+            "length": 2532,
+            "text_preview": "generally a little clearer what the latest version is on the GitHub page, but the kernel.org page al..."
+          },
+          {
+            "relevance": 0.16875752806663513,
+            "info_density": 0.17949579831932772,
+            "length": 2084,
+            "text_preview": "# Git Configuration\n\nC:\\ProgramData\\Git\\config on Windows Vista and newer. This config file can only..."
+          }
+        ]
+      },
+      "LU4": {
+        "lu_name": "LU4",
+        "sources_count": 4,
+        "avg_relevance": 0.34445351362228394,
+        "avg_info_density": 0.5796263482244524,
+        "avg_source_length": 1411.0,
+        "source_details": [
+          {
+            "relevance": 0.360967755317688,
+            "info_density": 0.5862068965517242,
+            "length": 476,
+            "text_preview": "# Summary\n\nYou\u2019ve seen a number of advanced tools that allow you to manipulate your commits and stag..."
+          },
+          {
+            "relevance": 0.21720173954963684,
+            "info_density": 0.5877984084880636,
+            "length": 2235,
+            "text_preview": "hooks/\n\ninfo/\n\nobjects/\n\nrefs/\n\nDepending on your version of Git, you may see some additional conten..."
+          },
+          {
+            "relevance": 0.35482490062713623,
+            "info_density": 0.5452380952380953,
+            "length": 1335,
+            "text_preview": "What\u2019s more, GitHub will look for task lists in your Issues and Pull Requests and show them as metad..."
+          },
+          {
+            "relevance": 0.4448196589946747,
+            "info_density": 0.5992619926199262,
+            "length": 1598,
+            "text_preview": "# GitHub\n\nGitHub is the single largest host for Git repositories, and is the central point of collab..."
+          }
+        ]
+      },
+      "LU5": {
+        "lu_name": "LU5",
+        "sources_count": 3,
+        "avg_relevance": 0.33109747370084125,
+        "avg_info_density": 0.5529730282956183,
+        "avg_source_length": 2372.3333333333335,
+        "source_details": [
+          {
+            "relevance": 0.3987583518028259,
+            "info_density": 0.4077269183650741,
+            "length": 2166,
+            "text_preview": "# Objective\n\ngit is fully interoperable with Swift, so don\u2019t fear if you\u2019ve left Objective-C behind...."
+          },
+          {
+            "relevance": 0.33150672912597656,
+            "info_density": 0.5898580121703854,
+            "length": 2906,
+            "text_preview": "# Git Internals\n\nYou may have skipped to this chapter from a much earlier chapter, or you may have g..."
+          },
+          {
+            "relevance": 0.2630273401737213,
+            "info_density": 0.6613341543513956,
+            "length": 2045,
+            "text_preview": "|Editor|Configuration command|\n|---|---|\n|Atom|git config --global core.editor \"atom --wait\"|\n|BBEdi..."
+          }
+        ]
+      },
+      "LU6": {
+        "lu_name": "LU6",
+        "sources_count": 5,
+        "avg_relevance": 0.34554901123046877,
+        "avg_info_density": 0.5415387920647186,
+        "avg_source_length": 2299.0,
+        "source_details": [
+          {
+            "relevance": 0.3315066993236542,
+            "info_density": 0.5898580121703854,
+            "length": 2906,
+            "text_preview": "# Git Internals\n\nYou may have skipped to this chapter from a much earlier chapter, or you may have g..."
+          },
+          {
+            "relevance": 0.3648076057434082,
+            "info_density": 0.5791946308724832,
+            "length": 3298,
+            "text_preview": "# Introduction\n\nYou\u2019re about to spend several hours of your life reading about Git. Let\u2019s take a min..."
+          },
+          {
+            "relevance": 0.376104474067688,
+            "info_density": 0.5338129496402878,
+            "length": 723,
+            "text_preview": "# Preface by Ben Straub\n\nThe first edition of this book is what got me hooked on Git. This was my in..."
+          },
+          {
+            "relevance": 0.39875829219818115,
+            "info_density": 0.4077269183650741,
+            "length": 2166,
+            "text_preview": "# Objective\n\ngit is fully interoperable with Swift, so don\u2019t fear if you\u2019ve left Objective-C behind...."
+          },
+          {
+            "relevance": 0.25656798481941223,
+            "info_density": 0.5971014492753624,
+            "length": 2402,
+            "text_preview": "messages should start with a single line that\u2019s no more than about 50 characters and that describes ..."
+          }
+        ]
+      }
+    }
+  },
+  "assessment": {
+    "summary": {
+      "total_questions": 6,
+      "total_learning_units_with_questions": 6,
+      "avg_questions_per_unit": 1.0,
+      "avg_question_length": 381.3333333333333,
+      "bloom_distribution": {
+        "remember": 0.3333333333333333,
+        "understand": 0.0,
+        "apply": 0.0,
+        "analyze": 0.0,
+        "evaluate": 0.0,
+        "create": 0.6666666666666666
+      },
+      "question_type_distribution": {
+        "multiple_choice": 0.0,
+        "short_answer": 0.0,
+        "scenario": 1.0
+      }
+    },
+    "learning_units": {
+      "LU1": {
+        "bloom_levels": {
+          "create": 1
+        },
+        "question_types": {
+          "scenario": 1
+        },
+        "question_details": [
+          {
+            "question_text": "As the Senior DevOps Engineer, you need to analyze the release components for the \"ConnectNow\" mobil...",
+            "bloom_level": "create",
+            "question_type": "scenario",
+            "length": 483
+          }
+        ]
+      },
+      "LU2": {
+        "bloom_levels": {
+          "create": 1
+        },
+        "question_types": {
+          "scenario": 1
+        },
+        "question_details": [
+          {
+            "question_text": "As the Senior DevOps Engineer, you need to prepare a simple integration script for \"ConnectNow\" vers...",
+            "bloom_level": "create",
+            "question_type": "scenario",
+            "length": 374
+          }
+        ]
+      },
+      "LU3": {
+        "bloom_levels": {
+          "remember": 1
+        },
+        "question_types": {
+          "scenario": 1
+        },
+        "question_details": [
+          {
+            "question_text": "To ensure a clean release, configure Git to automatically trim whitespace from your code before each...",
+            "bloom_level": "remember",
+            "question_type": "scenario",
+            "length": 326
+          }
+        ]
+      },
+      "LU4": {
+        "bloom_levels": {
+          "create": 1
+        },
+        "question_types": {
+          "scenario": 1
+        },
+        "question_details": [
+          {
+            "question_text": "Assume a configuration test has failed due to an issue with the `.gitignore` file. You suspect the f...",
+            "bloom_level": "create",
+            "question_type": "scenario",
+            "length": 471
+          }
+        ]
+      },
+      "LU5": {
+        "bloom_levels": {
+          "create": 1
+        },
+        "question_types": {
+          "scenario": 1
+        },
+        "question_details": [
+          {
+            "question_text": "Propose an improvement to the current development workflow.  Assume developers are using Visual Stud...",
+            "bloom_level": "create",
+            "question_type": "scenario",
+            "length": 302
+          }
+        ]
+      },
+      "LU6": {
+        "bloom_levels": {
+          "remember": 1
+        },
+        "question_types": {
+          "scenario": 1
+        },
+        "question_details": [
+          {
+            "question_text": "Implement a modification to the commit process to improve commit message clarity. Configure Git to e...",
+            "bloom_level": "remember",
+            "question_type": "scenario",
+            "length": 332
+          }
+        ]
+      }
+    }
+  },
+  "ablation": {}
+}
