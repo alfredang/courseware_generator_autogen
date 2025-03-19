@@ -230,6 +230,9 @@
           }
         ]
       }
+    },
+    "ragas": {
+      "error": "RAGAS not available"
     }
   },
   "assessment": {

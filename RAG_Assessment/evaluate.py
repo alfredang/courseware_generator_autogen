@@ -5,7 +5,8 @@ from redisvl.schema import IndexSchema
 from llama_index.vector_stores.redis import RedisVectorStore
 from llama_index.core import VectorStoreIndex
 
-from retrieval_workflow import define_custom_schema
+from evaluation_schema import define_custom_schema
+# from retrieval_workflow import define_custom_schema
 from config_loader import load_shared_resources
 from evaluation.retrieval_metrics import evaluate_retrieval_quality
 from evaluation.assessment_metrics import evaluate_educational_quality

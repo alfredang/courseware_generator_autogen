@@ -136,6 +136,54 @@ def create_retrieval_visualizations(retrieval_results: Dict[str, Any]) -> Dict[s
         
         figures["summary_radar"] = fig
     
+    # Add RAGAS visualization if available
+    ragas_results = retrieval_results.get("ragas", {}).get("metrics", {})
+    if ragas_results:
+        # Create a radar chart for RAGAS metrics
+        categories = list(ragas_results.keys())
+        values = [ragas_results[m] for m in categories]
+        
+        # Clean up category names for display
+        clean_categories = [c.replace("_", " ").title() for c in categories]
+        
+        # Create two figures:
+        # 1. Bar chart
+        fig1 = go.Figure([go.Bar(
+            x=clean_categories,
+            y=values,
+            text=[f"{v:.3f}" for v in values],
+            textposition='auto',
+            marker_color=['#3366cc', '#dc3912', '#ff9900', '#109618'][:len(values)]
+        )])
+        
+        fig1.update_layout(
+            title="RAGAS Evaluation Metrics",
+            yaxis=dict(range=[0, 1], title="Score"),
+            xaxis=dict(title="Metric")
+        )
+        figures["ragas_metrics_bar"] = fig1
+        
+        # 2. Radar chart
+        fig2 = go.Figure()
+        fig2.add_trace(go.Scatterpolar(
+            r=values,
+            theta=clean_categories,
+            fill='toself',
+            name='RAGAS Metrics'
+        ))
+        fig2.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 1]
+                )
+            ),
+            showlegend=False,
+            title="RAGAS Metrics Radar"
+        )
+        figures["ragas_metrics_radar"] = fig2
+
+    
     return figures
 
 def create_assessment_visualizations(assessment_results: Dict[str, Any]) -> Dict[str, go.Figure]:
@@ -429,6 +477,25 @@ def create_evaluation_report(results: Dict[str, Any], output_file: str = "evalua
         ])
     
     html_parts.append("    </div>")
+
+    ragas_results = results.get("retrieval", {}).get("ragas", {})
+    if ragas_results and "metrics" in ragas_results:
+        metrics = ragas_results["metrics"]
+        html_parts.extend([
+            "        <div class='summary'>",
+            "            <h3>RAGAS Evaluation Metrics</h3>",
+            "            <ul>"
+        ])
+        
+        for metric_name, score in metrics.items():
+            formatted_name = metric_name.replace("_", " ").title()
+            html_parts.append(f"                <li><strong>{formatted_name}:</strong> {score:.3f}</li>")
+        
+        html_parts.extend([
+            f"                <li><strong>Samples Evaluated:</strong> {ragas_results.get('samples_evaluated', 0)}</li>",
+            "            </ul>",
+            "        </div>"
+        ])
     
     # 3. Ablation Study Section
     html_parts.extend([

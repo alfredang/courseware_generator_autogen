@@ -6,16 +6,109 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 from typing import List, Dict, Any
 
+import sys
+sys.path.append("C:/Users/marcu/AppData/Roaming/Python/Python312/site-packages")
+
 # For RAGAS integration (if installed)
 try:
-    from ragas.metrics import faithfulness, context_relevancy, context_recall
+    import torch
+    from ragas.metrics import faithfulness, context_relevancy, context_recall, answer_relevancy
+    from ragas.metrics.critique import AspectCritique
     RAGAS_AVAILABLE = True
 except ImportError:
     RAGAS_AVAILABLE = False
-    print("RAGAS not available. Install with: pip install ragas")
+    print("RAGAS not available. Install with: pip install ragas langchain torch transformers datasets")
 
 # Load embeddings model for similarity calculations
 embedding_model = SentenceTransformer('all-MiniLM-L6-v2')  # Lightweight model for evaluation
+
+async def evaluate_with_ragas(data):
+    """Evaluate retrieval and answer quality using RAGAS metrics."""
+    if not RAGAS_AVAILABLE:
+        return {"error": "RAGAS not available. Install with: pip install ragas langchain torch datasets"}
+        
+    try:
+        # Prepare data in the format RAGAS expects
+        questions = []
+        contexts = []
+        answers = []
+        
+        for lu_name, lu_data in data.items():
+            if not isinstance(lu_data, dict) or 'RetrievedSources' not in lu_data:
+                continue
+                
+            question = lu_data.get('Question', '')
+            if not question or not isinstance(question, str):
+                continue
+                
+            sources = lu_data.get('RetrievedSources', [])
+            if not sources:
+                continue
+                
+            answer = lu_data.get('Answer', '')
+            if isinstance(answer, list):
+                answer = ' '.join([str(a) for a in answer])
+            if not answer:
+                continue
+                
+            # Extract text from sources
+            source_texts = [s.get('text', '') for s in sources if s.get('text')]
+            if not source_texts:
+                continue
+                
+            # Add to lists
+            questions.append(question)
+            contexts.append(source_texts)
+            answers.append(answer)
+        
+        if not questions:
+            return {"error": "No valid question-answer pairs found for RAGAS evaluation"}
+        
+        # Create datasets
+        import pandas as pd
+        from datasets import Dataset
+        
+        eval_dataset = Dataset.from_pandas(pd.DataFrame({
+            "question": questions,
+            "contexts": contexts,
+            "answer": answers
+        }))
+        
+        # Run evaluation with RAGAS
+        from ragas import evaluate
+        
+        print(f"Evaluating {len(questions)} question-answer pairs with RAGAS...")
+        results = evaluate(
+            eval_dataset,
+            metrics=[
+                faithfulness,
+                answer_relevancy,
+                context_relevancy,
+                context_recall
+            ]
+        )
+        
+        # Convert to dictionary
+        metrics_results = {}
+        for metric_name, score in results.items():
+            metrics_results[metric_name] = float(score)
+        
+        return {
+            "metrics": metrics_results,
+            "samples_evaluated": len(questions),
+            "details": [
+                {
+                    "question": q[:100] + "..." if len(q) > 100 else q,
+                    "answer_length": len(a),
+                    "num_contexts": len(c)
+                } for q, a, c in zip(questions, answers, contexts)
+            ]
+        }
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return {"error": f"RAGAS evaluation failed: {str(e)}"}
 
 def compute_info_density(text: str) -> float:
     """Calculate information density based on text features."""
@@ -134,10 +227,23 @@ async def evaluate_retrieval_quality(data_path="output_json/parsed_TSC.json"):
         "avg_source_length": np.mean(metrics["avg_source_length"]) if metrics["avg_source_length"] else 0,
         "total_learning_units_evaluated": len(all_results)
     }
+
+    ragas_results = {}
+    if RAGAS_AVAILABLE:
+        try:
+            print("Running RAGAS evaluation...")
+            ragas_results = await evaluate_with_ragas(data)
+        except Exception as e:
+            print(f"Error during RAGAS evaluation: {e}")
+            ragas_results = {"error": str(e)}
+    else:
+        ragas_results = {"error": "RAGAS not available"}
+    
     
     return {
         "summary": summary,
-        "learning_units": all_results
+        "learning_units": all_results,
+        "ragas": ragas_results
     }
 
 # Common stopwords for info density calculation
