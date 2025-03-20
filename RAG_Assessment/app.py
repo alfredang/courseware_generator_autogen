@@ -13,7 +13,7 @@ from retrieval_workflow import create_tsc_assessments
 import base64
 
 st.set_page_config(
-    page_title="RAG Assessment Tool",
+    page_title="Assessment Generation System",
     page_icon="🔍",
     layout="wide"
 )
@@ -105,7 +105,7 @@ elif page == "Document Querying":
     st.header("💬 Chat with Your Documents")
     st.markdown("""
     Ask questions about your indexed documents and get answers based on their content.
-    The system will retrieve relevant information and generate responses using Gemini LLM.
+    The system will retrieve relevant information and generate responses using a LLM.
     """)
     
     if st.button("Clear Chat History"):
