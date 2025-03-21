@@ -195,12 +195,17 @@ elif page == "Document Generation":
                     progress_bar.progress(100)
                     st.success("✅ Document generation completed successfully!")
                     
+                    
                     st.subheader("Download Generated Documents")
                     output_files = []
-                    for root, dirs, files in os.walk("output_documents"):
-                        for file in files:
-                            if file.endswith(".docx") or file.endswith(".pdf"):
-                                output_files.append(os.path.join(root, file))
+                    # Check both possible output folders
+                    for folder in ["output_documents", "generated_docs"]:
+                        if os.path.exists(folder):
+                            for root, dirs, files in os.walk(folder):
+                                for file in files:
+                                    if file.endswith(".docx") or file.endswith(".pdf"):
+                                        output_files.append(os.path.join(root, file))
+
                     
                     if output_files:
                         for file_path in output_files:

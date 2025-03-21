@@ -7,11 +7,11 @@
     },
     "Knowledge": {},
     "Keywords": [
-      "Here are 6 keywords highly relevant to the Learning Unit:\n\n1.  **GitHub**\n2.  **Release Scheduling**\n3.  **Collaboration**\n4.  **Release Components**\n5.  **Process Alignment**\n6.  **Stakeholders**"
+      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **GitHub**\n2.  **Release Management**\n3.  **Release Scheduling**\n4.  **Collaboration**\n5.  **Release Components**\n6.  **Stakeholders**\n7.  **Process Alignment**"
     ],
     "Retrieval_Metadata": null,
     "Question": "No question found in response",
-    "Answer": "What is GitHub and why is it important for Git users?\n\nGitHub is the single largest host for Git repositories and is a central point of collaboration for millions of developers and projects [5]. A large percentage of all Git repositories are hosted on GitHub, and many open-source projects use it for Git hosting, issue tracking, code review, and other things [5].\n",
+    "Answer": "What advanced tools does Git provide to manipulate commits and the staging area, and what can you do with these tools? Git provides advanced tools that allow you to manipulate your commits and staging area more precisely [4]. With these tools, you should be able to figure out what commit introduced issues, when, and by whom [4].\n",
     "RetrievedSources": [
       {
         "text": "macOS, it\u2019s on a separate tab.\n\n- On the right is a diff view, which shows what\u2019s changed in your working directory, or which changes were included in the selected commit.\n- The last thing to notice is the \u201cSync\u201d button at the top-right, which is the primary way you interact over the network.\n\nYou don\u2019t need a GitHub account to use these tools. While they\u2019re designed to highlight GitHub\u2019s service and recommended workflow, they will happily work with any repository, and do network operations with any Git host.\n\n# Installation\n\nGitHub for Windows and macOS can be downloaded from https://desktop.github.com/. When the applications are first run, they walk you through all the first-time Git setup, such as configuring your name and email address, and both set up sane defaults for many common configuration options, such as credential caches and CRLF behavior.\n\nBoth are \u201cevergreen\u201d \u2013 updates are downloaded and installed in the background while the applications are open. This helpfully includes a bundled version of Git, which means you probably won\u2019t have to worry about manually updating it again. On Windows, the client includes a shortcut to launch PowerShell with Posh-git, which we\u2019ll talk more about later in this chapter.\n\nThe next step is to give the tool some repositories to work with. The client shows you a list of the repositories you have access to on GitHub, and can clone them in one step. If you already have a local repository, just drag its directory from the Finder or Windows Explorer into the GitHub client window, and it will be included in the list of repositories on the left.\n\n# Recommended Workflow\n\nOnce it\u2019s installed and configured, you can use the GitHub client for many common Git tasks. The intended workflow for this tool is sometimes called the \u201cGitHub Flow.\u201d We cover this in more detail in The GitHub Flow, but the general gist is that (a) you\u2019ll be committing to a branch, and (b) you\u2019ll be syncing up with a remote repository fairly regularly.\n\nBranch management is one of the areas where the two tools diverge. On macOS, there\u2019s a button at the top of the window for creating a new branch:\n\nFigure 181. \u201cCreate Branch\u201d button on macOS\n\nOn Windows, this is done by typing the new branch\u2019s name in the branch-switching widget:",
@@ -55,7 +55,7 @@
     ],
     "Retrieval_Metadata": null,
     "Question": "No question found in response",
-    "Answer": "The provided source does not help refine the existing answer.\n",
+    "Answer": "The provided source does not offer information about integrating Git with an application. Therefore, the answer remains the same: The two main options for integrating Git with an application are to spawn a shell and call the Git command-line program, or to embed a Git library into your application [2].\n",
     "RetrievedSources": [
       {
         "text": "# Summary\n\nYou should feel fairly comfortable contributing to a project in Git as well as maintaining your own project or integrating other users' contributions. Congratulations on being an effective Git developer! In the next chapter, you\u2019ll learn about how to use the largest and most popular Git hosting service, GitHub.",
@@ -109,11 +109,11 @@
       "K3": "Configuration tests and their purposes"
     },
     "Keywords": [
-      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Git Configuration**\n2.  **Software Deployment**\n3.  **Configuration Tests**\n4.  **Release Management**\n5.  **Platform Integration**\n6.  **Software Configuration**\n7.  **Testing Procedures**"
+      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Git Configuration**\n2.  **Software Deployment**\n3.  **Release Management**\n4.  **Configuration Tests**\n5.  **Platform Integration**\n6.  **Testing Procedures**\n7.  **Software Configuration**"
     ],
     "Retrieval_Metadata": null,
-    "Question": "The provided source does not contain information about the core parts of a Git repository. Therefore, the answer remains the same:\n\n What are the core parts of a Git repository, and what do they store?",
-    "Answer": "The core parts of a Git repository are the HEAD and index files, and the objects and refs directories [3]. The objects directory stores all the content for your database, the refs directory stores pointers into commit objects, the HEAD file points to the branch you currently have checked out, and the index file is where Git stores your staging area information [3].",
+    "Question": "No question found in response",
+    "Answer": "I am sorry, but I am unable to create a question and answer based on the provided source. The source only describes the preface to a book about Git [4].\n",
     "RetrievedSources": [
       {
         "text": "# Customizing Git\n\nSo far, we\u2019ve covered the basics of how Git works and how to use it, and we\u2019ve introduced a number of tools that Git provides to help you use it easily and efficiently. In this chapter, we\u2019ll see how you can make Git operate in a more customized fashion, by introducing several important configuration settings and the hooks system. With these tools, it\u2019s easy to get Git to work exactly the way you, your company, or your group needs it to.\n\n# Git Configuration\n\nAs you read briefly in Getting Started, you can specify Git configuration settings with the git config command. One of the first things you did was set up your name and email address:\n\n$ git config --global user.name \"John Doe\"\n$ git config --global user.email johndoe@example.com\n\nNow you\u2019ll learn a few of the more interesting options that you can set in this manner to customize your Git usage.\n\nFirst, a quick review: Git uses a series of configuration files to determine non-default behavior that you may want. The first place Git looks for these values is in the system-wide [path]/etc/gitconfig file, which contains settings that are applied to every user on the system and all of their repositories. If you pass the option --system to git config, it reads and writes from this file specifically.\n\nThe next place Git looks is the ~/.gitconfig (or ~/.config/git/config) file, which is specific to each user. You can make Git read and write to this file by passing the --global option.\n\nFinally, Git looks for configuration values in the configuration file in the Git directory (.git/config) of whatever repository you\u2019re currently using. These values are specific to that single repository, and represent passing the --local option to git config. If you don\u2019t specify which level you want to work with, this is the default.\n\nEach of these \u201clevels\u201d (system, global, local) overwrites values in the previous level, so values in .git/config trump those in [path]/etc/gitconfig, for instance.\n\nGit\u2019s configuration files are plain-text, so you can also set these values by manually editing the file and inserting the correct syntax. It\u2019s generally easier to run the git config command, though.\n\n# Basic Client Configuration\n\nThe configuration options recognized by Git fall into two categories: client-side and server-side. The majority of the options are client-side \u2014 configuring your personal working preferences. Many, many configuration options are supported, but a large fraction of them are useful only in certain edge cases; we\u2019ll cover just the most common and useful options here. If you want to see a list of all the options your version of Git recognizes, you can run:",
@@ -170,7 +170,7 @@
     ],
     "Retrieval_Metadata": null,
     "Question": "No question found in response",
-    "Answer": "The provided sources do not contain information about the core parts of Git. Therefore, the answer remains the same.\n",
+    "Answer": "The provided sources do not contain information about the core parts of Git or what they store. Therefore, the existing answer is repeated.\n",
     "RetrievedSources": [
       {
         "text": "# Summary\n\nYou\u2019ve seen a number of advanced tools that allow you to manipulate your commits and staging area more precisely. When you notice issues, you should be able to easily figure out what commit introduced them, when, and by whom. If you want to use subprojects in your project, you\u2019ve learned how to accommodate those needs. At this point, you should be able to do most of the things in Git that you\u2019ll need on the command line day to day and feel comfortable doing so.",
@@ -209,7 +209,7 @@
       "K5": "Elements of the software configuration and deployment process"
     },
     "Keywords": [
-      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Software Improvement** (Core concept)\n2.  **Configuration Optimization** (Focus on configuration)\n3.  **Deployment Enhancement** (Focus on deployment)\n4.  **Code Refactoring** (Focus on code)\n5.  **Process Analysis** (Implied by improvement focus)\n6.  **Software Modifications** (Directly from the ability)\n7.  **Configuration Management** (Related to configuration and deployment)"
+      "Here are 7 keywords highly relevant to the Learning Unit:\n\n1.  **Configuration Improvement**\n2.  **Deployment Optimization**\n3.  **Code Modification**\n4.  **Software Configuration**\n5.  **Deployment Process**\n6.  **Code Elements**\n7.  **Software Enhancement**"
     ],
     "Retrieval_Metadata": null,
     "Question": null,
