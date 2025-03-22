@@ -259,12 +259,12 @@ async def generate_pp_from_tsc(tsc_data: Dict, model_client) -> Dict:
         name="practical_task_generator",
         model_client=model_client,
         system_message="""
-        You are an expert in creating practical coding assessments. Your task is to generate hands-on GitHub-related coding tasks that assess specific abilities.
+        You are an expert in creating practical coding assessments. Your task is to generate hands-on coding tasks that assess specific abilities.
 
         Guidelines:
         1. Create direct, hands-on coding tasks that require practical implementation.
         2. Each response MUST include both a specific question_statement and an expected_output.
-        3. The question_statement should clearly describe a practical GitHub task related to the abilities.
+        3. The question_statement should clearly describe a practical task related to the abilities.
         4. The question must end with "Take snapshots of your commands at each step and paste them below."
         5. The answer should be in the format: {"expected_output": "The snapshot should include: [detailed steps]", "citations": [list of citations]}
         6. Structure your response in valid JSON format with both question_statement and answer fields.
@@ -302,7 +302,7 @@ async def generate_pp_from_tsc(tsc_data: Dict, model_client) -> Dict:
         - Citations: {json.dumps(all_citations, indent=2)}
 
         Instructions:
-        1. Create a SPECIFIC, direct, hands-on GitHub-related coding task in 2-3 sentences.
+        1. Create a SPECIFIC, direct, hands-on task in 2-3 sentences.
         2. The task should require writing, modifying, or executing Git commands or scripts.
         3. The question must end with "Take snapshots of your commands at each step and paste them below."
         4. The answer should start with "The snapshot should include: " followed by the expected output.
@@ -310,7 +310,7 @@ async def generate_pp_from_tsc(tsc_data: Dict, model_client) -> Dict:
         6. Return your output in valid JSON format with the following structure:
         ```json
         {{
-        "question_statement": "Your specific Git/GitHub task here... Take snapshots of your commands at each step and paste them below.",
+        "question_statement": "Your specific [topic] task here... Take snapshots of your commands at each step and paste them below.",
         "answer": {{
             "expected_output": "The snapshot should include: [numbered steps with specific Git commands]",
             "citations_used": ["Source X"]  // List only the citation references you actually used
@@ -365,7 +365,7 @@ async def generate_pp_scenario_from_tsc(tsc_data: Dict, model_client) -> str:
     abilities_text = "\n".join([f"- {ability}" for ability in abilities if ability])
     
     agent_task = f"""
-    Design a realistic practical performance assessment scenario for a GitHub integration and deployment course.
+    Design a realistic practical performance assessment scenario for a course.
     
     The scenario should align with the following:
     
@@ -375,10 +375,10 @@ async def generate_pp_scenario_from_tsc(tsc_data: Dict, model_client) -> str:
     Abilities:
     {abilities_text}
     
-    The scenario should describe a company or organization facing practical challenges with Git/GitHub implementation.
+    The scenario should describe a company or organization facing practical challenges with the identified domain.
     Provide background context aligning to the learning outcomes and abilities.
     End the scenario by stating the learner's role in the company.
-    Ensure the scenario is concise (1 paragraph), realistic, and requires the learner to perform hands-on Git/GitHub tasks.
+    Ensure the scenario is concise (1 paragraph), realistic, and requires the learner to perform hands-on topic tasks.
     """
     
     # Instantiate the agent for scenario generation
