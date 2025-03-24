@@ -24,7 +24,7 @@ def app():
     model_choice = st.selectbox(
         "Select LLM Model:",
         options=list(MODEL_CHOICES.keys()),
-        index=0  # default: "GPT-4o Mini (Default)"
+        index=4  # default: "GPT-4o Mini (Default)"
     )
     st.session_state['selected_model'] = model_choice
 

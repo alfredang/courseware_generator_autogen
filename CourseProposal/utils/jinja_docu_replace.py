@@ -9,6 +9,19 @@ def replace_placeholders_with_docxtpl(json_path, doc_path, new_doc_name):
     with open(json_path, 'r') as file:
         json_data = json.load(file)
 
+        # Debug print to see the structure
+    print("DEBUG: JSON data structure keys:", data.keys())
+    
+    # Check for None values in the data that might be iterated
+    for key, value in data.items():
+        if value is None:
+            print(f"WARNING: Key '{key}' has None value")
+        elif isinstance(value, dict):
+            for subkey, subvalue in value.items():
+                if subvalue is None:
+                    print(f"WARNING: Nested key '{key}.{subkey}' has None value")
+
+
     # Preprocess JSON keys to make them valid Python variable names
     def preprocess_json_keys(json_data):
         new_data = {}
@@ -47,8 +60,25 @@ def replace_placeholders_with_docxtpl(json_path, doc_path, new_doc_name):
     # Load the template document
     tpl = DocxTemplate(doc_path)
 
-    # Render the document with the context
-    tpl.render(context, autoescape=True)
+    # # Render the document with the context
+    # tpl.render(context, autoescape=True)
+
+    context = data
+    try:
+        print("DEBUG: About to render template...")
+        tpl.render(context, autoescape=True)
+        print("DEBUG: Template rendered successfully")
+    except Exception as e:
+        print(f"ERROR during template rendering: {str(e)}")
+        print(f"Error type: {type(e)}")
+        # Try to identify which variable caused the issue
+        if "is not iterable" in str(e):
+            # Extract the problematic template section if possible
+            print("Possible template issue with a None value being iterated")
+            # Print relevant parts of the context that might be None but expected to be lists
+            for key in ['Learning Outcomes', 'TSC and Topics', 'Assessment Methods']:
+                if key in data:
+                    print(f"DEBUG: '{key}' structure: {type(data[key])}")
 
     # Save the new document after rendering placeholders
     temp_doc_path = "CourseProposal/output_docs/temp_with_placeholders_replaced.docx"
