@@ -58,7 +58,7 @@ async def process_excel(model_choice: str) -> None:
     course_agent_state = await course_agent.save_state()
     with open("CourseProposal/json_output/course_agent_state.json", "w") as f:
         json.dump(course_agent_state, f)
-    course_agent_data = extract_agent_json("CourseProposal/json_output/course_agent_state.json", "course_agent")  
+    course_agent_data = extract_agent_json("CourseProposal/json_output/course_agent_state.json", "course_agent_validator")  
     with open("CourseProposal/json_output/course_agent_data.json", "w", encoding="utf-8") as f:
         json.dump(course_agent_data, f)  
 

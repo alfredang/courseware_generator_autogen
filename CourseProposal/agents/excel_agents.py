@@ -70,13 +70,34 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
         }}
     """
 
+    validation_message = f"""
+    Your only purpose is to ensure that the output from the previous agent STRICTLY matches the json schema provided below.
+    It must not have any other keys other than the ones specified in the below example.
+    Your output must take the content of the previous agent and ensure that it is structured in the given JSON format.
+
+    Do not have more than 1 key value pair under "course_overview", and that key value pair must be "course_description".
+
+
+    Format your response in the given JSON structure under "course_overview".
+    Your output MUST be as follows, with course_description being the only key-value pair under "course_overview":
+    "course_overview": {{
+        course_description: "Generated content from previous agent",
+        }}
+    """
+
     course_agent = AssistantAgent(
         name="course_agent",
         model_client=model_client,
         system_message=about_course_message,
     )
 
-    course_agent_chat = RoundRobinGroupChat([course_agent], max_turns=1)
+    course_agent_validator = AssistantAgent(
+    name="course_agent_validator",
+    model_client=model_client,
+    system_message=validation_message,
+    )
+
+    course_agent_chat = RoundRobinGroupChat([course_agent, course_agent_validator], max_turns=2)
 
     return course_agent_chat
 
