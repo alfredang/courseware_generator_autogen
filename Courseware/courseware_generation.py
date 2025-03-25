@@ -168,9 +168,7 @@ def parse_cp_document(input_file):
             tbl = Table(element, doc)
             if current_section:
                 add_content_to_section(current_section, {"table": parse_table(tbl)})
-
     return data
-
 ############################################################
 # 2. Web Scrape TGS and UEN information from MySkillsFuture portal
 ############################################################
@@ -257,7 +255,6 @@ def web_scrape(course_title: str, name_of_org: str) -> str:
                             # Return both TGS Ref No and UEN if available
                             return {
                                 "TGS_Ref_No": tgs_ref_no,
-                                "UEN": uen_number
                             }
         return "TGS Ref No not found"
     finally:
@@ -323,7 +320,7 @@ async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient)
         - Learning Outcomes (LOs) (include the "LOx: " prefix for each LO)
         - Numbering and Description for the "K" (Knowledge) Statements (as a list of dictionaries with keys "K_number" and "Description")
         - Numbering and Description for the "A" (Ability) Statements (as a list of dictionaries with keys "A_number" and "Description")
-        - **Assessment_Methods** (a list of assessment method abbreviations; e.g., ["WA-SAQ", "CS"])
+        - **Assessment_Methods** (a list of assessment method abbreviations; e.g., ["WA-SAQ", "CS"]). Note: If the CP contains the term "Written Exam", output it as "Written Assessment - Short Answer Questions". If it contains "Practical Exam", output it as "Practical Performance".
         - **Instructional_Methods** (a list of instructional method abbreviations or names)
 
         ### Part E: Details of Assessment Methods Proposed
@@ -340,7 +337,7 @@ async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient)
         - If the evidence is already provided as a list (for example, a list of strings or a list of dictionaries), keep it as is.
         - **Manner_of_Submission** (as a list, e.g., ["Submission 1", "Submission 2"])
         - **Marking_Process** (as a list, e.g., ["Process 1", "Process 2"])
-        - **Retention_Period**: **Extract the complete retention description exactly as provided in the CP.** 
+        - **Retention_Period**: **Extract the complete retention description exactly as provided in the CP.**
         - **No_of_Role_Play_Scripts** (only if the assessment method is Role Play and this information is provided)
 
         ---
@@ -437,9 +434,6 @@ def app():
     # Create a modal instance with a unique key and title
     crud_modal = Modal(key="crud_modal", title="Manage Organisations")
 
-    # ---------------------------
-    # Step 2: Select Name of Organisation with Manage Button
-    # ---------------------------
     st.subheader("Step 2: Select Name of Organisation")
 
     # Load organisations from JSON using the utility function
@@ -522,6 +516,8 @@ def app():
                     st.session_state["org_edit_index"] = real_index
                     st.rerun()
                 if row_delete.button("Delete", key=f"delete_{display_idx}", type="primary"):
+                    if org["logo"] and os.path.exists(org["logo"]):
+                        os.remove(org["logo"])
                     delete_organization(real_index)
                     st.success(f"Organisation '{org['name']}' deleted.")
                     st.rerun()
@@ -577,6 +573,12 @@ def app():
     # ================================================================
     if st.button("Generate Documents"):
         if cp_file is not None and selected_org:
+            # Reset previous output document paths
+            st.session_state['lg_output'] = None
+            st.session_state['ap_output'] = None
+            st.session_state['asr_output'] = None
+            st.session_state['lp_output'] = None
+            st.session_state['fg_output'] = None
             # Use the selected model configuration for all autogen agents
             selected_config = get_model_config(st.session_state['selected_model'])
             api_key = selected_config["config"].get("api_key")
@@ -627,13 +629,6 @@ def app():
             # Step 1: Parse the CP document
             raw_data = parse_cp_document(cp_file)
 
-            # Step 2: Add the current date to the raw_data
-            current_datetime = datetime.now()
-            current_date = current_datetime.strftime("%d %b %Y")
-            year = current_datetime.year
-            raw_data["Date"] = current_date
-            raw_data["Year"] = year
-
             try:
                 with st.spinner('Extracting Information from Course Proposal...'):
                     context = asyncio.run(interpret_cp(raw_data=raw_data, model_client=openai_struct_model_client))
@@ -644,9 +639,21 @@ def app():
 
             # After obtaining the context
             if context:
-                # Run web_scrape function to get TGS Ref No and UEN
+                # Step 2: Add the current date to the raw_data
+                current_datetime = datetime.now()
+                current_date = current_datetime.strftime("%d %b %Y")
+                year = current_datetime.year
+                context["Date"] = current_date
+                context["Year"] = year
+                # Find the selected organisation UEN in the organisation's record
+                selected_org_data = next((org for org in org_list if org["name"] == selected_org), None)
+                if selected_org_data:
+                    context["UEN"] = selected_org_data["uen"]
+                st.session_state['context'] = context  # Store context in session state
+    
+                # Run web_scrape function to get TGS Ref No
                 try:
-                    with st.spinner('Retrieving TGS Ref No and UEN...'):
+                    with st.spinner('Retrieving TGS Ref No...'):
                         web_scrape_result = web_scrape(context['Course_Title'], context['Name_of_Organisation'])
                         if isinstance(web_scrape_result, dict):
                             # Update context with web_scrape_result
