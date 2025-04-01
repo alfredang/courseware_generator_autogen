@@ -300,7 +300,7 @@ def create_assessment_dataframe(json_data):
         "CS": "Others: Case Study",
         "OQ": "Oral Questioning",
         "Written Assessment - Short-Answer Questions (WA-SAQ) - Individual, Summative, Open book": "Written Assessment - Short-Answer Questions",
-        "RP": "Others: Role Play"
+        "RP": Role Play"
     }
 
     num_assessment_hours = json_data["Course Information"].get("Number of Assessment Hours", 0)
@@ -407,7 +407,7 @@ def create_assessment_dataframe(json_data):
                     
                     # For A factors: Prioritize in this order: Role Play, Case Study, Practical Exam
                     if "Role Play" in assessment_methods:
-                        moa = "Others: Role Play"
+                        moa = "Role Play"
                         duration_minutes = method_durations_per_lu.get(lu_num, {}).get('RP', 0)
                     elif "Case Study" in assessment_methods:
                         moa = "Others: Case Study"
@@ -459,7 +459,7 @@ def create_assessment_dataframe(json_data):
             increment = 5
             
             # Prioritize adjusting assessment types in this order
-            for assessment_type in ["Written Exam", "Practical Exam", "Others: Case Study", "Oral Questioning", "Others: Role Play"]:
+            for assessment_type in ["Written Exam", "Practical Exam", "Others: Case Study", "Oral Questioning", "Role Play"]:
                 type_rows = df[df["MOA"] == assessment_type].index.tolist()
                 
                 if not type_rows or remaining_diff <= 0:
