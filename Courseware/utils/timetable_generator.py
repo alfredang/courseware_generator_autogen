@@ -1,4 +1,46 @@
-# timetable_generator.py
+"""
+File: timetable_generator.py
+
+===============================================================================
+Timetable Generator Module
+===============================================================================
+Description:
+    This module generates a structured lesson plan timetable based on the provided course context.
+    It leverages an AI assistant agent to produce a detailed and balanced lesson plan that adheres
+    strictly to WSQ course structure rules. The generated timetable ensures even distribution of topics,
+    fixed sessions (such as attendance, breaks, and final assessments), and appropriate use of instructional
+    methods over the specified number of days.
+
+Main Functionalities:
+    • extract_unique_instructional_methods(course_context):
+          Extracts and processes unique instructional method combinations from each Learning Unit in the
+          course context by correcting method names and grouping them into valid pairs.
+    • generate_timetable(context, num_of_days, model_client):
+          Uses an AI assistant agent to generate a complete lesson plan timetable in JSON format.
+          The timetable includes fixed sessions (attendance, breaks, assessment sessions) and topic or
+          activity sessions, distributed evenly across the specified number of days.
+
+Dependencies:
+    - autogen_agentchat.agents (AssistantAgent)
+    - autogen_core (CancellationToken)
+    - autogen_agentchat.messages (TextMessage)
+    - utils.helper (parse_json_content)
+    - Standard Python Libraries (built-in)
+
+Usage:
+    - Ensure the course context includes complete details such as Learning Units, Topics, Learning Outcomes,
+      Assessment Methods, and Instructional Methods.
+    - Configure an AI model client and specify the number of days (num_of_days) for the timetable.
+    - Call generate_timetable(context, num_of_days, model_client) to generate the lesson plan timetable.
+    - The function returns a JSON dictionary with the key "lesson_plan", containing a list of daily session
+      schedules formatted according to WSQ rules.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
 
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken

@@ -1,6 +1,59 @@
+"""
+File: agentic_SAQ.py
+
+===============================================================================
+Agentic Short-Answer Question (SAQ) Generation Module
+===============================================================================
+Description:
+    This module generates a comprehensive set of short-answer questions (SAQs) and corresponding
+    answers for a course by focusing on Knowledge Statements (K statements) extracted from a Facilitator Guide.
+    The module operates by:
+      - Extracting topics associated with each Knowledge Statement.
+      - Asynchronously retrieving relevant module content using a LlamaIndex-based query engine.
+      - Generating scenario-based SAQ question-answer pairs for each Knowledge Statement via an AI assistant agent.
+      
+Main Functionalities:
+    • get_topics_for_all_k_statements(fg_data):
+         Maps each Knowledge Statement to the topics under which it appears in the Facilitator Guide.
+    • retrieve_content_for_knowledge_statement_async(k_topics, index, premium_mode):
+         Asynchronously retrieves all module content aligned with the topics for each K statement, 
+         formatting the output based on the premium_mode flag.
+    • generate_saq_for_k(qa_generation_agent, course_title, assessment_duration, k_statement, content):
+         Generates a short-answer question and answer pair for a specific Knowledge Statement by crafting 
+         a realistic scenario and providing concise bullet-point answers.
+    • generate_saq(extracted_data, index, model_client, premium_mode):
+         Coordinates the overall SAQ generation process by extracting K statement topics, retrieving content,
+         and generating corresponding question-answer pairs for all knowledge statements.
+
+Dependencies:
+    - Standard Libraries: re, asyncio, json
+    - Autogen Libraries:
+         • autogen_agentchat.agents (AssistantAgent)
+         • autogen_core (CancellationToken)
+         • autogen_agentchat.messages (TextMessage)
+    - Llama Index: For content retrieval (llama_index.llms.openai)
+    - Streamlit: For accessing API keys via st.secrets and logging
+    - Pydantic: For the FacilitatorGuideExtraction model (from Assessment.utils.pydantic_models)
+    - Utilities: parse_json_content from utils.helper
+
+Usage:
+    - Ensure that all required API keys (e.g., OPENAI_API_KEY) are configured in st.secrets.
+    - Prepare an extracted Facilitator Guide data object (of type FacilitatorGuideExtraction) that includes course
+      details, learning units, topics, and knowledge statements.
+    - Provide a LlamaIndex vector store index (index) and a language model client (model_client) for content retrieval
+      and text generation.
+    - Invoke the generate_saq() function with the appropriate parameters (including the premium_mode flag) to obtain
+      a structured dictionary containing the course title, assessment duration, and a list of generated SAQ question-answer pairs.
+      
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import asyncio
 from llama_index.llms.openai import OpenAI as llama_openai
-from llama_index.postprocessor.flag_embedding_reranker import FlagEmbeddingReranker
 from Assessment.utils.pydantic_models import FacilitatorGuideExtraction
 from autogen_agentchat.agents import AssistantAgent
 from autogen_core import CancellationToken
@@ -50,16 +103,10 @@ async def retrieve_content_for_knowledge_statement_async(k_topics, index, premiu
     Returns:
         dict: A dictionary mapping K statements to their retrieved content.
     """
-    reranker = FlagEmbeddingReranker(
-        top_n=10,
-        model="BAAI/bge-reranker-large",
-    )
-
     query_engine = index.as_query_engine(
         similarity_top_k=10,
         verbose=True,
         response_mode="compact",
-        # node_postprocessors=[reranker],
     )
 
     async def query_index(k_statement, topics):

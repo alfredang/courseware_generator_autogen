@@ -1,3 +1,109 @@
+"""
+File: assessment_generation.py
+
+===============================================================================
+Assessment Generator Module
+===============================================================================
+Description:
+    This module implements a Streamlit-based web application that generates
+    assessment documents (e.g., Question and Answer papers) from provided input
+    documents. It processes a Facilitator Guide (FG) document and a Trainer Slide
+    Deck (PDF) to extract structured data, which is then used to generate assessments
+    for various types of tests such as Short Answer Questions (SAQ), Practical
+    Performance (PP), and Case Study (CS).
+
+Main Functionalities:
+    1. Session State Initialization:
+       - Sets up key variables in Streamlit's session_state to maintain state
+         across app interactions, including parsed indexes, extracted FG data,
+         and generated assessment files.
+
+    2. Helper Functions for Document Processing:
+       - get_text_nodes(json_list):
+         Extracts text nodes from parsed slide pages.
+       - get_page_nodes(docs, separator="\n---\n"):
+         Splits each document into page nodes based on a separator.
+       - get_pdf_page_count(pdf_path):
+         Returns the total number of pages in a PDF using pymupdf.
+
+    3. Facilitator Guide (FG) Parsing and Interpretation:
+       - parse_fg(fg_path, LLAMA_API_KEY):
+         Parses a Facilitator Guide document using LlamaParse to produce a JSON
+         representation of its contents.
+       - interpret_fg(fg_data, model_client):
+         Uses an AI assistant (via OpenAIChatCompletionClient) to extract and
+         structure key information from the FG document based on a predefined JSON
+         schema.
+
+    4. Slide Deck Parsing:
+       - parse_slides(slides_path, LLAMA_CLOUD_API_KEY, LVM_API_KEY, LVM_NAME, premium_mode=False):
+         Processes the Trainer Slide Deck PDF to extract text nodes, optionally
+         applying premium parsing instructions if enabled. The parsed content is
+         indexed using a vector store for subsequent query operations.
+
+    5. Assessment Document Generation:
+       - _ensure_list(answer):
+         Utility to guarantee that assessment answers are always returned as a list.
+       - generate_documents(context, assessment_type, output_dir):
+         Generates both question and answer documents for a given assessment type
+         using docxtpl templates. The generated files are saved temporarily and later
+         zipped for download.
+
+    6. Streamlit Web Application (app function):
+       - Provides a step-by-step user interface for:
+           a. Uploading the Facilitator Guide (.docx) and Trainer Slide Deck (.pdf).
+           b. Selecting additional parsing options (e.g., Premium Parsing).
+           c. Parsing the documents to extract structured data.
+           d. Generating assessments (SAQ, PP, CS) based on user selections.
+           e. Downloading the generated assessment files as a ZIP archive.
+           f. Resetting session data to start over if needed.
+
+Dependencies:
+    - Core Libraries:
+        • os, io, zipfile, tempfile, json, asyncio, copy (deepcopy)
+    - Streamlit:
+        • streamlit (for building the web application interface)
+    - PDF and Document Parsing:
+        • pymupdf (for PDF page count and processing)
+        • llama_parse (for parsing documents using LlamaCloud services)
+        • docxtpl (for generating and rendering Word document templates)
+    - AI and LLM Integration:
+        • llama_index (for indexing and processing text nodes)
+        • llama_index.llms.openai (for integrating OpenAI models)
+        • autogen_agentchat & autogen_core (for structured data extraction using AI)
+        • autogen_ext.models.openai (for OpenAIChatCompletionClient)
+    - Others:
+        • nest_asyncio (to support nested asyncio loops)
+        • Assessment.utils and utils.helper (for additional helper functions and model configurations)
+        • pymupdf (for handling PDF files)
+
+Usage:
+    - Ensure that all external dependencies are installed and that API keys (e.g.,
+      LLAMA_CLOUD_API_KEY, OPENAI_API_KEY, LVM_API_KEY) are configured in st.secrets.
+    - Run the module via Streamlit using:
+          streamlit run <this_file.py>
+    - Follow the on-screen instructions:
+          1. Upload the Facilitator Guide and Trainer Slide Deck.
+          2. Choose parsing options and initiate document parsing.
+          3. Select the type(s) of assessments to generate.
+          4. Download the generated assessments as a ZIP archive.
+          5. Optionally, reset course data to start a new session.
+
+Author: 
+    Derrick Lim
+Date:
+    4 March 2025
+
+Notes:
+    - The module integrates asynchronous processing for document parsing and data
+      extraction. Ensure that the environment supports asyncio and related libraries.
+    - Premium Parsing mode offers enhanced extraction features; enable it only if the
+      required vendor services (LVM) are properly configured.
+    - The generated assessments are stored temporarily and packaged into a ZIP file
+      for ease of download. Clean-up of temporary files is handled automatically.
+===============================================================================
+"""
+
 import streamlit as st
 import nest_asyncio
 import os

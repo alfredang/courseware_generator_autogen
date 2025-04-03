@@ -1,3 +1,46 @@
+"""
+File: utils.py
+
+===============================================================================
+Utilities Module for File Handling and Text Node Creation
+===============================================================================
+Description:
+    This module provides utility functions to support file operations and the creation of TextNode
+    objects for content processing within the LlamaIndex framework. The functions in this module
+    facilitate saving uploaded files, extracting page numbers from image filenames, sorting image files
+    based on page numbers, and converting JSON documents into TextNode objects enriched with metadata,
+    such as page numbers and image paths.
+
+Main Functionalities:
+    • save_uploaded_file(uploaded_file, save_dir):
+          Saves an uploaded file to the specified directory, creating the directory if it does not exist.
+    • get_page_number(file_name):
+          Extracts a page number from an image filename using a predefined regex pattern.
+    • _get_sorted_image_files(image_dir):
+          Retrieves and returns image files from a directory sorted by page number.
+    • get_text_nodes(json_dicts, image_dir=None):
+          Converts a list of JSON dictionaries containing markdown text into TextNode objects,
+          associating each node with metadata including the page number and corresponding image path (if available).
+
+Dependencies:
+    - Standard Libraries: re, os, pathlib (Path)
+    - External Libraries: llama_index.core.schema (TextNode)
+
+Usage:
+    - Import the necessary functions from this module to handle file uploads and generate TextNode objects
+      for further content processing.
+    - Example:
+          from utils import save_uploaded_file, get_text_nodes
+          file_path = save_uploaded_file(uploaded_file, "uploads")
+          nodes = get_text_nodes(json_data, image_dir="path/to/images")
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import re
 import os
 from pathlib import Path

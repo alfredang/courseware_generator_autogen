@@ -1,4 +1,45 @@
-# Courseware/utils/model_configs.py
+"""
+File: model_configs.py
+
+===============================================================================
+Model Configurations Module
+===============================================================================
+Description:
+    This module defines and manages model configurations for the Courseware system.
+    It retrieves necessary API keys from Streamlit secrets and constructs configuration
+    dictionaries for different language models including Gemini-Pro-2.5, GPT-4o, GPT-4o-mini,
+    and DeepSeek-V3. Each configuration specifies parameters such as the model name, API key,
+    base URL, temperature, seed, and additional model-specific settings.
+
+Main Functionalities:
+    • Defines configuration dictionaries for supported models:
+          - Gemini-Pro-2.5-Exp-03-25 (default)
+          - GPT-4o
+          - GPT-4o-mini
+          - DeepSeek-V3
+    • Provides a mapping (MODEL_CHOICES) from user-friendly model names to their corresponding
+      configuration dictionaries.
+    • Implements get_model_config(choice: str) to return the configuration dictionary for a given
+      model choice, defaulting to the Gemini-Pro configuration if the choice is unknown.
+
+Dependencies:
+    - Streamlit: Utilized to access API keys from st.secrets.
+
+Usage:
+    - Ensure that the required API keys (OPENAI_API_KEY, DEEPSEEK_API_KEY, GEMINI_API_KEY) are set in
+      st.secrets.
+    - Import and call the get_model_config function to retrieve the desired model configuration.
+      Example:
+          from Courseware.utils.model_configs import get_model_config
+          config = get_model_config("GPT-4o-mini")
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import streamlit as st
 
 # Retrieve API keys from Streamlit secrets

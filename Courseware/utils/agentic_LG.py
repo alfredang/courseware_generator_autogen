@@ -1,4 +1,47 @@
-# agentic_LG.py
+"""
+File: agentic_LG.py
+
+===============================================================================
+Learning Guide Generation Module
+===============================================================================
+Description:
+    This module is responsible for generating a Learning Guide (LG) document for a course.
+    It utilizes an AI assistant to produce structured content, including a Course Overview (90-100 words)
+    and a Learning Outcome description (45-50 words), based on the provided course details.
+    The generated content is then merged into a DOCX template, along with organization branding such as
+    the company logo, to create a comprehensive Learning Guide tailored to potential learners.
+
+Main Functionalities:
+    • generate_content(context, model_client):
+          Uses an AI assistant agent to generate a detailed Course Overview and a concise Learning Outcome
+          description. The output is a JSON dictionary with keys "Course_Overview" and "LO_Description".
+    • generate_learning_guide(context, name_of_organisation, model_client):
+          Retrieves the AI-generated content, integrates it into a DOCX template, inserts the organization's logo,
+          renders the document, and saves it as a temporary file. Returns the file path of the generated Learning Guide.
+
+Dependencies:
+    - Standard Libraries: json, tempfile, asyncio
+    - External Libraries:
+         • autogen_agentchat.agents (AssistantAgent)
+         • autogen_core (CancellationToken)
+         • autogen_agentchat.messages (TextMessage)
+         • docxtpl (DocxTemplate)
+    - Custom Utilities:
+         • parse_json_content from utils.helper
+         • process_logo_image from Courseware/utils/helper
+
+Usage:
+    - Ensure the Learning Guide DOCX template and organization logo are available at the specified paths.
+    - Configure the AI model client and prepare a structured course context.
+    - Invoke generate_learning_guide(context, name_of_organisation, model_client) to generate the Learning Guide.
+    - The function returns the file path of the generated document.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
 
 import json
 import tempfile

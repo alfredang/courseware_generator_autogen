@@ -1,3 +1,48 @@
+"""
+File: helper.py
+
+===============================================================================
+Helper Functions Module for Courseware
+===============================================================================
+Description:
+    This module provides utility functions to support various operations in the Courseware
+    system. It includes functions to retrieve course-related data from an Excel dataset and to
+    process an organization's logo image for insertion into DOCX documents. The retrieved data
+    enriches the course context with additional information such as TSC Sector, Category, and
+    Proficiency details, while the logo processing function resizes and prepares the image for
+    use in document templates.
+
+Main Functionalities:
+    • retrieve_excel_data(context: dict, sfw_dataset_dir: str) -> dict:
+          - Reads an Excel file from the specified directory.
+          - Extracts relevant information from the "TSC_K&A" sheet using the TSC Code provided in the context.
+          - Updates and returns the context dictionary with additional keys:
+                "TSC_Sector", "TSC_Sector_Abbr", "TSC_Category", "Proficiency_Level", and "Proficiency_Description".
+    • process_logo_image(doc, name_of_organisation, max_width_inch=7, max_height_inch=2.5) -> InlineImage:
+          - Processes and resizes the organization's logo image to fit within the defined maximum dimensions.
+          - Returns an InlineImage object for insertion into DOCX templates using docxtpl.
+
+Dependencies:
+    - pandas: For reading and parsing Excel files.
+    - os: For file system operations.
+    - PIL (Pillow): For image processing.
+    - docx.shared.Inches: For specifying dimensions in Word documents.
+    - docxtpl.InlineImage: For embedding images into DOCX templates.
+
+Usage:
+    - Import the helper functions when additional course data or logo processing is required.
+      Example:
+          from Courseware.utils.helper import retrieve_excel_data, process_logo_image
+          context = retrieve_excel_data(context, "Courseware/input/dataset/Sfw_dataset-2022-03-30 copy.xlsx")
+          logo_image = process_logo_image(doc, "Organisation Name")
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import pandas as pd
 import os
 from PIL import Image

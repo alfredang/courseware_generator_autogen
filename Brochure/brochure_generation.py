@@ -1,3 +1,69 @@
+"""
+File: brochure_generation.py
+
+===============================================================================
+Brochure Generator Module
+===============================================================================
+Description:
+    This module implements a Streamlit web application that generates course 
+    brochures by scraping course data from a provided URL and integrating with 
+    Google Drive and Google Docs APIs. It extracts key course details—including 
+    the course title, description, learning outcomes, TSC details, WSQ funding, 
+    pricing, session information, and topics—from the course webpage using Selenium. 
+    The module then uses these details to generate a Google Docs brochure based on 
+    a predefined template, replacing placeholders with actual course data.
+
+Main Functionalities:
+    - Scraping Course Data:
+        • Uses Selenium to navigate to a given course URL.
+        • Extracts course title, description, learning outcomes, TSC title/code/framework,
+          WSQ funding details, pricing information, session days, duration (hrs), and course topics.
+    - Data Modeling:
+        • Defines Pydantic models (CourseTopic and CourseData) for structured course data.
+        • Uses BrochureResponse to encapsulate the result of the brochure generation process.
+    - Google Drive and Docs Integration:
+        • Authenticates with Google services using service account credentials.
+        • Searches for existing folders and template documents on Google Drive.
+        • Copies a brochure template and replaces its placeholders with the scraped data.
+        • Generates a shareable link to the created brochure.
+    - Helper Functions:
+        • Includes utility functions for authentication, folder lookup, template copying,
+          placeholder detection/replacement, and text range identification within Google Docs.
+    - Streamlit Web Interface:
+        • Provides a user interface for inputting the course URL and folder name.
+        • Guides the user through scraping, authentication, folder validation, and brochure generation.
+        • Displays warnings if required folders are missing and offers a link to view the brochure.
+
+Dependencies:
+    - Standard Libraries:
+        • re, time
+    - External Libraries:
+        • streamlit           – For building the web interface.
+        • selenium            – For web scraping.
+        • pydantic            – For data validation and modeling.
+        • google.oauth2       – For service account authentication.
+        • googleapiclient     – For interacting with Google Drive and Docs APIs.
+    - Google API Credentials and Browser Configurations:
+        • Configured via st.secrets (e.g., BROWSER_TOKEN, BROWSER_WEBDRIVER_ENDPOINT, GOOGLE_API_CREDS).
+
+Usage:
+    - Configure the necessary API keys and credentials in st.secrets.
+    - Run the module with Streamlit (e.g., `streamlit run <this_file.py>`).
+    - Follow the on-screen instructions to enter the course URL and the exact course folder name.
+    - The application will then:
+         1. Scrape course data from the provided URL.
+         2. Authenticate with Google services.
+         3. Check for the existence of the required folders.
+         4. Generate or reuse a brochure based on a predefined template.
+         5. Provide a link to view the generated brochure.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import re
 import streamlit as st
 from typing import List, Dict
@@ -739,10 +805,10 @@ def app():
 
     
     # URL input
-    course_url = st.text_input("Enter the Course URL:")
+    course_url = st.text_input("Enter the Course URL:", placeholder="https://www.tertiarycourses.com.sg/wsq-comptia-security-certification-prep.html")
     
     # Course folder name input
-    course_folder_name = st.text_input("Enter the Course Folder name:")
+    course_folder_name = st.text_input("Enter the Course Folder name:", placeholder="e.g., TGS-2023039181 -  CompTIA Certified Security+ Training")
     
     # Add a warning about folder requirements
     st.warning("⚠️ Important: Both the _**Course Folder**_ and its _**Brochure**_ subfolder must already exist. This app will NOT create any folders.")

@@ -1,3 +1,80 @@
+"""
+File: annex_assessment.py
+
+===============================================================================
+Assessment into AP Annex Module
+===============================================================================
+Description:
+    This module integrates assessment Q&A documents into the annex section of an 
+    Assessment Plan (AP) document. It processes course folder contents in Google Drive 
+    to classify and retrieve relevant files (such as assessment plans, question papers, 
+    and answer papers) using OpenAI. The module then merges the Q&A documents into the 
+    annex section of the AP, updates version information on the cover page and within the 
+    filename, and tracks changes via a version control record. Overall, it automates the 
+    process of adding Assessment documents into the AP Annex.
+
+Main Functionalities:
+    0. Data Model & OpenAI Classification:
+         • Defines the FileClassification model (using Pydantic) to structure file metadata 
+           and classification details.
+         • Implements classify_files_with_openai() to classify files (assessment plan, question, 
+           and answer papers) using the GPT-4o-mini model.
+    1. Helper Functions:
+         • Provides utilities for authenticating with Google, downloading files from Google Drive, 
+           parsing version strings, selecting the latest file versions, building method data for 
+           Q&A documents, and deleting temporary files.
+    2. Processing Course Folder:
+         • Functions process_course_folder() and process_course_folder_direct() retrieve and classify 
+           files from specific subfolders (e.g., "Assessment Plan" and "Assessment") and compile structured 
+           data for further processing.
+    3. Merging Documents into Annex & Version Updates:
+         • insert_centered_header(): Inserts a centered header with an annex label into a Word document.
+         • insert_answers_under_heading(): Merges Q&A documents into the annex section of the assessment plan.
+         • update_cover_page_version(), update_version_number(), get_annex_label(): Update version numbers 
+           and generate annex labels.
+         • update_version_control_record(), bump_filename_version(), upload_updated_doc(): Handle version 
+           control updates and file renaming/uploading on Google Drive.
+    4. Tracking Processes:
+         • track_edited_assessment_plan(): Records editing events by appending new entries to an Excel file.
+    5. Main Function (app):
+         • Provides a Streamlit web application interface that:
+             - Prompts the user to enter a course TGS code.
+             - Searches for and processes the corresponding course folder in Google Drive.
+             - Downloads the assessment plan and Q&A files.
+             - Merges the Q&A documents into the annex of the assessment plan.
+             - Updates version information and uploads the revised document back to Google Drive.
+             - Cleans up temporary downloaded files after processing.
+
+Dependencies:
+    - Standard Libraries: os, io, re, json, pandas, datetime
+    - External Libraries:
+         • streamlit              – For building the web application interface.
+         • googleapiclient        – For interacting with Google Drive and Docs APIs.
+         • google.oauth2          – For service account authentication.
+         • docx, docxcompose      – For document manipulation and merging.
+         • pydantic               – For data validation and modeling.
+         • openai                 – For file classification via GPT-4o-mini.
+         • Additional modules from typing and various docx enums/shared/oxml for styling.
+
+Usage:
+    - Ensure that all required API keys and credentials (e.g., OPENAI_API_KEY, GOOGLE_API_CREDS, 
+      BROWSER_TOKEN, BROWSER_WEBDRIVER_ENDPOINT) are properly configured in st.secrets.
+    - Run the module with Streamlit:
+          streamlit run annex_assessment.py
+    - Follow the on-screen instructions to:
+          1. Input the course TGS code.
+          2. Search for and process the corresponding course folder.
+          3. Download, merge, and update assessment Q&A documents into the annex of the AP.
+          4. Upload the final updated document back to Google Drive.
+          5. Track changes via an Excel log.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import os
 import io
 import re
@@ -929,7 +1006,7 @@ def app():
         return match.group(0).upper() if match else None
 
     # Input: Course TGS code
-    course_tgs_code = st.text_input("Enter the Course TGS code:", "").strip().upper()
+    course_tgs_code = st.text_input("Enter the Course TGS code:", "", placeholder="e.g., TGS-2023039181").strip().upper()
 
     if st.button("Process Document"):
         if not course_tgs_code:

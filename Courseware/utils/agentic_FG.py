@@ -1,4 +1,42 @@
-# agentic_FG.py
+"""
+File: agentic_FG.py
+
+===============================================================================
+Facilitator's Guide Generation Module
+===============================================================================
+Description:
+    This module is responsible for generating a Facilitator's Guide (FG) document for a course.
+    It populates a DOCX template with detailed course content by merging data from an Excel dataset
+    and incorporating organization-specific branding, such as the company logo. The resulting document
+    serves as a comprehensive guide to assist facilitators in delivering course content effectively.
+
+Main Functionalities:
+    • generate_facilitators_guide(context: dict, name_of_organisation: str, sfw_dataset_dir=None) -> str:
+          - Retrieves additional course data from an Excel dataset using custom helper functions.
+          - Processes and inserts the organization's logo into the document context.
+          - Renders a Facilitator's Guide DOCX template with the enriched context.
+          - Saves the generated document as a temporary file and returns its file path.
+
+Dependencies:
+    - Standard Libraries: tempfile
+    - External Libraries:
+         • docxtpl (DocxTemplate) – For rendering DOCX templates.
+    - Custom Utilities:
+         • retrieve_excel_data, process_logo_image from Courseware/utils/helper
+
+Usage:
+    - Ensure that the FG DOCX template and the Excel dataset file are available at the specified locations.
+    - Provide a course context dictionary and the organization name.
+    - Optionally, specify a custom path to the Excel dataset; otherwise, the default dataset will be used.
+    - Call generate_facilitators_guide(context, name_of_organisation, sfw_dataset_dir) to generate the document.
+    - The function returns the file path of the generated Facilitator's Guide document.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
 
 import tempfile
 from docxtpl import DocxTemplate

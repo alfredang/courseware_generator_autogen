@@ -1,4 +1,64 @@
-# agentic_PP.py
+"""
+File: agentic_PP.py
+
+===============================================================================
+Agentic Practical Performance Generation Module
+===============================================================================
+Description:
+    This module generates practical performance assessments for a course by creating a concise,
+    realistic, and action-oriented scenario along with corresponding question-answer pairs for
+    each learning outcome. The module leverages asynchronous operations to:
+      - Clean markdown formatting from text.
+      - Extract learning outcome identifiers from provided strings.
+      - Retrieve relevant course content based on topics associated with each learning outcome.
+      - Generate a practical performance scenario that provides real-world context for hands-on assessments.
+      - Create task-based question-answer pairs for each learning outcome using an AI assistant agent.
+
+    The final output is structured in JSON format, ensuring that each question-answer pair is linked to
+    its respective learning outcome and abilities. This facilitates the creation of comprehensive practical
+    performance assessments that simulate real-world challenges.
+
+Main Functionalities:
+    • clean_markdown(text: str):
+          Removes markdown formatting (e.g., bold, underline, inline code) from input text.
+    • extract_learning_outcome_id(lo_text: str):
+          Extracts the learning outcome identifier (e.g., "LO4") from a learning outcome string.
+    • retrieve_content_for_learning_outcomes(extracted_data, engine, premium_mode=False):
+          Retrieves relevant course content for each learning outcome based on its topics.
+    • generate_pp_scenario(data, model_client):
+          Generates a concise and realistic practical performance scenario based on course details.
+    • generate_pp_for_lo(qa_generation_agent, course_title, assessment_duration, scenario, 
+          learning_outcome, learning_outcome_id, retrieved_content, ability_ids, ability_texts):
+          Generates a hands-on, task-based question-answer pair for a specific learning outcome.
+    • generate_pp(extracted_data, index, model_client, premium_mode):
+          Orchestrates the full practical performance assessment generation process by creating a scenario,
+          retrieving content, and generating question-answer pairs for each learning outcome.
+
+Dependencies:
+    - Standard Libraries: re, asyncio
+    - Streamlit: For accessing st.secrets and logging.
+    - Autogen Libraries:
+         • autogen_agentchat.agents (AssistantAgent)
+         • autogen_core (CancellationToken)
+         • autogen_agentchat.messages (TextMessage)
+    - Llama Index: For integrating OpenAI via llama_index.llms.openai (alias: llama_openai)
+    - Utilities: parse_json_content from utils.helper
+
+Usage:
+    - Prepare an extracted_data object containing course details, learning units, topics, and abilities.
+    - Provide a knowledge retrieval index (index) and a language model client (model_client) for text generation.
+    - Call the generate_pp() function with the appropriate parameters (including the premium_mode flag) to generate a
+      structured practical performance assessment.
+    - The output is a dictionary with the course title, assessment duration, generated scenario, and a list of question-answer
+      pairs in JSON format.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import re
 import asyncio
 import streamlit as st

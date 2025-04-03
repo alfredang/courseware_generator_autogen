@@ -1,4 +1,42 @@
-# agentic_LP.py
+"""
+File: agentic_LP.py
+
+===============================================================================
+Lesson Plan Generation Module
+===============================================================================
+Description:
+    This module generates a Lesson Plan (LP) document by populating a DOCX template with 
+    course-specific data provided via a context dictionary. It also integrates the organization's 
+    branding by processing and inserting the company logo into the document. The final Lesson Plan 
+    is saved as a temporary DOCX file, and the file path is returned for further use or download.
+
+Main Functionalities:
+    • generate_lesson_plan(context: dict, name_of_organisation: str) -> str:
+          - Loads the Lesson Plan DOCX template.
+          - Incorporates course details from the provided context.
+          - Processes and inserts the organization's logo into the document.
+          - Renders the populated template and saves the document as a temporary file.
+          - Returns the file path of the generated Lesson Plan document.
+
+Dependencies:
+    - Standard Libraries: tempfile
+    - External Libraries:
+         • docxtpl (DocxTemplate) – For rendering DOCX templates.
+    - Custom Utilities:
+         • process_logo_image from Courseware/utils/helper – For processing and embedding the organization's logo.
+
+Usage:
+    - Ensure the Lesson Plan DOCX template is available at the specified path.
+    - Provide a valid context dictionary containing course-related details and the organization's name.
+    - Call generate_lesson_plan(context, name_of_organisation) to generate the Lesson Plan.
+    - The function returns the file path of the generated document, which can then be used for further processing or download.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
 
 import tempfile
 from docxtpl import DocxTemplate

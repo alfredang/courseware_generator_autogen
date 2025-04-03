@@ -1,4 +1,69 @@
-# agentic_CS.py
+"""
+File: agentic_CS.py
+
+===============================================================================
+Agentic Case Study Generation Module
+===============================================================================
+Description:
+    This module is responsible for generating case study assessments for a course by
+    creating a realistic case study scenario and corresponding question-answer pairs
+    for each learning outcome. The module leverages asynchronous functions to:
+      - Extract learning outcome identifiers from provided texts.
+      - Retrieve relevant course content using a query engine based on topics and learning outcomes.
+      - Generate a detailed case study scenario aligned with the course’s learning outcomes
+        and associated abilities.
+      - Generate scenario-based question-answer pairs for each learning outcome using an
+        AI assistant agent.
+      
+    The output is structured in JSON format, ensuring that each case study question-answer
+    pair is linked to its respective learning outcome and abilities. This facilitates the
+    creation of comprehensive case study assessments that are grounded in real-world
+    organizational challenges.
+
+Main Functionalities:
+    • extract_learning_outcome_id(lo_text: str):
+          Extracts the learning outcome identifier (e.g., "LO4") from a learning outcome string.
+    • retrieve_content_for_learning_outcomes(extracted_data, engine, premium_mode=False):
+          Queries a content retrieval engine to obtain relevant course material for each learning
+          outcome based on associated topics.
+    • generate_cs_scenario(data: FacilitatorGuideExtraction, model_client):
+          Generates a realistic case study scenario (at least 250 words) that aligns with the
+          course’s learning outcomes and abilities.
+    • generate_cs_for_lo(qa_generation_agent, course_title, assessment_duration, scenario, 
+          learning_outcome, learning_outcome_id, retrieved_content, ability_ids, ability_texts):
+          Generates a case study question-answer pair for a specific learning outcome.
+    • generate_cs(extracted_data: FacilitatorGuideExtraction, index, model_client, premium_mode):
+          Orchestrates the overall case study generation process by creating a scenario, retrieving
+          content for each learning outcome, and generating corresponding question-answer pairs.
+
+Dependencies:
+    - Standard Libraries: re, asyncio
+    - Streamlit: For accessing st.secrets and logging
+    - Pydantic: For the FacilitatorGuideExtraction model from Assessment.utils.pydantic_models
+    - Autogen Libraries:
+         • autogen_agentchat.agents (AssistantAgent)
+         • autogen_core (CancellationToken)
+         • autogen_agentchat.messages (TextMessage)
+    - Llama Index: For integrating OpenAI via llama_index.llms.openai (alias: llama_openai)
+    - Utilities: parse_json_content from utils.helper
+
+Usage:
+    - Prepare a FacilitatorGuideExtraction data object containing course details, learning units,
+      topics, and abilities.
+    - Provide a query engine (index) for content retrieval and a language model client (model_client)
+      for generating text.
+    - Call the generate_cs() function with the appropriate parameters (including premium_mode flag)
+      to generate a structured case study assessment.
+    - The final output is a dictionary with the course title, assessment duration, generated scenario,
+      and a list of question-answer pairs.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 import re
 import asyncio
 import streamlit as st

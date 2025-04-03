@@ -1,3 +1,60 @@
+"""
+File: scraper_test.py
+
+===============================================================================
+Web Scraper Test Module
+===============================================================================
+Description:
+    This module serves as a test script for scraping course details from a specified
+    course webpage using Selenium WebDriver. It demonstrates how to:
+      - Initialize a Chrome WebDriver and set the browser window size.
+      - Navigate to a course details page and scroll to the bottom to ensure all content is loaded.
+      - Extract key course data including:
+            • Course Description (first two paragraphs)
+            • Learning Outcomes from an unordered list following a "Learning Outcomes" header
+            • Skills Framework details (TSC Title and TSC Code) using regex
+            • WSQ Funding information including Effective Date and funding values
+            • TGS Reference Number (Course Code)
+            • Pricing details (GST-exclusive and GST-inclusive prices)
+            • Course Information (Session days and Duration in hours)
+            • Course Details Topics and their subtopics
+      - Structure the scraped data into Pydantic models (CourseTopic and CourseData).
+      - Print the extracted information to the console for verification.
+
+Main Functionalities:
+    • WebDriver Initialization and Navigation:
+          Configures and launches a Chrome WebDriver, sets the window size,
+          navigates to the target URL, and scrolls to load dynamic content.
+    • Data Extraction:
+          Utilizes Selenium’s element locators (By.CLASS_NAME, By.XPATH, etc.)
+          to extract text from HTML elements and process it using regular expressions.
+    • Data Structuring:
+          Organizes extracted data into defined Pydantic models for consistency and
+          ease of further processing.
+    • Error Handling:
+          Implements try-except blocks to handle missing elements gracefully, providing
+          default values where necessary.
+    • Cleanup:
+          Closes the WebDriver session after data extraction to free system resources.
+
+Dependencies:
+    - Selenium: For automating the web browser and interacting with webpage elements.
+    - Pydantic: For data validation and creating structured models (CourseTopic and CourseData).
+    - Standard Libraries: re, time, typing (List, Optional)
+
+Usage:
+    - Ensure that the Chrome WebDriver is installed and accessible in your PATH.
+    - Run this script to test the scraping functionality on a sample course details page.
+    - The script will print the extracted course information to the console.
+    - Review the output for correctness and adjust selectors or logic if needed.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait

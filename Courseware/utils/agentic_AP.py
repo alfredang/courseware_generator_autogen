@@ -1,4 +1,59 @@
-# agentic_AP.py
+"""
+File: agentic_AP.py
+
+===============================================================================
+Assessment Plan Generation Module
+===============================================================================
+Description:
+    This module is part of the Courseware system and is responsible for generating
+    assessment documents by processing structured course data and integrating assessment
+    evidence extracted via an AI agent. It extracts structured justifications for various
+    assessment methods (such as CS, PP, OQ, and RP), merges these justifications into the
+    course data, and then populates DOCX templates to generate both an Assessment Plan (AP)
+    document and an Assessment Summary Report (ASR) document.
+
+Main Functionalities:
+    • extract_assessment_evidence(structured_data, model_client):
+          Uses an AI assistant agent to extract structured assessment evidence details (e.g.,
+          type of evidence, submission method, marking process, retention period, and role play
+          script requirements) from course learning outcomes and topics.
+    • combine_assessment_methods(structured_data, evidence_data):
+          Merges the extracted assessment evidence into the existing structured course data
+          under "Assessment_Methods_Details" based on method abbreviations.
+    • is_evidence_extracted(context):
+          Checks whether all required evidence fields (evidence, submission, marking process,
+          and retention period) are already present for each assessment method.
+    • generate_assessment_plan(context, name_of_organisation, sfw_dataset_dir):
+          Populates an Assessment Plan DOCX template with the course and assessment evidence data,
+          integrates the organization's logo, and returns the path to the generated document.
+    • generate_asr_document(context, name_of_organisation):
+          Populates an Assessment Summary Report DOCX template with course details and returns the
+          file path of the generated document.
+    • generate_assessment_documents(context, name_of_organisation, sfw_dataset_dir=None):
+          Coordinates the overall process by ensuring that all assessment evidence is extracted,
+          merging evidence into the structured data, and generating both the AP and ASR documents.
+
+Dependencies:
+    - Standard Libraries: tempfile, json, asyncio
+    - Streamlit: For configuration and accessing API keys via st.secrets.
+    - Pydantic: For modeling assessment method data.
+    - Autogen AgentChat and OpenAIChatCompletionClient: For generating structured evidence using AI.
+    - DocxTemplate (from docxtpl): For rendering DOCX templates.
+    - Custom Helper Functions: retrieve_excel_data and process_logo_image from Courseware/utils/helper.
+
+Usage:
+    - Ensure that all necessary API keys and configurations are set in st.secrets.
+    - Prepare a structured course context dictionary that includes assessment method details.
+    - Call generate_assessment_documents(context, name_of_organisation, sfw_dataset_dir) to generate
+      the Assessment Plan and Assessment Summary Report documents.
+    - The function returns a tuple with file paths to the generated documents.
+
+Author:
+    Derrick Lim
+Date:
+    3 March 2025
+===============================================================================
+"""
 
 import tempfile
 import streamlit as st

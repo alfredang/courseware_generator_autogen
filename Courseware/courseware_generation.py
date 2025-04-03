@@ -1,4 +1,94 @@
-# courseware_generation.py
+"""
+File: courseware_generation.py
+
+===============================================================================
+Courseware Document Generator
+===============================================================================
+Description:
+    This module serves as the main entry point for the Courseware Document Generator
+    application. It is designed to parse Course Proposal (CP) documents, extract and
+    interpret the course data, and generate multiple courseware documents such as:
+      - Learning Guide (LG)
+      - Assessment Plan (AP)
+      - Lesson Plan (LP)
+      - Facilitator's Guide (FG)
+      - Timetable (as needed)
+      
+    The application utilizes both AI-based processing (via OpenAI and autogen agents)
+    and conventional document parsing and web scraping methods to ensure that the CP data
+    is accurately transformed into a structured format for document generation.
+
+Main Functionalities:
+    1. Data Models:
+        - Defines several Pydantic models (e.g., Topic, LearningUnit, CourseData, etc.)
+          to validate and structure the course proposal and generated document data.
+          
+    2. Document Parsing:
+        - Function: parse_cp_document(uploaded_file)
+          Parses a CP document (Word or Excel) into a trimmed Markdown string based on
+          regex patterns to capture only the relevant sections of the document.
+          
+    3. Web Scraping:
+        - Function: web_scrape(course_title, name_of_org)
+          Automates a headless browser session using Selenium to retrieve TGS Ref No (and UEN)
+          from the MySkillsFuture portal based on the provided course title and organization.
+          
+    4. Data Interpretation:
+        - Function: interpret_cp(raw_data, model_client)
+          Leverages an AI assistant (via the OpenAIChatCompletionClient) to extract and structure
+          the course proposal data into a comprehensive JSON dictionary as defined by the CourseData model.
+          
+    5. Streamlit Application:
+        - Function: app()
+          Implements the user interface using Streamlit. This interface guides users through:
+            - Uploading a Course Proposal document.
+            - Managing organization details (CRUD operations via a modal).
+            - Optionally uploading an updated Skills Framework dataset.
+            - Selecting which courseware documents to generate.
+            - Executing the parsing, data extraction, document generation processes,
+              and finally providing a ZIP file download of all generated documents.
+              
+Dependencies:
+    - Custom Courseware Utilities:
+        • Courseware.utils.agentic_LG         : For generating the Learning Guide.
+        • Courseware.utils.agentic_AP         : For generating Assessment Documents.
+        • Courseware.utils.timetable_generator : For generating the course timetable.
+        • Courseware.utils.agentic_LP         : For generating the Lesson Plan.
+        • Courseware.utils.agentic_FG         : For generating the Facilitator's Guide.
+        • Courseware.utils.model_configs       : For model configuration and selection.
+        • Courseware.utils.organization_utils  : For managing organization data (CRUD).
+    - External Libraries:
+        • os, io, zipfile, tempfile, json, time, asyncio, datetime
+        • streamlit                        : For building the web UI.
+        • selenium & BeautifulSoup         : For web scraping tasks.
+        • docx                             : For generating and modifying Word documents.
+        • pydantic                         : For data validation and structured models.
+        • autogen_agentchat & autogen_core   : For AI-assisted text generation and processing.
+        • urllib.parse                     : For URL manipulation.
+    
+Usage:
+    - Configure API keys and endpoints in st.secrets (e.g., LLAMA_CLOUD_API_KEY, BROWSER_TOKEN,
+      BROWSER_WEBDRIVER_ENDPOINT, etc.).
+    - Run this module using Streamlit, e.g., `streamlit run <this_file.py>`, to launch the web interface.
+    - Follow the on-screen instructions to upload your CP document, manage organization data, select
+      the desired courseware documents, and generate/download the outputs.
+
+Author: 
+    Derrick Lim
+Date:
+    4 March 2025
+
+Notes:
+    - This module uses asynchronous functions and external AI services for data extraction.
+    - The Selenium web scraping component is configured to run headlessly with optimized options
+      suitable for both local and containerized environments.
+    - Organization management is performed using a JSON-based system via utility functions provided
+      in the Courseware.utils.organization_utils module.
+    - Ensure all dependencies are installed and properly configured before running the application.
+
+===============================================================================
+"""
+
 
 from Courseware.utils.agentic_LG import generate_learning_guide
 from Courseware.utils.agentic_AP import generate_assessment_documents
@@ -194,124 +284,7 @@ def parse_cp_document(uploaded_file):
     return markdown_text
 
 ############################################################
-# 2. Web Scrape TGS and UEN information from MySkillsFuture portal
-############################################################
-def web_scrape(course_title: str, name_of_org: str) -> str:
-    """
-    Scrapes TGS Ref No and UEN from the MySkillsFuture portal.
-
-    This function automates a browser session using Selenium, searches for the 
-    given course title, and extracts relevant identifiers from the first matching course.
-
-    Args:
-        course_title (str): 
-            The title of the course to search for.
-        name_of_org (str): 
-            The name of the organization offering the course.
-
-    Returns:
-        dict or str: 
-            A dictionary containing `TGS_Ref_No` and `UEN` if found,
-            otherwise, a string indicating that no matching course was found.
-
-    Raises:
-        WebDriverException: 
-            If there is an issue initializing or running the browser.
-    """
-    
-    # Format the course title for the URL
-    formatted_course_title = urllib.parse.quote(course_title)
-    search_url = f"https://www.myskillsfuture.gov.sg/content/portal/en/portal-search/portal-search.html?q={formatted_course_title}"
-    print(search_url)
-
-    # Set up the Selenium WebDriver (using Chrome here)
-    # options = webdriver.ChromeOptions()
-    # options.add_argument("--headless")
-    # options.add_argument("--no-sandbox")
-    # options.add_argument("--disable-dev-shm-usage")
-    # driver = webdriver.Chrome(options=options)
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.set_capability('browserless:token', st.secrets['BROWSER_TOKEN'])
-    # Set args similar to puppeteer's for best performance
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-background-timer-throttling")
-    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
-    chrome_options.add_argument("--disable-breakpad")
-    chrome_options.add_argument("--disable-component-extensions-with-background-pages")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--disable-features=TranslateUI,BlinkGenPropertyTrees")
-    chrome_options.add_argument("--disable-ipc-flooding-protection")
-    chrome_options.add_argument("--disable-renderer-backgrounding")
-    chrome_options.add_argument("--enable-features=NetworkService,NetworkServiceInProcess")
-    chrome_options.add_argument("--force-color-profile=srgb")
-    chrome_options.add_argument("--hide-scrollbars")
-    chrome_options.add_argument("--metrics-recording-only")
-    chrome_options.add_argument("--mute-audio")
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-
-    driver = webdriver.Remote(
-        command_executor=st.secrets['BROWSER_WEBDRIVER_ENDPOINT'],
-        options=chrome_options
-    )
-
-
-    try:
-        # Load the page with Selenium
-        driver.get(search_url)
-        time.sleep(3)  # Wait for JavaScript to load content
-
-        # Parse the loaded page with BeautifulSoup
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
-
-        # Locate the specific course-holder div with the class "courses-card-holder is-horizontal"
-        course_holder = soup.find('div', class_='courses-card-holder is-horizontal')
-        if not course_holder:
-            return "No courses found in the specified format."
-
-        # Find all relevant course cards within this container
-        course_cards = course_holder.find_all('div', class_='card')
-
-        for card in course_cards:
-            # Check if the card has the necessary elements for a course listing
-            provider_div = card.find('div', class_='course-provider')
-            title_element = card.find('h5', class_='card-title')
-            
-            if provider_div and title_element:
-                provider_name_element = provider_div.find('a')
-                if provider_name_element:
-                    provider_name = provider_name_element.get_text(strip=True)
-                    # Check if this matches the given organization name
-                    if name_of_org.lower() in provider_name.lower():
-                        # Find the link to the course detail page
-                        course_link_element = title_element.find('a')
-                        if course_link_element and 'href' in course_link_element.attrs:
-                            course_detail_url = "https://www.myskillsfuture.gov.sg" + course_link_element['href']
-                            
-                            # Request the course detail page
-                            driver.get(course_detail_url)
-                            time.sleep(5)  # Wait for JavaScript to load the detail page
-                            detail_soup = BeautifulSoup(driver.page_source, 'html.parser')
-
-                            # Extract TGS Ref No (Course ID)
-                            tgs_ref_no_element = detail_soup.find('div', class_='course-details-header').find('small')
-                            tgs_ref_no = tgs_ref_no_element.find('span').get_text(strip=True) if tgs_ref_no_element else None
-
-                            # Extract UEN number
-                            uen_element = detail_soup.find('div', class_='course-provider-info-holder').find_next('small')
-                            uen_number = uen_element.find('span').get_text(strip=True) if uen_element else None
-
-                            # Return both TGS Ref No and UEN if available
-                            return {
-                                "TGS_Ref_No": tgs_ref_no,
-                            }
-        return "TGS Ref No not found"
-    finally:
-        driver.quit()
-
-############################################################
-# 3. Interpret Course Proposal Data
+# 2. Interpret Course Proposal Data
 ############################################################
 async def interpret_cp(raw_data: dict, model_client: OpenAIChatCompletionClient) -> dict:
     """
@@ -490,6 +463,8 @@ def app():
     crud_modal = Modal(key="crud_modal", title="Manage Organisations")
 
     st.subheader("Step 2: Enter Relevant Details")
+    tgs_course_code = st.text_input("Enter TGS Course Code", key="tgs_course_code", placeholder="e.g., TGS-2023039181")
+
     col1, col2 = st.columns([0.8, 0.2], vertical_alignment="center")
     # Load organisations from JSON using the utility function
     org_list = load_organizations()
@@ -707,20 +682,11 @@ def app():
                 selected_org_data = next((org for org in org_list if org["name"] == selected_org), None)
                 if selected_org_data:
                     context["UEN"] = selected_org_data["uen"]
-                st.session_state['context'] = context  # Store context in session state
 
-                # Run web_scrape function to get TGS Ref No
-                try:
-                    with st.spinner('Retrieving TGS Ref No...'):
-                        web_scrape_result = web_scrape(context['Course_Title'], context['Name_of_Organisation'])
-                        if isinstance(web_scrape_result, dict):
-                            # Update context with web_scrape_result
-                            context.update(web_scrape_result)
-                        else:   
-                            st.warning(f"Web scrape result: {web_scrape_result}")
-                    st.session_state['context'] = context  # Store context in session state
-                except Exception as e:
-                    st.error(f"Error in web scraping: {e}")
+                tgs_course_code = st.session_state.get("tgs_course_code", "")
+                context["TGS_Ref_No"] = tgs_course_code
+
+                st.session_state['context'] = context  # Store context in session state
 
                 # Generate Learning Guide
                 if generate_lg:
