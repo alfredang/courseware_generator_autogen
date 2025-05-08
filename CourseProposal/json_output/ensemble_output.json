@@ -92,10 +92,10 @@
             "Topic 4: Copyright risk and avoid copyright infringement (K2, A9)"
         ],
         "Learning Units": [
-            "LU1: Storytelling with Generative AI",
-            "LU2: Storyboarding with Generative AI",
-            "LU3: Creating AI Generated Video",
-            "LU4: Generative AI Ethics and Best Practices"
+            "LU1: Storytelling with Generative AI (K9, K10, A8, A5)",
+            "LU2: Storyboarding with Generative AI (K1, K3, A7, A6)",
+            "LU3: Creating AI Generated Video (K8, K6, A2, A4)",
+            "LU4: Generative AI Ethics and Best Practices (K7, K5, K4, K2, A3, A1, A9)"
         ]
     },
     "Assessment Methods": {
@@ -112,40 +112,40 @@
                             "Topic": "Topic 1: Fundamentals of storytelling (K9)",
                             "Details": [
                                 "Explore the core elements of storytelling, including plot, character, and setting.",
-                                "Discuss the role of creative principles in crafting engaging narratives.",
-                                "Analyze examples of successful storytelling in various media.",
-                                "Understand how to incorporate storytelling techniques into AI-generated content.",
-                                "Exercises on developing narrative structures using AI tools."
+                                "Discuss the role of narrative structure in engaging storytelling.",
+                                "Examine creative principles in crafting compelling stories.",
+                                "Analyze examples of effective storytelling in various media.",
+                                "Apply storytelling techniques to AI-generated text prompts."
                             ]
                         },
                         {
                             "Topic": "Topic 2: Basic AI models for script generation (K10)",
                             "Details": [
-                                "Introduction to AI algorithms and models used in text generation.",
-                                "Examine the capabilities and limitations of current AI models for scriptwriting.",
-                                "Hands-on practice with AI tools for generating script elements.",
-                                "Discussion on the evolution of AI in creative writing.",
-                                "Case studies of AI-generated scripts in the industry."
+                                "Understand the foundational AI algorithms used in text generation.",
+                                "Explore different AI models and their applications in scriptwriting.",
+                                "Discuss the strengths and limitations of AI in creative writing.",
+                                "Examine case studies of AI-generated scripts.",
+                                "Learn to select appropriate AI models for specific scriptwriting tasks."
                             ]
                         },
                         {
                             "Topic": "Topic 3: Storytelling and storyboarding with generative AI (A8)",
                             "Details": [
-                                "Learn how to integrate storytelling elements into AI-generated storyboards.",
-                                "Techniques for avoiding generic replication in AI-generated content.",
-                                "Workshop on creating unique storyboards using generative AI.",
-                                "Explore the synergy between narrative and visual elements in storyboarding.",
-                                "Evaluate the effectiveness of AI-generated storyboards in storytelling."
+                                "Incorporate unique storytelling elements into AI-generated content.",
+                                "Avoid generic replication by applying creative principles.",
+                                "Develop storyboards that align with narrative goals.",
+                                "Utilize AI tools to enhance visual storytelling.",
+                                "Evaluate the effectiveness of AI-generated storyboards."
                             ]
                         },
                         {
                             "Topic": "Topic 4: Generating stories with generative AI (A5)",
                             "Details": [
-                                "Utilize AI-generated text techniques to develop compelling story elements.",
-                                "Strategies for enhancing narrative creativity using AI tools.",
-                                "Practical exercises on generating stories with AI.",
-                                "Discussion on the role of AI in modern storytelling.",
-                                "Explore the potential of AI in creating diverse and inclusive narratives."
+                                "Use AI-generated text techniques to create story elements.",
+                                "Explore methodologies for developing compelling narratives.",
+                                "Refine AI-generated content for clarity and engagement.",
+                                "Experiment with different prompts to enhance story quality.",
+                                "Assess the impact of AI on storytelling processes."
                             ]
                         }
                     ]
@@ -155,41 +155,41 @@
                         {
                             "Topic": "Topic 1: Fundamentals of storyboarding (K1)",
                             "Details": [
-                                "Understand the basics of storyboarding and its importance in visual storytelling.",
-                                "Learn techniques for world-building and character development in storyboards.",
-                                "Exercises on creating effective storyboards for different media.",
-                                "Analyze successful storyboards and their impact on storytelling.",
-                                "Discussion on the role of AI in enhancing storyboard creation."
+                                "Learn the basics of creating effective storyboards.",
+                                "Understand the role of storyboarding in visual storytelling.",
+                                "Explore techniques for visualizing narrative elements.",
+                                "Analyze examples of successful storyboards.",
+                                "Apply AI-generated script ideation techniques to storyboarding."
                             ]
                         },
                         {
                             "Topic": "Topic 2: Storyboard breakdown and text prompts for images (A7)",
                             "Details": [
-                                "Learn how to break down storyboards into key visual elements.",
-                                "Techniques for creating effective text prompts for AI-generated images.",
-                                "Hands-on practice with AI tools for generating storyboard images.",
-                                "Explore the relationship between text prompts and visual storytelling.",
-                                "Evaluate the effectiveness of AI-generated images in storyboards."
+                                "Identify key terms and themes for AI-generated storyboards.",
+                                "Develop text prompts to guide image generation.",
+                                "Break down storyboards into actionable components.",
+                                "Utilize AI tools to enhance visual elements.",
+                                "Iterate on storyboard designs for improved outcomes."
                             ]
                         },
                         {
                             "Topic": "Topic 3: AI tool limitation and solutions to generate better images (K3)",
                             "Details": [
-                                "Identify common limitations of AI tools in image generation.",
-                                "Explore solutions to overcome these limitations and improve image quality.",
-                                "Discussion on the impact of AI tool limitations on creative processes.",
-                                "Hands-on practice with advanced AI tools for image enhancement.",
-                                "Case studies of successful AI-generated images in media."
+                                "Understand the limitations of current AI tools in image generation.",
+                                "Explore solutions to overcome AI tool limitations.",
+                                "Experiment with different AI techniques for better image quality.",
+                                "Discuss the impact of AI limitations on creative processes.",
+                                "Evaluate the effectiveness of AI-generated images."
                             ]
                         },
                         {
                             "Topic": "Topic 4: Apply iterative approach to image generation (A6)",
                             "Details": [
-                                "Learn the importance of iteration in improving AI-generated images.",
-                                "Techniques for applying iterative processes to enhance image quality.",
-                                "Workshop on refining AI-generated images through iteration.",
-                                "Explore the role of feedback in the iterative process.",
-                                "Discussion on the impact of iteration on creative outcomes."
+                                "Learn the importance of iteration in image generation.",
+                                "Apply and adjust relevant prompts to improve image quality.",
+                                "Experiment with different iterations to achieve desired outcomes.",
+                                "Analyze the impact of iterative processes on creative results.",
+                                "Utilize AI tools to streamline the iterative process."
                             ]
                         }
                     ]
@@ -199,21 +199,21 @@
                         {
                             "Topic": "Topic 1: AI Video tools for generating text, voiceover and video (K8, A2)",
                             "Details": [
-                                "Introduction to AI tools for generating video content.",
-                                "Learn how to create text, voiceover, and video using AI.",
-                                "Hands-on practice with AI video tools for content creation.",
-                                "Explore the integration of NLP techniques in video generation.",
-                                "Discussion on the impact of AI on video production."
+                                "Explore AI tools for generating video content.",
+                                "Utilize NLP techniques to enhance video scripts.",
+                                "Experiment with AI-generated voiceovers for video content.",
+                                "Discuss the integration of text, voice, and video in storytelling.",
+                                "Evaluate the effectiveness of AI-generated video elements."
                             ]
                         },
                         {
                             "Topic": "Topic 2: Generating AI video for storyboard (K6, A4)",
                             "Details": [
-                                "Learn how to generate AI videos based on storyboards.",
-                                "Techniques for script-editing AI-generated video content.",
-                                "Workshop on creating AI videos for visual storytelling.",
-                                "Explore the role of AI in enhancing video narratives.",
-                                "Evaluate the effectiveness of AI-generated videos in storytelling."
+                                "Learn to generate AI video content for storyboards.",
+                                "Utilize AI tools for script analysis and market research.",
+                                "Filter and script-edit AI-generated video content.",
+                                "Discuss the impact of AI on video production processes.",
+                                "Evaluate the quality and effectiveness of AI-generated videos."
                             ]
                         }
                     ]
@@ -223,41 +223,41 @@
                         {
                             "Topic": "Topic 1: Gen AI and ethics awareness (K7)",
                             "Details": [
-                                "Understand the ethical considerations in using generative AI.",
-                                "Discuss the impact of AI on privacy, bias, and misinformation.",
-                                "Explore the role of ethics in AI content creation.",
-                                "Case studies on ethical challenges in AI-generated content.",
-                                "Strategies for promoting ethical AI practices in media."
+                                "Understand the ethical implications of using generative AI.",
+                                "Discuss the importance of ethics in AI-generated content.",
+                                "Explore case studies of ethical challenges in AI usage.",
+                                "Learn to identify and address ethical issues in AI outputs.",
+                                "Develop strategies for ethical AI content generation."
                             ]
                         },
                         {
                             "Topic": "Topic 2: Best Practices to minimise plagiarism risk (K5, A3)",
                             "Details": [
-                                "Learn best practices for minimizing plagiarism in AI-generated content.",
-                                "Discuss the importance of ethical considerations in prompt selection.",
-                                "Techniques for ensuring originality in AI-generated scripts.",
-                                "Workshop on applying ethical practices in AI content creation.",
-                                "Explore the impact of plagiarism on creative industries."
+                                "Learn best practices to minimize plagiarism in AI-generated content.",
+                                "Apply ethical considerations in prompt selection and reference usage.",
+                                "Discuss the impact of plagiarism on creative processes.",
+                                "Explore tools and techniques to detect and prevent plagiarism.",
+                                "Develop strategies for maintaining originality in AI outputs."
                             ]
                         },
                         {
                             "Topic": "Topic 3: Analyse AI output for bias and taking corrective steps (K4, A1)",
                             "Details": [
-                                "Learn how to identify and analyze bias in AI-generated content.",
-                                "Techniques for taking corrective steps to address bias.",
-                                "Discussion on the impact of bias on AI content quality.",
-                                "Hands-on practice with tools for bias detection and correction.",
-                                "Explore the role of bias awareness in ethical AI practices."
+                                "Understand the presence of bias in AI-generated content.",
+                                "Learn techniques to analyze AI outputs for bias.",
+                                "Discuss the impact of bias on creative and ethical outcomes.",
+                                "Develop corrective steps to address bias in AI outputs.",
+                                "Evaluate the effectiveness of bias correction strategies."
                             ]
                         },
                         {
                             "Topic": "Topic 4: Copyright risk and avoid copyright infringement (K2, A9)",
                             "Details": [
                                 "Understand copyright laws related to generative AI usage.",
-                                "Learn how to identify and avoid copyright infringement in AI content.",
-                                "Discussion on the impact of copyright risks on creative processes.",
-                                "Techniques for ensuring compliance with copyright regulations.",
-                                "Case studies on copyright challenges in AI-generated content."
+                                "Identify copyright risks in AI-generated content.",
+                                "Learn strategies to avoid copyright infringement.",
+                                "Discuss the impact of copyright issues on creative processes.",
+                                "Develop best practices for copyright compliance in AI outputs."
                             ]
                         }
                     ]

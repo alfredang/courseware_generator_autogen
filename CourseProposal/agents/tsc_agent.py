@@ -83,14 +83,14 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
                     "A4: Keep up to date with new technologies and systems",
                     "Learning Units"
                 ],
-                "LU1: Storytelling with Generative AI": [
+                "LU1: Storytelling with Generative AI (K9, K10, A8, A5)": [
                     "Topic 1: Getting Started with Github Copilot (K1, K3, A1, A3)",
                     "What is Github Copilot?",
                     "How Github Copilot enhances software development efficiency?",
                     "Install Github Copilot on Visual Studio Code",
                     "Explore Github Copilot features"
                 ],
-                "LU2: Storyboarding with Generative AI": [
+                "LU2: Storyboarding with Generative AI (K2, K4, A2, A4)": [
                     "Topic 2: Software Development with Github Copilot (K2, K4, A2, A4)",
                     "Github Copilot for HTML",
                     "Github Copilot for Python",
@@ -138,7 +138,7 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
                     "A4: Keep up to date with new technologies and systems",
                     "Learning Units"
                 ],
-                "LU1: Storytelling with Generative AI": [
+                "LU1: Storytelling with Generative AI (K1, K3, A1, A3)": [
                     "Topic 1: Getting Started with Github Copilot (K1, A1)",
                     "What is Github Copilot?",
                     "How Github Copilot enhances software development efficiency?",

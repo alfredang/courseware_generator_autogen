@@ -174,8 +174,8 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         "#Course_Background1": {"sheet": "1 - Course Particulars", "cell": "C6", "json_key": "#Course_Background1"},  
         "#Placeholder[0]": {"sheet": "2 - Background", "cell": "B4", "json_key": "#Placeholder[0]"},
         "#Placeholder[1]": {"sheet": "2 - Background", "cell": "B8", "json_key": "#Placeholder[1]"},
-        "#Sequencing_rationale": {"sheet": "3 - Instructional Design", "cell": "B4", "json_key": "#Sequencing_rationale"},
-       # "#Combined_LO": {"sheet": "3 - Instructional Design", "cell": "B4", "json_key": "#Combined_LO"}
+        "#Sequencing_rationale": {"sheet": "3 - Instructional Design", "cell": "B6", "json_key": "#Sequencing_rationale"},
+        "#Combined_LO": {"sheet": "3 - Instructional Design", "cell": "B4", "json_key": "#Combined_LO"}
     }
 
     temp_dir = tempfile.mkdtemp()
