@@ -14,14 +14,39 @@ def convert_minutes_to_hours_minutes(minutes_total):
     return f"{hours} hours {minutes} minutes"
 
 def compute_total_durations(summary_df):
-    # Sum up the instructional durations from the summary dataframe.
+    """
+    Computes total durations (instructional, assessment, course) based on the summary dataframe.
+    
+    Args:
+        summary_df (pd.DataFrame): The summary dataframe containing instructional and assessment durations.
+        
+    Returns:
+        tuple: (instructional_duration_str, assessment_duration_str, course_duration_str)
+               Formatted strings showing hours and minutes.
+    """
+    # Ensure we have valid numeric values by forcing conversion to integers
+    summary_df["Instructional Duration (in minutes)"] = pd.to_numeric(
+        summary_df["Instructional Duration (in minutes)"], errors="coerce").fillna(0).astype(int)
+    
+    summary_df["Assessment Duration (in minutes)"] = pd.to_numeric(
+        summary_df["Assessment Duration (in minutes)"], errors="coerce").fillna(0).astype(int)
+    
+    # Sum up the instructional durations from the summary dataframe
     total_instructional_minutes = summary_df["Instructional Duration (in minutes)"].sum()
-    # Sum up the assessment durations from the summary dataframe.
+    
+    # Sum up the assessment durations from the summary dataframe
     total_assessment_minutes = summary_df["Assessment Duration (in minutes)"].sum()
-    # Total course duration is the sum of instructional and assessment durations.
+    
+    print(f"Computing total durations - Instructional: {total_instructional_minutes} min, Assessment: {total_assessment_minutes} min")
+    
+    # Ensure we have positive values
+    total_instructional_minutes = max(0, total_instructional_minutes)
+    total_assessment_minutes = max(0, total_assessment_minutes)
+    
+    # Total course duration is the sum of instructional and assessment durations
     total_course_minutes = total_instructional_minutes + total_assessment_minutes
 
-    # Convert totals to "x hours x minutes" format.
+    # Convert totals to "x hours x minutes" format
     instructional_duration = convert_minutes_to_hours_minutes(total_instructional_minutes)
     assessment_duration = convert_minutes_to_hours_minutes(total_assessment_minutes)
     course_duration = convert_minutes_to_hours_minutes(total_course_minutes)
@@ -196,7 +221,7 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
                 save_dataframe_to_excel(instructional_df, "CourseProposal/json_output/course_dataframe.xlsx")
                 print(instructional_df)
                 # For example, insert starting at row 18 and column 2 (B18)
-                insert_dataframe_into_sheet(sheet_xml_path, start_row=17, start_col=2, df=instructional_df)
+                insert_dataframe_into_sheet(sheet_xml_path, start_row=15, start_col=2, df=instructional_df)
             else:
                 print("Warning: DataFrame is empty. Nothing to insert.")
         else:
@@ -257,31 +282,47 @@ def process_excel_update(json_data_path, excel_template_path, output_excel_path,
         else:
             print("Sheet '3 - Methodologies' not found. DataFrame not inserted.")
 
-        # Insert the DataFrame into a designated sheet (e.g., "3 - Instructional Design")
+        # Insert the DataFrame into a designated sheet (e.g., "3 - Summary")
         if "3 - Summary" in sheet_mapping:
-
             instructional_description_df = create_instruction_description_dataframe(ensemble_output_path, instructional_methods_path)
             summary_df = create_summary_dataframe(instructional_df, instructional_2_df, methods_df)
+            
             if not summary_df.empty:
                 sheet_xml_path = os.path.join(temp_dir, sheet_mapping["3 - Summary"])
                 save_dataframe_to_excel(summary_df, "CourseProposal/json_output/summary_dataframe.xlsx")
-                # For example, insert starting at row 18 and column 2 (B18)
+                
+                # Insert starting at row 7 and column 2 (B7)
                 insert_dataframe_into_sheet(sheet_xml_path, start_row=7, start_col=2, df=summary_df)
-                total_instructional_duration, total_assessment_duration, total_course_duration = compute_total_durations(summary_df)
-                print(f"Total Instructional Duration: {total_instructional_duration}")
-                print(f"Total Assessment Duration: {total_assessment_duration}")
-                print(f"Total Course Duration: {total_course_duration}")
-                print(summary_df)
+                
+                # Calculate durations for summary sheet
+                # Get total assessment duration from the dataframe - use actual calculated values
+                total_assessment_minutes = summary_df["Assessment Duration (in minutes)"].sum()
+                
+                # Get total instructional duration from the dataframe
+                total_instructional_minutes = summary_df["Instructional Duration (in minutes)"].sum()
+                
+                # Calculate total course minutes
+                total_course_minutes = total_instructional_minutes + total_assessment_minutes
+                
+                # Convert totals to "x hours x minutes" format
+                instructional_duration = convert_minutes_to_hours_minutes(total_instructional_minutes)
+                assessment_duration = convert_minutes_to_hours_minutes(total_assessment_minutes)
+                course_duration = convert_minutes_to_hours_minutes(total_course_minutes)
+                
+                print(f"Total Assessment Duration from dataframe: {total_assessment_minutes} minutes ({assessment_duration})")
+                print(f"Total Instructional Duration: {instructional_duration}")
+                print(f"Total Course Duration: {course_duration}")
+                
                 # Write the total durations to specific cells in the Summary sheet
-                update_cell_in_sheet(sheet_xml_path, "G4", total_instructional_duration)
-                update_cell_in_sheet(sheet_xml_path, "I4", total_assessment_duration) 
-                update_cell_in_sheet(sheet_xml_path, "G3", total_course_duration)
+                update_cell_in_sheet(sheet_xml_path, "G4", instructional_duration)
+                update_cell_in_sheet(sheet_xml_path, "I4", assessment_duration) 
+                update_cell_in_sheet(sheet_xml_path, "G3", course_duration)
                 update_cell_in_sheet(sheet_xml_path, "K4", "Classroom Facilitated Training")
-                update_cell_in_sheet(sheet_xml_path, "M4", total_instructional_duration)
+                update_cell_in_sheet(sheet_xml_path, "M4", instructional_duration)
             else:
-                print("Warning: DataFrame is empty. Nothing to insert.")
+                print("Warning: Summary DataFrame is empty. Nothing to insert.")
         else:
-            print("Sheet '3 - Methodologies' not found. DataFrame not inserted.")
+            print("Sheet '3 - Summary' not found. DataFrame not inserted.")
 
         # Repackage the updated directory into a new .xlsx file
         with zipfile.ZipFile(output_excel_path, 'w', zipfile.ZIP_DEFLATED) as zout:
@@ -352,7 +393,7 @@ def update_cell_in_sheet(sheet_xml_path, cell_ref, new_value):
 
     # Find the <c> element with attribute r equal to cell_ref
     for cell in root.xpath('.//main:c[@r="%s"]' % cell_ref, namespaces=ns):
-        # Skip cells that have a formula (we don’t want to overwrite them)
+        # Skip cells that have a formula (we don't want to overwrite them)
         if cell.xpath('main:f', namespaces=ns):
             print(f"Notice: Overwriting formula in cell {cell_ref}")
 

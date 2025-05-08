@@ -118,6 +118,10 @@ def create_ka_analysis_agent(ensemble_output, instructional_methods_data, model_
     Full list of A factors: {ensemble_output.get('Learning Outcomes', {}).get('Ability', [])}
     Ensure that ALL of the A and K factors are addressed.
     Only use the first 2 characters as the key names for your JSON output, like K1 for example. Do not use the full A and K factor description as the key name.
+    
+    IMPORTANT: Use the exact assessment method terminology:
+    - "Written Exam" (not "Written Assessment")  
+    - "Practical Exam" (not "Practical Performance")
 
     Do not mention any of the Instructional Methods directly.
     K factors must address theory and knowledge, while A factors must address practical application and skills, you must reflect this in your analysis.

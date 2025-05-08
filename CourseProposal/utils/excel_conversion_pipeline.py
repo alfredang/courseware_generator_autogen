@@ -158,73 +158,111 @@ def create_course_dataframe(json_data):
 
     # Initialize lists to hold the data for each row in the DataFrame
     data = []
+    # Dictionary to track topics already processed for each LU
+    processed_topics = {}
 
     # Iterate through Learning Units (LU)
     for lu_index, lu_title in enumerate(learning_units):
         lu_num = f"LU{lu_index + 1}"  # LU1, LU2, etc.
-        lu_title_only = lu_title.split(": ", 1)[1]  # Extract title after "LUx: "
+        # Extract title after "LUx: " and REMOVE any KA references in parentheses
+        lu_title_full = lu_title.split(": ", 1)[1] if ": " in lu_title else lu_title
+        lu_title_only = lu_title_full.split(" (")[0] if " (" in lu_title_full else lu_title_full
 
         # Get Learning Outcome (LO) for the current LU
         lo_title = learning_outcomes[lu_index] if lu_index < len(learning_outcomes) else "N/A"
         lo_num = f"LO{lu_index + 1}"
-        lo_title_only = lo_title.split(": ", 1)[1] if lo_title != "N/A" else "N/A" # Extract title after "LOx: "
+        lo_title_only = lo_title.split(": ", 1)[1] if lo_title != "N/A" and ": " in lo_title else "N/A" # Extract title after "LOx: "
 
         # Get Topics for the current LU from Course Outline
         lu_key = f"LU{lu_index + 1}"
+        processed_topics[lu_key] = {}
+        
         if lu_key in course_outline:
             topics = course_outline[lu_key].get("Description", [])
+            
             for topic in topics:
                 topic_title_full = topic.get("Topic", "N/A")
                 topic_num = topic_title_full.split(":")[0].replace("Topic ", "T") # "Topic 1" -> "T1"
-                topic_title = topic_title_full.split(': ', 1)[1]  # Get the title only, after the first ': '
-                topic_title_short = topic_title.split(' (')[0]  # extract the topic title without KA
+                topic_title = topic_title_full.split(': ', 1)[1] if ": " in topic_title_full else topic_title_full  # Get the title only, after the first ': '
+                topic_title_short = topic_title.split(' (')[0] if " (" in topic_title else topic_title  # extract the topic title without KA
 
-                # Extract K and A statements from the topic title
-                ka_codes_str = topic_title_full.split('(')[-1].rstrip(')')  # Everything inside (...)
-                ka_codes = [code.strip() for code in ka_codes_str.split(',')]
-
-                if "Case Study" in assessment_methods:
-                    moa = "Others: Case Study"
-                elif "Role Play" in assessment_methods:
-                    moa = "Role Play"
-                else:
-                    moa = "Practical Exam"
+                # Create a unique identifier for this topic in this LU
+                topic_key = f"{topic_num}: {topic_title_short}"
                 
-                if "Oral Questioning" in assessment_methods:
-                    moa_k = "Oral Questioning"
-                else:
-                    moa_k = "Written Exam"                
+                # Extract K and A statements from the topic title
+                ka_codes_str = topic_title_full.split('(')[-1].rstrip(')') if "(" in topic_title_full else ""
+                ka_codes = [code.strip() for code in ka_codes_str.split(',')] if ka_codes_str else []
 
-                # Create rows for EACH K and A statement
+                # Group K and A statements for the same topic
+                k_statements = []
+                a_statements = []
+                
                 for code in ka_codes:
                     if code.startswith('K'):
                         k_index = int(code[1:]) - 1
-                        # Correct K statement formatting:  Remove the duplicate "Kx: " prefix
                         k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
-                        data.append([
-                            lu_num,
-                            lu_title_only,
-                            lo_num,
-                            lo_title_only,
-                            f"{topic_num}: {topic_title_short}",
-                            k_statement,
-                            # "Written Exam"  # Mode of Assessment for K
-                            moa_k
-                        ])
+                        k_statements.append(k_statement)
                     elif code.startswith('A'):
                         a_index = int(code[1:]) - 1
-                        # Correct A statement formatting: Remove the duplicate "Ax: " prefix
                         a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
-                        data.append([
-                            lu_num,
-                            lu_title_only,
-                            lo_num,
-                            lo_title_only,
-                            f"{topic_num}: {topic_title_short}",
-                            a_statement,
-                            # "Practical Exam"  # Mode of Assessment for A
-                            moa
-                        ])
+                        a_statements.append(a_statement)
+                
+                # Determine assessment methods
+                if "Oral Questioning" in assessment_methods:
+                    moa_k = "Oral Questioning"
+                else:
+                    moa_k = "Written Exam"
+                    
+                if "Case Study" in assessment_methods:
+                    moa_a = "Others: [Please elaborate]"
+                elif "Role Play" in assessment_methods:
+                    moa_a = "Role Play"
+                else:
+                    moa_a = "Practical Exam"
+                
+                # Add K statements row
+                if k_statements:
+                    if topic_key not in processed_topics[lu_key]:
+                        processed_topics[lu_key][topic_key] = {'k': k_statements, 'a': []}
+                    else:
+                        processed_topics[lu_key][topic_key]['k'].extend(k_statements)
+                
+                # Add A statements row
+                if a_statements:
+                    if topic_key not in processed_topics[lu_key]:
+                        processed_topics[lu_key][topic_key] = {'k': [], 'a': a_statements}
+                    else:
+                        processed_topics[lu_key][topic_key]['a'].extend(a_statements)
+
+            # Now create rows from the processed data
+            for topic_key, statements in processed_topics[lu_key].items():
+                # Add K statements row
+                if statements['k']:
+                    # Join all K statements with newlines
+                    k_combined = "\n".join(statements['k'])
+                    data.append([
+                        lu_num,
+                        lu_title_only,
+                        lo_num,
+                        lo_title_only,
+                        topic_key,
+                        k_combined,
+                        moa_k
+                    ])
+                
+                # Add A statements row
+                if statements['a']:
+                    # Join all A statements with newlines
+                    a_combined = "\n".join(statements['a'])
+                    data.append([
+                        lu_num,
+                        lu_title_only,
+                        lo_num,
+                        lo_title_only,
+                        topic_key,
+                        a_combined,
+                        moa_a
+                    ])
 
     # Create the DataFrame
     df = pd.DataFrame(data, columns=[
@@ -272,7 +310,7 @@ def combine_los_and_topics(ensemble_output):
 def create_assessment_dataframe(json_data):
     """
     Creates a DataFrame for assessment output based on the provided JSON data,
-    including assessment duration in minutes as integers.
+    with assessment durations distributed equally among all K and A factors.
 
     Args:
         json_data (dict): The JSON data containing course information.
@@ -281,150 +319,174 @@ def create_assessment_dataframe(json_data):
         pandas.DataFrame: A DataFrame representing the assessment schema with integer duration.
     """
 
-    # --- Assessment Duration Logic (from generate_assessment_output) ---
+    # --- Assessment Duration Logic ---
     assessment_methods_list = json_data["Assessment Methods"].get("Assessment Methods", [])
 
     assessment_method_abbreviations = {
+        "Written Exam": "WE",
+        "Online Test": "OT",
+        "Project": "P",
+        "Assignments": "A",
+        "Oral Interview": "OI",
+        "Demonstration": "D",
+        "Practical Exam": "PE",
+        "Role Play": "RP",
+        "Oral Questioning": "OQ",
         "Written Assessment": "WA-SAQ",
         "Practical Performance": "PP",
-        "Case Study": "CS",
-        "Oral Questioning": "OQ",
-        "Role Play": "RP"
+        "Case Study": "CS"
     }
 
     normalized_assessment_methods = [assessment_method_abbreviations.get(method, method) for method in assessment_methods_list]
 
     assessment_method_names = {
-        "WA-SAQ": "Written Exam", # Changed to match desired MOA in dataframe
-        "PP": "Practical Exam",    # Changed to match desired MOA in dataframe
-        "CS": "Others: Case Study",
+        "WE": "Written Exam",
+        "OT": "Online Test", 
+        "P": "Project",
+        "A": "Assignments",
+        "OI": "Oral Interview",
+        "D": "Demonstration",
+        "PE": "Practical Exam",
+        "RP": "Role Play",
         "OQ": "Oral Questioning",
-        "Written Assessment - Short-Answer Questions (WA-SAQ) - Individual, Summative, Open book": "Written Assessment - Short-Answer Questions",
-        "RP": "Role Play"
+        "WA-SAQ": "Written Exam", # Maps to Written Exam in output
+        "PP": "Practical Exam",   # Maps to Practical Exam in output
+        "CS": "Others: [Please elaborate]",
+        "Written Assessment - Short-Answer Questions (WA-SAQ) - Individual, Summative, Open book": "Written Assessment - Short-Answer Questions"
     }
 
+    # Get total assessment duration from Course Information
     num_assessment_hours = json_data["Course Information"].get("Number of Assessment Hours", 0)
     total_assessment_minutes = num_assessment_hours * 60
+    print(f"Total assessment minutes from ensemble output: {total_assessment_minutes}")
+    
+    # Ensure this is a reasonable value (at least 30 minutes if not specified)
+    if total_assessment_minutes < 30:
+        print("Warning: Assessment hours too low or missing, defaulting to minimum of 30 minutes")
+        total_assessment_minutes = 30
 
-    learning_units = json_data["TSC and Topics"]["Learning Units"]
-    num_lus = len(learning_units)
-
-    ka_mapping = json_data["Learning Outcomes"].get("Knowledge and Ability Mapping", {})
-    lu_ka_mapping = {} # Create LU-based KA mapping
-    for idx in range(num_lus):
-        ka_key = f"KA{idx + 1}"
-        if ka_key in ka_mapping:
-            lu_ka_mapping[f"LU{idx+1}"] = ka_mapping[ka_key]
-
-    lu_assessment_methods = {}
-    methods_used = set()
-
-    for i, lu in enumerate(learning_units):
-        lu_key = f"LU{i+1}"
-        lu_data_ka = lu_ka_mapping.get(lu_key, []) # Get KA for LU
-
-        methods_in_lu = []
-        k_codes_in_lu = [item for item in lu_data_ka if item.startswith('K')]
-        a_codes_in_lu = [item for item in lu_data_ka if item.startswith('A')]
-
-        if k_codes_in_lu:
-            # For K factors, prioritize Oral Questioning if available, otherwise use WA-SAQ
-            if "OQ" in normalized_assessment_methods:
-                methods_in_lu.append('OQ')
-            elif "WA-SAQ" in normalized_assessment_methods:
-                methods_in_lu.append('WA-SAQ')
-            elif "Written Assessment" in assessment_methods_list:
-                methods_in_lu.append('Written Assessment') # Use full name
-
-        if a_codes_in_lu:
-            # For A factors, prioritize methods in this order: RP, CS, PP, OQ
-            method_priority = ['RP', 'CS', 'PP', 'OQ']
-            available_methods_for_a = [method for method in method_priority if method in normalized_assessment_methods]
-            if available_methods_for_a:
-                methods_in_lu.append(available_methods_for_a[0])
-
-        lu_assessment_methods[lu_key] = methods_in_lu
-        methods_used.update(methods_in_lu)
-
-    num_methods_used = len(methods_used)
-    method_total_duration = total_assessment_minutes // num_methods_used if num_methods_used > 0 else 0
-
-    method_lu_map = {method: [] for method in methods_used}
-    for lu_key, methods_in_lu in lu_assessment_methods.items():
-        for method in methods_in_lu:
-            method_lu_map[method].append(lu_key)
-
-    method_durations_per_lu = {}
-    for method, lus in method_lu_map.items():
-        num_lus_using_method = len(lus)
-        duration_per_lu = method_total_duration // num_lus_using_method if num_lus_using_method > 0 else 0
-        for lu_key in lus:
-            if lu_key not in method_durations_per_lu:
-                method_durations_per_lu[lu_key] = {}
-            method_durations_per_lu[lu_key][method] = duration_per_lu
-
-    # --- DataFrame Creation Logic (modified to include duration as integer) ---
+    # --- Count total number of KA statements ---
     learning_outcomes_list = json_data["Learning Outcomes"].get("Learning Outcomes", [])
     knowledge_statements = json_data["Learning Outcomes"].get("Knowledge", [])
     ability_statements = json_data["Learning Outcomes"].get("Ability", [])
     tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
     assessment_methods = json_data["Assessment Methods"].get("Assessment Methods", [])
-
-    data = []
-
-    for lo_index, lo_title in enumerate(learning_outcomes_list):
-        lo_num = f"LO{lo_index + 1}"
-        lu_num = f"LU{lo_index + 1}" # Assuming LO index corresponds to LU index
-
+    
+    # Get K and A factors for each LO
+    ka_mapping = json_data["Learning Outcomes"].get("Knowledge and Ability Mapping", {})
+    
+    # Count total KA statements
+    total_ka_statements = 0
+    ka_statements_list = []
+    
+    for lo_index, _ in enumerate(learning_outcomes_list):
         ka_key = f"KA{lo_index + 1}"
         if ka_key in ka_mapping:
             ka_values = ka_mapping[ka_key]
+            total_ka_statements += len(ka_values)
             for code in ka_values:
-                if code.startswith('K'):
-                    k_index = int(code[1:]) - 1
-                    k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
-                    
-                    # For K factors: Use Oral Questioning if available, otherwise use Written Exam
-                    if "Oral Questioning" in assessment_methods:
-                        moa = "Oral Questioning"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('OQ', 0)
-                    else:
-                        moa = "Written Exam"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('WA-SAQ', 0)
-
-                    data.append([
-                        lo_num,
-                        moa,
-                        duration_minutes,
-                        1,
-                        20,
-                        k_statement
-                    ])
-
-                elif code.startswith('A'):
-                    a_index = int(code[1:]) - 1
-                    a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
-                    
-                    # For A factors: Prioritize in this order: Role Play, Case Study, Practical Exam
-                    if "Role Play" in assessment_methods:
-                        moa = "Role Play"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('RP', 0)
-                    elif "Case Study" in assessment_methods:
-                        moa = "Others: Case Study"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('CS', 0)
-                    else:
-                        moa = "Practical Exam"
-                        duration_minutes = method_durations_per_lu.get(lu_num, {}).get('PP', 0)
-
-                    data.append([
-                        lo_num,
-                        moa,
-                        duration_minutes,
-                        1,
-                        20,
-                        a_statement
-                    ])
-
+                ka_statements_list.append((lo_index, code))
+    
+    # Ensure we have at least one KA statement
+    if total_ka_statements == 0:
+        print("Warning: No KA statements found. Creating a placeholder.")
+        total_ka_statements = 1
+        ka_statements_list = [(0, "K1")]
+    
+    print(f"Total KA statements: {total_ka_statements}")
+    
+    # --- Calculate duration per KA statement ---
+    # Divide total assessment minutes evenly between all KA statements
+    # and ensure each duration is a multiple of 5
+    base_duration = total_assessment_minutes // total_ka_statements
+    
+    # Round base duration to nearest multiple of 5 (floor)
+    base_duration = (base_duration // 5) * 5
+    
+    # Ensure minimum duration of 5 minutes per assessment
+    if base_duration < 5:
+        base_duration = 5
+    
+    # Calculate total allocated and remaining minutes
+    total_allocated = base_duration * total_ka_statements
+    remaining_minutes = total_assessment_minutes - total_allocated
+    
+    print(f"Base duration per KA statement: {base_duration} minutes")
+    print(f"Remaining minutes to distribute: {remaining_minutes} minutes")
+    
+    # Create list of durations for each KA statement
+    durations = [base_duration] * total_ka_statements
+    
+    # Distribute remaining minutes (if any) in increments of 5
+    while remaining_minutes >= 5:
+        # Try to distribute evenly
+        increment = min(5, remaining_minutes)
+        statements_to_increment = min(total_ka_statements, remaining_minutes // increment)
+        
+        for i in range(statements_to_increment):
+            durations[i] += increment
+            remaining_minutes -= increment
+            
+        # If we've allocated to all statements but still have minutes left,
+        # start over from the beginning
+        if statements_to_increment == total_ka_statements and remaining_minutes >= 5:
+            continue
+            
+        # If we can't distribute evenly anymore, break
+        if statements_to_increment == 0 or remaining_minutes < 5:
+            break
+    
+    # If there are still remaining minutes, add them to the first assessment
+    if remaining_minutes > 0 and total_ka_statements > 0:
+        durations[0] += remaining_minutes
+    
+    # --- Create DataFrame ---
+    data = []
+    
+    for idx, (lo_index, code) in enumerate(ka_statements_list):
+        lo_num = f"LO{lo_index + 1}"
+        duration_minutes = durations[idx] if idx < len(durations) else base_duration
+        
+        if code.startswith('K'):
+            k_index = int(code[1:]) - 1
+            k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
+            
+            # For K factors: Use Oral Questioning if available, otherwise use Written Exam
+            if "Oral Questioning" in assessment_methods:
+                moa = "Oral Questioning"
+            else:
+                moa = "Written Exam"
+            
+            data.append([
+                lo_num,
+                moa,
+                duration_minutes,
+                1,
+                20,
+                k_statement
+            ])
+            
+        elif code.startswith('A'):
+            a_index = int(code[1:]) - 1
+            a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
+            
+            # For A factors: Prioritize in this order: Role Play, Case Study, Practical Exam
+            if "Role Play" in assessment_methods:
+                moa = "Role Play"
+            elif "Case Study" in assessment_methods:
+                moa = "Others: [Please elaborate]"
+            else:
+                moa = "Practical Exam"
+            
+            data.append([
+                lo_num,
+                moa,
+                duration_minutes,
+                1,
+                20,
+                a_statement
+            ])
+    
     df = pd.DataFrame(data, columns=[
         "LO#",
         "MOA",
@@ -433,87 +495,19 @@ def create_assessment_dataframe(json_data):
         "Candidates",
         "KA"
     ])
-
-    # Round all durations to the nearest multiple of 5
-    for idx in range(len(df)):
-        current_duration = df.loc[idx, "Assessment Duration"]
-        # Round to nearest multiple of 5
-        rounded_duration = round(current_duration / 5) * 5
-        df.loc[idx, "Assessment Duration"] = rounded_duration
-
-    # Verify total assessment duration matches expected value
-    total_assessment_minutes = num_assessment_hours * 60
+    
+    # Verify total assessment duration
     actual_assessment_minutes = df["Assessment Duration"].sum()
+    print(f"Final assessment duration: {actual_assessment_minutes} minutes")
+    print(f"Target assessment duration: {total_assessment_minutes} minutes")
     
-    if actual_assessment_minutes != total_assessment_minutes:
-        print(f"Warning: Assessment duration discrepancy detected after rounding to multiples of 5!")
-        print(f"Expected: {total_assessment_minutes} minutes, Actual: {actual_assessment_minutes} minutes")
-        
-        # Calculate adjustment needed (which should also be a multiple of 5)
+    # If there's still a small difference, adjust the first row
+    if actual_assessment_minutes != total_assessment_minutes and df.shape[0] > 0:
         diff = total_assessment_minutes - actual_assessment_minutes
-        
-        # Find rows to adjust based on assessment type
-        if diff > 0:  # Need to add minutes
-            # Try to distribute extra minutes while maintaining multiples of 5
-            remaining_diff = diff
-            increment = 5
-            
-            # Prioritize adjusting assessment types in this order
-            for assessment_type in ["Written Exam", "Practical Exam", "Others: Case Study", "Oral Questioning", "Role Play"]:
-                type_rows = df[df["MOA"] == assessment_type].index.tolist()
-                
-                if not type_rows or remaining_diff <= 0:
-                    continue
-                    
-                # Calculate how many 5-minute increments we need to distribute
-                increments_to_add = remaining_diff // 5
-                if increments_to_add == 0:
-                    continue
-                
-                # Distribute 5-minute increments across rows of this type
-                for i in range(min(increments_to_add, len(type_rows))):
-                    df.loc[type_rows[i], "Assessment Duration"] += 5
-                    remaining_diff -= 5
-                
-                if remaining_diff <= 0:
-                    break
-                    
-        elif diff < 0:  # Need to subtract minutes
-            # Try to distribute reduction while maintaining multiples of 5
-            remaining_diff = abs(diff)
-            decrement = 5
-            
-            # Prioritize reducing from the rows with the largest durations
-            while remaining_diff > 0:
-                # Get indices of rows with duration >= 10 (to avoid zeroing out any row)
-                eligible_rows = df[df["Assessment Duration"] >= 10].index.tolist()
-                
-                if not eligible_rows:
-                    break  # No more eligible rows to reduce
-                
-                # Sort by duration descending
-                eligible_rows = sorted(eligible_rows, 
-                                      key=lambda idx: df.loc[idx, "Assessment Duration"],
-                                      reverse=True)
-                
-                # Subtract 5 minutes from the row with the largest duration
-                df.loc[eligible_rows[0], "Assessment Duration"] -= 5
-                remaining_diff -= 5
+        df.loc[0, "Assessment Duration"] += diff
+        print(f"Made final adjustment of {diff} minutes to reach exact total")
+        print(f"Final assessment duration after adjustment: {df['Assessment Duration'].sum()} minutes")
     
-    # Verify again
-    actual_assessment_minutes = df["Assessment Duration"].sum()
-    print(f"Final assessment duration: {df['Assessment Duration'].sum()} minutes")
-    print(f"All durations are multiples of 5: {all(d % 5 == 0 for d in df['Assessment Duration'])}")
-    
-    # If there's still a discrepancy, make one final adjustment to the largest duration
-    if actual_assessment_minutes != total_assessment_minutes:
-        diff = total_assessment_minutes - actual_assessment_minutes
-        if abs(diff) < 5:  # Only fix if difference is small
-            # Find the row with the largest duration
-            max_idx = df["Assessment Duration"].idxmax()
-            df.loc[max_idx, "Assessment Duration"] += diff
-            print(f"Made final adjustment of {diff} minutes to reach exact total")
-
     return df
 
 def enrich_assessment_dataframe_ka_descriptions(df, excel_data_json_path):
@@ -834,7 +828,7 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
         """
         codes = []
         for text in statements_series:
-            m = re.match(r"^(A\d+|K\d+):", text.strip())
+            m = re.match(r"^(A\d+|K\d+):", text.strip()) if isinstance(text, str) else None
             if m:
                 codes.append(m.group(1))
         # Deduplicate while preserving order.
@@ -875,8 +869,13 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
     # --- Process Assessment DataFrame ---
     # Normalize the LU# key using regex so that, for example, "LO04" becomes "LU4"
     assessment_df = assessment_df.copy()
+    # Ensure LO# column exists and has string values
+    if "LO#" not in assessment_df.columns:
+        print("Warning: LO# column missing from assessment dataframe. Adding default column.")
+        assessment_df["LO#"] = "LO1"
+    
     assessment_df["LU#"] = assessment_df["LO#"].apply(
-        lambda x: re.sub(r'^LO0*', 'LU', x) if isinstance(x, str) else x
+        lambda x: re.sub(r'^LO0*', 'LU', x) if isinstance(x, str) else f"LU{x}" if isinstance(x, int) else "LU1"
     )
 
     def agg_assessment(g):
@@ -887,20 +886,49 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
         lines = []
         for _, row in g.iterrows():
             ratio = f"{row['Assessors']}:{row['Candidates']}"
-            lines.append(f"- {row['MOA']} ({ratio}, {row['Assessment Duration']})")
-        return "\n".join(lines)
+            duration = row["Assessment Duration"]
+            lines.append(f"- {row['MOA']} ({ratio}, {duration})")
+        return "\n".join(lines) if lines else "- No assessment methods specified"
 
-    assess_agg = assessment_df.groupby("LU#").apply(lambda g: pd.Series({
-        "Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)": agg_assessment(g),
-        "Assessment Duration (in minutes)": g["Assessment Duration"].sum()
-    })).reset_index()
+    # Check if assessment dataframe has data
+    if assessment_df.empty:
+        print("Warning: Assessment dataframe is empty. Using placeholder data.")
+        # Create dummy assessment aggregation with zeros
+        assess_agg = pd.DataFrame({
+            "LU#": course_agg["LU#"].unique(),
+            "Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)": "- No assessment methods specified",
+            "Assessment Duration (in minutes)": 0
+        })
+    else:
+        assess_agg = assessment_df.groupby("LU#").apply(lambda g: pd.Series({
+            "Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)": agg_assessment(g),
+            "Assessment Duration (in minutes)": g["Assessment Duration"].sum()
+        })).reset_index()
 
     # --- Merge Aggregated Data ---
+    # First merge course and instructional data
     summary_df = course_agg[["LU#", "Learning Unit Title", "Learning Outcome(s)", "Topic(s)"]].merge(
         instr_agg, on="LU#", how="left"
-    ).merge(
+    )
+    
+    # Handle nulls in instructional data
+    summary_df["Instructional Methods (modes of training, duration in minutes)"].fillna(
+        "- No instructional methods specified", inplace=True)
+    summary_df["Instructional Duration (in minutes)"].fillna(0, inplace=True)
+    
+    # Now merge assessment data
+    summary_df = summary_df.merge(
         assess_agg, on="LU#", how="left"
     )
+    
+    # Handle nulls in assessment data
+    summary_df["Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)"].fillna(
+        "- No assessment methods specified", inplace=True)
+    summary_df["Assessment Duration (in minutes)"].fillna(0, inplace=True)
+    
+    # Convert duration columns to integers
+    summary_df["Instructional Duration (in minutes)"] = summary_df["Instructional Duration (in minutes)"].astype(int)
+    summary_df["Assessment Duration (in minutes)"] = summary_df["Assessment Duration (in minutes)"].astype(int)
 
     # --- Order Columns as Specified ---
     summary_df = summary_df[[
@@ -913,6 +941,10 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
         "Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)",
         "Assessment Duration (in minutes)"
     ]]
+    
+    print(f"Summary dataframe created with {len(summary_df)} rows")
+    print(f"Total instructional duration: {summary_df['Instructional Duration (in minutes)'].sum()} minutes")
+    print(f"Total assessment duration: {summary_df['Assessment Duration (in minutes)'].sum()} minutes")
 
     return summary_df
 

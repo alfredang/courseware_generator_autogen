@@ -40,7 +40,7 @@ def combine_json_files(file1_path, file2_path):
 async def process_excel(model_choice: str) -> None:
 
     json_data_path = "CourseProposal/json_output/generated_mapping.json" 
-    excel_template_path = "CourseProposal/templates/CP_excel_template.xlsx"
+    excel_template_path = "CourseProposal/templates/course_proposal_form_01apr2025_template.xlsx"
     output_excel_path_modified = "CourseProposal/output_docs/CP_template_updated_cells_output.xlsx" # Intermediate output after cell update
     output_excel_path_preserved = "CourseProposal/output_docs/CP_template_metadata_preserved.xlsx" # Final output with metadata preserved
     ensemble_output_path = "CourseProposal/json_output/ensemble_output.json"
