@@ -1,20 +1,20 @@
 {
     "course_info": {
-        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
-        "Industry": "Security",
+        "Course Title": "Storytelling and Storyboarding with Generative AI",
+        "Industry": "Media",
         "Learning Outcomes": [
-            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
-            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
-            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
-            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+            "LO1: Use generative AI techniques to develop compelling script elements enriched with narrative structure and creative storytelling.",
+            "LO2: Identify effective prompt terms and narrative components to enhance AI-generated storyboards for visual storytelling.",
+            "LO3: Utilise generative AI tools to refine video scripts for clarity, tone, and narrative consistency.",
+            "LO4: Analyse generative AI outputs for ethical issues, bias, and copyright risks, applying appropriate corrective actions."
         ],
-        "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
-        "TSC Code": "SEC-SRM-3002-1.1"
+        "TSC Title": "AI Content Generation for Script Development",
+        "TSC Code": "MED-MED-3004-1.1"
     },
     "analyst_responses": [
         {
-            "What are the performance gaps in the industry?": "Within the sector, a significant gap exists in the proactive identification of potential threats. Personnel often struggle to recognize subtle indicators of impending security breaches, leading to delayed responses and increased vulnerability. This reactive approach hinders the ability to effectively mitigate risks before they escalate into serious incidents. Furthermore, there is inconsistency in applying standardized procedures when assessing and responding to potential threats.",
-            "Why do you think this WSQ course will address the training needs for the industry?": "This course equips individuals with the skills to observe and interpret initial signs of potential security threats, thus enabling earlier detection. By familiarizing participants with organizational protocols, it ensures standardized, consistent reactions when risks are identified. This proactive strategy allows for the mitigation of potential issues before they evolve into full-scale problems, safeguarding assets and maintaining operational integrity through improved responses to suspicious activities."
+            "What are the performance gaps in the industry?": "The industry faces challenges in creating engaging and original content that resonates with audiences. Traditional methods often lead to repetitive and uninspired storytelling, lacking the innovative spark needed to captivate viewers. Additionally, there is a struggle to efficiently integrate new technologies into the creative process, which can hinder the development of dynamic and visually appealing narratives.",
+            "Why do you think this WSQ course will address the training needs for the industry?": "This course equips participants with the skills to harness generative AI for crafting unique and compelling narratives. By leveraging AI tools, creators can explore new storytelling techniques and enhance their visual storytelling capabilities. The course also provides insights into overcoming technological limitations, enabling more effective integration of AI into the creative workflow."
         }
     ]
 }

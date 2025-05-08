@@ -1,28 +1,28 @@
 {
   "analyst_responses": [
     {
-      "What are the performance gaps in the industry?": "Within the sector, a significant gap exists in the proactive identification of potential threats. Personnel often struggle to recognize subtle indicators of impending security breaches, leading to delayed responses and increased vulnerability. This reactive approach hinders the ability to effectively mitigate risks before they escalate into serious incidents. Furthermore, there is inconsistency in applying standardized procedures when assessing and responding to potential threats.",
-      "Why do you think this WSQ course will address the training needs for the industry?": "This course equips individuals with the skills to observe and interpret initial signs of potential security threats, thus enabling earlier detection. By familiarizing participants with organizational protocols, it ensures standardized, consistent reactions when risks are identified. This proactive strategy allows for the mitigation of potential issues before they evolve into full-scale problems, safeguarding assets and maintaining operational integrity through improved responses to suspicious activities."
+      "What are the performance gaps in the industry?": "The industry faces challenges in creating engaging and original content that resonates with audiences. Traditional methods often lead to repetitive and uninspired storytelling, lacking the innovative spark needed to captivate viewers. Additionally, there is a struggle to efficiently integrate new technologies into the creative process, which can hinder the development of dynamic and visually appealing narratives.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "This course equips participants with the skills to harness generative AI for crafting unique and compelling narratives. By leveraging AI tools, creators can explore new storytelling techniques and enhance their visual storytelling capabilities. The course also provides insights into overcoming technological limitations, enabling more effective integration of AI into the creative workflow."
     },
     {
-      "What are the performance gaps in the industry?": "One critical area needing improvement is the consistent application of security protocols across various operational settings. Differing interpretations and adherence to procedures can create vulnerabilities exploited by malicious actors. A lack of consistent protocol application leads to confusion and ineffective response during critical moments. Personnel also sometimes miss crucial details when identifying threats due to lack of experience.",
-      "Why do you think this WSQ course will address the training needs for the industry?": "The course provides participants with a structured approach to identifying risks, leveraging both theoretical knowledge and practical experience, and will help to learn to recognize potential threats within organizational procedures. Emphasis is placed on analyzing diverse scenarios, which fosters an environment for experience-based judgement to promote proactive risk management, thereby decreasing security lapses from inconsistent implementations."
+      "What are the performance gaps in the industry?": "There is a noticeable gap in the industry's ability to produce content that is both ethically sound and free from bias. Many creators lack the necessary understanding of ethical considerations and the potential biases inherent in AI-generated content. This can lead to content that inadvertently perpetuates stereotypes or infringes on copyright, posing significant risks to creators and organizations.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "The course offers comprehensive training on identifying and mitigating ethical issues and biases in AI-generated content. Participants learn to apply best practices for ethical content creation, ensuring that their work is both responsible and compliant with copyright laws. This knowledge empowers creators to produce content that is both innovative and ethically sound."
     },
     {
-      "What are the performance gaps in the industry?": "A notable deficiency lies in the ability to thoroughly analyze security situations and apply prior experiences to new, evolving threats. Many professionals find it challenging to connect seemingly unrelated events to identify underlying risks. The ability to think critically and adapt to novel situations is crucial. Moreover, collaboration between security teams is often fragmented.",
-      "Why do you think this WSQ course will address the training needs for the industry?": "This course promotes a holistic approach to security by teaching individuals how to relate current situations to past experiences, thereby enhancing their ability to identify subtle patterns and risks. It also fosters collaboration among security teams, ensuring comprehensive risk analysis, and facilitates effective communication, which ensures that different perspectives and expertise contribute to a more robust security framework. This can allow the teams to address complex risks and implement preventive strategies."
+      "What are the performance gaps in the industry?": "The industry struggles with effectively utilizing AI tools to enhance the quality and consistency of video scripts. Many creators find it challenging to refine AI-generated content to meet the desired tone and clarity, resulting in scripts that lack coherence and engagement. This gap hinders the ability to produce high-quality video content that aligns with audience expectations.",
+      "Why do you think this WSQ course will address the training needs for the industry?": "Through this course, participants gain the ability to refine and enhance AI-generated video scripts, improving clarity and narrative consistency. The training focuses on utilizing AI tools to achieve the desired tone and engagement, enabling creators to produce high-quality video content that resonates with audiences. This skill set is crucial for meeting industry standards and audience expectations."
     }
   ],
   "course_info": {
-    "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
-    "Industry": "Security",
+    "Course Title": "Storytelling and Storyboarding with Generative AI",
+    "Industry": "Media",
     "Learning Outcomes": [
-      "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
-      "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
-      "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
-      "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+      "LO1: Use generative AI techniques to develop compelling script elements enriched with narrative structure and creative storytelling.",
+      "LO2: Identify effective prompt terms and narrative components to enhance AI-generated storyboards for visual storytelling.",
+      "LO3: Utilise generative AI tools to refine video scripts for clarity, tone, and narrative consistency.",
+      "LO4: Analyse generative AI outputs for ethical issues, bias, and copyright risks, applying appropriate corrective actions."
     ],
-    "TSC Title": "Security Risk Analysis Assess and Address Security Risks",
-    "TSC Code": "SEC-SRM-3002-1.1"
+    "TSC Title": "AI Content Generation for Script Development",
+    "TSC Code": "MED-MED-3004-1.1"
   }
 }

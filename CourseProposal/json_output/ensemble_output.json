@@ -1,94 +1,151 @@
 {
     "Course Information": {
-        "Course Title": "PWM-Security: Security Risk Analysis (Assess and Address Security Risks)",
-        "Name of Organisation": "QE Safety Consultancy Pte Ltd",
-        "Classroom Hours": 22,
-        "Practical Hours": 0,
+        "Course Title": "Storytelling and Storyboarding with Generative AI",
+        "Name of Organisation": "Tertiary Infotech Pte. Ltd.",
+        "Classroom Hours": 14,
+        "Practical Hours": 2,
         "Number of Assessment Hours": 2,
-        "Course Duration (Number of Hours)": 24,
-        "Industry": "Security"
+        "Course Duration (Number of Hours)": 16,
+        "Industry": "Media"
     },
     "Learning Outcomes": {
         "Learning Outcomes": [
-            "LO1: Apply basic risk identification techniques to detect tell-tale signs and symptoms of potential security threats.",
-            "LO2: Follow organizational procedures to identify risks by recognizing surveillance, inappropriate behavior, or potential threats.",
-            "LO3: Analyze situations and relate them to prior experiences to identify suspicious activities, attire, or explosive devices.",
-            "LO4: Collaborate with security teams to assess risks using established methods of risk analysis."
+            "LO1: Use generative AI techniques to develop compelling script elements enriched with narrative structure and creative storytelling.",
+            "LO2: Identify effective prompt terms and narrative components to enhance AI-generated storyboards for visual storytelling.",
+            "LO3: Utilise generative AI tools to refine video scripts for clarity, tone, and narrative consistency.",
+            "LO4: Analyse generative AI outputs for ethical issues, bias, and copyright risks, applying appropriate corrective actions."
         ],
         "Knowledge": [
-            "K1: Methods of risk analysis",
-            "K2: Types of tell-tale signs and symptoms",
-            "K3: Organisational procedures for security operations",
-            "K4: Signs of surveillance and intelligence-gathering being conducted, inappropriate demeanours and potential suicide bombers",
-            "K5: Types of suspicious activities, inappropriate attire, explosives and incendiary devices used by terrorists",
-            "K6: Identification of persons"
+            "K1: AI-generated script ideation techniques for world-building, storyline and character development, scenario iterations",
+            "K2: Copyright law covering Gen AI usage",
+            "K3: Gen AI tool limitations and solutions",
+            "K4: Awareness and correction of bias in LLMs training data reproduced in output",
+            "K5: Best Practices to minimise plagiarism risk",
+            "K6: AI tools for script analysis and market research",
+            "K7: Gen AI and Ethics awareness",
+            "K8: Basic Natural Language Processing (NLP) techniques and tools relevant to AI Text generation",
+            "K9: Creative principles and storytelling in AI generated text prompts",
+            "K10: Basic AI algorithms and models used in script/text generation"
         ],
         "Ability": [
-            "A1: Apply basic risk identification techniques",
-            "A2: Follow standard operating procedures (SOPs) to identify risks",
-            "A3: Study situations and relate to past experience for identification of risks",
-            "A4: Discuss situations with security teams to identify risks"
+            "A1: Analyse AI output for bias and taking corrective steps",
+            "A2: Utilise NLP techniques and tools to enhance the quality and effectiveness of AI-generated story elements",
+            "A3: Apply ethical considerations in the selection of prompts and reference usage",
+            "A4: Filter and Script-edit Gen-AI output",
+            "A5: Use AI-generated text techniques and methodologies to develop script elements",
+            "A6: Apply and adjust relevant prompts in the generative process to improve iterations",
+            "A7: Identify key terms and themes for input into Gen AI platform to ideate and iterate story elements for incorporation into text prompts",
+            "A8: Incorporate unique creative principles and storytelling elements into AI-generated story ideas to avoid generic replication",
+            "A9: Identify copyright risk in Gen-AI production and avoid copyright infringement"
         ],
         "Knowledge and Ability Mapping": {
             "KA1": [
-                "K2",
-                "A1"
+                "K9",
+                "K10",
+                "A8",
+                "A5"
             ],
             "KA2": [
+                "K1",
+                "A7",
                 "K3",
-                "K4",
-                "A2"
+                "A6"
             ],
             "KA3": [
-                "K5",
+                "K8",
+                "A2",
                 "K6",
-                "A3"
+                "A4"
             ],
             "KA4": [
-                "K1",
-                "A4"
+                "K7",
+                "K5",
+                "A3",
+                "K4",
+                "A1",
+                "K2",
+                "A9"
             ]
         }
     },
     "TSC and Topics": {
         "TSC Title": [
-            "Security Risk Analysis Assess and Address Security Risks"
+            "AI Content Generation for Script Development"
         ],
         "TSC Code": [
-            "SEC-SRM-3002-1.1"
+            "MED-MED-3004-1.1"
         ],
         "Topics": [
-            "Topic 1: Assess Clients Security Status (K2, A1)",
-            "Topic 2: Conduct Site Assessment (K3, K4, A2)",
-            "Topic 3: Address Security Deficiencies (K5, K6, A3)",
-            "Topic 4: Submit Findings and Recommendations (K1, A4)"
+            "Topic 1: Fundamentals of storytelling (K9)",
+            "Topic 2: Basic AI models for script generation (K10)",
+            "Topic 3: Storytelling and storyboarding with generative AI (A8)",
+            "Topic 4: Generating stories with generative AI (A5)",
+            "Topic 1: Fundamentals of storyboarding (K1)",
+            "Topic 2: Storyboard breakdown and text prompts for images (A7)",
+            "Topic 3: AI tool limitation and solutions to generate better images (K3)",
+            "Topic 4: Apply iterative approach to image generation (A6)",
+            "Topic 1: AI Video tools for generating text, voiceover and video (K8, A2)",
+            "Topic 2: Generating AI video for storyboard (K6, A4)",
+            "Topic 1: Gen AI and ethics awareness (K7)",
+            "Topic 2: Best Practices to minimise plagiarism risk (K5, A3)",
+            "Topic 3: Analyse AI output for bias and taking corrective steps (K4, A1)",
+            "Topic 4: Copyright risk and avoid copyright infringement (K2, A9)"
         ],
         "Learning Units": [
-            "LU1: Client Security Needs Assessment",
-            "LU2: Security Site Performance Analysis",
-            "LU3: Corrective Measures Implementation",
-            "LU4: Security Assessment Reporting"
+            "LU1: Storytelling with Generative AI (K9, K10, A8, A5)",
+            "LU2: Storyboarding with Generative AI (K1, K3, A7, A6)",
+            "LU3: Creating AI Generated Video (K8, K6, A2, A4)",
+            "LU4: Generative AI Ethics and Best Practices (K7, K5, K4, K2, A3, A1, A9)"
         ]
     },
     "Assessment Methods": {
         "Assessment Methods": [
-            "Case Study",
-            "Oral Questioning"
+            "Written Exam",
+            "Practical Exam"
         ],
-        "Amount of Practice Hours": "N.A.",
+        "Amount of Practice Hours": 2,
         "Course Outline": {
             "Learning Units": {
                 "LU1": {
                     "Description": [
                         {
-                            "Topic": "Topic 1: Assess Clients Security Status (K2, A1)",
+                            "Topic": "Topic 1: Fundamentals of storytelling (K9)",
                             "Details": [
-                                "Identify changes of security needs and requirements of security site arising from changes in site amenities and environment according to organisation procedures",
-                                "Collect data from information sources concerning security incidents for analysis of any trends and patterns of occurrences",
-                                "Conduct a discussion with the client to identify any security concerns",
-                                "Record issues raised and any changes to the clients security needs",
-                                "Examine security operations orders and terms of the security services contract with the client according to organisational procedures to assess the clients security status",
-                                "Prepare site Assessment work plan to optimise utilisation of resources"
+                                "Explore the core elements of storytelling, including plot, character, and setting.",
+                                "Discuss the role of narrative structure in engaging storytelling.",
+                                "Examine creative principles in crafting compelling stories.",
+                                "Analyze examples of effective storytelling in various media.",
+                                "Apply storytelling techniques to AI-generated text prompts."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 2: Basic AI models for script generation (K10)",
+                            "Details": [
+                                "Understand the foundational AI algorithms used in text generation.",
+                                "Explore different AI models and their applications in scriptwriting.",
+                                "Discuss the strengths and limitations of AI in creative writing.",
+                                "Examine case studies of AI-generated scripts.",
+                                "Learn to select appropriate AI models for specific scriptwriting tasks."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 3: Storytelling and storyboarding with generative AI (A8)",
+                            "Details": [
+                                "Incorporate unique storytelling elements into AI-generated content.",
+                                "Avoid generic replication by applying creative principles.",
+                                "Develop storyboards that align with narrative goals.",
+                                "Utilize AI tools to enhance visual storytelling.",
+                                "Evaluate the effectiveness of AI-generated storyboards."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 4: Generating stories with generative AI (A5)",
+                            "Details": [
+                                "Use AI-generated text techniques to create story elements.",
+                                "Explore methodologies for developing compelling narratives.",
+                                "Refine AI-generated content for clarity and engagement.",
+                                "Experiment with different prompts to enhance story quality.",
+                                "Assess the impact of AI on storytelling processes."
                             ]
                         }
                     ]
@@ -96,16 +153,43 @@
                 "LU2": {
                     "Description": [
                         {
-                            "Topic": "Topic 2: Conduct Site Assessment (K3, K4, A2)",
+                            "Topic": "Topic 1: Fundamentals of storyboarding (K1)",
                             "Details": [
-                                "Carry out site Assessment systematically according to organisational procedures, site Assessment work plan and clients requirements",
-                                "Compare actual security site performance against security operation procedures and record any variance accurately",
-                                "Examine details of clients security system / equipment and building premises according to organisational procedures to Assess client security status",
-                                "Assess the suitability of clients existing security system/ equipment in meeting clients security needs",
-                                "Examine the updated floor plan of assignment location to identify building structures and layout",
-                                "Identify variance and deviations from the clients security requirements",
-                                "Identify security risks raised by environment factors",
-                                "Identify security risks and threats to the assignment location"
+                                "Learn the basics of creating effective storyboards.",
+                                "Understand the role of storyboarding in visual storytelling.",
+                                "Explore techniques for visualizing narrative elements.",
+                                "Analyze examples of successful storyboards.",
+                                "Apply AI-generated script ideation techniques to storyboarding."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 2: Storyboard breakdown and text prompts for images (A7)",
+                            "Details": [
+                                "Identify key terms and themes for AI-generated storyboards.",
+                                "Develop text prompts to guide image generation.",
+                                "Break down storyboards into actionable components.",
+                                "Utilize AI tools to enhance visual elements.",
+                                "Iterate on storyboard designs for improved outcomes."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 3: AI tool limitation and solutions to generate better images (K3)",
+                            "Details": [
+                                "Understand the limitations of current AI tools in image generation.",
+                                "Explore solutions to overcome AI tool limitations.",
+                                "Experiment with different AI techniques for better image quality.",
+                                "Discuss the impact of AI limitations on creative processes.",
+                                "Evaluate the effectiveness of AI-generated images."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 4: Apply iterative approach to image generation (A6)",
+                            "Details": [
+                                "Learn the importance of iteration in image generation.",
+                                "Apply and adjust relevant prompts to improve image quality.",
+                                "Experiment with different iterations to achieve desired outcomes.",
+                                "Analyze the impact of iterative processes on creative results.",
+                                "Utilize AI tools to streamline the iterative process."
                             ]
                         }
                     ]
@@ -113,18 +197,23 @@
                 "LU3": {
                     "Description": [
                         {
-                            "Topic": "Topic 3: Address Security Deficiencies (K5, K6, A3)",
+                            "Topic": "Topic 1: AI Video tools for generating text, voiceover and video (K8, A2)",
                             "Details": [
-                                "Confirm the accuracy and currency of data related to client security status prior to recommending security options",
-                                "Determine risk potential by analysing relevant client security status data",
-                                "Assess a range of security resources for suitability and availability against security risks",
-                                "Identify any security deficiencies due to manpower and security systems resources and take appropriate corrective measures",
-                                "Prevent risk to client operations by addressing deficiencies in existing control mechanisms",
-                                "Take appropriate corrective measures to address security deficiencies identified in a security survey of assignment location",
-                                "Gauge and define the potential impact of any security deficiencies accurately to prioritise measures to address gaps in security",
-                                "Provide recommendations which address clients security deficiencies within the scope of security services contract terms where necessary to appropriate parties to follow up on actions to be taken to address security risks",
-                                "Complete analysis and recommendations for the client within an agreed timescale",
-                                "Record analysis and recommendations in accordance with organisational procedures"
+                                "Explore AI tools for generating video content.",
+                                "Utilize NLP techniques to enhance video scripts.",
+                                "Experiment with AI-generated voiceovers for video content.",
+                                "Discuss the integration of text, voice, and video in storytelling.",
+                                "Evaluate the effectiveness of AI-generated video elements."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 2: Generating AI video for storyboard (K6, A4)",
+                            "Details": [
+                                "Learn to generate AI video content for storyboards.",
+                                "Utilize AI tools for script analysis and market research.",
+                                "Filter and script-edit AI-generated video content.",
+                                "Discuss the impact of AI on video production processes.",
+                                "Evaluate the quality and effectiveness of AI-generated videos."
                             ]
                         }
                     ]
@@ -132,18 +221,43 @@
                 "LU4": {
                     "Description": [
                         {
-                            "Topic": "Topic 4: Submit Findings and Recommendations (K1, A4)",
+                            "Topic": "Topic 1: Gen AI and ethics awareness (K7)",
                             "Details": [
-                                "Compile and record relevant information accurately and report to appropriate person according to organisational procedures",
-                                "Ensure findings and recommendations in the report are clear, logical and consistent with contract terms and conditions",
-                                "Make recommendations based on the findings",
-                                "Prepare a complete and accurate account of security assessment study report with indemnity specification according to organisation procedures",
-                                "Establish recommendations for new and existing security service requirements / appropriate security risk prevention measures supported by relevant documentation",
-                                "Outline constraints, limitations and exclusions to security survey and analysis in report and submit a report to the relevant person for approval",
-                                "Follow-up and meet with the client to discuss on the site survey findings and seek agreement to proposed security recommendations. Finalise with the client the terms of reference for the next step in preparing operations order",
-                                "Implement agreed on terms of reference when security recommendations are accepted",
-                                "Carry out any changes and adjustments to recommended actions within agreed terms of reference",
-                                "Maintain the confidentiality of all recorded information"
+                                "Understand the ethical implications of using generative AI.",
+                                "Discuss the importance of ethics in AI-generated content.",
+                                "Explore case studies of ethical challenges in AI usage.",
+                                "Learn to identify and address ethical issues in AI outputs.",
+                                "Develop strategies for ethical AI content generation."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 2: Best Practices to minimise plagiarism risk (K5, A3)",
+                            "Details": [
+                                "Learn best practices to minimize plagiarism in AI-generated content.",
+                                "Apply ethical considerations in prompt selection and reference usage.",
+                                "Discuss the impact of plagiarism on creative processes.",
+                                "Explore tools and techniques to detect and prevent plagiarism.",
+                                "Develop strategies for maintaining originality in AI outputs."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 3: Analyse AI output for bias and taking corrective steps (K4, A1)",
+                            "Details": [
+                                "Understand the presence of bias in AI-generated content.",
+                                "Learn techniques to analyze AI outputs for bias.",
+                                "Discuss the impact of bias on creative and ethical outcomes.",
+                                "Develop corrective steps to address bias in AI outputs.",
+                                "Evaluate the effectiveness of bias correction strategies."
+                            ]
+                        },
+                        {
+                            "Topic": "Topic 4: Copyright risk and avoid copyright infringement (K2, A9)",
+                            "Details": [
+                                "Understand copyright laws related to generative AI usage.",
+                                "Identify copyright risks in AI-generated content.",
+                                "Learn strategies to avoid copyright infringement.",
+                                "Discuss the impact of copyright issues on creative processes.",
+                                "Develop best practices for copyright compliance in AI outputs."
                             ]
                         }
                     ]
@@ -151,10 +265,10 @@
             }
         },
         "Instructional Methods": [
-            "Classroom",
-            "Peer Sharing",
-            "Group Discussion",
-            "Case Study"
+            "Interactive Presentation",
+            "Brainstorming",
+            "Demonstration",
+            "Drill and Practice"
         ]
     }
 }

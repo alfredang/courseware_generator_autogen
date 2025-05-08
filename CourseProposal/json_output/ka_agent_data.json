@@ -1,16 +1,23 @@
 {
   "KA_Analysis": {
-    "K1": "The candidate will respond to questions related to methods of risk analysis, demonstrating understanding of different approaches.",
-    "A1": "The candidate will perform risk identification techniques on scenarios and submit a report demonstrating their analysis.",
-    "K2": "The candidate will describe types of tell-tale signs and symptoms, demonstrating knowledge of indicators.",
-    "A2": "The candidate will identify risks in simulated scenarios, following SOPs and documenting the process.",
-    "K3": "The candidate will outline organisational procedures for security operations, reflecting understanding of protocols.",
-    "A3": "The candidate will analyze real-world case studies, relating them to past experiences to identify potential risks.",
-    "K4": "The candidate will explain signs of surveillance and inappropriate demeanors, showing awareness of potential threats.",
-    "A4": "The candidate will participate in team discussions, sharing observations and contributing to risk identification.",
-    "K5": "The candidate will identify types of suspicious activities and devices, demonstrating knowledge of terrorist tactics.",
-    "K6": "The candidate will describe proper protocols for the identification of persons, and the different methodologies.",
-    "A5": "N/A",
-    "A6": "N/A"
+    "K1": "The candidate will respond to a series of short answer questions related to AI-generated script ideation techniques for world-building, storyline and character development, scenario iterations.",
+    "A1": "The candidate will perform a practical exercise on analyzing AI output for bias and taking corrective steps and submit their analysis.",
+    "K2": "The candidate will respond to questions about copyright law covering Gen AI usage to demonstrate understanding.",
+    "A2": "The candidate will utilize NLP techniques and tools to enhance the quality and effectiveness of AI-generated story elements in a practical exam.",
+    "K3": "The candidate will answer questions on Gen AI tool limitations and solutions to assess their knowledge.",
+    "A3": "The candidate will apply ethical considerations in the selection of prompts and reference usage during a practical exam.",
+    "K4": "The candidate will explain awareness and correction of bias in LLMs training data reproduced in output through written responses.",
+    "A4": "The candidate will filter and script-edit Gen-AI output in a practical exam to demonstrate their skills.",
+    "K5": "The candidate will answer questions on best practices to minimize plagiarism risk to show understanding.",
+    "A5": "The candidate will use AI-generated text techniques and methodologies to develop script elements in a practical exam.",
+    "K6": "The candidate will respond to questions about AI tools for script analysis and market research to demonstrate knowledge.",
+    "A6": "The candidate will apply and adjust relevant prompts in the generative process to improve iterations during a practical exam.",
+    "K7": "The candidate will answer questions on Gen AI and ethics awareness to assess their understanding.",
+    "A7": "The candidate will identify key terms and themes for input into Gen AI platform to ideate and iterate story elements in a practical exam.",
+    "K8": "The candidate will respond to questions on basic NLP techniques and tools relevant to AI text generation to demonstrate knowledge.",
+    "A8": "The candidate will incorporate unique creative principles and storytelling elements into AI-generated story ideas during a practical exam.",
+    "K9": "The candidate will answer questions on creative principles and storytelling in AI-generated text prompts to assess understanding.",
+    "A9": "The candidate will identify copyright risk in Gen-AI production and avoid copyright infringement in a practical exam.",
+    "K10": "The candidate will respond to questions on basic AI algorithms and models used in script/text generation to demonstrate knowledge."
   }
 }
