@@ -1,5 +1,5 @@
 from CourseProposal.utils.excel_replace_xml import process_excel_update, preserve_excel_metadata, cleanup_old_files
-from CourseProposal.utils.excel_conversion_pipeline import map_new_key_names_excel, create_instructional_dataframe
+from CourseProposal.utils.excel_conversion_pipeline import map_new_key_names_excel, create_instructional_dataframe, combine_los_and_topics
 from CourseProposal.agents.excel_agents import (
     course_task,
     ka_task,
@@ -122,3 +122,39 @@ async def process_excel(model_choice: str) -> None:
 # if __name__ == "__main__":
 #     model_choice = "Gemini-Flash-2.0-Exp"
 #     asyncio.run(process_excel(model_choice=model_choice))
+
+# Add test code for just the course outline formatting
+if __name__ == "__main__":
+    # Test the course outline formatting only
+    import json
+    from CourseProposal.utils.excel_conversion_pipeline import combine_los_and_topics
+    from CourseProposal.utils.helpers import load_json_file
+    
+    ensemble_output_path = "CourseProposal/json_output/ensemble_output.json"
+    with open(ensemble_output_path, 'r', encoding='utf-8') as f:
+        ensemble_output = json.load(f)
+    
+    # Generate the course outline with the new format
+    course_outline = combine_los_and_topics(ensemble_output)
+    
+    # Print the result
+    print("\nGenerated Course Outline:")
+    print(course_outline)
+    
+    # Test if it gets properly added to the generated_mapping.json
+    generated_mapping_path = "CourseProposal/json_output/generated_mapping.json"
+    json_data_path = "CourseProposal/json_output/generated_mapping.json"
+    excel_data_path = "CourseProposal/json_output/excel_data.json"
+    
+    generated_mapping = load_json_file(generated_mapping_path)
+    
+    # Update the generated_mapping with the course outline
+    from CourseProposal.utils.excel_conversion_pipeline import map_new_key_names_excel
+    map_new_key_names_excel(generated_mapping_path, generated_mapping, json_data_path, excel_data_path, ensemble_output)
+    
+    # Load and print the updated mapping to verify
+    updated_mapping = load_json_file(json_data_path)
+    if "#Course_Outline" in updated_mapping:
+        print("\nSuccessfully updated generated_mapping.json with the new course outline format!")
+    else:
+        print("\nFailed to update generated_mapping.json with the new course outline.")
