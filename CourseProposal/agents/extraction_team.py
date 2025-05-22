@@ -26,7 +26,6 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -131,7 +130,6 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - Do NOT add any other keys at the top level, or under the main `"Learning Outcomes"` object, other than the three specified sub-keys.
     - Do NOT change, add, or remove any keys or alter the structure from the schema (other than populating the lists).
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -192,7 +190,6 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -259,7 +256,6 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
@@ -389,7 +385,6 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 

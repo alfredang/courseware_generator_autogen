@@ -15,6 +15,7 @@ from CourseProposal.utils.helpers import (
     flatten_json,
     flatten_list,
     extract_tsc_agent_json,
+    fix_missing_ka_references,
 )
 from CourseProposal.utils.json_mapping import map_values
 from CourseProposal.utils.jinja_docu_replace import replace_placeholders_with_docxtpl
@@ -71,6 +72,10 @@ async def main(input_tsc) -> None:
 
     update_knowledge_ability_mapping('CourseProposal/json_output/output_TSC.json', 'CourseProposal/json_output/ensemble_output.json')
 
+    print("\n--- Validating Knowledge and Ability factor coverage ---")
+    # First try to fix any missing K&A references
+    fix_missing_ka_references()
+    # Then run the validation
     validate_knowledge_and_ability()
 
     # Research Team Process

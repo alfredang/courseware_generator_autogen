@@ -17,7 +17,6 @@ def course_task():
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -50,7 +49,6 @@ def ka_task():
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -84,7 +82,6 @@ def im_task():
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
@@ -132,7 +129,6 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - The course level (e.g., Beginner, Intermediate, Advanced, Beginner to Intermediate, Intermediate to Advanced) MUST be clearly stated in the course description, using the value from the input JSON (ensemble_output['Course Information']['Course Level']).
@@ -219,7 +215,6 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -319,7 +314,6 @@ def create_instructional_methods_agent(ensemble_output, instructional_methods_js
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 

@@ -46,7 +46,6 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
         - The JSON object MUST strictly match the schema and examples provided.
         - Do NOT change, add, or remove any keys or alter the structure from the schema.
         - Do NOT include any comments or headings within the JSON.
-        - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
         - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
         - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
         - Do not repeat or duplicate the TSC code in the output. The TSC code should appear only once, followed by the skill name/title.

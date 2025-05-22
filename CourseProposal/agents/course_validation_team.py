@@ -24,6 +24,8 @@ def create_course_validation_team(ensemble_output, model_choice: str) -> RoundRo
     1. Course title (e.g., "Data Analytics for Business")
     2. Industry (e.g., "Retail")
     3. Learning outcomes expected from the course (e.g., "Better decision-making using data, automation of business reports")
+    4. TSC Title - extract this EXACTLY as it appears, e.g. "Greenhouse Gas Accounting"
+    5. TSC Code - extract this EXACTLY as it appears, e.g. "ACC-ADV-0002-1.1"
 
     Generate 3 distinct sets of answers to two specific survey questions.
     Survey Questions and Structure:
@@ -47,14 +49,24 @@ def create_course_validation_team(ensemble_output, model_choice: str) -> RoundRo
     You won't indicate that I am acting in a director role.
 
     You are to output your response in this JSON format, do not change the keys:
-    Output Format (for each of the 3 sets):
+    Output Format:
     {{
-    What are the performance gaps in the industry?
-    [Answer here based on the industry and course details you provide]
-
-    Why do you think this WSQ course will address the training needs for the industry?
-    [Answer here showing how the course helps address the gaps based on relevant learning outcomes]
-
+      "analyst_responses": [
+        {{
+          "tsc_title": "The EXACT TSC Title from the ensemble output",
+          "tsc_code": "The EXACT TSC Code from the ensemble output",
+          "course_title": "The course title from the ensemble output",
+          "industry": "The industry from the ensemble output",
+          "learning_outcomes": ["LO1...", "LO2...", "LO3...", "LO4..."],
+          "What are the performance gaps in the industry?": "[Answer here based on the industry and course details you provide]",
+          "Why do you think this WSQ course will address the training needs for the industry?": "[Answer here showing how the course helps address the gaps based on relevant learning outcomes]"
+        }},
+        {{ ... }},
+        {{ ... }}
+      ]
+    }}
+    (You must provide exactly 3 objects in the analyst_responses list, each with distinct answers.)
+    
     By following these steps, you aim to provide actionable insights that match the course content to the training needs within the specified industry.
     
     IMPORTANT:
@@ -64,16 +76,22 @@ def create_course_validation_team(ensemble_output, model_choice: str) -> RoundRo
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
-    }}
     """
 
     editor_message = f"""
     You are to combine the outputs from the following agents into a single JSON object, do NOT aggregate output from the validator agent:
         1) analyst
-    Return the combined output into a single JSON file.
+    
+    First, extract essential course information from the ensemble_output: []
+    - Course Title
+    - Industry
+    - Learning Outcomes
+    - TSC Title (Exactly as given, e.g. "Greenhouse Gas Accounting")
+    - TSC Code (Exactly as given, e.g. "ACC-ADV-0002-1.1")
+    
+    Then, combine this information with the analyst responses to create a complete JSON object.
 
     IMPORTANT:
     - Your ENTIRE output MUST be a single, raw JSON object.
@@ -82,19 +100,28 @@ def create_course_validation_team(ensemble_output, model_choice: str) -> RoundRo
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     Follow this structure and naming convention below:
     {{
+        "course_info": {{
+            "Course Title": "The exact course title from ensemble_output",
+            "Industry": "The industry name from ensemble_output",
+            "Learning Outcomes": ["LO1: Full text of Learning Outcome 1", "LO2: Full text of Learning Outcome 2", ...],
+            "TSC Title": "The EXACT TSC Title from ensemble_output - don't abbreviate or modify this",
+            "TSC Code": "The EXACT TSC Code from ensemble_output - don't abbreviate or modify this"
+        }},
         "analyst_responses": [
             {{
                 "What are the performance gaps in the industry?": "",
                 "Why do you think this WSQ course will address the training needs for the industry?": ""
-            }}
+            }},
+            {{ ... }},
+            {{ ... }}
         ]
     }}
+    (You must provide exactly 3 objects in the analyst_responses list, each with distinct answers.)
     """
 
     analyst = AssistantAgent(

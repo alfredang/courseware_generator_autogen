@@ -56,7 +56,6 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -105,7 +104,6 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
@@ -193,7 +191,6 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\\'\\'n\\'\', quotes as \'\\'\\"\\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - The sequencing explanation MUST start with a generic introduction sentence (e.g., 'For this course, the step-by-step sequencing helps learners acquire the necessary knowledge and skills in [course subject or skill area].').
@@ -269,7 +266,6 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     - The JSON object MUST strictly match the schema and examples provided.
     - Do NOT change, add, or remove any keys or alter the structure from the schema.
     - Do NOT include any comments or headings within the JSON.
-    - Ensure all strings within the JSON are properly escaped (e.g., newlines as \'\'\'\\\\n\'\'\', quotes as \'\'\'\\\\"\'\'\').
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
