@@ -217,6 +217,7 @@ async def generate_timetable(context, num_of_days, model_client):
             - **Lunch breaks, attendance sessions, and other breaks DO NOT count against LU_Duration.**
             - **LU_Duration only applies to the actual instruction and activity time.**
             - **When scheduling sessions, ensure breaks are inserted between LUs as needed without reducing the allocated LU_Duration.**
+            - **IMPORTANT: For each day, the session that occurs immediately after the Lunch Break (i.e., the first topic or activity after lunch) MUST include "Digital Attendance (PM)" in its "Resources" field, in addition to any other required resources for that session.**
             
             #### 4. **Number of Days & Even Distribution**
             - Use **exactly {num_of_days}** day(s).
@@ -382,7 +383,7 @@ async def generate_timetable(context, num_of_days, model_client):
                             ],
                             "reference_line": "Refer to some online references in Google Classroom LMS,
                             "Instructional_Methods": "Lecture, Demonstration",
-                            "Resources": "Slide page 11-15, TV, Wi-Fi"
+                            "Resources": "Digital Attendance (PM), Slide page 11-15, TV, Wi-Fi"
                         }},
                         {{
                             "Time": "1345hrs - 1350hrs (5 mins)",
