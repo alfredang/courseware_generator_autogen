@@ -15,7 +15,11 @@ if 'output_docx' not in st.session_state:
 if 'cv_output_files' not in st.session_state:
     st.session_state['cv_output_files'] = []
 if 'selected_model' not in st.session_state:
-    st.session_state['selected_model'] = "GPT-4o Mini (Default)"
+    st.session_state['selected_model'] = "DeepSeek-V3"
+if 'ka_validation_results' not in st.session_state:
+    st.session_state['ka_validation_results'] = {}
+if 'validation_displayed' not in st.session_state:
+    st.session_state['validation_displayed'] = False
 
 def app():
     st.title("📄 Course Proposal File Processor")
@@ -24,7 +28,7 @@ def app():
     model_choice = st.selectbox(
         "Select LLM Model:",
         options=list(MODEL_CHOICES.keys()),
-        index=4  # default: "GPT-4o Mini (Default)"
+        index=list(MODEL_CHOICES.keys()).index("DeepSeek-V3")
     )
     st.session_state['selected_model'] = model_choice
 
@@ -124,12 +128,32 @@ def app():
         <div class="header">💡 Tips:</div>
         - Colons ( : ) should be included in every LU and Topic, e.g., LU1: xxx, Topic 1: xxx <br>
         - Ensure LUs are properly formatted using the naming conventions mentioned above. <br>
-        - Double check the industry of the CV and background info of the CP, in case the wrong industry is mentioned!
+        - Double check the industry of the CV and background info of the CP, in case the wrong industry is mentioned! <br>
+        - Ensure your TSC document is in .docx format <br>
+        - Make sure your TSC document is properly formatted <br>
+        - Check that all required sections are present <br>
+        - Verify that the TSC code and title are correct <br>
         """,
         unsafe_allow_html=True
     )
 
-    uploaded_file = st.file_uploader("Upload a TSC DOCX file", type="docx", key='uploaded_file')
+    # Always display validation results here, if available
+    if st.session_state.get('validation_displayed'):
+        display_validation_results()
+
+    # Add extra spacing after tips and validation results
+    st.markdown("<div style='margin-bottom: 0.5em;'></div>", unsafe_allow_html=True)
+
+    # Larger upload file label
+    st.markdown("""
+        <div style='font-size: 1.3em; font-weight: bold;'>Upload a TSC DOCX file</div>
+    """, unsafe_allow_html=True)
+    uploaded_file = st.file_uploader(
+        "Upload a TSC DOCX file",
+        type="docx",
+        key='uploaded_file',
+        label_visibility="collapsed"
+    )
 
     if uploaded_file is not None:
         st.success(f"Uploaded file: {uploaded_file.name}")
@@ -141,8 +165,6 @@ def app():
 
         # 2) Process button
         if st.button("🚀 Process File"):
-            # Optional: parse_document before the main pipeline if you want:
-            # parse_document(input_tsc_path, "json_output/output_TSC_TEST.json")
             run_processing(input_tsc_path)
             st.session_state['processing_done'] = True
 
@@ -222,6 +244,9 @@ def run_processing(input_file: str):
     # 1) Run the pipeline (async), passing the TSC doc path
     asyncio.run(main(input_file))
 
+    # Set validation as displayed
+    st.session_state['validation_displayed'] = True
+
     # 2) Now copy the relevant docx files from 'output_docs' to NamedTemporaryFiles
     # Common files for both CP types
     cp_doc_path = "CourseProposal/output_docs/CP_output.docx"
@@ -272,6 +297,66 @@ def run_processing(input_file: str):
 
     st.success("Processing complete. Download your files below!")
 
+def display_validation_results():
+    """Display Knowledge and Ability validation results"""
+    if 'ka_validation_results' in st.session_state and st.session_state['ka_validation_results']:
+        validation_results = st.session_state['ka_validation_results'].get('validation_results', {})
+        fix_results = st.session_state['ka_validation_results'].get('fix_results', {})
+        
+        if validation_results:
+            with st.expander("Knowledge and Ability Validation Results", expanded=not validation_results.get('success', False)):
+                # Show summary results
+                if validation_results.get('success', False):
+                    st.success("✅ SUCCESS: All Knowledge and Ability factors are accounted for.")
+                else:
+                    st.error(f"❌ FAIL: {len(validation_results.get('missing_factors', []))} missing factors, {len(validation_results.get('undefined_factors', []))} undefined factors")
+                
+                # Show coverage metrics
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("Total K&A Factors", validation_results.get('total_factors', 0))
+                with col2:
+                    st.metric("Covered Factors", len(validation_results.get('covered_factors', [])))
+                with col3:
+                    st.metric("Coverage %", f"{validation_results.get('coverage_percentage', 0):.1f}%")
+                
+                # Show missing factors if any
+                if validation_results.get('missing_factors'):
+                    st.subheader("Missing Factors")
+                    for factor in validation_results.get('missing_factors', []):
+                        st.markdown(f"- {factor}")
+                    
+                    st.markdown("""
+                    **How to fix:**
+                    - Ensure all Knowledge and Ability statements are referenced in at least one topic
+                    - Check if any Learning Units are missing their K&A factors in parentheses
+                    """)
+                
+                # Show undefined factors if any
+                if validation_results.get('undefined_factors'):
+                    st.subheader("Undefined Factors")
+                    for factor in validation_results.get('undefined_factors', []):
+                        st.markdown(f"- {factor}")
+                    
+                    st.markdown("""
+                    **How to fix:**
+                    - Remove references to non-existent K&A factors from topics
+                    - Or add these factors to the Knowledge/Ability lists
+                    """)
+        
+        # Show fix results if any topics were fixed
+        if fix_results and fix_results.get('fixed_count', 0) > 0:
+            with st.expander("Knowledge and Ability Auto-Fix Results", expanded=True):
+                st.success(f"✅ {fix_results.get('fixed_count', 0)} topics fixed with missing K&A references")
+                
+                # Show detailed fix information
+                for i, fix in enumerate(fix_results.get('fixed_topics', []), 1):
+                    st.markdown(f"**Fix {i}:**")
+                    st.markdown(f"- Learning Unit: {fix.get('learning_unit')}")
+                    st.markdown(f"- Original: {fix.get('original')}")
+                    st.markdown(f"- Fixed: {fix.get('fixed')}")
+                    st.markdown(f"- Added factors: {', '.join(fix.get('added_factors', []))}")
+                    st.markdown("---")
 
 if __name__ == "__main__":
     app()

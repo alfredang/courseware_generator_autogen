@@ -129,9 +129,10 @@ class CourseOverview(BaseModel):
 class ExcelData(BaseModel):
     """Excel agent output with dynamic sections"""
     course_overview: CourseOverview
-    ka_analysis: Dict[str, str]  # Dynamic K&A factors
-    instructional_methods: Optional[Dict[str, str]] = None  # Dynamic instructional methods
+    ka_analysis: Dict[str, str] = Field(..., alias="KA_Analysis")  # Dynamic K&A factors, aliased for autogen
+    instructional_methods: Optional[Dict[str, str]] = Field(None, alias="Instructional_Methods")  # Dynamic instructional methods, aliased for autogen
     
     # Allow for additional dynamic sections
     class Config:
         extra = "allow"
+        allow_population_by_field_name = True  # Allow both field name and alias for compatibility

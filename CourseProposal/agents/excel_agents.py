@@ -11,12 +11,14 @@ from autogen_agentchat.ui import Console
 def course_task():
     overview_task = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -41,12 +43,14 @@ def course_task():
 def ka_task():
     overview_task = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -72,12 +76,14 @@ def ka_task():
 def im_task():
     im_task = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
     - If the instructional or assessment method is Case Study, output as 'Others: Case Study' (not 'Others: [Please elaborate]').
     - Add 'Others: Case Study' to the dropdown options and use this format for Case Study.
@@ -117,7 +123,15 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     Your task is to create a Course Description in 2 paragraphs for the above factors.
 
     IMPORTANT:
-    - The course level (beginner, intermediate, or advanced) MUST be clearly stated in the course description, using the value from the input JSON (ensemble_output['Course Information']['Course Level']).
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
+    - The course level (e.g., Beginner, Intermediate, Advanced, Beginner to Intermediate, Intermediate to Advanced) MUST be clearly stated in the course description, using the value from the input JSON (ensemble_output['Course Information']['Course Level']).
     - The proficiency level (e.g., Basic, Intermediate, Advanced) MUST be clearly stated in the course description, using the value from the input JSON (ensemble_output['Course Information']['Proficiency Level']).
     - Do NOT guess or default the course level or proficiency level; always use the provided values.
     - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
@@ -148,29 +162,33 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     Do not mention the LOs in your answer.
     Do not add quotation marks in your answer.
 
-    Your course description MUST strictly fulfill all of the following:
-    • Highlight the benefits, skills, competencies, and needs the course will address
-    • Explain how the course is relevant to the industry and how it may impact the learner's career in terms of employment/job upgrading opportunities
-    • Indicate if the course is for beginner, intermediate, or advanced learners (using the value from the input JSON)
+    As a consultant, your primary goal is to articulate the value proposition of this course. Your language should be clear, engaging, and professional, avoiding unnecessary jargon. The description needs to be easily digestible, persuasive, and tailored to the target audience, reflecting a good Flesch Reading Ease score.
+
+    Emphasize and clearly address these key aspects in the body of your description:
+    1.  **Value & Skills:** Clearly detail the tangible benefits, new skills, and core competencies learners will acquire. Explain what specific needs this course fulfills for them.
+    2.  **Industry & Career:** Explain the course's relevance to the current industry landscape. Specifically, discuss how it can impact a learner's career, including employment prospects and opportunities for job upgrading or specialization.
+    3.  **Audience & Level:** Clearly state the course level (e.g. Beginner to Intermediate, Intermediate to Advanced) using the provided input. The proficiency level (e.g., Basic, Intermediate, Advanced) from the input JSON MUST be stated at the beginning of the course description.
 
     Do NOT copy the template or example verbatim. Vary your sentence structure, paragraph flow, and adapt your style to the course context. Your output should be natural, engaging, and tailored, not formulaic.
-
-    ---
     Your course description must be at least 4 sentences long, multi-paragraph, and as detailed as the example provided. It must adapt terminology, standards, frameworks, and real-world applications to the actual course subject area (e.g., technology, healthcare, finance, engineering, etc.).
+
+    Use the following TEMPLATE as a *guideline* to structure your response, infusing your consultant expertise to make it dynamic and compelling. Ensure all placeholders are adapted to the specific course domain and details.
 
     TEMPLATE (ADAPT TO THE COURSE DOMAIN):
     This course equips learners with the [proficiency level] competencies required to design and implement robust [domain/subject] systems in alignment with [relevant standard or framework, e.g., ISO 14064-1:2018, HIPAA, IFRS, etc.]. Participants will explore foundational principles of [subject] and its alignment with [science-based targets, industry standards, or global reporting requirements]. By engaging with real-world scenarios and case studies, learners will gain a practical understanding of how these principles are applied in leading organizations. Through practical engagement with [risk-informed planning, data analysis, compliance strategies, or other key activities], learners will develop the ability to ensure [regulatory compliance, operational excellence, or other domain-relevant goals] and integrate efforts into broader [organizational, industry, or societal] frameworks. The curriculum is designed to foster both technical expertise and strategic thinking, preparing participants to address complex challenges in their field.
     A key focus of the course is operationalizing [core skill or process, e.g., emissions reduction, patient care, financial reporting] across [systems, supply chains, teams, etc.] using [lifecycle methodologies, data analysis, baseline assessments, etc.]. Learners will also gain critical skills in [specialized area, e.g., offset planning, clinical decision-making, risk management], including how to [define scopes, apply key metrics, formulate strategies] that are [economically viable, evidence-based, or optimized for the domain]. Interactive workshops and collaborative projects will enable participants to apply new knowledge in simulated professional contexts. The course delivers real-world applications that prepare participants to drive measurable impact within their organizations.
 
-    With [global regulatory and investor scrutiny, or industry trends] intensifying around [key challenge, e.g., climate accountability, data privacy, patient safety], this course provides essential upskilling for professionals engaged in [relevant roles or sectors]. The program addresses both current and emerging issues, ensuring that graduates remain adaptable in a rapidly evolving landscape. Proficiency in [relevant standard or practice] significantly enhances employability across diverse industries by equipping learners with the tools to [quantify, report, improve, or comply]. Graduates of this course will be well-positioned to pursue career advancement, transition into specialized roles, or support companies in meeting [industry or regulatory] goals. Alumni often find themselves at the forefront of innovation, leading initiatives that shape the future of their professions.
+    With [global regulatory and investor scrutiny, or industry trends] intensifying around [key challenge, e.g., climate accountability, data privacy, patient safety], this course provides essential upskilling for professionals engaged in [relevant roles or sectors]. The program addresses both current and emerging issues, ensuring that graduates remain adaptable in a rapidly evolving landscape. Proficiency in [relevant standard or practice] significantly enhances employability across diverse industries by equipping learners with the tools to [quantify, report, improve, or comply]. Graduates of this course will be well-positioned to pursue career advancement,
+    transition into specialized roles, or support companies in meeting [industry or regulatory] goals. Alumni often find themselves at the forefront of innovation, leading initiatives that shape the future of their professions.
 
-    This course is at a(n) [course level] level and equips learners with [proficiency level] proficiency, designed for [target audience, e.g., professionals, managers, practitioners] who have a foundational understanding of [relevant background] and are seeking to deepen their expertise in [subject area or skill]. Participants are encouraged to bring their own professional experiences into the learning environment, enriching discussions and fostering a vibrant community of practice.
+    This course is at a(n) [course level] level, designed for [target audience, e.g., professionals, managers, practitioners] who have a foundational understanding of [relevant background] and are seeking to deepen their expertise in [subject area or skill]. Participants are encouraged to bring their own professional experiences into the learning environment, enriching discussions and fostering a vibrant community of practice.
 
     EXAMPLE (HEALTHCARE DOMAIN):
     This course equips learners with the advanced competencies required to design and implement robust patient data management systems in alignment with HIPAA and global healthcare data standards. Participants will explore foundational principles of healthcare informatics and its alignment with patient safety, privacy regulations, and international reporting requirements. Through a blend of lectures and hands-on labs, students will see how informatics principles are applied in hospitals and clinics worldwide. Through practical engagement with risk-informed planning, clinical data analysis, and compliance strategies, learners will develop the ability to ensure regulatory compliance and integrate data management efforts into broader hospital and healthcare system frameworks. The curriculum emphasizes both the technical and ethical dimensions of healthcare data, preparing participants to navigate complex regulatory environments.
     A key focus of the course is operationalizing secure patient data handling across clinical departments and care teams using lifecycle methodologies, data analysis, and baseline assessments. Learners will also gain critical skills in clinical decision support, including how to define data scopes, apply key healthcare metrics, and formulate strategies that are evidence-based and optimized for patient outcomes. Group projects and scenario-based exercises will help participants translate theory into practice, simulating the challenges faced by healthcare professionals. The course delivers real-world applications that prepare participants to drive measurable improvements in patient care and data security within their organizations.
 
-    With global regulatory and public scrutiny intensifying around patient privacy and healthcare data security, this course provides essential upskilling for professionals engaged in healthcare management, clinical informatics, and digital health transformation. The program is regularly updated to reflect the latest trends and compliance requirements, ensuring its ongoing relevance. Proficiency in HIPAA and related standards significantly enhances employability across diverse healthcare settings by equipping learners with the tools to quantify, report, and improve patient data practices. Graduates of this course will be well-positioned to pursue career advancement, transition into informatics-focused roles, or support organizations in meeting compliance and patient safety goals. Many alumni have gone on to lead digital transformation projects or serve as data governance champions in their institutions.
+    With global regulatory and public scrutiny intensifying around patient privacy and healthcare data security, this course provides essential upskilling for professionals engaged in healthcare management,
+    clinical informatics, and digital health transformation. The program is regularly updated to reflect the latest trends and compliance requirements, ensuring its ongoing relevance. Proficiency in HIPAA and related standards significantly enhances employability across diverse healthcare settings by equipping learners with the tools to quantify, report, and improve patient data practices. Graduates of this course will be well-positioned to pursue career advancement, transition into informatics-focused roles, or support organizations in meeting compliance and patient safety goals. Many alumni have gone on to lead digital transformation projects or serve as data governance champions in their institutions.
 
     This course is at an intermediate level, designed for healthcare professionals who have a foundational understanding of clinical systems or patient care and are seeking to deepen their expertise in healthcare informatics and data strategy. Learners from a variety of backgrounds are welcomed, and peer-to-peer learning is encouraged to maximize the value of diverse perspectives.
 
@@ -180,7 +198,7 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
 
     Format your response in the given JSON structure under "course_overview".
     Your output MUST be as follows, with course_description being the only key-value pair under "course_overview":
-    "course_overview": 
+    "course_overview": {{
         course_description: "Your course description here",
         }}
     """
@@ -189,6 +207,16 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     Your only purpose is to ensure that the output from the previous agent STRICTLY matches the json schema provided below.
     It must not have any other keys other than the ones specified in the below example.
     Your output must take the content of the previous agent and ensure that it is structured in the given JSON format.
+
+    IMPORTANT:
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     Do not have more than 1 key value pair under "course_overview", and that key value pair must be "course_description".
 
@@ -278,6 +306,16 @@ def create_instructional_methods_agent(ensemble_output, instructional_methods_js
     Do not mention any A and K factors directly.
     Do not mention any topics directly.
     Do not mention the course name directly.
+
+    IMPORTANT:
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     Your response should be structured in the given JSON format under "Instructional_Methods".
     The following JSON output details the course, and the full list of chosen instructional methods can be found under the Instructional Methods key: {ensemble_output}

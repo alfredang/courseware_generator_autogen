@@ -93,14 +93,15 @@ def run_assessment_justification_agent(ensemble_output, model_choice: str) -> Ro
         
     assessment_justification_agent_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - If the assessment method is Case Study, output as 'Others: Case Study' (not 'Others: [Please elaborate]').
-    - Add 'Others: Case Study' to the dropdown options and use this format for Case Study.
 
     CORRECT EXAMPLE:
     {{

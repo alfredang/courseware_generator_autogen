@@ -20,12 +20,14 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     model_client = ChatCompletionClient.load_component(chosen_config)
     course_info_extractor_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -46,7 +48,7 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     You are to extract the following variables from {data}:
             1) Course Title
             2) Name of Organisation
-            3) Course Level (e.g., Beginner, Intermediate, Advanced)
+            3) Course Level (e.g., Beginner to Intermediate, Intermediate to Advanced)
             4) Proficiency Level (e.g., Basic, Intermediate, Advanced)
             5) Classroom Hours (can be found under Instructional Duration: xxxx)
             6) Practical Hours (IMPORTANT: should match the Number of Assessment Hours exactly)
@@ -118,12 +120,18 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
 
     learning_outcomes_extractor_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - The output JSON object MUST have a single top-level key: `"Learning Outcomes"`.
+    - Under the `"Learning Outcomes"` key, there MUST be exactly three sub-keys: `"Learning Outcomes"` (a list of strings), `"Knowledge"` (a list of strings), and `"Ability"` (a list of strings).
+    - These three sub-keys (`"Learning Outcomes"`, `"Knowledge"`, `"Ability"`) MUST ALWAYS be present, even if their corresponding lists are empty (e.g., if no relevant knowledge points are found, you MUST output `"Knowledge": []`).
+    - Do NOT add any other keys at the top level, or under the main `"Learning Outcomes"` object, other than the three specified sub-keys.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema (other than populating the lists).
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -160,7 +168,8 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
             "Ability": ["A1: Calculate ratios for assessing organisation's profitability\nA2: Calculate ratios for assessing organisation's financial performance"], 
 
 
-            Format the extracted data in JSON format, with this structure:
+            Format the extracted data in JSON format, with this structure. The top-level `"Learning Outcomes"` key IS REQUIRED. 
+            Under this, the sub-keys `"Learning Outcomes"` (list), `"Knowledge"` (list), and `"Ability"` (list) MUST ALWAYS be present, even if empty:
                 "Learning Outcomes": {{
                 "Learning Outcomes": [
 
@@ -175,12 +184,14 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
 
     tsc_and_topics_extractor_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -228,7 +239,7 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
             "TSC Code": [
                 
             ],
-            "Topics": [
+            "Topic": [
 
             ],
             "Learning Units": [
@@ -239,12 +250,14 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
 
     assessment_methods_extractor_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
     - For assessment methods, if the method is not in the dropdown list, output as 'Others: [method]'. If the method is in the dropdown, use the dropdown value exactly. This ensures unknown methods are handled robustly and the JSON output will not break the Excel pipeline.
 
@@ -364,6 +377,17 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
         2) learning_outcomes_extractor
         3) tsc_and_topics_extractor
         4) assessment_methods_extractor
+    
+    IMPORTANT:
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
+
     Return the combined output into a single JSON file, do not alter the keys in any way, do not add or nest any keys. Ensure that the following is adhered to:
     1. **Strict JSON Formatting:**  
     - The output must be a valid JSON object with proper syntax (keys in double quotes, commas separating elements, arrays enclosed in square brackets, objects enclosed in curly braces).
@@ -373,7 +397,9 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - `"Course Information"`  
     - `"Learning Outcomes"`  
     - `"TSC and Topics"`  
-    - `"Assessment Methods"`  
+    - `"Assessment Methods"` 
+     
+    If data for a section (e.g., from `learning_outcomes_extractor`) is missing or invalid, you MUST still include its corresponding top-level key (e.g., `"Learning Outcomes"`) in your output. For such cases, use a default empty structure for that key (e.g., `"Learning Outcomes": {{"Learning Outcomes": [], "Knowledge": [], "Ability": []}}` or an empty object `{{}}` if the detailed structure is unknown or too complex to default).
     
     3. **No Trailing Commas or Missing Brackets:**  
     - Ensure that each array (`[...]`) and object (`{{...}}`) is closed properly.  

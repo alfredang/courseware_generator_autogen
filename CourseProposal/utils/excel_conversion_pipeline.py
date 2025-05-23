@@ -174,11 +174,19 @@ def create_course_dataframe(json_data):
         lo_title_only = lo_title.split(": ", 1)[1] if lo_title != "N/A" and ": " in lo_title else "N/A" # Extract title after "LOx: "
 
         # Get Topics for the current LU from Course Outline
-        lu_key = f"LU{lu_index + 1}"
-        processed_topics[lu_key] = {}
+        lu_num = f"LU{lu_index + 1}"
+        processed_topics[lu_num] = {}
         
-        if lu_key in course_outline:
-            topics = course_outline[lu_key].get("Description", [])
+        # Look for the matching LU in course_outline by either exact match or start-with match
+        matching_lu_key = None
+        for lu_key in course_outline:
+            # Check if the key is exactly lu_num or starts with lu_num followed by ':'
+            if lu_key == lu_num or lu_key.startswith(f"{lu_num}:"):
+                matching_lu_key = lu_key
+                break
+                
+        if matching_lu_key and matching_lu_key in course_outline:
+            topics = course_outline[matching_lu_key].get("Description", [])
             
             for topic in topics:
                 topic_title_full = topic.get("Topic", "N/A")
@@ -191,7 +199,19 @@ def create_course_dataframe(json_data):
                 
                 # Extract K and A statements from the topic title
                 ka_codes_str = topic_title_full.split('(')[-1].rstrip(')') if "(" in topic_title_full else ""
-                ka_codes = [code.strip() for code in ka_codes_str.split(',')] if ka_codes_str else []
+                # Extract just the codes, not the full descriptions
+                ka_codes = []
+                if ka_codes_str:
+                    # Handle both simple codes "K1, A2" and complex formats "K1: description"
+                    parts = [part.strip() for part in ka_codes_str.split(',')]
+                    for part in parts:
+                        if ':' in part:
+                            # If it contains a colon, extract just the code before it (e.g. "K1: desc" -> "K1")
+                            code = part.split(':', 1)[0].strip()
+                        else:
+                            code = part.strip()
+                        if code.startswith('K') or code.startswith('A'):
+                            ka_codes.append(code)
 
                 # Group K and A statements for the same topic
                 k_statements = []
@@ -199,13 +219,21 @@ def create_course_dataframe(json_data):
                 
                 for code in ka_codes:
                     if code.startswith('K'):
-                        k_index = int(code[1:]) - 1
-                        k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
-                        k_statements.append(k_statement)
+                        try:
+                            k_index = int(code[1:]) - 1
+                            k_statement = f"{knowledge_statements[k_index]} ({tsc_code})" if 0 <= k_index < len(knowledge_statements) else f"{code}: N/A ({tsc_code})"
+                            k_statements.append(k_statement)
+                        except ValueError:
+                            # Skip this code if we can't parse the index
+                            print(f"Warning: Could not parse knowledge index from code: {code}")
                     elif code.startswith('A'):
-                        a_index = int(code[1:]) - 1
-                        a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
-                        a_statements.append(a_statement)
+                        try:
+                            a_index = int(code[1:]) - 1
+                            a_statement = f"{ability_statements[a_index]} ({tsc_code})" if 0 <= a_index < len(ability_statements) else f"{code}: N/A ({tsc_code})"
+                            a_statements.append(a_statement)
+                        except ValueError:
+                            # Skip this code if we can't parse the index
+                            print(f"Warning: Could not parse ability index from code: {code}")
                 
                 # Determine assessment methods
                 if "Oral Questioning" in assessment_methods:
@@ -222,20 +250,20 @@ def create_course_dataframe(json_data):
                 
                 # Add K statements row
                 if k_statements:
-                    if topic_key not in processed_topics[lu_key]:
-                        processed_topics[lu_key][topic_key] = {'k': k_statements, 'a': []}
+                    if topic_key not in processed_topics[lu_num]:
+                        processed_topics[lu_num][topic_key] = {'k': k_statements, 'a': []}
                     else:
-                        processed_topics[lu_key][topic_key]['k'].extend(k_statements)
+                        processed_topics[lu_num][topic_key]['k'].extend(k_statements)
                 
                 # Add A statements row
                 if a_statements:
-                    if topic_key not in processed_topics[lu_key]:
-                        processed_topics[lu_key][topic_key] = {'k': [], 'a': a_statements}
+                    if topic_key not in processed_topics[lu_num]:
+                        processed_topics[lu_num][topic_key] = {'k': [], 'a': a_statements}
                     else:
-                        processed_topics[lu_key][topic_key]['a'].extend(a_statements)
+                        processed_topics[lu_num][topic_key]['a'].extend(a_statements)
 
             # Now create rows from the processed data
-            for topic_key, statements in processed_topics[lu_key].items():
+            for topic_key, statements in processed_topics[lu_num].items():
                 # Add K statements row
                 if statements['k']:
                     # Join all K statements with newlines
@@ -344,9 +372,17 @@ def combine_los_and_topics(ensemble_output):
         result += f"{lu_num}: {lu_title_clean} \n"
         result += "Topics:\n"
         
-        # Get topics for this Learning Unit
-        if lu_num in course_outline:
-            topics = course_outline[lu_num].get("Description", [])
+        # Look for the matching LU in course_outline by either exact match or start-with match
+        matching_lu_key = None
+        for lu_key in course_outline:
+            # Check if the key is exactly lu_num or starts with lu_num followed by ':'
+            if lu_key == lu_num or lu_key.startswith(f"{lu_num}:"):
+                matching_lu_key = lu_key
+                break
+        
+        # Get topics for this Learning Unit using the matching key
+        if matching_lu_key and matching_lu_key in course_outline:
+            topics = course_outline[matching_lu_key].get("Description", [])
             
             for topic in topics:
                 topic_title = topic.get("Topic", "")
@@ -358,7 +394,7 @@ def combine_los_and_topics(ensemble_output):
                 topic_name = topic_title.split(': ', 1)[1] if ": " in topic_title else topic_title
                 topic_name = topic_name.split(' (')[0] if " (" in topic_name else topic_name
                 
-                # Add the topic
+                # Add the topic without KA references
                 result += f"•\tT{topic_num}: {topic_name} \n"
         
         result += "\n"
@@ -1027,9 +1063,9 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
     )
     
     # Handle nulls in instructional data
-    summary_df["Instructional Methods (modes of training, duration in minutes)"].fillna(
-        "- No instructional methods specified", inplace=True)
-    summary_df["Instructional Duration (in minutes)"].fillna(0, inplace=True)
+    summary_df["Instructional Methods (modes of training, duration in minutes)"] = summary_df["Instructional Methods (modes of training, duration in minutes)"].fillna(
+        "- No instructional methods specified")
+    summary_df["Instructional Duration (in minutes)"] = summary_df["Instructional Duration (in minutes)"].fillna(0)
     
     # Now merge assessment data
     summary_df = summary_df.merge(
@@ -1037,9 +1073,9 @@ def create_summary_dataframe(course_df, instructional_df, assessment_df):
     )
     
     # Handle nulls in assessment data
-    summary_df["Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)"].fillna(
-        "- No assessment methods specified", inplace=True)
-    summary_df["Assessment Duration (in minutes)"].fillna(0, inplace=True)
+    summary_df["Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)"] = summary_df["Modes of Assessment (Assessor-to-candidate Ratio, duration in minutes)"].fillna(
+        "- No assessment methods specified")
+    summary_df["Assessment Duration (in minutes)"] = summary_df["Assessment Duration (in minutes)"].fillna(0)
     
     # Convert duration columns to integers
     summary_df["Instructional Duration (in minutes)"] = summary_df["Instructional Duration (in minutes)"].astype(int)

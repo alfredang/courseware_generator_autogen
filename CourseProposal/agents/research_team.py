@@ -50,12 +50,14 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
     # insert research analysts
     background_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -96,12 +98,14 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
 
     performance_gap_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{
@@ -181,7 +185,14 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
 
     sequencing_rationale_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
     - The sequencing explanation MUST start with a generic introduction sentence (e.g., 'For this course, the step-by-step sequencing helps learners acquire the necessary knowledge and skills in [course subject or skill area].').
     - Immediately after, you MUST insert a detailed, logically structured sequencing explanation (3-5 sentences) that describes:
         1. The overall framework and logic of the sequencing.
@@ -208,50 +219,55 @@ def create_research_team(ensemble_output, model_choice: str) -> RoundRobinGroupC
 
     TEMPLATE:
     {{
-        Sequencing Explanation: For this course, the step-by-step sequencing helps learners acquire the necessary knowledge and skills in [course subject or skill area].
-        [Insert here: 3-5 sentence, logically structured explanation describing the overall framework, how foundational knowledge is established, how each unit builds on the previous, how the sequence supports mastery and real-world application, and how the structure ensures alignment with learning outcomes. Reference the course's actual learning outcomes, units, or topics.]
-        Each learning unit (LU) is carefully positioned to lay the groundwork for the next, ensuring that learners gain the necessary knowledge and applied skills at each stage before advancing further.
-
-        LU1: [Exact title of LU1 from the course JSON]
-        LU1 directly supports [LO1 or relevant outcome] by [establishing/introducing] [key concepts, skills, or frameworks]. The topics in this unit cover [briefly list or describe topics/skills], which are essential before [next stage or application]. Applied components such as [practical activities, frameworks, or tools] equip learners with [capabilities or understanding]. This unit ensures that learners develop a complete baseline, which is critical for progressing to subsequent units.
-
-        LU2: [Exact title of LU2 from the course JSON]
-        LU2 builds on the foundation of LU1 and addresses [LO2 or relevant outcome] by guiding learners through [frameworks, requirements, or skills]. With foundational knowledge already established, learners are now equipped to [explore/apply] [new topics, skills, or challenges]. This step is essential before [next stage or application]. The progression into [advanced topics or skills] allows learners to develop practical skills in [area]. This stage ensures learners can [apply/interpet] [knowledge/skills] while considering broader goals.
-
-        LU3: [Exact title of LU3 from the course JSON]
-        LU3 builds on the grounding in LU2 and supports [LO3 or relevant outcome]. At this stage, learners are prepared to [apply/operationalise] [key skills or concepts] by first understanding [critical concepts or systems]. This logical next step ensures the learner can [contextualise/apply] [knowledge/skills] in [real-world or advanced context]. The unit progresses to [advanced methodologies or applications], which are critical before [final stage or application]. These steps are sequenced deliberately to ensure that [outcomes/strategies] are based on [accurate, system-wide understanding], reinforcing sound planning and mastery.
-
-        [Repeat for LU4, LU5, etc. as needed.]
-
-        Conclusion: The structured sequencing of these learning units ensures that learners develop a coherent and comprehensive understanding of [course subject or skill area]. By progressing from foundational principles to advanced applications, each unit builds on the previous, supporting mastery, real-world application, and alignment with the course's learning outcomes and industry or professional standards.
+        "Sequencing Explanation": "For this course, the step-by-step sequencing helps learners acquire the necessary knowledge and skills in [course subject or skill area]. [Insert here: 3-5 sentence, logically structured explanation describing the overall framework, how foundational knowledge is established, how each unit builds on the previous, how the sequence supports mastery and real-world application, and how the structure ensures alignment with learning outcomes. Reference the course's actual learning outcomes, units, or topics.] Each learning unit (LU) is carefully positioned to lay the groundwork for the next, ensuring that learners gain the necessary knowledge and applied skills at each stage before advancing further.",
+        "LU1": {{
+            "Title": "[Exact title of LU1 from the course JSON]",
+            "Description": "LU1 directly supports [LO1 or relevant outcome] by [establishing/introducing] [key concepts, skills, or frameworks]. The topics in this unit cover [briefly list or describe topics/skills], which are essential before [next stage or application]. Applied components such as [practical activities, frameworks, or tools] equip learners with [capabilities or understanding]. This unit ensures that learners develop a complete baseline, which is critical for progressing to subsequent units."
+        }},
+        "LU2": {{
+            "Title": "[Exact title of LU2 from the course JSON]",
+            "Description": "LU2 builds on the foundation of LU1 and addresses [LO2 or relevant outcome] by guiding learners through [frameworks, requirements, or skills]. With foundational knowledge already established, learners are now equipped to [explore/apply] [new topics, skills, or challenges]. This step is essential before [next stage or application]. The progression into [advanced topics or skills] allows learners to develop practical skills in [area]. This stage ensures learners can [apply/interpet] [knowledge/skills] while considering broader goals."
+        }},
+        "LU3": {{
+            "Title": "[Exact title of LU3 from the course JSON]",
+            "Description": "LU3 builds on the grounding in LU2 and supports [LO3 or relevant outcome]. At this stage, learners are prepared to [apply/operationalise] [key skills or concepts] by first understanding [critical concepts or systems]. This logical next step ensures the learner can [contextualise/apply] [knowledge/skills] in [real-world or advanced context]. The unit progresses to [advanced methodologies or applications], which are critical before [final stage or application]. These steps are sequenced deliberately to ensure that [outcomes/strategies] are based on [accurate, system-wide understanding], reinforcing sound planning and mastery."
+        }},
+        "[Repeat for LU4, LU5, etc. as needed, following the same structure as LU1, LU2, LU3, ensuring the key is like \"LU4\", \"LU5\", etc.]": {{
+            "Title": "[Exact title of the LU from the course JSON]",
+            "Description": "[Detailed description for this LU, similar to others]"
+        }},
+        "Conclusion": "The structured sequencing of these learning units ensures that learners develop a coherent and comprehensive understanding of [course subject or skill area]. By progressing from foundational principles to advanced applications, each unit builds on the previous, supporting mastery, real-world application, and alignment with the course's learning outcomes and industry or professional standards."
     }}
 
     CORRECT EXAMPLE:
     {{
-        Sequencing Explanation: For this course, the step-by-step sequencing helps learners acquire the necessary knowledge and skills in data analytics and decision-making. The framework begins with essential knowledge of data structures and methodically builds toward advanced application in predictive modeling, business intelligence, and finally, the formulation of actionable strategies. Each learning unit (LU) is carefully positioned to lay the groundwork for the next, ensuring that learners gain the necessary knowledge and applied skills at each stage before advancing further. This systematic sequencing ensures alignment with the course's learning outcomes and supports mastery at each critical phase of data-driven problem solving.
-
-        LU1: Foundations of Data Structures and Management
-        LU1 directly supports LO1 by establishing a technical and conceptual foundation for data analytics. The topics in this unit introduce core principles of data types, storage, and retrieval, as well as best practices for data integrity and security. These foundational concepts are necessary before any analysis or modeling can be introduced. Applied components such as database design and data cleaning equip learners with the capability to manage and prepare data for analysis. This unit ensures that learners develop a complete baseline understanding, which is critical for progressing to analytical and modeling aspects.
-
-        LU2: Analytical Methods and Business Intelligence
-        LU2 builds on the foundation of LU1 and addresses LO2 by guiding learners through analytical frameworks and business intelligence tools. With foundational knowledge already established, learners are now equipped to explore data visualization, reporting, and dashboard creation. This step is essential before predictive modeling or strategic decision-making can be conducted. The progression into interpreting business metrics and identifying trends allows learners to develop practical skills in business intelligence. This stage ensures learners can interpret and apply analytics while considering broader organizational goals.
-
-        LU3: Predictive Modeling and Strategic Application
-        LU3 builds on the analytical grounding in LU2 and supports LO3. At this stage, learners are prepared to operationalize predictive modeling by first understanding statistical methods and machine learning algorithms. This logical next step ensures the learner can contextualize predictions within business scenarios. The unit progresses to model evaluation and deployment, which are critical before actionable strategies can be formulated. These steps are sequenced deliberately to ensure that strategies are based on accurate, data-driven insights, thus reinforcing sound decision-making and planning.
-
-        Conclusion: The structured sequencing of these learning units ensures that learners develop a coherent and comprehensive understanding of data analytics and decision-making. By progressing from foundational principles to advanced applications, each unit builds on the previous, supporting mastery, real-world application, and alignment with the course's learning outcomes and industry standards.
+        "Sequencing Explanation": "For this course, the step-by-step sequencing helps learners acquire the necessary knowledge and skills in data analytics and decision-making. The framework begins with essential knowledge of data structures and methodically builds toward advanced application in predictive modeling, business intelligence, and finally, the formulation of actionable strategies. Each learning unit (LU) is carefully positioned to lay the groundwork for the next, ensuring that learners gain the necessary knowledge and applied skills at each stage before advancing further. This systematic sequencing ensures alignment with the course's learning outcomes and supports mastery at each critical phase of data-driven problem solving.",
+        "LU1": {{
+            "Title": "Foundations of Data Structures and Management",
+            "Description": "LU1 directly supports LO1 by establishing a technical and conceptual foundation for data analytics. The topics in this unit introduce core principles of data types, storage, and retrieval, as well as best practices for data integrity and security. These foundational concepts are necessary before any analysis or modeling can be introduced. Applied components such as database design and data cleaning equip learners with the capability to manage and prepare data for analysis. This unit ensures that learners develop a complete baseline understanding, which is critical for progressing to analytical and modeling aspects."
+        }},
+        "LU2": {{
+            "Title": "Analytical Methods and Business Intelligence",
+            "Description": "LU2 builds on the foundation of LU1 and addresses LO2 by guiding learners through analytical frameworks and business intelligence tools. With foundational knowledge already established, learners are now equipped to explore data visualization, reporting, and dashboard creation. This step is essential before predictive modeling or strategic decision-making can be conducted. The progression into interpreting business metrics and identifying trends allows learners to develop practical skills in business intelligence. This stage ensures learners can interpret and apply analytics while considering broader organizational goals."
+        }},
+        "LU3": {{
+            "Title": "Predictive Modeling and Strategic Application",
+            "Description": "LU3 builds on the analytical grounding in LU2 and supports LO3. At this stage, learners are prepared to operationalize predictive modeling by first understanding statistical methods and machine learning algorithms. This logical next step ensures the learner can contextualize predictions within business scenarios. The unit progresses to model evaluation and deployment, which are critical before actionable strategies can be formulated. These steps are sequenced deliberately to ensure that strategies are based on accurate, data-driven insights, thus reinforcing sound decision-making and planning."
+        }},
+        "Conclusion": "The structured sequencing of these learning units ensures that learners develop a coherent and comprehensive understanding of data analytics and decision-making. By progressing from foundational principles to advanced applications, each unit builds on the previous, supporting mastery, real-world application, and alignment with the course's learning outcomes and industry standards."
     }}
-
     """
 
     editor_message = f"""
     IMPORTANT:
-    - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-    - Do NOT add any extra text, explanations, or markdown code blocks.
-    - Do NOT change, add, or remove any keys or structure.
-    - Do NOT include any comments or headings.
-    - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-    - If you do not follow these instructions, the process will fail.
+    - Your ENTIRE output MUST be a single, raw JSON object.
+    - Do NOT enclose it in markdown ```json ... ``` blocks.
+    - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+    - The JSON object MUST strictly match the schema and examples provided.
+    - Do NOT change, add, or remove any keys or alter the structure from the schema.
+    - Do NOT include any comments or headings within the JSON.
+    - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+    - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
 
     CORRECT EXAMPLE:
     {{

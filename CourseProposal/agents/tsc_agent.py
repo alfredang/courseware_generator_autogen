@@ -40,12 +40,14 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
 
     tsc_parser_agent_message = f"""
         IMPORTANT:
-        - Your output MUST be a valid JSON object, matching the schema below EXACTLY.
-        - Do NOT add any extra text, explanations, or markdown code blocks.
-        - Do NOT change, add, or remove any keys or structure.
-        - Do NOT include any comments or headings.
-        - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
-        - If you do not follow these instructions, the process will fail.
+        - Your ENTIRE output MUST be a single, raw JSON object.
+        - Do NOT enclose it in markdown ```json ... ``` blocks.
+        - Do NOT add any introductory text, explanations, or concluding remarks before or after the JSON.
+        - The JSON object MUST strictly match the schema and examples provided.
+        - Do NOT change, add, or remove any keys or alter the structure from the schema.
+        - Do NOT include any comments or headings within the JSON.
+        - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
+        - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
         - Do not repeat or duplicate the TSC code in the output. The TSC code should appear only once, followed by the skill name/title.
 
         CORRECT EXAMPLE:
@@ -88,6 +90,14 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
         - Case Study
 
         For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
+
+        Regarding "Assessment Methods" in your output:
+        - You will receive a list of assessment method names under the key `data['Assessment Methods']['Assessment Methods']` in the input.
+        - You will also receive a dictionary mapping method names to their hour strings under `data['Assessment Methods']['MethodsWithHours']`.
+        - For each assessment method name from the list, check if it exists as a key in the `MethodsWithHours` dictionary.
+        - If it exists, format it as "Method Name (Hour String)" (e.g., "Written Exam (1 hr)", "Case Study (1 hr)").
+        - If it does not exist in `MethodsWithHours` (meaning it has no specified hours), list just the "Method Name".
+        - Ensure the final list in your output under "Assessment Methods:" reflects this formatting. Do NOT duplicate methods.
 
         For example, "case studies" is WRONG, "Case Study" is CORRECT.
 
