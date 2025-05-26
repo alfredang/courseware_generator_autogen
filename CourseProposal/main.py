@@ -16,6 +16,7 @@ from CourseProposal.utils.helpers import (
     flatten_list,
     extract_tsc_agent_json,
     fix_missing_ka_references,
+    apply_fallback_logic,
 )
 from CourseProposal.utils.json_mapping import map_values
 from CourseProposal.utils.jinja_docu_replace import replace_placeholders_with_docxtpl
@@ -172,6 +173,23 @@ async def main(input_tsc) -> None:
             print(f"Warning: Knowledge and Ability mapping update failed: {e}")
             st.warning(f"Knowledge and Ability mapping update failed: {e}")
 
+        # Apply fallback logic
+        try:
+            apply_fallback_logic(
+                primary_data_path="CourseProposal/json_output/ensemble_output.json",
+                fallback_paths=[
+                    "CourseProposal/json_output/output_TSC.json", 
+                    "CourseProposal/json_output/output_TSC_raw.json"
+                ],
+                output_path="CourseProposal/json_output/ensemble_output.json" # Overwrite the ensemble_output
+            )
+            print("Fallback logic applied successfully to ensemble_output.json")
+        except Exception as e:
+            print(f"Error during fallback logic application: {e}")
+            st.error(f"Error applying fallback logic: {e}")
+            # Decide if this is a critical error that should stop the pipeline
+            # For now, we'll print an error and continue, but this might need adjustment
+
         print("\n--- Validating Knowledge and Ability factor coverage ---")
         # First try to fix any missing K&A references
         try:
@@ -320,8 +338,7 @@ async def main(input_tsc) -> None:
             
             # Offer recovery options
             if st.button("Attempt Recovery"):
-                # Implement recovery logic based on last successful step
-                pass
+                st.info("Please rerun and process again.")
 
 # if __name__ == "__main__":
 #     asyncio.run(main())

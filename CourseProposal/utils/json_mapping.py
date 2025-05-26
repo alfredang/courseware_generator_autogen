@@ -104,48 +104,61 @@ def map_values(mapping_source, ensemble_output, research_output):
     introductory_string = "SkillsFuture's report Skills Demand For The Future Economy (https://www.skillsfuture.gov.sg/skillsreport) published in 2025, spotlights the priority skills and jobs in demand in three specially selected, emerging, high-growth areas. This report is designed for Singaporeans as a resource for an individual's skills development journey over the next one to three years.  Singapore's key growth areas (Digital, Green & Care Economy) bring exciting job and skills opportunities. It also introduced the idea of 'priority skills, ' highly transferable skills across job roles within the three economies. In other words, these skills are applicable in many job roles and will contribute significantly to the individual's long-term career versatility. A new dimension on skills demands growth has been added and analysed alongside skills transferability. Demand growth captures the relative scale of the increase in demand for that skill, while transferability captures the scope of the skill's applicability across different job roles. The two-dimensional analysis seeks to provide deeper insights to the reader into the nature of the priority skills identified. \n\n"
 
     background_analysis = ""
-    for key, value in research_output["Background Analysis"].items():
-        background_analysis += f"{value.strip()}\n\n"
+    background_data = research_output.get("Background Analysis", {})
+    if isinstance(background_data, dict):
+        for key, value in background_data.items():
+            background_analysis += f"{value.strip()}\n\n"
+    elif isinstance(background_data, list):
+        for value in background_data:
+            background_analysis += f"{str(value).strip()}\n\n"
+    elif isinstance(background_data, str):
+        background_analysis += f"{background_data.strip()}\n\n"
 
     # Insert the introductory string at the beginning
     background_analysis = introductory_string + background_analysis.strip()
     mapping_source["#Placeholder[0]"] = [background_analysis]
 
     performance_analysis = "Performance gaps were identified through survey forms distributed to external stakeholders:\n\n"
+    perf_data = research_output.get("Performance Analysis", {})
+    if isinstance(perf_data, dict):
+        perf_items = perf_data.items()
+    elif isinstance(perf_data, list):
+        perf_items = ((None, v) for v in perf_data)
+    else:
+        perf_items = []
 
-    # Iterate through the performance analysis
-    for key, value in research_output["Performance Analysis"].items():
+    for key, value in perf_items:
         if key == "Performance Gaps":
             performance_analysis += f"{key}:\n"
             if isinstance(value, list):
                 for item in value:
                     performance_analysis += f"•\t{item.strip()}\n"
             else:
-                performance_analysis += f"•\t{value.strip()}\n"
+                performance_analysis += f"•\t{str(value).strip()}\n"
             performance_analysis += "\n"
 
     performance_analysis += "Through targeted training programs, learners will gain the following attributes to address the identified performance gaps after the training:\n\n"
 
-    for key, value in research_output["Performance Analysis"].items():
+    for key, value in perf_items:
         if key == "Attributes Gained":
             performance_analysis += f"{key}:\n"
             if isinstance(value, list):
                 for item in value:
                     performance_analysis += f"•\t{item.strip()}\n"
             else:
-                performance_analysis += f"•\t{value.strip()}\n"
+                performance_analysis += f"•\t{str(value).strip()}\n"
             performance_analysis += "\n"
 
     mapping_source["#Placeholder[1]"] = [performance_analysis.strip()]
 
-    for key, value in research_output["Performance Analysis"].items():
+    for key, value in perf_items:
         if key == "Post-Training Benefits to Learners":
             performance_analysis += f"{key}:\n"
             if isinstance(value, list):
                 for item in value:
                     performance_analysis += f"•\t{item.strip()}\n"
             else:
-                performance_analysis += f"•\t{value.strip()}\n"
+                performance_analysis += f"•\t{str(value).strip()}\n"
             performance_analysis += "\n"
 
     mapping_source["#Placeholder[1]"] = [performance_analysis.strip()]

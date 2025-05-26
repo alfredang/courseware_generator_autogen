@@ -137,13 +137,6 @@ def app():
         unsafe_allow_html=True
     )
 
-    # Always display validation results here, if available
-    if st.session_state.get('validation_displayed'):
-        display_validation_results()
-
-    # Add extra spacing after tips and validation results
-    st.markdown("<div style='margin-bottom: 0.5em;'></div>", unsafe_allow_html=True)
-
     # Larger upload file label
     st.markdown("""
         <div style='font-size: 1.3em; font-weight: bold;'>Upload a TSC DOCX file</div>
@@ -170,6 +163,7 @@ def app():
 
         # 3) Display download buttons after processing
         if st.session_state.get('processing_done'):
+            display_validation_results()
             st.subheader("Download Processed Files")
             
             # Get CP type to show relevant information

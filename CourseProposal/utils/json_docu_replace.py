@@ -66,16 +66,15 @@ def replace_placeholders_in_doc(json_path, doc_path, new_doc_name, response_set)
     json_data = read_json(json_path)
 
     # Prepare replacements dictionary for placeholders
-    tsc_combined = f"{json_data['course_info']['TSC Title']} {json_data['course_info']['TSC Code']}"
-
+    tsc_combined = f"{json_data.get('course_info', {}).get('TSC Title', '')} {json_data.get('course_info', {}).get('TSC Code', '')}"
 
     # Prepare replacements dictionary for placeholders
     replacements = {
-        "#Course": json_data["course_info"]["Course Title"],
+        "#Course": json_data.get("course_info", {}).get("Course Title", ""),
         "#TSC": tsc_combined,
-        "#Title": json_data["course_info"]["Industry"],
-        "#Q1": response_set["What are the performance gaps in the industry?"],
-        "#Q2": response_set["Why do you think this WSQ course will address the training needs for the industry?"],
+        "#Title": json_data.get("course_info", {}).get("Industry", ""),
+        "#Q1": response_set.get("What are the performance gaps in the industry?", ""),
+        "#Q2": response_set.get("Why do you think this WSQ course will address the training needs for the industry?", ""),
         "#Date": get_today_date()  # Add today's date using the get_today_date function
     }
 

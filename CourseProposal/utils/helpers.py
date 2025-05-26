@@ -12,7 +12,7 @@ def validate_knowledge_and_ability():
 
         # Extract Knowledge and Ability factors from the data
         knowledge_factors = set()
-        for i, k in enumerate(data['Learning Outcomes'].get('Knowledge', []), 1):
+        for i, k in enumerate(data.get('Learning Outcomes', {}).get('Knowledge', []), 1):
             # Add the expected factor (e.g., K1, K2) based on position
             knowledge_factors.add(f"K{i}")
             # Also extract any explicitly mentioned K factors
@@ -21,7 +21,7 @@ def validate_knowledge_and_ability():
                 knowledge_factors.add(k_match)
 
         ability_factors = set()
-        for i, a in enumerate(data['Learning Outcomes'].get('Ability', []), 1):
+        for i, a in enumerate(data.get('Learning Outcomes', {}).get('Ability', []), 1):
             # Add the expected factor (e.g., A1, A2) based on position
             ability_factors.add(f"A{i}")
             # Also extract any explicitly mentioned A factors
@@ -1324,3 +1324,244 @@ def clean_and_parse_json(llm_output_string: str) -> dict | None:
     # If all attempts fail, return None
     print("[JSON Cleaner] All JSON parsing attempts failed.")
     return None
+
+def apply_fallback_logic(primary_data_path: str, fallback_paths: list[str], output_path: str):
+    """
+    Applies fallback logic to a primary JSON data source.
+
+    It loads the primary data. Then, for specified keys, if the data is missing
+    or considered invalid (e.g., empty string, empty list, placeholder),
+    it attempts to populate it from a list of fallback JSON files, in order.
+
+    Args:
+        primary_data_path (str): Path to the primary JSON file (e.g., ensemble_output.json).
+        fallback_paths (list[str]): A list of paths to fallback JSON files, in order of preference
+                                     (e.g., [output_TSC.json, output_TSC_raw.json]).
+        output_path (str): Path to save the updated primary data.
+    """
+    print(f"Starting fallback logic: Primary: {primary_data_path}, Fallbacks: {fallback_paths}")
+
+    primary_data = load_json_file(primary_data_path)
+    if primary_data is None:
+        print(f"CRITICAL: Failed to load primary data from {primary_data_path}. Fallback logic cannot proceed.")
+        return
+
+    fallback_data_sources = []
+    for path in fallback_paths:
+        data = load_json_file(path)
+        if data:
+            fallback_data_sources.append(data)
+        else:
+            print(f"Warning: Failed to load fallback data from {path}.")
+
+    if not fallback_data_sources:
+        print("No valid fallback data sources loaded. No fallback logic will be applied.")
+        # Still save the primary data to the output path to ensure the file exists
+        with open(output_path, 'w', encoding='utf-8') as f_out:
+            json.dump(primary_data, f_out, indent=4, ensure_ascii=False)
+        return
+
+    # Helper to check if a value is "missing" (None, empty string, empty list/dict, or common placeholders)
+    def is_missing_or_placeholder(value):
+        if value is None:
+            return True
+        if isinstance(value, str) and (not value.strip() or value.lower() in ["n/a", "na", "", "none", "[tbc]"]):
+            return True
+        if isinstance(value, (list, dict)) and not value:
+            return True
+        return False
+
+    # Helper to get a value from fallback sources
+    def get_fallback_value(key_path: list[str]):
+        for source_index, source_data in enumerate(fallback_data_sources):
+            current_level = source_data
+            is_output_tsc_json = "output_TSC.json" in fallback_paths[source_index]
+
+            if is_output_tsc_json:
+                # Custom logic for output_TSC.json
+                # print(f"DEBUG: Using custom logic for output_TSC.json for path: {key_path}")
+                cpf_data = source_data.get("Course_Proposal_Form", {})
+                null_list = cpf_data.get("null", [])
+                
+                # Simplified direct mapping for common fields from 'null' list
+                primary_section = key_path[0]
+                primary_key = key_path[1] if len(key_path) > 1 else None
+
+                found_val = None
+                if primary_section == "Course Information":
+                    if primary_key == "Course Title":
+                        for item in null_list:
+                            if item.lower().startswith("title:"):
+                                found_val = item.split(":", 1)[1].strip()
+                                break
+                    elif primary_key == "Name of Organisation":
+                        for item in null_list:
+                            if item.lower().startswith("organization:"):
+                                found_val = item.split(":", 1)[1].strip()
+                                break
+                    elif primary_key == "Course Level":
+                         for item in null_list:
+                            if item.lower().startswith("course level:"):
+                                found_val = item.split(":", 1)[1].strip()
+                                break
+                    elif primary_key == "Proficiency Level":
+                        for item in null_list:
+                            if item.lower().startswith("proficiency level:"):
+                                found_val = item.split(":", 1)[1].strip()
+                                break
+                elif primary_section == "Learning Outcomes":
+                    if primary_key == "Learning Outcomes":
+                        found_val = [item for item in null_list if item.lower().startswith("lo")]
+                    # Knowledge/Ability in output_TSC.json are often prefixed lines
+                    elif primary_key == "Knowledge":
+                        found_val = [item for item in null_list if re.match(r"^[Kk]\d+[:\s]", item)]
+                    elif primary_key == "Ability":
+                        found_val = [item for item in null_list if re.match(r"^[Aa]\d+[:\s]", item)]
+                elif primary_section == "TSC and Topics":
+                    if primary_key == "TSC Title":
+                        for item in null_list:
+                            if item.lower().startswith("tsc title:"):
+                                found_val = item.split(":", 1)[1].strip()
+                                # TSC Title in ensemble is a list
+                                if found_val: found_val = [found_val]
+                                break
+                    elif primary_key == "TSC Code":
+                        for item in null_list:
+                            if item.lower().startswith("tsc code:"):
+                                found_val = item.split(":", 1)[1].strip()
+                                 # TSC Code in ensemble is a list
+                                if found_val: found_val = [found_val]
+                                break
+                    elif primary_key == "Learning Units": # LUs are keys in output_TSC.json
+                        lu_keys = [key for key in cpf_data if key.startswith("LU")]
+                        if lu_keys: found_val = lu_keys # This provides LU names like "LU1: Foundations..."
+
+                if found_val is not None and not is_missing_or_placeholder(found_val):
+                    print(f"Found fallback for {' -> '.join(map(str, key_path))} in output_TSC.json (derived)")
+                    return found_val
+                # If custom logic doesn't find it, or not applicable, continue to next source
+                # print(f"DEBUG: Custom logic for output_TSC.json did not yield value for {key_path}")
+                # continue # Skip generic lookup for this file if custom logic was attempted
+
+            # Generic lookup for other files or if custom logic didn't apply/find
+            found_generic = True
+            for key_part in key_path:
+                if isinstance(current_level, dict) and key_part in current_level:
+                    current_level = current_level[key_part]
+                elif isinstance(current_level, list) and isinstance(key_part, int) and 0 <= key_part < len(current_level):
+                    current_level = current_level[key_part]
+                else:
+                    found_generic = False
+                    break
+            
+            if found_generic and not is_missing_or_placeholder(current_level):
+                print(f"Found fallback for {' -> '.join(map(str, key_path))} in fallback source {source_index} ('{fallback_paths[source_index]}') using generic path")
+                return current_level
+                
+        return None
+
+    # Define keys and their paths to check for fallbacks
+    keys_to_check = {
+        "Course Information": {
+            "Course Title": ["Course Information", "Course Title"],
+            "Course Level": ["Course Information", "Course Level"],
+            "Proficiency Level": ["Course Information", "Proficiency Level"],
+            "Name of Organisation": ["Course Information", "Name of Organisation"],
+            "Industry": ["Course Information", "Industry"],
+            "Course Duration (Number of Hours)": ["Course Information", "Course Duration (Number of Hours)"], # Specific handling for this later
+            "Classroom Hours": ["Course Information", "Classroom Hours"],
+            "Practical Hours": ["Course Information", "Practical Hours"],
+            "Number of Assessment Hours": ["Course Information", "Number of Assessment Hours"],
+        },
+        "Learning Outcomes": {
+            "Learning Outcomes": ["Learning Outcomes", "Learning Outcomes"],
+            "Knowledge": ["Learning Outcomes", "Knowledge"],
+            "Ability": ["Learning Outcomes", "Ability"],
+            # Knowledge and Ability Mapping is complex and usually derived, so less direct fallback.
+        },
+        "TSC and Topics": {
+            "TSC Title": ["TSC and Topics", "TSC Title"],
+            "TSC Code": ["TSC and Topics", "TSC Code"],
+            "Learning Units": ["TSC and Topics", "Learning Units"],
+            "Topic": ["TSC and Topics", "Topic"], # For direct topics list
+        },
+        "Assessment Methods": {
+            "Assessment Methods": ["Assessment Methods", "Assessment Methods"],
+            "Amount of Practice Hours": ["Assessment Methods", "Amount of Practice Hours"], # Usually matches Number of Assessment Hours
+            "Instructional Methods": ["Assessment Methods", "Instructional Methods"],
+            "Course Outline": ["Assessment Methods", "Course Outline"], # For nested topics in LUs
+        }
+    }
+
+    # Process fallbacks
+    for section, keys in keys_to_check.items():
+        if section not in primary_data:
+            primary_data[section] = {} # Ensure section exists
+
+        for key, path in keys.items():
+            current_value_in_primary = primary_data.get(section, {}).get(key)
+
+            if is_missing_or_placeholder(current_value_in_primary):
+                print(f"Value for '{section} -> {key}' is missing/placeholder in primary. Seeking fallback.")
+                fallback_value = get_fallback_value(path)
+                if fallback_value is not None:
+                    primary_data[section][key] = fallback_value
+                    print(f"Applied fallback for '{section} -> {key}'. New value: {fallback_value}")
+                else:
+                    print(f"No fallback found for '{section} -> {key}'. It remains: {current_value_in_primary}")
+            else:
+                print(f"Value for '{section} -> {key}' is present in primary. Value: {current_value_in_primary}")
+
+
+    # Special handling for course duration components to ensure consistency
+    # If "Course Duration (Number of Hours)" is missing or zero, try to calculate it
+    # from Classroom Hours + Number of Assessment Hours.
+    course_info = primary_data.get("Course Information", {})
+    course_duration_primary = course_info.get("Course Duration (Number of Hours)")
+
+    if is_missing_or_placeholder(course_duration_primary) or course_duration_primary == 0:
+        print("Course Duration is missing or zero in primary. Attempting to calculate or fallback.")
+        # First, try to get it directly from a fallback
+        fallback_duration = get_fallback_value(["Course Information", "Course Duration (Number of Hours)"])
+        if fallback_duration is not None and fallback_duration > 0:
+            course_info["Course Duration (Number of Hours)"] = fallback_duration
+            print(f"Applied fallback for Course Duration. New value: {fallback_duration}")
+        else:
+            # If direct fallback fails, try calculating from components
+            classroom_h = course_info.get("Classroom Hours", 0)
+            assessment_h = course_info.get("Number of Assessment Hours", 0)
+            if not isinstance(classroom_h, (int, float)): classroom_h = 0
+            if not isinstance(assessment_h, (int, float)): assessment_h = 0
+
+            if classroom_h > 0 and assessment_h > 0 : # Require both to be somewhat valid
+                calculated_duration = classroom_h + assessment_h
+                course_info["Course Duration (Number of Hours)"] = calculated_duration
+                print(f"Calculated Course Duration: {calculated_duration} (Classroom: {classroom_h} + Assessment: {assessment_h})")
+            else:
+                print("Could not calculate Course Duration due to missing/invalid components and no direct fallback.")
+
+    # Ensure "Amount of Practice Hours" matches "Number of Assessment Hours"
+    if "Assessment Methods" in primary_data and "Course Information" in primary_data:
+        assessment_hours = primary_data.get("Course Information", {}).get("Number of Assessment Hours")
+        if not is_missing_or_placeholder(assessment_hours):
+            if primary_data.get("Assessment Methods", {}).get("Amount of Practice Hours") != assessment_hours:
+                print(f"Aligning 'Amount of Practice Hours' with 'Number of Assessment Hours' ({assessment_hours})")
+                primary_data["Assessment Methods"]["Amount of Practice Hours"] = assessment_hours
+
+    # Save the updated data
+    try:
+        with open(output_path, 'w', encoding='utf-8') as f_out:
+            json.dump(primary_data, f_out, indent=4, ensure_ascii=False)
+        print(f"Fallback logic complete. Updated data saved to {output_path}")
+    except Exception as e:
+        print(f"CRITICAL: Error saving updated data to {output_path}: {e}")
+
+# Example usage (you would call this from your main script):
+# apply_fallback_logic(
+#     "CourseProposal/json_output/ensemble_output.json",
+#     ["CourseProposal/json_output/output_TSC.json", "CourseProposal/json_output/output_TSC_raw.json"],
+#     "CourseProposal/json_output/ensemble_output_with_fallback.json" # Save to a new file or overwrite
+# )
+
+# Ensure all utility functions like load_json_file are defined above or imported.
+# This example assumes load_json_file is already defined in helpers.py

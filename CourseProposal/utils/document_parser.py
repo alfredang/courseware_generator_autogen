@@ -82,7 +82,7 @@ def parse_document(input_docx, output_json):
     # Ensure all keys from SECTION_HEADERS that map to Course Information are present
     for header_key_init, (section_init, sub_key_init) in SECTION_HEADERS.items():
         if section_init == "Course Information" and sub_key_init:
-            if sub_key_init not in data["Course Information"]:
+            if sub_key_init not in data.get("Course Information", {}):
                  data["Course Information"][sub_key_init] = ""
 
     # Function to parse tables

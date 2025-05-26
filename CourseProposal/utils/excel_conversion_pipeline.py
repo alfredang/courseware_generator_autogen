@@ -148,13 +148,13 @@ def create_course_dataframe(json_data):
     """
 
     # Extract relevant data sections (with defaults for safety)
-    learning_units = json_data["TSC and Topics"].get("Learning Units", [])
-    learning_outcomes = json_data["Learning Outcomes"].get("Learning Outcomes", [])
-    knowledge_statements = json_data["Learning Outcomes"].get("Knowledge", [])
-    ability_statements = json_data["Learning Outcomes"].get("Ability", [])
-    course_outline = json_data["Assessment Methods"].get("Course Outline", {}).get("Learning Units", {})
-    tsc_code = json_data["TSC and Topics"].get("TSC Code", ["N/A"])[0]
-    assessment_methods = json_data["Assessment Methods"].get("Assessment Methods", [])
+    learning_units = json_data.get("TSC and Topics", {}).get("Learning Units", [])
+    learning_outcomes = json_data.get("Learning Outcomes", {}).get("Learning Outcomes", [])
+    knowledge_statements = json_data.get("Learning Outcomes", {}).get("Knowledge", [])
+    ability_statements = json_data.get("Learning Outcomes", {}).get("Ability", [])
+    course_outline = json_data.get("Assessment Methods", {}).get("Course Outline", {}).get("Learning Units", {})
+    tsc_code = json_data.get("TSC and Topics", {}).get("TSC Code", ["N/A"])[0]
+    assessment_methods = json_data.get("Assessment Methods", {}).get("Assessment Methods", [])
 
     # Initialize lists to hold the data for each row in the DataFrame
     data = []
