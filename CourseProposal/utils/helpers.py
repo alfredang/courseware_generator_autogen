@@ -194,121 +194,243 @@ def validate_knowledge_and_ability():
             "error_type": "general_error"
         }
 
-def fix_missing_ka_references():
+def _extract_base_name(text_with_ka: str) -> str:
+    """Extracts the base name from a string like 'Name (K1, A1)' -> 'Name'."""
+    if not isinstance(text_with_ka, str):
+        return ""
+    return text_with_ka.split(' (')[0].strip()
+
+def _extract_kas(text_with_ka: str) -> list[str]:
+    """Extracts K/A factors from a string like 'Name (K1, A1)' -> ['K1', 'A1']."""
+    if not isinstance(text_with_ka, str):
+        return []
+    match = re.search(r'\(([^)]+)\)', text_with_ka)
+    if match:
+        content = match.group(1)
+        factors = re.findall(r'\b(K\d+|A\d+)\b', content)
+        return sorted(list(set(factors))) # Sorted unique factors
+    return []
+
+def fix_missing_ka_references(
+    ensemble_output_path: str = "CourseProposal/json_output/ensemble_output.json",
+    # Default to output_TSC_raw.json as the primary source for topic-KA mapping
+    reference_json_path: str = "CourseProposal/json_output/output_TSC_raw.json" 
+):
     """
-    Attempts to fix missing Knowledge and Ability references in topics by using
-    the Knowledge and Ability Mapping if available.
+    Attempts to fix missing or incorrect Knowledge and Ability (K/A) references in 
+    topics within ensemble_output.json, using a reference JSON (defaulting to 
+    output_TSC_raw.json) as the source for correct topic-specific K/A mappings.
     """
     try:
-        # Read data from the JSON file
-        with open('CourseProposal/json_output/ensemble_output.json', 'r', encoding='utf-8') as file:
-            data = json.load(file)
+        primary_data = load_json_file(ensemble_output_path)
+        if not primary_data:
+            print(f"Error: Could not load primary data from {ensemble_output_path}")
+            return {"success": False, "message": "Failed to load primary data.", "fixed_topics": [], "fixed_count": 0}
+
+        reference_data = load_json_file(reference_json_path)
+        if not reference_data:
+            print(f"Error: Could not load reference data from {reference_json_path}")
+            return {"success": False, "message": "Failed to load reference data.", "fixed_topics": [], "fixed_count": 0}
+
+        # 1. Build detailed topic-to-KA map from reference_data
+        # This now prioritizes the table in output_TSC_raw.json
+        detailed_topic_ka_map = {}
+        #   Example: {("LU1 Base Title", "Topic1 Base Title"): ["K1", "A1"], ...}
         
-        # Get the Knowledge and Ability mapping
-        ka_mapping = data.get('Learning Outcomes', {}).get('Knowledge and Ability Mapping', {})
-        if not ka_mapping:
-            print("No Knowledge and Ability Mapping found, cannot fix missing references.")
+        tsc_and_topics_ref = reference_data.get("TSC and Topics", {})
+        ref_content = tsc_and_topics_ref.get("content", [])
+        parsed_from_raw_table = False
+
+        for item in ref_content:
+            if isinstance(item, dict) and "table" in item:
+                table_data = item["table"]
+                if not isinstance(table_data, list) or len(table_data) < 2: # Needs header and at least one data row
+                    continue
+
+                header = table_data[0]
+                # Expected headers (can be made more flexible if needed)
+                try:
+                    lu_title_idx = header.index("Learning Unit Title")
+                    topic_title_idx = header.index("Topic (T#: Topic Title)")
+                    ka_col_idx = header.index("K&A")
+                except ValueError:
+                    print(f"Warning: Expected columns not found in table header in {reference_json_path}. Header: {header}")
+                    continue # Skip this table if headers are not as expected
+
+                for row in table_data[1:]: # Skip header row
+                    if len(row) > max(lu_title_idx, topic_title_idx, ka_col_idx):
+                        lu_base_name_from_table = _extract_base_name(row[lu_title_idx])
+                        topic_base_name_from_table = _extract_base_name(row[topic_title_idx])
+                        ka_statement_from_table = row[ka_col_idx]
+                        
+                        # Extract K/A code (e.g., "A1") from the full statement (e.g., "A1: Description")
+                        ka_codes_for_this_row_entry = _extract_kas(ka_statement_from_table) # _extract_kas now returns a list, usually of one item here
+                        
+                        map_key = (lu_base_name_from_table, topic_base_name_from_table)
+                        
+                        if not detailed_topic_ka_map.get(map_key):
+                            detailed_topic_ka_map[map_key] = []
+                        
+                        detailed_topic_ka_map[map_key].extend(ka_codes_for_this_row_entry)
+                        # Ensure uniqueness and sort for consistency
+                        detailed_topic_ka_map[map_key] = sorted(list(set(detailed_topic_ka_map[map_key])))
+                
+                if detailed_topic_ka_map:
+                    parsed_from_raw_table = True
+                    print(f"Successfully parsed topic-KA mapping from table in {reference_json_path}.")
+                break # Processed the first table found
+
+        if not parsed_from_raw_table:
+            # Fallback to the previous logic if parsing from output_TSC_raw.json's table fails
+            # This part is similar to the previous version, using output_TSC.json's structure
+            print(f"Warning: Could not parse topic-KA mapping from table in {reference_json_path}. Attempting fallback parsing (e.g. from output_TSC.json structure).")
+            course_proposal_form_ref = reference_data.get("Course_Proposal_Form", {})
+            for ref_lu_str_with_kas, ref_topic_str_list_with_kas in course_proposal_form_ref.items():
+                if not isinstance(ref_lu_str_with_kas, str) or not ref_lu_str_with_kas.startswith("LU"):
+                    continue
+                if not isinstance(ref_topic_str_list_with_kas, list):
+                    continue
+
+                ref_lu_base_name = _extract_base_name(ref_lu_str_with_kas)
+
+                for ref_topic_str_with_kas in ref_topic_str_list_with_kas:
+                    if not isinstance(ref_topic_str_with_kas, str) or not (ref_topic_str_with_kas.lower().startswith("topic ") or ref_topic_str_with_kas.lower().startswith("t")):
+                        continue
+                    
+                    ref_topic_base_name = _extract_base_name(ref_topic_str_with_kas)
+                    correct_kas_for_topic = _extract_kas(ref_topic_str_with_kas) # KAs are directly on topic string here
+                    
+                    detailed_topic_ka_map[(ref_lu_base_name, ref_topic_base_name)] = correct_kas_for_topic
+        
+        if not detailed_topic_ka_map:
+            print(f"Critical: No topic-KA mappings could be built from reference file {reference_json_path} using any method. Cannot perform topic-specific KA fixing.")
             return {
                 "success": False,
-                "message": "No Knowledge and Ability Mapping found, cannot fix missing references.",
+                "message": "No topic-KA mappings built from reference. Cannot perform topic-specific KA fixing.",
+                "fixed_topics": [],
+                "fixed_count": 0
+            }
+        print(f"Built reference map with {len(detailed_topic_ka_map)} topic-specific KA entries from {reference_json_path}.")
+
+        # 2. Map ensemble LU keys (e.g., "LU1") to their base titles
+        ensemble_lu_full_titles = primary_data.get("TSC and Topics", {}).get("Learning Units", [])
+        if not ensemble_lu_full_titles:
+            print(f"Warning: 'Learning Units' list not found or empty in {ensemble_output_path}. Cannot map LU numbers to titles accurately.")
+            return {
+                "success": False,
+                "message": "'Learning Units' list not found/empty in primary data.",
                 "fixed_topics": [],
                 "fixed_count": 0
             }
             
-        # Check if we have Topics directly
-        tsc_and_topics = data.get('TSC and Topics', {})
-        has_direct_topics = False
+        lu_num_to_ensemble_base_title = {}
+        for i, lu_full_title in enumerate(ensemble_lu_full_titles, 1):
+            lu_num_to_ensemble_base_title[f"LU{i}"] = _extract_base_name(lu_full_title)
+
+        # 3. Iterate through ensemble_output.json and apply fixes
+        course_outline_ensemble = primary_data.get("Assessment Methods", {}).get("Course Outline", {}).get("Learning Units", {})
         
-        for topic_key in ['Topic', 'Topics', 'topics']:
-            if topic_key in tsc_and_topics and isinstance(tsc_and_topics[topic_key], list):
-                has_direct_topics = True
-                break
-        
-        # If we have direct topics, we'll need to update the Learning Units
-        # But if we only have Learning Units with topics inside, we'll update those
-        course_outline = data.get('Assessment Methods', {}).get('Course Outline', {}).get('Learning Units', {})
-        
-        # Track if we made any changes
         made_changes = False
-        fixed_topics = []
-        
-        # Check each Learning Unit
-        for lu_idx, (lu_key, lu_data) in enumerate(course_outline.items(), 1):
-            # Find corresponding KA mapping
-            ka_key = f"KA{lu_idx}"
-            ka_factors = ka_mapping.get(ka_key, [])
-            
-            if not ka_factors:
+        fixed_topics_log = []
+
+        for ensemble_lu_key, ensemble_lu_content in course_outline_ensemble.items(): # ensemble_lu_key is "LU1", "LU2"
+            ensemble_lu_base_title = lu_num_to_ensemble_base_title.get(ensemble_lu_key)
+            if not ensemble_lu_base_title:
+                print(f"Warning: Could not find base title for LU key '{ensemble_lu_key}' in ensemble data. Skipping its topics.")
                 continue
+
+            descriptions = ensemble_lu_content.get("Description", [])
+            if not isinstance(descriptions, list): # Ensure it's a list
+                print(f"Warning: 'Description' for LU '{ensemble_lu_key}' is not a list. Skipping. Found: {type(descriptions)}")
+                continue
+
+            for desc_entry in descriptions:
+                if not isinstance(desc_entry, dict) or "Topic" not in desc_entry:
+                    continue # Skip if not a dict or no 'Topic' key
+
+                current_topic_str = desc_entry.get("Topic", "")
+                if not isinstance(current_topic_str, str): # Ensure topic is a string
+                     print(f"Warning: Topic in LU '{ensemble_lu_key}' is not a string. Skipping. Found: {type(current_topic_str)}")
+                     continue
+
+                current_topic_base_name = _extract_base_name(current_topic_str)
                 
-            # Update topics in this Learning Unit
-            if isinstance(lu_data, dict) and 'Description' in lu_data:
-                descriptions = lu_data['Description']
-                for desc_idx, desc in enumerate(descriptions):
-                    if isinstance(desc, dict) and 'Topic' in desc:
-                        topic = desc['Topic']
-                        # Check if topic already has K/A references
-                        if '(' in topic and any(f in topic for f in ka_factors):
-                            continue
-                            
-                        # If no references, add them from the mapping
-                        if '(' not in topic:
-                            # Add at the end of the topic name
-                            original_topic = topic
-                            desc['Topic'] = f"{topic} ({', '.join(ka_factors)})"
-                            made_changes = True
-                            fixed_topics.append({
-                                "learning_unit": lu_key,
-                                "original": original_topic,
-                                "fixed": desc['Topic'],
-                                "added_factors": ka_factors
-                            })
-                        else:
-                            # Has parentheses but no K/A references - try to add to existing parentheses
-                            parts = topic.split('(')
-                            base = parts[0].strip()
-                            closing_paren_pos = topic.rfind(')')
-                            
-                            if closing_paren_pos != -1:
-                                # Replace the content in parentheses
-                                original_topic = topic
-                                desc['Topic'] = f"{base} ({', '.join(ka_factors)})"
-                                made_changes = True
-                                fixed_topics.append({
-                                    "learning_unit": lu_key,
-                                    "original": original_topic,
-                                    "fixed": desc['Topic'],
-                                    "added_factors": ka_factors
-                                })
+                # Attempt to match using a normalized topic key (e.g. "T1", "T2" from "Topic 1", "Topic 2")
+                # This helps if the reference map uses "T1: Name" and ensemble uses "Topic 1: Name"
+                normalized_topic_key_part = current_topic_base_name.split(':')[0].replace("Topic ", "T").strip()
+                
+                # Try finding the correct KAs using a few key variations for robustness
+                # Key variants for map lookup
+                # 1. Exact base names from ensemble
+                # 2. LU base name from ensemble, normalized topic base name from ensemble
+                # (Add more sophisticated fuzzy matching if needed)
+                
+                key_to_try_1 = (ensemble_lu_base_title, current_topic_base_name)
+                
+                # Try to create a version of topic base name that might match reference data format if different
+                # e.g. ensemble has "T1: Create basic charts", reference has "Topic 1: Create basic charts"
+                alt_current_topic_base_name = current_topic_base_name
+                if current_topic_base_name.startswith("T") and ":" in current_topic_base_name and not current_topic_base_name.lower().startswith("topic"):
+                    alt_current_topic_base_name = "Topic " + current_topic_base_name[1:] 
+                elif current_topic_base_name.lower().startswith("topic ") and ":" in current_topic_base_name:
+                    alt_current_topic_base_name = "T" + current_topic_base_name.lower().replace("topic ", "")
+
+                key_to_try_2 = (ensemble_lu_base_title, alt_current_topic_base_name)
+
+                correct_kas_from_ref = detailed_topic_ka_map.get(key_to_try_1)
+                if correct_kas_from_ref is None:
+                    correct_kas_from_ref = detailed_topic_ka_map.get(key_to_try_2)
+
+                if correct_kas_from_ref is not None: # Found in reference map (could be empty list)
+                    expected_topic_str = current_topic_base_name
+                    if correct_kas_from_ref: # If there are KAs to add/set
+                        expected_topic_str += f" ({', '.join(sorted(correct_kas_from_ref))})"
+                    
+                    if current_topic_str != expected_topic_str:
+                        original_topic_for_log = current_topic_str
+                        desc_entry["Topic"] = expected_topic_str
+                        made_changes = True
+                        fixed_topics_log.append({
+                            "learning_unit": ensemble_lu_base_title, # Log with LU base title
+                            "original": original_topic_for_log,
+                            "fixed": expected_topic_str,
+                            "corrected_factors": sorted(correct_kas_from_ref) if correct_kas_from_ref else []
+                        })
+                        print(f"Corrected Topic in '{ensemble_lu_base_title}': '{original_topic_for_log}' -> '{expected_topic_str}'")
+                else:
+                    print(f"Warning: Topic '{current_topic_base_name}' (tried key: {key_to_try_1}, {key_to_try_2}) in LU '{ensemble_lu_base_title}' not found in reference K/A mapping. Skipping.")
         
-        # If we made changes, save the file
         results = {
-            "success": made_changes,
-            "fixed_topics": fixed_topics,
-            "fixed_count": len(fixed_topics)
+            "success": True, # Indicates function ran, 'made_changes' indicates if file was altered
+            "fixed_topics": fixed_topics_log,
+            "fixed_count": len(fixed_topics_log)
         }
-        
+
         if made_changes:
-            with open('CourseProposal/json_output/ensemble_output.json', 'w', encoding='utf-8') as file:
-                json.dump(data, file, indent=4)
-            print(f"Fixed {len(fixed_topics)} missing K&A references in topics.")
-            results["message"] = f"Fixed {len(fixed_topics)} missing K&A references in topics."
+            with open(ensemble_output_path, 'w', encoding='utf-8') as file_out:
+                json.dump(primary_data, file_out, indent=4, ensure_ascii=False)
+            print(f"Fixed {len(fixed_topics_log)} K/A references in topics. Updated {ensemble_output_path}")
+            results["message"] = f"Fixed {len(fixed_topics_log)} K/A references in topics."
         else:
-            print("No missing K&A references found that could be fixed.")
-            results["message"] = "No missing K&A references found that could be fixed."
+            print("No K/A references in topics required fixing based on the reference data.")
+            results["message"] = "No topic K/A references required fixing."
         
         return results
             
+    except FileNotFoundError as e:
+        error_message = f"Error in fix_missing_ka_references: File not found - {e.filename}"
+        print(error_message)
+        return {"success": False, "error": error_message, "error_type": "file_not_found", "fixed_topics": [], "fixed_count": 0}
+    except json.JSONDecodeError as e:
+        error_message = f"Error in fix_missing_ka_references: Invalid JSON - {e.msg} at line {e.lineno} col {e.colno}"
+        print(error_message)
+        return {"success": False, "error": error_message, "error_type": "json_decode_error", "fixed_topics": [], "fixed_count": 0}
     except Exception as e:
         error_message = f"Error in fix_missing_ka_references: {str(e)}"
+        traceback_info = traceback.format_exc()
         print(error_message)
-        return {
-            "success": False,
-            "error": error_message,
-            "error_type": "general_error",
-            "fixed_topics": [],
-            "fixed_count": 0
-        }
+        print(f"Traceback:\n{traceback_info}") # Print traceback for better debugging
+        return {"success": False, "error": error_message, "error_type": "general_error", "fixed_topics": [], "fixed_count": 0}
 
 def extract_final_aggregator_json(file_path: str = "group_chat_state.json"):
     """
@@ -1278,46 +1400,37 @@ def clean_and_parse_json(llm_output_string: str) -> dict | None:
                 return json.loads(cleaned_string)
             except json.JSONDecodeError as e2:
                 print(f"[JSON Cleaner] Still failed after basic fixes: {e2}")
-                
-                # 7. Try json5 if available
+                # 7. Last resort: Try to extract valid JSON with balanced braces
                 try:
-                    import json5
-                    print("[JSON Cleaner] Attempting to parse with json5...")
-                    return json5.loads(cleaned_string)
-                except (ImportError, Exception) as e3:
-                    print(f"[JSON Cleaner] JSON5 parsing failed or not available: {e3}")
+                    # Find balanced braces
+                    stack = []
+                    potential_jsons = []
+                    start_index = -1
                     
-                    # 8. Last resort: Try to extract valid JSON with balanced braces
-                    try:
-                        # Find balanced braces
-                        stack = []
-                        potential_jsons = []
-                        start_index = -1
-                        
-                        for i, char in enumerate(cleaned_string):
-                            if char == '{':
-                                if not stack:  # Start of a potential JSON object
-                                    start_index = i
-                                stack.append('{')
-                            elif char == '}' and stack:
-                                stack.pop()
-                                if not stack and start_index != -1:  # End of a balanced JSON object
-                                    potential_jsons.append(cleaned_string[start_index:i+1])
-                        
-                        # Try each potential JSON object from largest to smallest
-                        if potential_jsons:
-                            for potential_json in sorted(potential_jsons, key=len, reverse=True):
-                                try:
-                                    parsed = json.loads(potential_json)
-                                    print("[JSON Cleaner] Successfully extracted JSON with balanced braces approach")
-                                    return parsed
-                                except Exception:
-                                    # Try next potential JSON
-                                    continue
-                                    
-                        print("[JSON Cleaner] Could not extract valid JSON with balanced braces approach")
-                    except Exception as e4:
-                        print(f"[JSON Cleaner] Last resort extraction failed: {e4}")
+                    for i, char in enumerate(cleaned_string):
+                        if char == '{':
+                            if not stack:  # Start of a potential JSON object
+                                start_index = i
+                            stack.append('{')
+                        elif char == '}' and stack:
+                            stack.pop()
+                            if not stack and start_index != -1:  # End of a balanced JSON object
+                                potential_jsons.append(cleaned_string[start_index:i+1])
+                    
+                    # Try each potential JSON object from largest to smallest
+                    if potential_jsons:
+                        for potential_json in sorted(potential_jsons, key=len, reverse=True):
+                            try:
+                                parsed = json.loads(potential_json)
+                                print("[JSON Cleaner] Successfully extracted JSON with balanced braces approach")
+                                return parsed
+                            except Exception:
+                                # Try next potential JSON
+                                continue
+                    
+                    print("[JSON Cleaner] Could not extract valid JSON with balanced braces approach")
+                except Exception as e4:
+                    print(f"[JSON Cleaner] Last resort extraction failed: {e4}")
         except Exception as e_general:
             print(f"[JSON Cleaner] General error during advanced cleaning: {e_general}")
     

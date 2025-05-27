@@ -20,6 +20,7 @@ from CourseProposal.utils.helpers import (
 )
 from CourseProposal.utils.json_mapping import map_values
 from CourseProposal.utils.jinja_docu_replace import replace_placeholders_with_docxtpl
+from CourseProposal.utils.excel_conversion_pipeline import normalize_ensemble_data
 import json
 from CourseProposal.cv_main import create_course_validation
 import streamlit as st
@@ -189,6 +190,18 @@ async def main(input_tsc) -> None:
             st.error(f"Error applying fallback logic: {e}")
             # Decide if this is a critical error that should stop the pipeline
             # For now, we'll print an error and continue, but this might need adjustment
+
+        # ----> ADD NORMALIZATION STEP HERE <----
+        print("\n--- Normalizing ensemble_output.json data ---")
+        with open("CourseProposal/json_output/ensemble_output.json", 'r', encoding='utf-8') as f:
+            ensemble_data_to_normalize = json.load(f)
+        
+        normalized_ensemble_data = normalize_ensemble_data(ensemble_data_to_normalize)
+        
+        with open("CourseProposal/json_output/ensemble_output.json", 'w', encoding='utf-8') as f_out:
+            json.dump(normalized_ensemble_data, f_out, indent=4, ensure_ascii=False)
+        print("Normalization of ensemble_output.json complete.")
+        # ----> END NORMALIZATION STEP <----
 
         print("\n--- Validating Knowledge and Ability factor coverage ---")
         # First try to fix any missing K&A references

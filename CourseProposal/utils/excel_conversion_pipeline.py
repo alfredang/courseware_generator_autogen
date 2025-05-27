@@ -147,6 +147,19 @@ def create_course_dataframe(json_data):
         pandas.DataFrame: A DataFrame representing the course schema.
     """
 
+    # --- Normalization for course info ---
+    course_info = json_data.get("Course Information", {})
+    # Normalize Proficiency Level and Course Level
+    course_info["Proficiency Level"] = normalize_proficiency_level(course_info.get("Proficiency Level", ""))
+    course_info["Course Level"] = normalize_course_level(course_info.get("Course Level", ""))
+    # Normalize Course Duration (Number of Hours)
+    duration_val = course_info.get("Course Duration (Number of Hours)", None)
+    course_info["Course Duration (Number of Hours)"] = normalize_course_duration(duration_val)
+    # Normalize Assessment Methods
+    assessment_methods = json_data.get("Assessment Methods", {}).get("Assessment Methods", [])
+    assessment_methods = [normalize_assessment_method(m) for m in assessment_methods]
+    json_data["Assessment Methods"]["Assessment Methods"] = assessment_methods
+
     # Extract relevant data sections (with defaults for safety)
     learning_units = json_data.get("TSC and Topics", {}).get("Learning Units", [])
     learning_outcomes = json_data.get("Learning Outcomes", {}).get("Learning Outcomes", [])
@@ -451,7 +464,7 @@ def create_assessment_dataframe(json_data):
 
     # Get total assessment duration from Course Information
     num_assessment_hours = json_data["Course Information"].get("Number of Assessment Hours", 0)
-    total_assessment_minutes = num_assessment_hours * 60
+    total_assessment_minutes = int(round(float(num_assessment_hours) * 60))
     print(f"Total assessment minutes from ensemble output: {total_assessment_minutes}")
     
     # Ensure this is a reasonable value (at least 30 minutes if not specified)
@@ -492,24 +505,24 @@ def create_assessment_dataframe(json_data):
     # --- Calculate duration per KA statement ---
     # Divide total assessment minutes evenly between all KA statements
     # and ensure each duration is a multiple of 5
-    base_duration = total_assessment_minutes // total_ka_statements
+    base_duration = int(total_assessment_minutes // total_ka_statements)
     
     # Round base duration to nearest multiple of 5 (floor)
-    base_duration = (base_duration // 5) * 5
+    base_duration = int((base_duration // 5) * 5)
     
     # Ensure minimum duration of 5 minutes per assessment
     if base_duration < 5:
         base_duration = 5
     
     # Calculate total allocated and remaining minutes
-    total_allocated = base_duration * total_ka_statements
-    remaining_minutes = total_assessment_minutes - total_allocated
+    total_allocated = int(base_duration * total_ka_statements)
+    remaining_minutes = int(total_assessment_minutes - total_allocated)
     
     print(f"Base duration per KA statement: {base_duration} minutes")
     print(f"Remaining minutes to distribute: {remaining_minutes} minutes")
     
     # Create list of durations for each KA statement
-    durations = [base_duration] * total_ka_statements
+    durations = [int(base_duration)] * total_ka_statements
     
     # Distribute remaining minutes (if any) in increments of 5
     while remaining_minutes >= 5:
@@ -518,28 +531,28 @@ def create_assessment_dataframe(json_data):
         statements_to_increment = min(total_ka_statements, remaining_minutes // increment)
         
         for i in range(statements_to_increment):
-            durations[i] += increment
-            remaining_minutes -= increment
-            
+            durations[i] += int(increment)
+            remaining_minutes -= int(increment)
+        
         # If we've allocated to all statements but still have minutes left,
         # start over from the beginning
         if statements_to_increment == total_ka_statements and remaining_minutes >= 5:
             continue
-            
+        
         # If we can't distribute evenly anymore, break
         if statements_to_increment == 0 or remaining_minutes < 5:
             break
     
     # If there are still remaining minutes, add them to the first assessment
     if remaining_minutes > 0 and total_ka_statements > 0:
-        durations[0] += remaining_minutes
+        durations[0] += int(remaining_minutes)
     
     # --- Create DataFrame ---
     data = []
     
     for idx, (lo_index, code) in enumerate(ka_statements_list):
         lo_num = f"LO{lo_index + 1}"
-        duration_minutes = durations[idx] if idx < len(durations) else base_duration
+        duration_minutes = int(durations[idx]) if idx < len(durations) else int(base_duration)
         
         if code.startswith('K'):
             k_index = int(code[1:]) - 1
@@ -1124,23 +1137,25 @@ INSTRUCTIONAL_METHODS_DROPDOWN = [
 
 # Mapping from raw instructional method names to dropdown values
 INSTRUCTIONAL_METHODS_MAPPING = {
-    "Peer Sharing": "Peer teaching / Peer practice",
-    "Peer sharing": "Peer teaching / Peer practice",
-    "Group Discussion": "Discussions",
-    "Group discussion": "Discussions",
-    "Interactive Presentation": "Interactive presentation",
-    "Case Study": "Case studies",
-    "Case study": "Case studies",
+    "peer sharing": "Peer teaching / Peer practice",
+    "group discussion": "Discussions",
+    "interactive presentation": "Interactive presentation",
+    "interactive presentation (15 hrs)": "Interactive presentation",
+    "didactic questioning": "Didactic questions",
+    "demonstration": "Demonstrations / Modelling",
+    "practice": "Drill and Practice",
+    "practical": "Drill and Practice",
+    "case study": "Case studies",
     # Add more mappings as needed
 }
 
 def map_instructional_method(value):
     if not isinstance(value, str):
         return value
-    # Use mapping if available
-    if value in INSTRUCTIONAL_METHODS_MAPPING:
-        return INSTRUCTIONAL_METHODS_MAPPING[value]
     value_clean = value.strip().lower()
+    # Use mapping if available (case-insensitive)
+    if value_clean in INSTRUCTIONAL_METHODS_MAPPING:
+        return INSTRUCTIONAL_METHODS_MAPPING[value_clean]
     for option in INSTRUCTIONAL_METHODS_DROPDOWN:
         if value_clean == option.strip().lower():
             return option  # Use dropdown value as-is
@@ -1175,4 +1190,179 @@ def clean_tsc_code_and_assessment_methods(df):
     if 'Assessment Methods' in df.columns:
         df['Assessment Methods'] = df['Assessment Methods'].apply(map_assessment_method)
     return df
+
+# --- Normalization helpers ---
+def normalize_proficiency_level(value):
+    expected = {"Basic", "Intermediate", "Advanced"}
+    val = str(value).strip().lower()
+    # Handle plural and capitalization
+    singular_map = {
+        "basics": "basic", "basic": "basic",
+        "beginners": "basic", "beginner": "basic",
+        "intermediates": "intermediate", "intermediate": "intermediate",
+        "advanceds": "advanced", "advanced": "advanced"
+    }
+    if val in [e.lower() for e in expected]:
+        return val  # already lowercase
+    if val in singular_map:
+        return singular_map[val]
+    try:
+        num = int(val)
+        if 1 <= num <= 3:
+            return "basic"
+        elif num == 4:
+            return "intermediate"
+        elif 5 <= num <= 6:
+            return "advanced"
+    except Exception:
+        pass
+    return val  # fallback to lowercased input
+
+def normalize_course_level(value):
+    allowed = {"Beginner", "Beginner to Intermediate", "Intermediate", "Intermediate to Advanced", "Advanced"}
+    val = str(value).strip().lower()
+    # Handle plural and capitalization
+    if val == "beginners":
+        return "beginner"
+    if val == "beginner to intermediate":
+        return "beginner to intermediate"
+    if val == "intermediate to advanced":
+        return "intermediate to advanced"
+    if val == "beginner":
+        return "beginner"
+    if val == "intermediate":
+        return "intermediate"
+    if val == "advanced":
+        return "advanced"
+    # Fallback: try to match allowed values ignoring case and whitespace
+    for allowed_val in allowed:
+        if val.replace(" ", "") == allowed_val.lower().replace(" ", ""):
+            return allowed_val.lower()
+    return val  # fallback to lowercased input
+
+def normalize_assessment_method(method):
+    expected = {"Written Exam", "Practical Exam", "Case Study", "Oral Questioning", "Role Play", "Online Test", "Project", "Assignments", "Oral Interview", "Demonstration"}
+    if str(method).strip() in expected:
+        return method
+    val = str(method).strip().lower()
+    if val == "written":
+        return "Written Exam"
+    if val == "practical":
+        return "Practical Exam"
+    return method
+
+def normalize_course_duration(value):
+    # If value is already a reasonable number of hours, leave as is
+    try:
+        if isinstance(value, (int, float)) and value > 6:
+            return value
+        val = str(value).strip()
+        if val.isdigit():
+            hours = int(val)
+            if hours > 6:
+                return hours
+            return hours * 8
+        # If value is like '2 days', extract the number
+        import re
+        m = re.match(r"(\d+)\s*days?", val)
+        if m:
+            return int(m.group(1)) * 8
+        # If value is like '16 hrs', extract the number
+        m = re.match(r"(\d+)\s*hrs?", val)
+        if m:
+            return int(m.group(1))
+    except Exception:
+        pass
+    return value
+
+def normalize_ensemble_data(ensemble_data: dict) -> dict:
+    """
+    Normalizes key fields within the ensemble_data dictionary in-place.
+    This prepares the data before it's used by downstream processes like excel_agents.
+    Expected fields are updated under 'Course Information' and 'Assessment Methods'.
+    """
+    if not isinstance(ensemble_data, dict):
+        print("Warning: normalize_ensemble_data expects a dict, received non-dict. Skipping normalization.")
+        return ensemble_data
+
+    # Normalize Course Information
+    course_info = ensemble_data.get("Course Information")
+    if isinstance(course_info, dict):
+        prof_level_val = course_info.get("Proficiency Level")
+        if prof_level_val is not None:
+            course_info["Proficiency Level"] = normalize_proficiency_level(str(prof_level_val))
+
+        course_level_val = course_info.get("Course Level")
+        if course_level_val is not None:
+            course_info["Course Level"] = normalize_course_level(str(course_level_val))
+
+        course_duration_val = course_info.get("Course Duration (Number of Hours)")
+        if course_duration_val is not None:
+            # normalize_course_duration can handle numbers or strings like "2 days"
+            course_info["Course Duration (Number of Hours)"] = normalize_course_duration(course_duration_val)
+    elif course_info is not None:
+        print(f"Warning: 'Course Information' in ensemble_data is {type(course_info)}, not a dict. Skipping its normalization.")
+
+    # Normalize Assessment Methods (list of strings)
+    assessment_methods_section = ensemble_data.get("Assessment Methods")
+    if isinstance(assessment_methods_section, dict):
+        assessment_methods_list = assessment_methods_section.get("Assessment Methods")
+        if isinstance(assessment_methods_list, list):
+            normalized_list = [
+                normalize_assessment_method(str(m)) for m in assessment_methods_list if m is not None
+            ]
+            assessment_methods_section["Assessment Methods"] = normalized_list
+        elif assessment_methods_list is not None:
+            print(f"Warning: 'Assessment Methods' under 'Assessment Methods' section is {type(assessment_methods_list)}, not a list. Skipping its normalization.")
+    elif assessment_methods_section is not None:
+        print(f"Warning: 'Assessment Methods' section in ensemble_data is {type(assessment_methods_section)}, not a dict. Skipping its normalization.")
+
+    return ensemble_data
+
+ASSESSMENT_METHODS_DROPDOWN = [
+    "Written Exam",
+    "Online Test",
+    "Project",
+    "Assignments",
+    "Oral Interview",
+    "Demonstration",
+    "Practical Exam",
+    "Role Play",
+    "Oral Questioning",
+    "Others: [Please elaborate]"
+]
+
+ASSESSMENT_METHODS_MAPPING = {
+    "written": "Written Exam",
+    "written exam": "Written Exam",
+    "practical": "Practical Exam",
+    "practical exam": "Practical Exam",
+    "case study": "Others: Case Study",
+    "oral questioning": "Oral Questioning",
+    "role play": "Role Play",
+    "online test": "Online Test",
+    "project": "Project",
+    "assignments": "Assignments",
+    "oral interview": "Oral Interview",
+    "demonstration": "Demonstration",
+    # Add more mappings as needed
+}
+
+def map_assessment_method(value):
+    if not isinstance(value, str):
+        return value
+    value_clean = value.strip().lower()
+    # Use mapping if available (case-insensitive)
+    if value_clean in ASSESSMENT_METHODS_MAPPING:
+        return ASSESSMENT_METHODS_MAPPING[value_clean]
+    for option in ASSESSMENT_METHODS_DROPDOWN:
+        if value_clean == option.strip().lower():
+            return option  # Use dropdown value as-is
+    # If already in the form 'Others: ...' (but not [Please elaborate]), keep as-is
+    if value_clean.startswith("others:") and value_clean != "others: [please elaborate]":
+        return f"Others: {value[7:].strip().capitalize()}"
+    # Special case: map 'Others: Case Study' or 'Case Study' to 'Others: Case Study'
+    if value_clean in ["others: case study", "case study"]:
+        return "Others: Case Study"
+    return f"Others: {value.strip()}"
 
