@@ -317,18 +317,6 @@ def create_course_dataframe(json_data):
     ])
 
     # Post-process Mode of Assessment for unknown/other methods
-    DROPDOWN_OPTIONS = [
-        "Written Exam",
-        "Online Test",
-        "Project",
-        "Assignments",
-        "Oral Interview",
-        "Demonstration",
-        "Practical Exam",
-        "Role Play",
-        "Oral Questioning",
-        "Others: [Please elaborate]"
-    ]
     def robust_mode_of_assessment(x):
         if x == "Others: [Please elaborate]":
             # If Case Study present, prefer that
@@ -336,7 +324,7 @@ def create_course_dataframe(json_data):
                 return "Others: Case Study"
             # Otherwise, find the first method not in the dropdown
             for method in assessment_methods:
-                if method not in DROPDOWN_OPTIONS and method != "Case Study":
+                if method not in ASSESSMENT_METHODS_DROPDOWN and method != "Case Study": # Use global
                     return f"Others: {method}"
         return x
     if "Mode of Assessment" in df.columns:
@@ -513,40 +501,31 @@ def create_assessment_dataframe(json_data):
     # Ensure minimum duration of 5 minutes per assessment
     if base_duration < 5:
         base_duration = 5
-    
-    # Calculate total allocated and remaining minutes
-    total_allocated = int(base_duration * total_ka_statements)
-    remaining_minutes = int(total_assessment_minutes - total_allocated)
-    
-    print(f"Base duration per KA statement: {base_duration} minutes")
-    print(f"Remaining minutes to distribute: {remaining_minutes} minutes")
-    
-    # Create list of durations for each KA statement
+
+    # Create list of durations for each KA statement (initialized with base_duration)
     durations = [int(base_duration)] * total_ka_statements
     
-    # Distribute remaining minutes (if any) in increments of 5
-    while remaining_minutes >= 5:
-        # Try to distribute evenly
-        increment = min(5, remaining_minutes)
-        statements_to_increment = min(total_ka_statements, remaining_minutes // increment)
-        
-        for i in range(statements_to_increment):
-            durations[i] += int(increment)
-            remaining_minutes -= int(increment)
-        
-        # If we've allocated to all statements but still have minutes left,
-        # start over from the beginning
-        if statements_to_increment == total_ka_statements and remaining_minutes >= 5:
-            continue
-        
-        # If we can't distribute evenly anymore, break
-        if statements_to_increment == 0 or remaining_minutes < 5:
-            break
+    # Calculate total allocated and remaining minutes
+    total_allocated = sum(durations) # Correct way to calculate allocated after min_duration enforcement
+    remaining_minutes = int(total_assessment_minutes - total_allocated)
     
-    # If there are still remaining minutes, add them to the first assessment
-    if remaining_minutes > 0 and total_ka_statements > 0:
-        durations[0] += int(remaining_minutes)
+    print(f"Base duration per KA statement: {base_duration} minutes (after min enforcement and mult-5 rounding)")
+    print(f"Total allocated after base: {total_allocated} minutes")
+    print(f"Remaining minutes to distribute: {remaining_minutes} minutes")
     
+    # Distribute remaining minutes more evenly
+    # First, distribute full 5-minute chunks cyclically
+    if total_ka_statements > 0:
+        num_five_minute_chunks = remaining_minutes // 5
+        for i in range(num_five_minute_chunks):
+            durations[i % total_ka_statements] += 5
+        remaining_minutes -= (num_five_minute_chunks * 5)
+        
+        # Then, distribute any leftover minutes (0-4) one by one cyclically
+        for i in range(remaining_minutes):
+            durations[i % total_ka_statements] += 1
+        remaining_minutes = 0 # All minutes should be distributed
+
     # --- Create DataFrame ---
     data = []
     
@@ -604,18 +583,6 @@ def create_assessment_dataframe(json_data):
     ])
     
     # Robust post-processing for Mode of Assessment (MOA)
-    DROPDOWN_OPTIONS = [
-        "Written Exam",
-        "Online Test",
-        "Project",
-        "Assignments",
-        "Oral Interview",
-        "Demonstration",
-        "Practical Exam",
-        "Role Play",
-        "Oral Questioning",
-        "Others: [Please elaborate]"
-    ]
     def robust_mode_of_assessment(x):
         if x == "Others: [Please elaborate]":
             # If Case Study present, prefer that
@@ -623,7 +590,7 @@ def create_assessment_dataframe(json_data):
                 return "Others: Case Study"
             # Otherwise, find the first method not in the dropdown
             for method in assessment_methods:
-                if method not in DROPDOWN_OPTIONS and method != "Case Study":
+                if method not in ASSESSMENT_METHODS_DROPDOWN and method != "Case Study": # Use global
                     return f"Others: {method}"
         return x
     if "MOA" in df.columns:
@@ -799,8 +766,8 @@ def create_instructional_dataframe(json_data):
     total_instructional_hours = course_duration_hours - assessment_hours
     total_instructional_minutes = total_instructional_hours * 60
     
-    # Round to nearest multiple of 5
-    total_instructional_minutes = round(total_instructional_minutes / 5) * 5
+    # Round to nearest multiple of 5 and ensure it's an integer
+    total_instructional_minutes = int(round(float(total_instructional_minutes) / 5.0) * 5)
 
     if isinstance(instructional_methods_input, str):
         instructional_methods_list = [method.strip() for method in instructional_methods_input.split(',')]
