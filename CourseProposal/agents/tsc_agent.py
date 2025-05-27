@@ -89,7 +89,7 @@ def create_tsc_agent(tsc_data, model_choice: str) -> RoundRobinGroupChat:
         - Group Discussion
         - Case Study
 
-        For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
+        For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline. Do NOT change 'practice' to 'practical' or vice versa. Use the exact term as extracted from the source.
 
         Regarding "Assessment Methods" in your output:
         - You will receive a list of assessment method names under the key `data['Assessment Methods']['Assessment Methods']` in the input.

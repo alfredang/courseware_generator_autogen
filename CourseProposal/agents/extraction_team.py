@@ -48,8 +48,8 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     You are to extract the following variables from {data}:
             1) Course Title
             2) Name of Organisation
-            3) Course Level (e.g., Beginner to Intermediate, Intermediate to Advanced)
-            4) Proficiency Level (e.g., Basic, Intermediate, Advanced)
+            3) Course Level (e.g. Beginners, Beginner, Beginner to Intermediate, Intermediate, Intermediate to Advanced, Advanced)
+            4) Proficiency Level (e.g., Basic, Intermediate, Advanced, or a number from 1 to 6)
             5) Classroom Hours (can be found under Instructional Duration: xxxx)
             6) Practical Hours (IMPORTANT: should match the Number of Assessment Hours exactly)
             7) Number of Assessment Hours (can be found under Assessment Duration: xxxx)
@@ -106,8 +106,8 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
             Format the extracted data in JSON format, with this structure, do NOT change the key names or add unnecessary spaces:
                 "Course Information": {{
                 "Course Title": "",
-                "Course Level": "",
-                "Proficiency Level": "",
+                "Course Level": "",  # Accept values like 'Beginners', 'Beginner', 'Beginner to Intermediate', etc. 'Beginners' will be normalized to 'Beginner' in the Excel pipeline.
+                "Proficiency Level": "",  # Accept values 1-6 or text labels as found. Do not convert numbers to labels.
                 "Name of Organisation": "",
                 "Classroom Hours": ,
                 "Practical Hours": ,
@@ -258,7 +258,7 @@ def create_extraction_team(data, model_choice: str) -> RoundRobinGroupChat:
     - Do NOT include any comments or headings within the JSON.
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
-    - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
+    - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline. Do NOT change 'practice' to 'practical' or vice versa. Use the exact term as extracted from the source.
     - For assessment methods, if the method is not in the dropdown list, output as 'Others: [method]'. If the method is in the dropdown, use the dropdown value exactly. This ensures unknown methods are handled robustly and the JSON output will not break the Excel pipeline.
 
     CORRECT EXAMPLE:

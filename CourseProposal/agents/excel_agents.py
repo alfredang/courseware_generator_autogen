@@ -84,7 +84,7 @@ def im_task():
     - Do NOT include any comments or headings within the JSON.
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
-    - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline.
+    - For instructional methods, output the method names EXACTLY as they appear in the input. Do NOT paraphrase, modify, or wrap them in 'Others: ...'. The mapping to dropdown or 'Others: [value]' will be handled downstream in the pipeline. Do NOT change 'practice' to 'practical' or vice versa. Use the exact term as extracted from the source.
     - If the instructional or assessment method is Case Study, output as 'Others: Case Study' (not 'Others: [Please elaborate]').
     - Add 'Others: Case Study' to the dropdown options and use this format for Case Study.
 
@@ -120,7 +120,14 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     As a digital marketing consultant, your primary role is to assist small business owners in optimizing their websites for SEO and improving their digital marketing strategies to enhance lead generation. You should provide clear, actionable advice tailored to the challenges and opportunities typical for small businesses. Focus on offering strategies that are feasible and effective for smaller budgets and resources. Stay abreast of the latest SEO and digital marketing trends, ensuring your advice is current and practical. When necessary, ask for clarification to understand the specific needs of each business, but also be proactive in filling in general small business scenarios. Personalize your responses to reflect an understanding of the unique dynamics and constraints small businesses face in digital marketing.
     You will do so based on the course title, learning outcomes (LOs), and the Topics found in {ensemble_output}
 
-    Your task is to create a Course Description in 2 paragraphs for the above factors.
+    YOUR OUTPUT MUST BE DETAILED AND SUBSTANTIAL:
+    - Your course description MUST be at least **8 sentences** and at least **2 paragraphs**.
+    - You MUST explicitly cover ALL of the following: (1) value and skills gained, (2) industry relevance, (3) career impact, (4) real-world application/examples, (5) both technical and soft/strategic skills.
+    - If your output is under 8 sentences, or lacks any of these details, it will be rejected and you will be asked to try again.
+    - Each paragraph should be at least 4 sentences. Avoid short, generic, or repetitive content.
+    - Use concrete examples, scenarios, or applications relevant to the course domain.
+    - Your language must be persuasive, specific, and tailored to the course context.
+    - Do NOT copy the template or example verbatim. Vary your sentence structure, paragraph flow, and adapt your style to the course context. Your output should be natural, engaging, and tailored, not formulaic.
 
     IMPORTANT:
     - Your ENTIRE output MUST be a single, raw JSON object.
@@ -131,6 +138,20 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     - Do NOT include any comments or headings within the JSON.
     - CRITICAL: Before outputting, rigorously check your response to ensure it is a perfectly valid JSON object. Imagine it will be directly parsed by a `json.loads()` function.
     - Failure to adhere to these strict JSON formatting rules will cause the entire process to fail. Accuracy is paramount.
+
+    There is no strict word limit. Your description should be as detailed as necessary to fully convey the course's value, industry relevance, and career impact. Your course description should be detailed and persuasive, typically between 6 and 12 sentences. Focus on substance and clarity, not unnecessary length.
+    Go beyond a basic summary:
+        - Highlight the specific skills, competencies, and needs the course addresses.
+        - Clearly explain how the course is relevant to current industry trends, standards, and challenges.
+        - Discuss how the course can impact a learner's career, including opportunities for employment, job upgrading, or specialization.
+        - Provide concrete examples or scenarios of how the skills will be applied in real-world contexts.
+        - Address both technical and strategic/soft skills developed in the course.
+    Avoid repeating phrases or ideas. Vary your sentence structure and ensure each paragraph adds new information or perspective.
+    Your output should be natural, engaging, and tailored to the course context, not formulaic.
+
+    - Your course description must begin with the phrase: "This course equips learners with the [proficiency level] competencies required to..." (e.g., "This course equips learners with the basic competencies required to design and implement effective data visualizations using Tableau Desktop.")
+    - The final sentence of your description must clearly state the course level, using the value from the input JSON, in the format: "This course is at a [course level] level, designed for [target audience/sector]." (e.g., "This course is at a beginner level, designed for professionals seeking to enhance their data presentation skills in the Infocomm Technology sector.")
+    - Your course description should be detailed and persuasive, typically between 6 and 12 sentences. Focus on substance and clarity, not unnecessary length.
     - The course level (e.g., Beginner, Intermediate, Advanced, Beginner to Intermediate, Intermediate to Advanced) MUST be clearly stated in the course description, using the value from the input JSON (ensemble_output['Course Information']['Course Level']).
     - The proficiency level (e.g., Basic, Intermediate, Advanced) MUST be clearly stated in the course description, using the value from the input JSON (ensemble_output['Course Information']['Proficiency Level']).
     - Do NOT guess or default the course level or proficiency level; always use the provided values.
@@ -140,25 +161,10 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     - Do NOT include any comments or headings.
     - Before outputting, simulate running a JSON linter (e.g., json.loads()) to ensure validity.
     - If you do not follow these instructions, the process will fail.
-      More concise and structured: Tighter language and clearer focus on core topics.
-    CORRECT EXAMPLE:
-    {{
-      "course_overview": {{
-        "course_description": "This course equips learners with advanced competencies required to design and implement robust [domain/subject] systems... This course is at an intermediate level and equips learners with advanced proficiency."
-      }}
-    }}
-
-    INCORRECT EXAMPLES (do NOT do this):
-    ```json
-    {{ ... }}
-    ```
-    Here is your JSON: {{ ... }}
-    Any output with extra text, markdown, or missing/extra keys is invalid.
 
     You must start your answer with "This course"
     You must take into consideration the learning outcomes and topics for the Course Description.
     Do not mention the course name in your answer.
-    Do not use more than 300 words, it should be a concise summary of the course and what it has to offer.
     Do not mention the LOs in your answer.
     Do not add quotation marks in your answer.
 
@@ -169,8 +175,7 @@ def create_course_agent(ensemble_output, model_choice: str) -> RoundRobinGroupCh
     2.  **Industry & Career:** Explain the course's relevance to the current industry landscape. Specifically, discuss how it can impact a learner's career, including employment prospects and opportunities for job upgrading or specialization.
     3.  **Audience & Level:** Clearly state the course level (e.g. Beginner to Intermediate, Intermediate to Advanced) using the provided input. The proficiency level (e.g., Basic, Intermediate, Advanced) from the input JSON MUST be stated at the beginning of the course description.
 
-    Do NOT copy the template or example verbatim. Vary your sentence structure, paragraph flow, and adapt your style to the course context. Your output should be natural, engaging, and tailored, not formulaic.
-    Your course description must be at least 4 sentences long, multi-paragraph, and as detailed as the example provided. It must adapt terminology, standards, frameworks, and real-world applications to the actual course subject area (e.g., technology, healthcare, finance, engineering, etc.).
+    Your course description must be at least 8 sentences long, multi-paragraph, and as detailed as the example provided. It must adapt terminology, standards, frameworks, and real-world applications to the actual course subject area (e.g., technology, healthcare, finance, engineering, etc.).
 
     Use the following TEMPLATE as a *guideline* to structure your response, infusing your consultant expertise to make it dynamic and compelling. Ensure all placeholders are adapted to the specific course domain and details.
 
