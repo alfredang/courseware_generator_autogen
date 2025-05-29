@@ -82,11 +82,11 @@ def cleanup_old_files(output_excel_path_modified, output_excel_path_preserved):
         if os.path.exists(filepath):
             try:
                 os.remove(filepath)
-                print(f" попередній файл '{filepath}' успішно видалено.")
+                print(f"Previous file '{filepath}' successfully deleted.")
             except OSError as e:
                 print(f"Error deleting existing file '{filepath}': {e}")
         else:
-            print(f"Файл '{filepath}' не існує, пропускаю видалення.") # File does not exist, skipping deletion
+            print(f"File '{filepath}' does not exist, skipping deletion.") # File does not exist, skipping deletion
     print("--- Cleanup complete ---")
 
 def insert_dataframe_into_sheet(sheet_xml_path, start_row, start_col, df):
@@ -502,7 +502,7 @@ def preserve_excel_metadata(template_path, modified_path, output_path):
         if os.path.exists(output_zip_path):
             try:
                 os.remove(output_zip_path)
-                print(f" попередній файл '{output_zip_path}' успішно видалено.")
+                print(f"Previous file '{output_zip_path}' successfully deleted.")
             except OSError as e:
                 print(f"Error deleting existing zip file '{output_zip_path}': {e}")
                 raise # Re-raise the exception if deletion fails
