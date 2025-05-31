@@ -388,7 +388,7 @@ def generate_assessment_plan(context: dict, name_of_organisation, sfw_dataset_di
             model=st.secrets["REPLACEMENT_MODEL"],
             response_format=EvidenceGatheringPlan,  # Structured output config
             temperature=0,
-            api_key=st.secrets["OPENAI_API_KEY"]
+            api_key=st.secrets["DEEPSEEK_API_KEY"]
         )
 
         evidence = asyncio.run(extract_assessment_evidence(structured_data=context, model_client=evidence_model_client))
