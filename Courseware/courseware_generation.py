@@ -100,6 +100,8 @@ import os
 import io
 import zipfile
 import tempfile
+from pathlib import Path
+import logging
 import json 
 import time
 import asyncio
@@ -662,6 +664,216 @@ def parse_cp_document(uploaded_file):
     
     return markdown_text
 
+def setup_batch_processing():
+    """
+    Sets up the batch processing environment.
+    Creates the output directory and initializes the log file.
+    
+    Returns:
+        tuple: (batch_output_dir, log_file_path)
+    """
+    # Create the batch output directory
+    batch_output_dir = os.path.join("batchoutput", datetime.now().strftime("%Y%m%d_%H%M%S"))
+    os.makedirs(batch_output_dir, exist_ok=True)
+    
+    # Initialize the log file
+    log_file_path = os.path.join(batch_output_dir, "batch_processing_log.txt")
+    
+    # Configure logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.FileHandler(log_file_path),
+            logging.StreamHandler()  # Also output to console
+        ]
+    )
+    
+    with open(log_file_path, "w") as log_file:
+        log_file.write(f"Batch Processing Log - Started at {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+        log_file.write("-" * 80 + "\n\n")
+    
+    return batch_output_dir, log_file_path
+
+def process_single_cp(file_path, selected_org, batch_output_dir, generate_options, model_clients, log_file_path):
+    """
+    Process a single course proposal file.
+    
+    Args:
+        file_path (str): Path to the CP file
+        selected_org (str): Selected organization name
+        batch_output_dir (str): Output directory for batch processing
+        generate_options (dict): Options for document generation
+        model_clients (dict): Dictionary of model clients
+        log_file_path (str): Path to the log file
+        
+    Returns:
+        bool: True if processing was successful, False otherwise
+    """
+    file_name = os.path.basename(file_path)
+    file_stem = os.path.splitext(file_name)[0]
+    
+    with open(log_file_path, "a") as log_file:
+        log_file.write(f"Processing file: {file_name}\n")
+    
+    logging.info(f"Processing file: {file_name}")
+    
+    try:
+        # Open the file
+        with open(file_path, "rb") as f:
+            file_bytes = f.read()
+            
+        # Create a temporary UploadedFile-like object
+        class TempUploadedFile:
+            def __init__(self, name, content):
+                self.name = name
+                self._content = content
+            
+            def read(self):
+                return self._content
+                
+        cp_file = TempUploadedFile(file_name, file_bytes)
+        
+        # Parse the CP document
+        raw_data = parse_cp_document(cp_file)
+        
+        # Extract information
+        context = asyncio.run(interpret_cp(
+            raw_data=raw_data, 
+            model_client=model_clients['openai_struct']
+        ))
+        
+        # Add date and organization info
+        current_datetime = datetime.now()
+        current_date = current_datetime.strftime("%d %b %Y")
+        year = current_datetime.year
+        context["Date"] = current_date
+        context["Year"] = year
+        
+        # Find the selected organisation UEN
+        org_list = load_organizations()
+        selected_org_data = next((org for org in org_list if org["name"] == selected_org), None)
+        if selected_org_data:
+            context["UEN"] = selected_org_data["uen"]
+        
+        # Process TGS Ref No if available
+        tgs_course_code = st.session_state.get("tgs_course_code", "")
+        context["TGS_Ref_No"] = tgs_course_code
+        
+        # Store generated documents paths
+        generated_files = []
+        
+        # Generate Learning Guide if selected
+        if generate_options.get('generate_lg'):
+            try:
+                logging.info(f"Generating Learning Guide for {file_name}")
+                lg_output = generate_learning_guide(context, selected_org, model_clients['openai'])
+                if lg_output:
+                    # Move the file to batch output directory with input file's name
+                    new_path = os.path.join(batch_output_dir, f"{file_stem}_LG.docx")
+                    os.rename(lg_output, new_path)
+                    generated_files.append(new_path)
+                    logging.info(f"Learning Guide generated: {new_path}")
+            except Exception as e:
+                logging.error(f"Error generating Learning Guide: {str(e)}")
+                with open(log_file_path, "a") as log_file:
+                    log_file.write(f"ERROR - Learning Guide: {str(e)}\n")
+        
+        # Generate Assessment Plan if selected
+        if generate_options.get('generate_ap'):
+            try:
+                logging.info(f"Generating Assessment Documents for {file_name}")
+                ap_output, asr_output = generate_assessment_documents(context, selected_org)
+                
+                if ap_output:
+                    new_path = os.path.join(batch_output_dir, f"{file_stem}_AP.docx")
+                    os.rename(ap_output, new_path)
+                    generated_files.append(new_path)
+                    logging.info(f"Assessment Plan generated: {new_path}")
+                
+                if asr_output:
+                    new_path = os.path.join(batch_output_dir, f"{file_stem}_ASR.docx")
+                    os.rename(asr_output, new_path)
+                    generated_files.append(new_path)
+                    logging.info(f"Assessment Summary Record generated: {new_path}")
+            except Exception as e:
+                logging.error(f"Error generating Assessment Documents: {str(e)}")
+                with open(log_file_path, "a") as log_file:
+                    log_file.write(f"ERROR - Assessment Documents: {str(e)}\n")
+        
+        # Check if timetable is needed
+        needs_timetable = (generate_options.get('generate_lp') or generate_options.get('generate_fg'))
+        
+        # Generate timetable if needed
+        if needs_timetable and 'lesson_plan' not in context:
+            try:
+                logging.info(f"Generating Timetable for {file_name}")
+                hours = int(''.join(filter(str.isdigit, context["Total_Course_Duration_Hours"])))
+                num_of_days = hours / 8
+                timetable_data = asyncio.run(generate_timetable(
+                    context, 
+                    num_of_days, 
+                    model_clients['timetable_openai_struct']
+                ))
+                context['lesson_plan'] = timetable_data['lesson_plan']
+            except Exception as e:
+                logging.error(f"Error generating Timetable: {str(e)}")
+                with open(log_file_path, "a") as log_file:
+                    log_file.write(f"ERROR - Timetable: {str(e)}\n")
+                return False  # Exit if timetable generation fails
+        
+        # Generate Lesson Plan if selected
+        if generate_options.get('generate_lp'):
+            try:
+                logging.info(f"Generating Lesson Plan for {file_name}")
+                temporary_lesson_plan = fix_lesson_plan_compat(context)
+                temporary_lesson_plan = addstartendduration(temporary_lesson_plan)
+                temporary_lesson_plan = renameactivity(temporary_lesson_plan)
+                context['lesson_plan'] = temporary_lesson_plan
+                
+                lp_output = generate_lesson_plan(context, selected_org)
+                if lp_output:
+                    new_path = os.path.join(batch_output_dir, f"{file_stem}_LP.docx")
+                    os.rename(lp_output, new_path)
+                    generated_files.append(new_path)
+                    logging.info(f"Lesson Plan generated: {new_path}")
+            except Exception as e:
+                logging.error(f"Error generating Lesson Plan: {str(e)}")
+                with open(log_file_path, "a") as log_file:
+                    log_file.write(f"ERROR - Lesson Plan: {str(e)}\n")
+        
+        # Generate Facilitator's Guide if selected
+        if generate_options.get('generate_fg'):
+            try:
+                logging.info(f"Generating Facilitator's Guide for {file_name}")
+                fg_output = generate_facilitators_guide(context, selected_org)
+                if fg_output:
+                    new_path = os.path.join(batch_output_dir, f"{file_stem}_FG.docx")
+                    os.rename(fg_output, new_path)
+                    generated_files.append(new_path)
+                    logging.info(f"Facilitator's Guide generated: {new_path}")
+            except Exception as e:
+                logging.error(f"Error generating Facilitator's Guide: {str(e)}")
+                with open(log_file_path, "a") as log_file:
+                    log_file.write(f"ERROR - Facilitator's Guide: {str(e)}\n")
+        
+        # Log success
+        with open(log_file_path, "a") as log_file:
+            log_file.write(f"SUCCESS - Generated {len(generated_files)} document(s) for {file_name}\n")
+            log_file.write(f"  Generated files: {', '.join(generated_files)}\n\n")
+        
+        logging.info(f"Successfully processed {file_name}")
+        return True
+        
+    except Exception as e:
+        # Log any unexpected errors
+        error_msg = f"ERROR - Unexpected error processing {file_name}: {str(e)}"
+        logging.error(error_msg)
+        with open(log_file_path, "a") as log_file:
+            log_file.write(error_msg + "\n\n")
+        return False
+    
+    
 ############################################################
 # 2. Interpret Course Proposal Data
 ############################################################
@@ -838,8 +1050,41 @@ def app():
     # ================================================================
     # Step 1: Upload Course Proposal (CP) Document
     # ================================================================
-    st.subheader("Step 1: Upload Course Proposal (CP) Document")
-    cp_file = st.file_uploader("Upload Course Proposal (CP) Document", type=["docx, xlsx"])
+    st.subheader("Step 1: Upload Course Proposal (CP) Document or Folder")
+    upload_type = st.radio(
+        "Choose upload method:",
+        ["Single File", "Batch Process Folder"],
+        index=0
+    )
+
+    if upload_type == "Single File":
+        cp_file = st.file_uploader("Upload Course Proposal (CP) Document", type=["docx", "xlsx"])
+        batch_mode = False
+    else:
+        cp_folder = st.text_input("Enter folder path containing Course Proposal documents", 
+                                placeholder="e.g., C:/Users/username/Documents/course_proposals")
+        
+        if cp_folder and os.path.exists(cp_folder):
+            # Count valid files in the folder
+            valid_files = [f for f in os.listdir(cp_folder) 
+                        if f.lower().endswith(('.docx', '.xlsx')) 
+                        and not f.startswith('~$')]  # Exclude temp files
+            
+            if valid_files:
+                st.success(f"Found {len(valid_files)} valid course proposal files in the folder.")
+                st.write("First 5 files:")
+                for i, file in enumerate(valid_files[:5]):
+                    st.write(f"{i+1}. {file}")
+                if len(valid_files) > 5:
+                    st.write(f"... and {len(valid_files) - 5} more files")
+            else:
+                st.warning(f"No valid course proposal files (.docx, .xlsx) found in {cp_folder}")
+        
+        elif cp_folder:
+            st.error(f"Folder not found: {cp_folder}")
+        
+        batch_mode = True
+        cp_file = None
 
     # ================================================================
     # Step 2: Select Name of Organisation
@@ -985,13 +1230,151 @@ def app():
     # Step 5: Generate Documents
     # ================================================================
     if st.button("Generate Documents"):
-        if cp_file is not None and selected_org:
-            # Reset previous output document paths
-            st.session_state['lg_output'] = None
-            st.session_state['ap_output'] = None
-            st.session_state['asr_output'] = None
-            st.session_state['lp_output'] = None
-            st.session_state['fg_output'] = None
+        if (batch_mode and cp_folder and os.path.exists(cp_folder)) or (not batch_mode and cp_file is not None):
+            if not selected_org:
+                st.error("Please select a Name of Organisation.")
+                st.stop()
+                
+            # Use the selected model configuration for all autogen agents
+            selected_config = get_model_config(st.session_state['selected_model'])
+            api_key = selected_config["config"].get("api_key")
+            if not api_key:
+                st.error("API key for the selected model is not provided.")
+                st.stop()
+                
+            model_name = selected_config["config"]["model"]
+            temperature = selected_config["config"].get("temperature", 0)
+            base_url = selected_config["config"].get("base_url", None)
+            model_info = selected_config["config"].get("model_info", None)
+
+            # Set up response formats based on selected model
+            if st.session_state['selected_model'] in ["DeepSeek-V3", "Gemini-Pro-2.5-Exp-03-25"]:
+                cp_response_format = None
+                lp_response_format = None
+            else:
+                cp_response_format = CourseData
+                lp_response_format = LessonPlan
+
+            # Initialize model clients
+            model_clients = {
+                'openai_struct': OpenAIChatCompletionClient(
+                    model=model_name,
+                    api_key=api_key,
+                    temperature=temperature,
+                    base_url=base_url,
+                    response_format=cp_response_format,
+                    model_info=model_info,
+                ),
+                'timetable_openai_struct': OpenAIChatCompletionClient(
+                    model=model_name,
+                    api_key=api_key,
+                    temperature=temperature,
+                    base_url=base_url,
+                    response_format=lp_response_format,
+                    model_info=model_info,
+                ),
+                'openai': OpenAIChatCompletionClient(
+                    model=model_name,
+                    api_key=api_key,
+                    temperature=temperature,
+                    base_url=base_url,
+                    model_info=model_info,
+                )
+            }
+            
+            # Store document generation options
+            generate_options = {
+                'generate_lg': generate_lg,
+                'generate_ap': generate_ap,
+                'generate_lp': generate_lp,
+                'generate_fg': generate_fg
+            }
+            
+            if batch_mode:
+                # Set up batch processing environment
+                batch_output_dir, log_file_path = setup_batch_processing()
+                
+                # Get list of valid CP files
+                valid_files = [f for f in os.listdir(cp_folder) 
+                            if f.lower().endswith(('.docx', '.xlsx')) 
+                            and not f.startswith('~$')]  # Exclude temp files
+                
+                if not valid_files:
+                    st.error("No valid course proposal files found in the specified folder.")
+                    st.stop()
+                
+                # Display progress bar
+                progress_bar = st.progress(0)
+                status_text = st.empty()
+                
+                # Process each file
+                successful_count = 0
+                failed_count = 0
+                
+                for i, filename in enumerate(valid_files):
+                    file_path = os.path.join(cp_folder, filename)
+                    status_text.text(f"Processing file {i+1}/{len(valid_files)}: {filename}")
+                    
+                    # Process the file
+                    success = process_single_cp(
+                        file_path=file_path,
+                        selected_org=selected_org,
+                        batch_output_dir=batch_output_dir,
+                        generate_options=generate_options,
+                        model_clients=model_clients,
+                        log_file_path=log_file_path
+                    )
+                    
+                    if success:
+                        successful_count += 1
+                    else:
+                        failed_count += 1
+                    
+                    # Update progress
+                    progress_bar.progress((i + 1) / len(valid_files))
+                
+                # Show completion message
+                status_text.text(f"Batch processing complete! Successfully processed {successful_count} files, {failed_count} failed.")
+                
+                # Show download link for the batch output folder
+                if successful_count > 0:
+                    # Create a zip file of the batch output
+                    zip_buffer = io.BytesIO()
+                    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
+                        for root, dirs, files in os.walk(batch_output_dir):
+                            for file in files:
+                                file_path = os.path.join(root, file)
+                                arcname = os.path.relpath(file_path, os.path.dirname(batch_output_dir))
+                                zipf.write(file_path, arcname=arcname)
+                    
+                    zip_buffer.seek(0)
+                    st.download_button(
+                        label="Download Batch Results (ZIP)",
+                        data=zip_buffer.getvalue(),
+                        file_name=f"batch_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip",
+                        mime="application/zip"
+                    )
+                    
+                    # Also provide a link to the log file
+                    with open(log_file_path, "rb") as log_file:
+                        log_content = log_file.read()
+                    st.download_button(
+                        label="Download Processing Log",
+                        data=log_content,
+                        file_name="batch_processing_log.txt",
+                        mime="text/plain"
+                    )
+                    
+                st.info(f"All processed files are saved in: {batch_output_dir}")
+                
+            else:
+                # Single file processing (existing code)
+                # Reset previous output document paths
+                st.session_state['lg_output'] = None
+                st.session_state['ap_output'] = None
+                st.session_state['asr_output'] = None
+                st.session_state['lp_output'] = None
+                st.session_state['fg_output'] = None
             # Use the selected model configuration for all autogen agents
             selected_config = get_model_config(st.session_state['selected_model'])
             api_key = selected_config["config"].get("api_key")
@@ -1184,20 +1567,20 @@ def app():
         zip_buffer = io.BytesIO()
         with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zipf:
             
-            # Helper function to add a file to the zip archive
-            def add_file(file_path, prefix):
+            if cp_file is not None:
+                file_stem = os.path.splitext(cp_file.name)[0]
+            else:
+                file_stem = "output"
+
+            def add_file(file_path, suffix):
                 if file_path and os.path.exists(file_path):
-                    # Determine file name based on TGS_Ref_No (if available) or fallback to course title
-                    if 'TGS_Ref_No' in st.session_state['context'] and st.session_state['context']['TGS_Ref_No']:
-                        file_name = f"{prefix}_{st.session_state['context']['TGS_Ref_No']}_{st.session_state['context']['Course_Title']}_v1.docx"
-                    else:
-                        file_name = f"{prefix}_{st.session_state['context']['Course_Title']}_v1.docx"
+                    file_name = f"{file_stem}_{suffix}.docx"
                     zipf.write(file_path, arcname=file_name)
-            
+
             # Add each generated document if it exists
             add_file(st.session_state.get('lg_output'), "LG")
-            add_file(st.session_state.get('ap_output'), "Assessment_Plan")
-            add_file(st.session_state.get('asr_output'), "Assessment_Summary_Record")
+            add_file(st.session_state.get('ap_output'), "AP")
+            add_file(st.session_state.get('asr_output'), "ASR")
             add_file(st.session_state.get('lp_output'), "LP")
             add_file(st.session_state.get('fg_output'), "FG")
         
