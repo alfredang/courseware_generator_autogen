@@ -145,7 +145,8 @@ def scrape_course_data(url: str) -> CourseData:
     """
 
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.set_capability('browserless:token', st.secrets['BROWSER_TOKEN'])
+    # Remove browserless:token capability for local use
+    # chrome_options.set_capability('browserless:token', st.secrets['BROWSER_TOKEN'])
     # Set args similar to puppeteer's for best performance
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-background-timer-throttling")
@@ -165,11 +166,8 @@ def scrape_course_data(url: str) -> CourseData:
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
 
-    driver = webdriver.Remote(
-        command_executor=st.secrets['BROWSER_WEBDRIVER_ENDPOINT'],
-        options=chrome_options
-    )
-
+    # Use local Chrome WebDriver
+    driver = webdriver.Chrome(options=chrome_options)
 
     try:
         # Navigate to the course page
