@@ -41,3 +41,4 @@ gspread
 rapidfuzz
 oauth2client
 streamlit-modal
+unstructured[all]
