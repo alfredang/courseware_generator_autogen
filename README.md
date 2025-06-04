@@ -78,12 +78,17 @@ python courseware_generation.py
 TSC Formatting to take into account:
 LUs must be present on top of their respective group of topics.
 Topics and LUs must follow this labelling convention:
+Course Level and proficiency Level must be present 
 eg. LU1: xxxx (K1, K2, A1, A2)
 eg. Topic 1: xxxxx (K1, A1)
 
 The colon character ( : ) is essential for the regex pattern in the code to detect what is needed for mapping, do not miss this out!
 
 ![plot](./agentic_chat_workflow.png)
+
+## Notes
+- **Railway deployment has been disabled**: This project is no longer deployed or maintained on Railway. Please use local or other cloud environments for running the workflow.
+- **Recommended Model**: For best cost-effectiveness, use DeepSeek v3 as the default model. It is both cheap and efficient for most tasks.
 
 ## Roadmap
 - [x] Parsing Function
