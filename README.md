@@ -5,6 +5,7 @@ This project is a Python-based system designed to automate the extraction, trans
 ## Table of Contents
 
 - [Installation](#installation)
+- [Docker Setup](#docker-setup)
 - [Usage](#usage)
   - [Executing JSON Document Replacement](#executing-json-document-replacement)
   - [JSON Content Extraction](#json-content-extraction)
@@ -24,6 +25,9 @@ This project is a Python-based system designed to automate the extraction, trans
 2. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
+    
+    Upgrade requirements
+    pip install --upgrade -r requirements.txt
     ```
 
 3. Set up environment variables by creating a `.env` file in the project root with the following keys:
@@ -31,6 +35,38 @@ This project is a Python-based system designed to automate the extraction, trans
     OPENAI_API_KEY=your_openai_api_key
     GROQ_API_KEY=your_groq_api_key
     ```
+
+## Docker Setup
+
+To run this project in a Docker container, follow these steps:
+
+1. **Install Docker Desktop**
+   - Download and install Docker Desktop from [https://www.docker.com/products/docker-desktop/](https://www.docker.com/products/docker-desktop/).
+   - Ensure Docker Desktop is running before proceeding.
+   - Make sure your project directory is accessible to Docker (check Docker Desktop's file sharing settings on Windows/Mac).
+
+2. **Set up environment variables**
+   - Ensure you have a `.env` file in the project root (see Installation step 3).
+   - Alternatively, you can set environment variables directly in the `docker-compose.yml` or pass them via the command line.
+
+3. **Build and run the container**
+   - Using Docker Compose (recommended):
+     ```bash
+     docker-compose up --build
+     ```
+   - Or, using the provided batch scripts (on Windows):
+     - `compose_build.bat` (builds and runs, starts Docker Desktop if needed)
+     - `run_docker.bat` (runs without rebuilding)
+   - **Note:**
+     - You may need to edit the Docker pathway in the `.bat` files (`compose_build.bat` and `run_docker.bat`) to match your local project directory and Docker installation location.
+     - Ensure that the path to `docker.exe` is included in your Windows environment `PATH` variable. This allows you to run Docker commands from any terminal window. If not, add the directory containing `docker.exe` (e.g., `C:\Program Files\Docker\Docker\resources\bin`) to your system `PATH`.
+
+4. **Access the application**
+   - The app will be available at [http://localhost:8502](http://localhost:8502) by default.
+
+5. **Environment variables in Docker**
+   - The container will automatically use the `.env` file if present in the project root.
+   - For custom setups, you can add an `env_file` section to `docker-compose.yml` or use the `-e` flag with `docker run`.
 
 ## Executing Workflow Automation
 

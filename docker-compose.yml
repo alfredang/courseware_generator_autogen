@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+    container_name: courseware
+    ports:
+      - "8502:8502"
+    volumes:
+      - .:/app 
