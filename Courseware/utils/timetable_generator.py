@@ -153,7 +153,7 @@ async def generate_timetable(context, num_of_days, model_client):
         name="Timetable_Generator",
         model_client=model_client,
         system_message=f"""
-            You are AI assistant with expertise in generating structured timetable generator for WSQ courses based on the given context in JSON format {context}.
+            You are AI assistant with expertise in generating structured timetable generator for WSQ courses based on the given context in JSON format {{context}}.
             Understand the course context and generate a detailed lesson plan timetable that adheres to the WSQ course structure rules. Make sure to follow the instructions carefully.
             The course context includes the following details which you should use to generate the timetable. Pay special attention to the LU_Duration provided in the course context to ensure the timetable is accurate:
             - Course_Title
@@ -176,153 +176,105 @@ async def generate_timetable(context, num_of_days, model_client):
             ---
             **IMPORTANT! Ensure the rules are followed closely or the time table generated will be inaccurate.**
             ### **Instructions:**
-            #### 1. **Course Data & Completeness**
-            - **Use all provided course details**, including Learning Units (LUs), topics, Learning Outcomes (LOs), Assessment Methods (AMs), and Instructional Methods (IMs).
-            - **Always convert hours to minutes (e.g., 3.5 hrs = 210 mins) before allocating time.**
-            - **For each Learning Unit, MANDATORY: Calculate and track the exact minutes allocated to topics and activities**
-            - **For each Learning Unit, MANDATORY: Every Topic must have activities with the leftover time from LU_Duration after topics (e.g. Total LU_Duration= 210mins ,Total topic duration= 180 mins, Activity duration = LU_Duration - total topic duration = 210 mins- 180 mins = 30 mins)**
-            - **You MUST maintain a running total of allocated minutes for each LU and ensure it EXACTLY matches the LU_Duration to the minute**
-            - **Maximise every available minute: Do not leave any minute of LU_Duration unused. All time must be filled with either a topic or activity session.**
-            - **Ensure Lu_Duration is fully utlised by each topic/activity. (e.g. "If LU1 Lu_Duration is 3.5 hours OR 210 minutes, ensure that the time given is fully utlised by both Topics and Activities")**
-            - **If LU_Duration is not fully utilised, Teach the topic again and make sure to fully utilise the left over LU_Duration after the initial topics and activities**
-            - **For the end of the course, MANDATORY: At the end of the course, Perform Course Feedback and TRAQOM Survey must happen before Final Assessment is conducted**
-            - **MANDATORY: The sum of all session durations (including classroom and assessment) must EXACTLY match the course's total duration as specified in the input (Total_Course_Duration_Hours and Total_Course_Duration_Minutes).**
-            - **Before generating the timetable, output a calculation table showing the duration of each session and the total. If the total does not match the course duration, adjust and recalculate until it matches exactly. Do not proceed until this check passes.**
-            - **For each Topic or Activity, Ensure that they have their own references to their materials. (Example: Lecture ->Refer to some online references in Google Classroom LMS, Case study -> Refer to some online case studies in Google Classroom LMS)**
+
+            #### 1. **Overall Structure & Duration**
+            - Use all provided course details: LUs, topics, LOs, AMs, IMs.
+            - **LU Duration Adherence:** The sum of durations for all Topic and Activity sessions within a Learning Unit (LU) MUST EXACTLY match that LU's specified `LU_Duration`. Convert all `LU_Duration` (e.g., "3.5 hrs") to minutes for allocation and ensure every minute is used.
+            - **Topic/Activity Allocation:** If an LU is "3.5 hours" (210 minutes), you might allocate it as: Topic (2 hours = 120 mins), same Topic continued (1 hour = 60 mins), Activity (30 mins). Or Topic (3 hours = 180 mins), Activity (30 mins).
+            - **Session Durations:** All session durations (for topics, activities, breaks, assessments) MUST be in multiples of 15 minutes (e.g., 15min, 30min, 45min, 1hr, 1hr 15min, 2hr 30min).
+            - **Total Course Duration:** The sum of all session durations across all days (including topics, activities, breaks, and assessments) must EXACTLY match the course's total duration.
+            - **No Fixed Daily End Time:** Days conclude when the planned LUs/topics for that day are completed, respecting LU duration rules. There's no strict 1830hrs cutoff unless it coincides with content completion.
+            - **Reference Line:** For every Topic session, include a `reference_line` field with the value "Refer to online references in Google Classroom LMS". For Activity sessions, the `reference_line` should correspond to its Instructional Method (e.g., "Refer to some online case studies in Google Classroom LMS" for Case Study). Omit `reference_line` or set to empty string if Instructional_Methods is "N/A".
+
+            #### 2. **Fixed Sessions and Formatting**
+
+            ##### **Digital Attendance:**
+            - **Day 1 - First Session (Mandatory):**
+                - `starttime`: "0930", `endtime`: "0945", `duration`: "15min"
+                - `instruction_title`: "Digital Attendance and Introduction to the Course"
+                - `bullet_points`: ["Trainer Introduction", "Learner Introduction", "Overview of Course Structure"]
+                - `Instructional_Methods`: "N/A"
+                - `Resources`: "QR Attendance, Attendance Sheet"
+                - `reference_line`: ""
+            - **Subsequent Days - AM Attendance:**
+                - The first *Topic session* of the day should incorporate AM attendance.
+                - `instruction_title` should be like: "Digital Attendance (AM) & Topic X: [Topic Title] (K#, A#)"
+                - `Resources` for this session must include "QR Attendance, Attendance Sheet" in addition to topic-specific resources. The duration of this session is primarily for the topic.
+            - **PM Attendance (After Lunch):**
+                - The first *Topic session* immediately following Lunch Break should incorporate PM attendance.
+                - `instruction_title` should be like: "Digital Attendance (PM) & Topic Y: [Topic Title] (K#, A#)"
+                - `Resources` for this session must include "Digital Attendance (PM)" in addition to topic-specific resources.
+
+            ##### **Breaks:**
+            - **Lunch Break:**
+                - `duration`: "45min"
+                - Timing: Flexible, can be scheduled between 11:30 and 13:00.
+                - `instruction_title`: "Lunch Break"
+                - `bullet_points`: []
+                - `Instructional_Methods`: "N/A"
+                - `Resources`: "N/A"
+                - `reference_line`: ""
+            - **Tea Break:**
+                - `duration`: "10min"
+                - Timing: Must be scheduled in the afternoon (after Lunch Break).
+                - `instruction_title`: "Tea Break"
+                - `bullet_points`: []
+                - `Instructional_Methods`: "N/A"
+                - `Resources`: "Refreshments"
+                - `reference_line`: ""
+
+            #### 3. **Instructional Methods & Resources**
+            - **Topic Instructional Methods:** Primarily use combinations like "Lecture, Group Discussion", "Lecture, Peer Sharing". Use from the provided `list_of_im`: {{list_of_im}}
+            - **Activity Instructional Methods:** Activities must use methods like "Case Study", "Demonstration", "Practice", "Role Play". **DO NOT use "Lecture", "Group Discussion", or "Peer Sharing" for activities.**
+            - **Approved Resources (General):** "Slide page #", "TV", "Whiteboard", "Wi-Fi", "LMS". Specific attendance resources mentioned above.
             
-            **IMPORTANT!! Take note of the learning unit duration allocations or there will be errors when allocating the timetable!!! Make sure the timetable fulfills every point**
-            #### 2. **Learning Unit Duration Allocation**
-            - **Each Learning Unit (LU) has a specified LU_Duration (e.g., "3.5 hrs").**
-            - **One Learning Unit (LU) might have one or multiple topics. Take note of the total number of topics, and split the LU_Duration accordingly**
-            - **All Topic and Activity sessions within a LU must add up exactly to the LU_Duration. No minutes may be left unused.**
-            - **Every minute of LU_Duration must be allocated to either a Topic or Activity session (never to breaks or non-instructional time).**
-            - **Double-check that the sum of all Topic and Activity sessions for each LU matches the LU_Duration exactly.**
-            - **For each Learning Unit, before generating the timetable, calculate and display:**
-                - List the LU_Duration in minutes.
-                - List each topic and activity with its assigned duration.
-                - Show the sum of all topic and activity durations.
-                - If the sum does not match LU_Duration, adjust and recalculate until it matches exactly.
-                - Do not proceed to timetable generation until this check passes.
-            -    For each Learning Unit, output a calculation table like:
-                LU1: Catalysing HR with Generative AI (GAI)
-                - LU_Duration: 210 mins
-                - Topic 1: 180 mins
-                - Activity: 30 mins
-            -    Total allocated: 210 mins (must match LU_Duration)
-            - **If the total allocated time does not match the LU_Duration, adjust the durations and recalculate until it matches. Do not proceed until this check passes.**
-            
-                            
-            #### 3. **Breaks and Fixed Sessions**
-            - **Lunch MUST be from 1200 to 1245**
-            - **Lunch breaks, attendance sessions, and other breaks DO NOT count against LU_Duration.**
-            - **LU_Duration only applies to the actual instruction and activity time.**
-            - **When scheduling sessions, ensure breaks are inserted between LUs as needed without reducing the allocated LU_Duration.**
-            - **IMPORTANT: For each day, the session that occurs immediately after the Lunch Break (i.e., the first topic or activity after lunch) MUST include "Digital Attendance (PM)" in its "Resources" field, in addition to any other required resources for that session.**
-            
-            #### 4. **Number of Days & Even Distribution**
-            - Use **exactly {num_of_days}** day(s).
-            - Distribute **topics, activities, and assessments** evenly across the day(s).
-            - Ensure that each day has **exactly 9 hours** (0930hrs - 1830hrs), including breaks and assessments.
-            - **Important:** The schedule for each day must start at the designated start time and end exactly at 1830hrs.
+            #### 4. **Topic and Activity Session Structure**
+            - **Topic Sessions:**
+                - `instruction_title`: "Topic X: [Topic Title] (K#, A#)" or "Topic X: [Topic Title] (continued) (K#, A#)" if a topic is split.
+                - `bullet_points`: List of strings covering the content for that specific session.
+                - `reference_line`: "Refer to online references in Google Classroom LMS"
+            - **Activity Sessions:**
+                - `instruction_title`: "Activity: [Descriptive Activity Name, e.g., Case studies on Identify Conflicts]"
+                - `bullet_points`: Relevant bullet points for the activity, if any (can be an empty list).
+                - `reference_line`: Based on IM (e.g., "Refer to some online case studies in Google Classroom LMS" for Case Study).
+            - **Splitting Topics:** If a topic is long, its bullet points can be split across multiple consecutive sessions. Ensure the `instruction_title` reflects continuation (e.g., "Topic 1 (continued)").
 
-            ### **5. Instructional Methods & Resources**
-            **Use ONLY these instructional methods** (extracted from the course context):  
-            {list_of_im}
-            DO NOT generate any IM pairs that are not in this list.
-            Every session must have an instructional method pair that is in the list.
-                    
-            **Approved Resources:**
-                - "Slide page #"
-                - "TV"
-                - "Whiteboard"
-                - "Wi-Fi"
-                - "Digital Attendance (PM)"
-                - "Digital Attendance (Assessment)"
+            #### 5. **Final Day & Assessments**
+            - **Course Feedback and TRAQOM Survey:**
+                - This MUST be merged with the *last Activity session* on the assessment day, scheduled immediately before the Final Assessment(s).
+                - The `instruction_title` for this activity session should be: "Activity: [Activity Name] & Course Feedback/TRAQOM Survey"
+                - `Resources` for this session must include "LMS, Feedback Forms, Survey Links" in addition to activity-specific resources.
+            - **Final Assessment Session(s):**
+                - Scheduled as the absolute last sessions of the course, after the combined activity/feedback session.
+                - For each Assessment Method from the course context:
+                    - `instruction_title`: "Final Assessment: [Assessment Method Full Name]" (e.g., "Final Assessment: Written Assessment - Short Answer Questions")
+                    - `duration`: Must align with the `Total_Delivery_Hours` for that specific assessment method, converted to a 15-min interval string.
+                    - `Instructional_Methods`: "Assessment"
+                    - `Resources`: "Digital Attendance Assessment, Assessment Plan" (First assessment may also include "Assessment Questions").
+                    - `reference_line`: ""
+            - **No Recap Sessions:** Do not include "Recap All Contents and Close" sessions.
 
-            ### **6. Fixed Sessions & Breaks**
-            Each day must contain the following **fixed time slots**:
-
-            #### **Day 1 First Timeslot (Mandatory)**
-            - **Time:** "0930hrs - 0935hrs (5 mins)"
-            - **Instructions:** 
-            "Digital Attendance and Introduction to the Course"
-                • Trainer Introduction
-                • Learner Introduction
-                • Overview of Course Structure
-            - **Instructional_Methods:** "N/A"
-            - **Resources:** "QR Attendance, Attendance Sheet"
-
-            #### **Subsequent Days First Timeslot**
-            - **Time:** "0930hrs - 0935hrs (5 mins)"
-            - **Instructions:** "Digital Attendance (AM)"
-            - **Instructional_Methods:** "N/A"
-            - **Resources:** "QR Attendance, Attendance Sheet"
-
-            #### **Mandatory Breaks**
-            - **Lunch Break:** 45 mins
-            - **Afternoon Break:** 5 mins
-
-            #### **End-of-Day Recap (All Days Except Assessment Day)**
-            - **Time:** "1825hrs - 1830hrs (5 mins)"
-            - **Instructions:** "Recap All Contents and Close"
-            - **Instructional_Methods:** [a valid Lecture or IM Pair from the context]
-            - **Resources:** "Slide page #, TV, Whiteboard, Wi-Fi"
+            #### 6. **Number of Days**
+            - Distribute content over **exactly {{num_of_days}}** day(s).
 
             ---
-
-            ### **5. Final Day Assessments**
-            - **Important! Make sure the final assessments are as follows below OR the timetable generated will be WRONG**
-            - **On the last day of the course, the following sessions must be scheduled as the last timeslots of the day, in the exact order given below. No other sessions should follow these sessions.**
-            - **The sessions are held after the all topics and activities are conducted.**
-            - On the Assessment day, the following sessions must be scheduled as the **last timeslots** of the day, in the exact order given below. **No other sessions should follow these sessions.**
-
-            1. **Final Course Feedback and TRAQOM Survey**
-            - **Time:** "[Start Time] - [End Time] ([Duration])" (Duration must be 5 mins)
-            - **Instructions:** "Course Feedback and TRAQOM Survey"
-            - **Instructional_Methods:** "N/A"
-            - **Resources:** "Feedback Forms, Survey Links"
-            
-            2. **Final Assessment Session(s)**
-            - For each Assessment Method in the course details, schedule a Final Assessment session:
-                - **Time:** "[Start Time] - [End Time] ([Duration])" (Duration must align with each assessment method's `Total_Delivery_Hours`.)
-                - **Instructions:** "Final Assessment: [Assessment Method Full Name] ([Method Abbreviation])"
-                - **Instructional_Methods:** "Assessment"
-                - **Resources:** "Digital Attendance (Assessment), Assessment Questions, Assessment Plan"
-
-            
-
-            ---
-
-            ### **6. Topic & Activity Session Structure**
-            #### **Topic Sessions**
-            - **Time:** Varies (e.g., "0945hrs - 1050hrs (65 mins)")
-            - **Ensure the reference line is added to each topic or activity session.**
-            - **Duration** If the topic is longer than 2 hours, split the session into half sessions with breaks in between depending on available time."
-            - **Instructions Format:**  
-            Instead of a single string, break the session instructions into:
-            - **instruction_title:** e.g., "Topic X: [Topic Title] (K#, A#)"
-            - **bullet_points:** A list containing each bullet point for the topic.
-            
-            **Important:** If there are too few topics to fill the schedule, you are allowed to split the bullet points of a single topic across multiple sessions. In that case, each session should cover a different subset of bullet points, and together they must cover all bullet points for that topic.
-          
-            Example:
+            ### **7. Output JSON Format**
+            The output MUST be a JSON object with a single key "lesson_plan". The value is a list of days. Each day is an object with "Day" (e.g., "Day 1") and "Sessions". "Sessions" is a list of session objects.
+            **Each session object MUST have the following structure and keys:**
             ```json
-            "instruction_title": "Topic 1: Interpretation of a Balance Sheet (A1)",
-            "bullet_points": [
-                "Understanding the different components of a Balance Sheet and where to find value of any business in any Balance Sheet."
-            ],
-            "reference_line": "Refer to some online references in Google Classroom LMS,
+            {{
+                "starttime": "HHMM",       // e.g., "0930", "1300"
+                "endtime": "HHMM",         // e.g., "0945", "1430"
+                "duration": "Xh Ymin",     // e.g., "15min", "1hr", "2hr 30min"
+                "instruction_title": "String",
+                "bullet_points": ["String list"], // Can be empty list []
+                "Instructional_Methods": "String", // e.g., "Lecture, Group Discussion", "Case Study", "N/A"
+                "Resources": "String",
+                "reference_line": "String" // Optional, can be empty ""
+            }}
             ```
-            and
-            ```json
-            "instruction_title": "Topic 1: Interpretation of a Balance Sheet (A1) (Cont.)",
-            "bullet_points": [
-                "Understanding the various types of financial ratios that can be derived from the Balance Sheet"
-            ],
-            "reference_line": "Refer to some online references in Google Classroom LMS,
-            ```
-            
-            Example Output for a single day:
+
+            **Example Snippet for a Day:**
             ```json
                         {{
                 "lesson_plan": [
@@ -330,176 +282,64 @@ async def generate_timetable(context, num_of_days, model_client):
                     "Day": "Day 1",
                     "Sessions": [
                         {{
-                            "Time": "0930hrs - 0935hrs (5 mins)",
+                                "starttime": "0930",
+                                "endtime": "0945",
+                                "duration": "15min",
                             "instruction_title": "Digital Attendance and Introduction to the Course",
-                            "bullet_points": [
-                                "Trainer Introduction",
-                                "Learner Introduction",
-                                "Overview of Course Structure"
-                            ],
+                                "bullet_points": ["Trainer Introduction", "Learner Introduction", "Overview of Course Structure"],
                             "Instructional_Methods": "N/A",
-                            "Resources": "QR Attendance, Attendance Sheet"
+                                "Resources": "QR Attendance, Attendance Sheet",
+                                "reference_line": ""
                         }},
                         {{
-                            "Time": "0935hrs - 1040hrs (65 mins)",
-                            "instruction_title": "Topic 1: Introduction to Digital Humans (K1, A1)",
-                            "bullet_points": [
-                                "Definition and overview of digital humans",
-                                "Key applications in branding and customer service"
-                            ],
-                            "reference_line": "Refer to some online references in Google Classroom LMS,
-                            "Instructional_Methods": "Lecture, Group Discussion",
-                            "Resources": "Slide page 1-5, TV, Whiteboard, Wi-Fi",
+                                "starttime": "0945",
+                                "endtime": "1145",
+                                "duration": "2hr",
+                                "instruction_title": "Digital Attendance (AM) & Topic 1: Identify Conflicts (K1, A1, A6)",
+                                "bullet_points": ["Assess conflict situation", "Causes of conflict (K1)"],
+                                "Instructional_Methods": "Lecture, Group Discussion, Peer Sharing",
+                                "Resources": "QR Attendance, Attendance Sheet, Slide page 1-5, TV, Whiteboard, Wi-Fi, LMS",
+                                "reference_line": "Refer to online references in Google Classroom LMS"
                         }},
                         {{
-                            "Time": "1040hrs - 1140hrs (60 mins)",
-                            "instruction_title": "Activity: Case Studies of Digital Human Applications (K2, A2)",
-                            "bullet_points": [],
-                            "reference_line": "Refer to some case studyies in Google Classroom LMS,
-                            "Instructional_Methods": "Case Study",
-                            "Resources": "N/A"
-                        }},
-                        {{
-                            "Time": "1140hrs - 1200hrs (20 mins)",
-                            "instruction_title": "Activity: Group Discussion on Case Studies",
-                            "bullet_points": [],
-                            "reference_line": "Refer to some online discussion in Google Classroom LMS,
-                            "Instructional_Methods": "Group Discussion",
-                            "Resources": "N/A"
-                        }},
-                        {{
-                            "Time": "1200hrs - 1245hrs (45 mins)",
+                                "starttime": "1145",
+                                "endtime": "1230",
+                                "duration": "45min",
                             "instruction_title": "Lunch Break",
                             "bullet_points": [],
                             "Instructional_Methods": "N/A",
-                            "Resources": "N/A"
+                                "Resources": "N/A",
+                                "reference_line": ""
                         }},
                         {{
-                            "Time": "1245hrs - 1345hrs (60 mins)",
-                            "instruction_title": "Topic 3: Designing Digital Human Interactions (K3, A3)",
-                            "bullet_points": [
-                                "Principles of effective digital human design",
-                                "Tools and platforms overview"
-                            ],
-                            "reference_line": "Refer to some online references in Google Classroom LMS,
-                            "Instructional_Methods": "Lecture, Demonstration",
-                            "Resources": "Digital Attendance (PM), Slide page 11-15, TV, Wi-Fi"
-                        }},
-                        {{
-                            "Time": "1345hrs - 1350hrs (5 mins)",
-                            "instruction_title": "Afternoon Break",
-                            "bullet_points": [],
-                            "Instructional_Methods": "N/A",
-                            "Resources": "N/A"
-                        }},
-                        {{
-                            "Time": "1350hrs - 1520hrs (90 mins)",
-                            "instruction_title": "Topic 4: Hands-on Practice: Creating a Digital Human Scenario (A4)",
-                            "bullet_points": [
-                                "Step-by-step guide to building a digital human scenario",
-                                "Peer feedback and sharing"
-                            ],
-                            "reference_line": "Refer to some online references in Google Classroom LMS,
-                            "Instructional_Methods": "Demonstration, Practice",
-                            "Resources": "Slide page 16-20, TV, Wi-Fi"
-                        }},
-                        {{
-                            "Time": "1520hrs - 1825hrs (185 mins)",
-                            "instruction_title": "Activity: Group Project Work",
-                            "bullet_points": [],
-                            "reference_line": "Refer to some online references in Google Classroom LMS,
-                            "Instructional_Methods": "Practice, Group Discussion",
-                            "Resources": "N/A"
-                        }},
-                        {{
-                            "Time": "1825hrs - 1830hrs (5 mins)",
-                            "instruction_title": "Recap All Contents and Close",
-                            "bullet_points": [
-                                "Summary of key learning points",
-                                "Q&A"
-                            ],
-                            "Instructional_Methods": "Lecture, Group Discussion",
-                            "Resources": "Slide page 21, TV, Whiteboard, Wi-Fi"
-                        }}
-                        // Additional sessions for the day
-                    ]
-                }},
-                // Additional days
-            ]
-        }}
-            ```
-
-            #### **Activity Sessions**
-            - **Duration:** Determined by the associated leftover time after the topic session.
-            - **Must immediately follow the corresponding topic session.**
-            - **Instructions Format:**  
-            - **instruction_title:** e.g., "Activity: Demonstration on [Description]" or "Activity: Case Study on [Description]"
-            - **bullet_points:** ["Bullet point 1", "Bullet point 2", "..."]
-
-            #### **7. Adjustments on Topic Allocation**
-            - **If there are too many topics to fit within {num_of_days} day(s):**
-            - Adjust session durations while ensuring all topics and their bullet points are covered.
-            - **If there are too few topics to fill all timeslots:**
-            - You may split the bullet points of a topic across multiple sessions.
-            - You may add one, and only one, **Recap All Contents and Close** session per day **(if needed for when there is extra time on the assessment day before the assessments)**, placed immediately before the Course Feedback and TRAQOM Survey Timeslot.  
-            **Do not generate multiple Recap sessions.**
-            - This Recap session is a fallback option only when there are insufficient topic sessions; it should not replace the bullet point details of the topic sessions.
-
-            ---
-
-            ### **8. Output Format**
-            The output must strictly follow this JSON structure:
-
-            ```json
-            {{
-                "lesson_plan": [
-                    {{
-                        "Day": "Day X",
-                        "Sessions": [
+                                "starttime": "1230",
+                                "endtime": "1330",
+                                "duration": "1hr",
+                                "instruction_title": "Digital Attendance (PM) & Topic 1: Identify Conflicts (continued)",
+                                "bullet_points": ["Determine ways to validate information and history of conflict (A1)", "Identify the possible causes of conflict (A1)", "Recognise factors and early indicators that give rise to conflicts (A6)"],
+                                "Instructional_Methods": "Lecture, Group Discussion, Peer Sharing",
+                                "Resources": "Digital Attendance (PM), Slide page 1-5, TV, Whiteboard, Wi-Fi, LMS",
+                                "reference_line": "Refer to online references in Google Classroom LMS"
+                            }},
                             {{
-                                "Time": "Start - End (duration)",
-                                "instruction_title": "Session title (e.g., Topic 1: ... or Activity: ...)",
-                                "bullet_points": ["Bullet point 1", "Bullet point 2", "..."],
-                                "reference_line": "Refer to ... in Google Classroom LMS",
-                                "Instructional_Methods": "Method pair",
-                                "Resources": "Required resources"
+                                "starttime": "1330",
+                                "endtime": "1400",
+                                "duration": "30min",
+                                "instruction_title": "Activity: Case studies on Identify Conflicts",
+                                "bullet_points": [],
+                                "Instructional_Methods": "Case Study",
+                                "Resources": "LMS",
+                                "reference_line": "Refer to some online case studies in Google Classroom LMS"
                             }}
-                            // Additional sessions for the day
+                            // ... more sessions ...
                         ]
                     }}
-                    // Additional days
+                    // ... more days ...
                 ]
             }}
             ```
-            All timings must be consecutive without gaps or overlaps.
-            The total number of days in the timetable must match {num_of_days}.
-            
-            ### **9. Google Classroom LMS Reference Line**
-            For each session, add a new field called `"reference_line"` immediately after `"bullet_points"`.  
-            Set its value depending on the instructional method(s) used:
-            - **Lecture:** "Refer to some online references in Google Classroom LMS"
-            - **Case Study:** "Refer to some online case studies in Google Classroom LMS"
-            - **Peer Sharing / Group Discussion:** "Refer to some online discussion in Google Classroom LMS"
-            - **Demonstration / Practice:** "Refer to some online practices in Google Classroom LMS"
-            - **Role Play:** "Generate some roles depending on the LU"
-            - **Activity sessions:** Use the line that matches the instructional method(s) for the activity.
-            - If multiple instructional methods are present, include all relevant lines, separated by a semicolon.
-            - Do **not** add a reference line for sessions where "Instructional_Methods" is "N/A" (e.g., breaks, attendance). In that case, omit the `"reference_line"` field.
-
-            **Example:**
-            ```json
-            {{
-                "instruction_title": "Topic 3: Designing Digital Human Interactions (K3, A3)",
-                "bullet_points": [
-                    "Principles of effective digital human design",
-                    "Tools and platforms overview"
-                ],
-                "reference_line": "Refer to some online references in Google Classroom LMS,
-                "Instructional_Methods": "Lecture, Demonstration",
-                "Resources": "Slide page 11-15, TV, Wi-Fi"
-            }}
-            ```
-            
+            Ensure all timings are consecutive and logical. Calculate `endtime` based on `starttime` and `duration`.
+            Adhere strictly to the 15-minute multiple rule for all `duration` fields.
             """
     )
 

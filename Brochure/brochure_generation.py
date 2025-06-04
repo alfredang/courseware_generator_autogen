@@ -66,20 +66,24 @@ Date:
 
 import re
 import streamlit as st
-from typing import List, Dict
+from typing import List, Dict, Optional
 from pydantic import BaseModel
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaIoBaseUpload
 import time
+import io
 
 # Initialize session state variables
 if 'course_title' not in st.session_state:
     st.session_state['course_title'] = None
 if 'file_url' not in st.session_state:
     st.session_state['file_url'] = None
+if 'pdf_file_url' not in st.session_state:
+    st.session_state['pdf_file_url'] = None
 if 'json_data' not in st.session_state:
     st.session_state['json_data'] = None
 
@@ -111,7 +115,7 @@ class CourseData(BaseModel):
     session_days: str
     duration_hrs: str
     course_details_topics: List[CourseTopic]
-    course_url: str  # Added course_url to match {Course_URL}
+    course_url: str
 
     def to_dict(self):
         return self.dict()
@@ -119,6 +123,7 @@ class CourseData(BaseModel):
 class BrochureResponse(BaseModel):
     course_title: str
     file_url: str
+    pdf_file_url: Optional[str] = None
     error: str = None
     exists: bool = False
 
@@ -314,26 +319,29 @@ def generate_brochure_wrapper(data: CourseData, course_folder_name: str) -> Broc
         if "error" in brochure_info:
             error_message = brochure_info.get("error")
             course_title = brochure_info.get("course_title", data.course_title)
-            return BrochureResponse(course_title=course_title, file_url="", error=error_message)
+            return BrochureResponse(course_title=course_title, file_url="", pdf_file_url=None, error=error_message)
         
         # Handle success case
         course_title = brochure_info.get("course_title")
         shareable_link = brochure_info.get("shareable_link")
+        pdf_shareable_link = brochure_info.get("pdf_shareable_link") # Get PDF link
         
         # Handle existing file case
         if "exists" in brochure_info and brochure_info["exists"]:
             return BrochureResponse(
                 course_title=course_title, 
                 file_url=shareable_link,
+                pdf_file_url=pdf_shareable_link, # Pass PDF link
                 exists=True
             )
         
-        return BrochureResponse(course_title=course_title, file_url=shareable_link)
+        return BrochureResponse(course_title=course_title, file_url=shareable_link, pdf_file_url=pdf_shareable_link) # Pass PDF link
     except Exception as e:
         # Catch any unexpected errors and wrap them in the response
         return BrochureResponse(
             course_title=data.course_title, 
             file_url="", 
+            pdf_file_url=None, # Ensure pdf_file_url is None in case of error
             error=f"Unexpected error in brochure generation: {str(e)}"
         )
 
@@ -667,6 +675,9 @@ def generate_brochure(data: CourseData, course_folder_name: str):
     
     # Check if a brochure already exists in the destination folder
     new_title = f"{data.course_title} Brochure"
+    pdf_title = f"{data.course_title} Brochure.pdf" # PDF title
+    existing_pdf_id = None
+    
     try:
         query = f"name = '{new_title}' and mimeType='application/vnd.google-apps.document' and '{brochure_folder_id}' in parents and trashed = false"
         response = drive_service.files().list(
@@ -680,9 +691,23 @@ def generate_brochure(data: CourseData, course_folder_name: str):
         if existing_files:
             existing_file_id = existing_files[0]['id']
             print(f"Found existing brochure: {new_title} (ID: {existing_file_id})")
+
+            # Also check for existing PDF
+            pdf_query = f"name = '{pdf_title}' and mimeType='application/pdf' and '{brochure_folder_id}' in parents and trashed = false"
+            pdf_response = drive_service.files().list(q=pdf_query, spaces='drive', fields='files(id)', pageSize=1).execute()
+            existing_pdfs = pdf_response.get('files', [])
+            if existing_pdfs:
+                existing_pdf_id = existing_pdfs[0]['id']
+                print(f"Found existing PDF: {pdf_title} (ID: {existing_pdf_id})")
+            else: # If Doc exists but PDF doesn't, try to create PDF
+                print(f"Doc exists, but PDF '{pdf_title}' not found. Attempting to create it.")
+                existing_pdf_id = export_and_upload_pdf(drive_service, existing_file_id, pdf_title, brochure_folder_id)
+
+
             return {
                 "course_title": data.course_title,
                 "shareable_link": f"https://docs.google.com/document/d/{existing_file_id}/edit",
+                "pdf_shareable_link": f"https://drive.google.com/file/d/{existing_pdf_id}/view" if existing_pdf_id else None,
                 "exists": True
             }
     except Exception as e:
@@ -690,6 +715,7 @@ def generate_brochure(data: CourseData, course_folder_name: str):
         # Continue execution even if check fails
     
     # Copy the template to the Brochure folder with a new name - never overwrite existing files
+    new_doc_id = None
     try:
         new_doc_id = copy_template(drive_service, template_id, new_title, brochure_folder_id)
         if not new_doc_id:
@@ -752,19 +778,99 @@ def generate_brochure(data: CourseData, course_folder_name: str):
 
     if not replacements:
         print("No matching placeholders found. Skipping update.")
+        # Still attempt to create PDF for the non-updated document
+        created_pdf_id_no_placeholder = None
+        if new_doc_id:
+             created_pdf_id_no_placeholder = export_and_upload_pdf(drive_service, new_doc_id, pdf_title, brochure_folder_id)
         return {
             "course_title": data_dict.get('course_title', 'Unknown Course Title'),
-            "shareable_link": f"https://docs.google.com/document/d/{new_doc_id}/edit"
+            "shareable_link": f"https://docs.google.com/document/d/{new_doc_id}/edit",
+            "pdf_shareable_link": f"https://drive.google.com/file/d/{created_pdf_id_no_placeholder}/view" if created_pdf_id_no_placeholder else None,
+            "exists": False # It's a newly created document, even if no placeholders were replaced
         }
 
     # Replace placeholders
     replace_placeholders_in_doc(docs_service, new_doc_id, replacements)
     
-    # Return course title and shareable link
+    # Export to PDF and upload
+    created_pdf_id = None 
+    if new_doc_id: # Ensure document was created before trying to export
+        created_pdf_id = export_and_upload_pdf(drive_service, new_doc_id, pdf_title, brochure_folder_id)
+
+    # Return course title and shareable link for the NEWLY CREATED document and PDF
     return {
         "course_title": data_dict.get('course_title', 'Unknown Course Title'),
-        "shareable_link": f"https://docs.google.com/document/d/{new_doc_id}/edit"
+        "shareable_link": f"https://docs.google.com/document/d/{new_doc_id}/edit" if new_doc_id else None,
+        "pdf_shareable_link": f"https://drive.google.com/file/d/{created_pdf_id}/view" if created_pdf_id else None,
+        "exists": False # It's a newly created document
     }
+
+def export_and_upload_pdf(drive_service, document_id: str, pdf_name: str, destination_folder_id: str) -> Optional[str]:
+    """
+    Exports a Google Document to PDF and uploads it to a specified Google Drive folder.
+    If a PDF with the same name exists, it updates its content.
+
+    Args:
+        drive_service: Authorized Google Drive service instance.
+        document_id: The ID of the Google Document to export.
+        pdf_name: The desired name for the uploaded PDF file.
+        destination_folder_id: The ID of the Google Drive folder to upload the PDF to.
+
+    Returns:
+        The file ID of the created/updated PDF, or None if an error occurred.
+    """
+    try:
+        # Export Google Doc as PDF content
+        request = drive_service.files().export_media(fileId=document_id, mimeType='application/pdf')
+        pdf_bytes = request.execute()
+        pdf_content_stream = io.BytesIO(pdf_bytes)
+
+        # Check if PDF with the same name already exists in the destination folder
+        query = f"name = '{pdf_name}' and '{destination_folder_id}' in parents and mimeType='application/pdf' and trashed = false"
+        response = drive_service.files().list(q=query, spaces='drive', fields='files(id, name)', pageSize=1).execute()
+        existing_pdfs = response.get('files', [])
+
+        if existing_pdfs:
+            existing_pdf_id = existing_pdfs[0]['id']
+            print(f"PDF '{pdf_name}' already exists (ID: {existing_pdf_id}). Updating its content.")
+            media_body = MediaIoBaseUpload(pdf_content_stream, mimetype='application/pdf', resumable=True)
+            updated_file = drive_service.files().update(
+                fileId=existing_pdf_id,
+                media_body=media_body,
+                fields='id'
+            ).execute()
+            pdf_id = updated_file.get('id')
+            if pdf_id:
+                print(f"Successfully updated PDF: {pdf_name} (ID: {pdf_id})")
+            else:
+                print(f"Failed to update PDF: {pdf_name}")
+            return pdf_id
+        else:
+            print(f"PDF '{pdf_name}' not found. Creating new PDF.")
+            file_metadata = {
+                'name': pdf_name,
+                'parents': [destination_folder_id],
+                'mimeType': 'application/pdf'
+            }
+            media_body = MediaIoBaseUpload(pdf_content_stream, mimetype='application/pdf', resumable=True)
+            created_pdf = drive_service.files().create(
+                body=file_metadata,
+                media_body=media_body,
+                fields='id'
+            ).execute()
+            pdf_id = created_pdf.get('id')
+            if pdf_id:
+                print(f"Successfully uploaded new PDF: {pdf_name} (ID: {pdf_id}) to folder: {destination_folder_id}")
+            else:
+                print(f"Failed to upload new PDF: {pdf_name}")
+            return pdf_id
+            
+    except HttpError as error:
+        print(f"An error occurred during PDF export/upload: {error.resp.status}, {error._get_reason()}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred during PDF operations: {e}")
+        return None
 
 # Streamlit app
 def app():
@@ -924,13 +1030,18 @@ def app():
             try:
                 with st.spinner("Generating brochure..."):
                     # Convert the dictionary back to a CourseData object
-                    course_data = CourseData(**st.session_state['course_data'])
-                    response = generate_brochure_wrapper(course_data, course_folder_name)
+                    course_data_obj = CourseData(**st.session_state['course_data'])
+                    response = generate_brochure_wrapper(course_data_obj, course_folder_name)
                 
                 # Check if there was an error or if brochure already exists
                 if hasattr(response, 'error') and response.error is not None:
                     st.error(f"Error: {response.error}")
                     return
+                
+                # Set session state with response data
+                st.session_state['course_title'] = response.course_title
+                st.session_state['file_url'] = response.file_url
+                st.session_state['pdf_file_url'] = response.pdf_file_url # Store PDF URL
                     
                 if hasattr(response, 'exists') and response.exists:
                     st.warning(
@@ -938,17 +1049,15 @@ def app():
                         1 WSQ Documents > {course_folder_name} > Brochure
                         
                         The existing file will not be overwritten to prevent data loss.
-                        \n[View existing brochure]({response.file_url})
                         """
                     )
-                    # Still set session state so the "View Brochure" button works
-                    st.session_state['course_title'] = response.course_title
-                    st.session_state['file_url'] = response.file_url
-                    return
-                
-                # Set session state with response data
-                st.session_state['course_title'] = response.course_title
-                st.session_state['file_url'] = response.file_url
+                    # Link to existing Doc
+                    if response.file_url:
+                        st.markdown(f"[View existing Google Doc]({response.file_url})")
+                    # Link to existing PDF (if created/found)
+                    if response.pdf_file_url:
+                        st.markdown(f"[View existing PDF]({response.pdf_file_url})")
+                    return # Stop further processing for existing files
                 
                 st.success(
                     f"""The brochure for the course \"{response.course_title}\" has been successfully generated and saved to:
@@ -969,7 +1078,16 @@ def app():
     if file_url:
         # Display link button for the brochure
         st.link_button(
-            label="View Brochure",
+            label="View Brochure (Google Doc)",
             url=file_url,
             icon=":material/description:"
+        )
+
+    # Safely check if pdf_file_url exists in session state for PDF
+    pdf_file_url = st.session_state.get('pdf_file_url')
+    if pdf_file_url:
+        st.link_button(
+            label="View Brochure (PDF)",
+            url=pdf_file_url,
+            icon=":material/picture_as_pdf:" # Changed icon for PDF
         )

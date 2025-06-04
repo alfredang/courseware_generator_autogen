@@ -105,7 +105,11 @@ import logging
 import json 
 import time
 import asyncio
-from datetime import datetime
+from datetime import datetime, timedelta
+import re
+import copy
+from collections import defaultdict
+
 import streamlit as st
 import urllib.parse
 from selenium import webdriver
@@ -261,481 +265,423 @@ def parse_duration(duration_str):
     return 0
 
 def parse_time(time_str):
-    """Extract time from string like '0935hrs'."""
-    clean_time = re.sub(r'\s*\(.*?\)', '', time_str)
-    start_time_str = clean_time.split('-')[0].strip().replace('hrs', '').strip()
-    return datetime.strptime(start_time_str, '%H%M')
+    """Extract time from string like '0935hrs' or '0935'."""
+    clean_time = re.sub(r'\s*\(.*?\)', '', time_str) # remove (xx mins)
+    time_part = clean_time.split('-')[0].strip().replace('hrs', '').strip()
+    if len(time_part) == 4 and time_part.isdigit():
+        return datetime.strptime(time_part, '%H%M')
+    return None # Should not happen if AI follows format
 
-def format_time(dt):
+def format_time(dt_object):
     """Format datetime object to 'HHMMhrs'."""
-    return dt.strftime('%H%M') + 'hrs'
+    return dt_object.strftime('%H%Mhrs')
 
-def schedule_blockold(day_schedule, session_queue, start_time, end_time):
-    """Schedule sessions within the available time block."""
-    current_time = start_time
-    # Ensure the session queue is not empty and the current time is before the end time
-    while current_time < end_time and session_queue:
-        # Get the first session from the queue and remaining time
-        session = session_queue[0]
-        remaining_time = (end_time - current_time).total_seconds() // 60
-
-        # If the session fits within the remaining time, schedule it
-        # Otherwise, split the session with remaining time
-        if session['duration'] <= remaining_time:
-            session = session_queue.popleft()
-            end_session = current_time + timedelta(minutes=session['duration'])
-        else:
-            partial_session = copy.deepcopy(session)
-            partial_session['duration'] = int(remaining_time)
-            session['duration'] -= int(remaining_time)
-            end_session = current_time + timedelta(minutes=remaining_time)
-            session = partial_session
-
-        session_entry = {
-            'Time': f"{format_time(current_time)} - {format_time(end_session)} ({int((end_session - current_time).total_seconds() // 60)} mins)",
-            'instruction_title': session['title'],
-            'bullet_points': session['bullets'],
-            'Instructional_Methods': session['Instructional_Methods'],
-            'Resources': session['Resources'],
-            'reference_line': session['reference_line']
-        }
-
-        day_schedule['Sessions'].append(session_entry)
-        current_time = end_session
-    return current_time
-
-def schedule_block(day_schedule, session_queue, start_time, end_time):
-    """Schedule sessions within the available time block."""
-    current_time = start_time
-
-    while current_time < end_time and session_queue:
-        session = session_queue[0]
-        remaining_time = (end_time - current_time).total_seconds() // 60
-
-        # Round the duration to multiple of 5 (down)
-        rounded_duration, leftover = round_to_nearest_5(session['duration'], 'down')
-        
-        if rounded_duration <= remaining_time:
-            session = session_queue.popleft()
-            
-            # If there's leftover time, create a mini-session for it
-            if leftover > 0:
-                leftover_session = copy.deepcopy(session)
-                leftover_session['duration'] = leftover
-                session_queue.appendleft(leftover_session)
-            
-            # Use the rounded duration for scheduling
-            session['duration'] = rounded_duration
-            end_session = current_time + timedelta(minutes=rounded_duration)
-        else:
-            # If we can't fit the whole rounded duration
-            deliver_mins = int(remaining_time)
-            # Round down to nearest 5
-            rounded_deliver, leftover_deliver = round_to_nearest_5(deliver_mins, 'down')
-            end_session = current_time + timedelta(minutes=rounded_deliver)
-
-            # Split the session and adjust bullets permanently
-            partial_bullets = session['bullets'][:len(session['bullets']) // 2] if session['bullets'] else []
-            session['bullets'] = session['bullets'][len(partial_bullets):]  # remove delivered bullets from original
-            session['duration'] -= rounded_deliver
-            
-            # If there's leftover time, add it to the remaining session
-            if leftover_deliver > 0:
-                session['duration'] += leftover_deliver
-
-            session_to_add = {
-                'title': session['title'],
-                'duration': rounded_deliver,
-                'bullets': partial_bullets,
-                'Instructional_Methods': session['Instructional_Methods'],
-                'Resources': session['Resources'],
-                'reference_line': session.get('reference_line', '')
-            }
-
-        session_entry = {
-            'Time': f"{format_time(current_time)} - {format_time(end_session)} ({int((end_session - current_time).total_seconds() // 60)} mins)",
-            'instruction_title': session['title'],
-            'bullet_points': session['bullets'],
-            'Instructional_Methods': session['Instructional_Methods'],
-            'Resources': session['Resources'],
-            'reference_line': session.get('reference_line', '')
-        }
-
-        day_schedule['Sessions'].append(session_entry)
-        current_time = end_session
-
-    return current_time
+def format_duration_string(minutes):
+    if not isinstance(minutes, (int, float)) or minutes < 0:
+        return "0min" # Default or error string
+    minutes = int(minutes)
+    hours = minutes // 60
+    mins = minutes % 60
+    if hours > 0 and mins > 0:
+        return f"{hours}hr {mins}min"
+    elif hours > 0:
+        return f"{hours}hr"
+    else:
+        return f"{mins}min"
 
 def fix_lesson_plan_compat(input_data):
-    """
-    Compatibility wrapper for fix_lesson_plan function.
-    
-    Args:
-        input_data: Either a dictionary containing context data or JSON string
-        
-    Returns:
-        Processed lesson plan data
-    """
-    # If input is already a dictionary, pass it directly
-    if isinstance(input_data, dict):
-        return fix_lesson_plan(input_data)
-    
-    # If input is a string, let the original function handle it
-    elif isinstance(input_data, str):
-        return fix_lesson_plan(input_data)
-    
-    # If it's something else, try to convert to dictionary first
-    else:
+    if isinstance(input_data, str):
         try:
-            dict_data = dict(input_data)
-            return fix_lesson_plan(dict_data)
-        except (TypeError, ValueError):
-            raise TypeError(f"Cannot convert input of type {type(input_data)} to dictionary")
+            data = json.loads(input_data)
+        except json.JSONDecodeError:
+            raise ValueError("Invalid JSON input string for fix_lesson_plan_compat")
+    elif isinstance(input_data, dict):
+        data = input_data
+    else:
+        raise TypeError(f"Cannot process input of type {type(input_data)} for fix_lesson_plan_compat. Expected dict or JSON string.")
 
-def fix_lesson_plan(json_input):
-    context = json.loads(json_input) if isinstance(json_input, str) else json_input
-    session_reference_map = {}
+    if 'lesson_plan' in data and 'Learning_Units' in data:
+        return fix_lesson_plan(data) 
+    elif 'lesson_plan' in data: 
+        st.info("fix_lesson_plan_compat: Input seems to be lesson_plan only. LU duration validation will be skipped.")
+        return fix_lesson_plan(data) 
+    elif 'Learning_Units' in data: 
+        st.warning("fix_lesson_plan_compat: Input has Learning_Units but no 'lesson_plan' key. AI might have failed to generate it.")
+        return fix_lesson_plan(data)
+    else:
+        st.error("fix_lesson_plan_compat: Input data does not contain 'lesson_plan' or 'Learning_Units'. Cannot proceed.")
+        return {"lesson_plan": []}
 
-    for day in context.get('lesson_plan', []):
-        for session in day.get('Sessions', []):
-            title = session.get('instruction_title', '').strip()
-            if not title:
-                continue
-            session_reference_map[title] = {
-                'reference_line': session.get('reference_line', 'Refer to some online references in Google Classroom LMS'),
-                'Instructional_Methods': session.get('Instructional_Methods', 'Lecture'),
-                'Resources': session.get('Resources', 'Slide pages, TV, Whiteboard, Wi-Fi')
-            }
 
-    for lu in context['Learning_Units']:
-        lu['duration_mins'] = parse_duration(lu['LU_Duration'])
+def _get_lu_id_from_title(title_str):
+    if not title_str: return None
+    # Look for "LU<number>", "LU <number>", "Learning Unit <number>"
+    # Also try to catch "Topic X of LUY", "Activity for LUY"
+    match = re.search(r'(?:LU|Learning Unit)\s*(\d+)|(?:Topic\s*\w+\s*(?:of|for)?\s*LU(\d+))|(?:Activity\s*(?:for|on)?\s*LU(\d+))', title_str, re.IGNORECASE)
+    if match:
+        # Return the first non-None capturing group
+        return next((g for g in match.groups() if g is not None), None)
+    return None
 
-    session_queue = deque()
+def check_start_end_duration(lesson_plan):
+    """
+    For each session in the lesson plan, check that starttime + duration = endtime.
+    Warn if any mismatch is found.
+    """
+    import streamlit as st
+    from datetime import datetime, timedelta
+    def parse_time_str(t):
+        if not t or len(t) != 4 or not t.isdigit():
+            return None
+        return datetime.strptime(t, "%H%M")
+    def parse_duration_str(d):
+        if not d:
+            return 0
+        d = d.lower()
+        hr = 0
+        mn = 0
+        hr_match = re.search(r"(\d+)hr", d)
+        min_match = re.search(r"(\d+)min", d)
+        if hr_match:
+            hr = int(hr_match.group(1))
+        if min_match:
+            mn = int(min_match.group(1))
+        return hr * 60 + mn
+    for day_idx, day in enumerate(lesson_plan.get('lesson_plan', [])):
+        for session_idx, session in enumerate(day.get('Sessions', [])):
+            start = session.get('starttime')
+            end = session.get('endtime')
+            duration = session.get('duration')
+            if start and end and duration:
+                start_dt = parse_time_str(start)
+                end_dt = parse_time_str(end)
+                dur_min = parse_duration_str(duration)
+                if start_dt and end_dt:
+                    calc_end = start_dt + timedelta(minutes=dur_min)
+                    if calc_end != end_dt:
+                        st.warning(f"Day {day_idx+1}, Session {session_idx+1} ('{session.get('instruction_title','')}'): starttime {start}, duration {duration} => {calc_end.strftime('%H%M')}, but endtime is {end}. Mismatch.")
 
-    for lu in context['Learning_Units']:
-        total_lu_duration = lu['duration_mins']
-        
-        # Round the total LU duration to multiple of 5
-        topic_total_duration, leftover = round_to_nearest_5(int(total_lu_duration * 0.85), 'down')
-        activity_duration = total_lu_duration - topic_total_duration
-        
-        # Ensure activity duration is also a multiple of 5
-        activity_duration, activity_leftover = round_to_nearest_5(activity_duration, 'down')
-        
-        # Add any leftover minutes back to topic duration if needed
-        if activity_leftover > 0:
-            topic_total_duration += activity_leftover
-            
-        topic_duration = topic_total_duration // len(lu['Topics'])
+def fix_lesson_plan(data_input_context):
+    if isinstance(data_input_context, str):
+        try:
+            context = json.loads(data_input_context)
+        except json.JSONDecodeError:
+            st.error("Error: Invalid JSON input to fix_lesson_plan.")
+            return {"lesson_plan": []}
+    elif isinstance(data_input_context, dict):
+        context = data_input_context
+    else:
+        st.error(f"Error: Invalid input type to fix_lesson_plan: {type(data_input_context)}.")
+        return {"lesson_plan": []}
 
-        for topic in lu['Topics']:
-            topic_title = topic['Topic_Title']
-            matching_session = next(
-                (session_reference_map[s]
-                for s in session_reference_map
-                if topic_title.lower() in s.lower()),
-                {
-                    'reference_line': 'Refer to some online references in Google Classroom LMS',
-                    'Instructional_Methods': 'Lecture, Didactic Questioning',
-                    'Resources': 'Slide pages, TV, Whiteboard, Wi-Fi'
-                }
-            )
+    if 'lesson_plan' in context and isinstance(context.get('lesson_plan'), list):
+        processed_lesson_plan = {"lesson_plan": copy.deepcopy(context['lesson_plan'])}
+    elif isinstance(context, list) and all(isinstance(d, dict) and "Day" in d and "Sessions" in d for d in context):
+        st.info("Interpreting input 'context' directly as the list of lesson plan days, as 'lesson_plan' key was missing or invalid.")
+        processed_lesson_plan = {"lesson_plan": copy.deepcopy(context)}
+    else:
+        st.error("Critical Error: Lesson plan structure is missing, malformed, or input 'context' is not a valid fallback.")
+        return {"lesson_plan": []}
 
-            session_queue.append({
-                'type': 'topic',
-                'title': topic_title,
-                'duration': topic_duration,
-                'bullets': topic['Bullet_Points'],
-                'Instructional_Methods': matching_session['Instructional_Methods'],
-                'Resources': matching_session['Resources'],
-                'reference_line': matching_session['reference_line']
-            })
-
-        activity_title = f"Activity:"
-        matching_activity = next(
-            (session_reference_map[s]
-            for s in session_reference_map
-            if activity_title.lower() in s.lower()),
-            {
-                'reference_line': 'Refer to some online practices in Google Classroom LMS',
-                'Instructional_Methods': 'Demonstration, Practical Performance Practice',
-                'Resources': 'Slide pages, TV, Wi-Fi'
-            }
-        )
-        activity_title = f"Activity: {lu['LU_Title']}"
-
-        session_queue.append({
-            'type': 'activity',
-            'title': activity_title,
-            'duration': activity_duration,
-            'bullets': [],
-            'Instructional_Methods': matching_activity['Instructional_Methods'],
-            'Resources': matching_activity['Resources'],
-            'reference_line': matching_activity['reference_line']
-        })
-
-    days = []
-    current_date = datetime.strptime(context['Date'], '%d %b %Y')
-    day_count = 1
-
-    while session_queue or (not days and not session_queue):
-        day_schedule = {'Day': f"Day {day_count}", 'Sessions': []}
-        is_first_day = (day_count == 1)
-        day_count += 1
-
-        if is_first_day:
-            day_schedule['Sessions'].append({
-                'Time': '0930hrs - 0945hrs (15 mins)',
-                'instruction_title': 'Digital Attendance and Introduction to the Course',
-                'bullet_points': ['Trainer Introduction', 'Learner Introduction', 'Overview of Course Structure'],
-                'Instructional_Methods': 'N/A',
-                'Resources': 'QR Attendance, Attendance Sheet',
-                'reference_line': ''
-            })
-            morning_start = parse_time('0945')
-        else:
-            day_schedule['Sessions'].append({
-                'Time': '0930hrs - 0940hrs (10 mins)',
-                'instruction_title': 'Digital Attendance (AM)',
-                'bullet_points': [],
-                'Instructional_Methods': 'N/A',
-                'Resources': 'QR Attendance, Attendance Sheet',
-                'reference_line': ''
-            })
-            morning_start = parse_time('0940')
-
-        # Schedule morning block with 5-minute rounding
-        current_time = schedule_block(day_schedule, session_queue, morning_start, parse_time('1200'))
-
-        # Add lunch break
-        day_schedule['Sessions'].append({
-            'Time': '1200hrs - 1245hrs (45 mins)',
-            'instruction_title': 'Lunch Break',
-            'bullet_points': [],
-            'Instructional_Methods': 'N/A',
-            'Resources': 'N/A',
-            'reference_line': ''
-        })
-
-        # Schedule afternoon block
-        post_lunch_start = parse_time('1245')
-        post_lunch_end = parse_time('1825')
-        current_time = post_lunch_start
-        tea_break_inserted = False
-        post_lunch_session_count = 0
-
-        while current_time < post_lunch_end and session_queue:
-            session = session_queue[0]
-            remaining_time = (post_lunch_end - current_time).total_seconds() // 60
-
-            duration_to_use = session['duration']
-            deduct_5_min = False
-
-            # Insert tea break after first afternoon session if it's long enough
-            if not tea_break_inserted and post_lunch_session_count >= 1 and session['duration'] > 5:
-                deduct_5_min = True
-                duration_to_use -= 5
-            
-            # Round duration to multiple of 5
-            rounded_duration, leftover = round_to_nearest_5(duration_to_use, 'down')
-            
-            if rounded_duration <= remaining_time:
-                session = session_queue.popleft()
-                
-                # If there's leftover time, create a mini-session for it
-                if leftover > 0:
-                    leftover_session = copy.deepcopy(session)
-                    leftover_session['duration'] = leftover
-                    session_queue.appendleft(leftover_session)
-                
-                # Use the rounded duration
-                session_duration = rounded_duration
-                end_session = current_time + timedelta(minutes=session_duration)
+    # --- Robustness Checks Setup ---
+    learning_units_data = context.get('Learning_Units')
+    lu_target_durations = {}
+    if learning_units_data and isinstance(learning_units_data, list):
+        for lu_item in learning_units_data:
+            lu_title_from_manifest = lu_item.get('LU_Title')
+            lu_id_from_manifest = _get_lu_id_from_title(lu_title_from_manifest)
+            if lu_id_from_manifest:
+                lu_target_durations[lu_id_from_manifest] = parse_duration(lu_item.get('LU_Duration', "0min"))
             else:
-                # If we can't fit the whole rounded duration
-                deliver_mins = int(remaining_time)
-                # Round down to nearest 5
-                rounded_deliver, leftover_deliver = round_to_nearest_5(deliver_mins, 'down')
-                end_session = current_time + timedelta(minutes=rounded_deliver)
-                
-                # Split the session
-                partial_session = copy.deepcopy(session)
-                partial_session['duration'] = rounded_deliver
-                
-                # Split bullets if any
-                if session['bullets']:
-                    bullet_count = len(session['bullets'])
-                    partial_bullets_count = max(1, int(bullet_count * rounded_deliver / session['duration']))
-                    partial_session['bullets'] = session['bullets'][:partial_bullets_count]
-                    session['bullets'] = session['bullets'][partial_bullets_count:]
-                
-                # Adjust original session duration
-                session['duration'] -= rounded_deliver
-                
-                # Use partial session for scheduling
-                session_duration = rounded_deliver
+                st.warning(f"Could not parse LU ID from Learning_Units manifest item: '{lu_title_from_manifest}'. This LU cannot be duration-checked.")
+    else:
+        st.warning("fix_lesson_plan: 'Learning_Units' not found in context or is not a list. LU duration adherence check will be skipped.")
 
-            day_schedule['Sessions'].append({
-                'Time': f"{format_time(current_time)} - {format_time(end_session)} ({session_duration} mins)",
-                'instruction_title': session['title'] if 'title' in locals() else partial_session['title'],
-                'bullet_points': session['bullets'] if 'title' in locals() else partial_session['bullets'],
-                'Instructional_Methods': session['Instructional_Methods'] if 'title' in locals() else partial_session['Instructional_Methods'],
-                'Resources': session['Resources'] if 'title' in locals() else partial_session['Resources'],
-                'reference_line': session.get('reference_line', '') if 'title' in locals() else partial_session.get('reference_line', '')
-            })
-
-            current_time = end_session
-            post_lunch_session_count += 1
-
-            # Insert tea break if needed
-            if deduct_5_min:
-                tea_break_end = current_time + timedelta(minutes=5)
-                day_schedule['Sessions'].append({
-                    'Time': f"{format_time(current_time)} - {format_time(tea_break_end)} (5 mins)",
-                    'instruction_title': 'Tea Break',
-                    'bullet_points': [],
-                    'Instructional_Methods': 'N/A',
-                    'Resources': 'Refreshments',
-                    'reference_line': ''
-                })
-                current_time = tea_break_end
-                tea_break_inserted = True
-
-        is_last_lu_day = not session_queue
-
-        if not is_last_lu_day:
-            # Add recap for regular days
-            day_schedule['Sessions'].append({
-                'Time': '1825hrs - 1830hrs (5 mins)',
-                'instruction_title': 'Recap All Contents and Close',
-                'bullet_points': ['Summary of key learning points', 'Q&A'],
-                'Instructional_Methods': 'Classroom Didactic Questioning, Practical Performance (PP)',
-                'Resources': 'Slide pages, TV, Whiteboard, Wi-Fi',
-                'reference_line': ''
-            })
-        else:
-            # Handle last day - add TRAQOM and assessments
+    lu_actual_durations = defaultdict(int)
+    forbidden_activity_ims = ["lecture", "group discussion", "peer sharing"]
+    
+    # --- Main Processing Loop with Robustness Checks ---
+    for day_idx, day_schedule in enumerate(processed_lesson_plan.get('lesson_plan', [])):
+        current_time_dt = None
+        lunch_occurred_today = False
+        
+        for session_idx, session in enumerate(day_schedule.get('Sessions', [])):
+            title = session.get('instruction_title', '')
+            title_lower = title.lower()
+            instructional_methods_str = session.get('Instructional_Methods', '').lower()
+            resources_str = session.get('Resources', '').lower()
+            # Get original case for reference_line for accurate heuristic checks if needed
+            reference_line_original = session.get('reference_line', '') 
+            reference_line_lower = reference_line_original.lower()
+            bullet_points = session.get('bullet_points', [])
+            start_str = session.get('starttime')
+            duration_str = session.get('duration')
             
-            # Deduct 5 mins from final LU session for TRAQOM
-            last_session = None
-            for session in reversed(day_schedule['Sessions']):
-                if "instruction_title" in session and "Recap" not in session["instruction_title"] and "Break" not in session["instruction_title"]:
-                    last_session = session
-                    break
+            session_duration_minutes = 0
+            if duration_str:
+                hours = 0; minutes_val = 0
+                hr_match = re.search(r'(\d+)hr', duration_str)
+                min_match = re.search(r'(\d+)min', duration_str)
+                if hr_match: hours = int(hr_match.group(1))
+                if min_match: minutes_val = int(min_match.group(1))
+                session_duration_minutes = (hours * 60) + minutes_val
+            elif start_str and session.get('endtime'):
+                start_dt_temp = parse_time(start_str)
+                end_dt_temp = parse_time(session.get('endtime'))
+                if start_dt_temp and end_dt_temp:
+                    session_duration_minutes = int((end_dt_temp - start_dt_temp).total_seconds() // 60)
+            
+            if session_duration_minutes == 0 and not any(keyword in title_lower for keyword in ['break', 'attendance', 'introduction', 'course overview', 'feedback', 'traqom', 'assessment']):
+                 st.warning(f"Day {day_idx+1}, Session {session_idx+1} ('{title}') has 0 duration or invalid time fields, and is not a typical non-timed event.")
 
-            if last_session:
-                time_range = last_session['Time']
-                match = re.match(r'(\d{4})hrs - (\d{4})hrs \((\d+)\s+mins\)', time_range)
-                if match:
-                    start_str, end_str, duration_str = match.groups()
-                    new_end = parse_time(end_str) - timedelta(minutes=5)
-                    new_duration = int(duration_str) - 5
-                    last_session['Time'] = f"{start_str}hrs - {format_time(new_end)} ({new_duration} mins)"
+            is_tea_break = 'tea break' in title_lower
+            if not is_tea_break and session_duration_minutes % 15 != 0:
+                st.warning(f"Day {day_idx+1}, Session '{title}' duration {session_duration_minutes}m is not a multiple of 15.")
+            if is_tea_break and session_duration_minutes != 10:
+                 st.warning(f"Day {day_idx+1}, Tea Break duration is {session_duration_minutes}m, expected 10m.")
 
-                    # Insert TRAQOM
-                    tea_break_end = new_end + timedelta(minutes=5)
-                    day_schedule['Sessions'].append({
-                        'Time': f"{format_time(new_end)} - {format_time(tea_break_end)} (5 mins)",
-                        'instruction_title': 'Course Feedback and TRAQOM Survey',
-                        'bullet_points': [],
-                        'Instructional_Methods': 'N/A',
-                        'Resources': 'Feedback Forms, Survey Links',
-                        'reference_line': ''
-                    })
-                    current_time = tea_break_end
+            start_dt = None # Define start_dt here for broader scope within session loop
+            if start_str:
+                start_dt = parse_time(start_str)
+                if start_dt:
+                    if current_time_dt and start_dt != current_time_dt:
+                        st.warning(f"Day {day_idx+1}, Session '{title}': Start time {start_str} does not match previous end time {format_time(current_time_dt)}.")
+                    calculated_end_dt = start_dt + timedelta(minutes=session_duration_minutes)
+                    session['starttime'] = start_dt.strftime('%H%M')
+                    session['endtime'] = calculated_end_dt.strftime('%H%M')
+                    session['duration'] = format_duration_string(session_duration_minutes)
+                    current_time_dt = calculated_end_dt
+                else:
+                    st.warning(f"Day {day_idx+1}, Session '{title}': Invalid starttime format '{start_str}'.")
+                    current_time_dt = None
+            elif current_time_dt:
+                st.warning(f"Day {day_idx+1}, Session '{title}': Missing starttime. Inferring from previous session.")
+                start_dt = current_time_dt
+                session['starttime'] = current_time_dt.strftime('%H%M')
+                calculated_end_dt = current_time_dt + timedelta(minutes=session_duration_minutes)
+                session['endtime'] = calculated_end_dt.strftime('%H%M')
+                session['duration'] = format_duration_string(session_duration_minutes)
+                current_time_dt = calculated_end_dt
+            else:
+                st.error(f"Day {day_idx+1}, Session '{title}': Missing starttime and no previous time to infer from.")
+                current_time_dt = None
+            
+            if not isinstance(session.get('bullet_points'), list):
+                session['bullet_points'] = []
+            if 'reference_line' not in session:
+                session['reference_line'] = ""
 
-            # Schedule assessments in available time
-            total_assessment_time = sum(parse_duration(method['Total_Delivery_Hours']) for method in context['Assessment_Methods_Details'])
-            available_time = (parse_time('1830') - current_time).total_seconds() / 60
-            time_ratio = min(1, available_time / total_assessment_time) if total_assessment_time > 0 else 1
+            # --- Start of Specific Robustness Checks for this session ---
+            lu_id_for_session = _get_lu_id_from_title(title)
+            is_content_session = not any(keyword in title_lower for keyword in ['break', 'assessment', 'feedback', 'traqom', 'attendance', 'introduction', 'course overview'])
+            if lu_id_for_session and is_content_session:
+                lu_actual_durations[lu_id_for_session] += session_duration_minutes
+            elif not lu_id_for_session and is_content_session and not title_lower.startswith('activity:'):
+                st.warning(f"Day {day_idx+1}, Session '{title}' seems like LU content but LU ID could not be parsed from title.")
 
-            for method in context['Assessment_Methods_Details']:
-                duration = parse_duration(method['Total_Delivery_Hours']) * time_ratio
-                if current_time >= parse_time('1830'):
-                    break
-                    
-                # Round assessment duration to multiple of 5
-                rounded_duration, leftover = round_to_nearest_5(duration, 'down')
-                end_time = min(current_time + timedelta(minutes=rounded_duration), parse_time('1830'))
-                session_duration = int((end_time - current_time).total_seconds() / 60)
-                
-                day_schedule['Sessions'].append({
-                    'Time': f"{format_time(current_time)} - {format_time(end_time)} ({session_duration} mins)",
-                    'instruction_title': "Final Assessment: " + method['Assessment_Method'],
-                    'bullet_points': [],
-                    'Instructional_Methods': 'Assessment',
-                    'Resources': 'Assessment Plan',
-                    'reference_line': ''
-                })
-                current_time = end_time
+            if title_lower.startswith('activity:'):
+                for forbidden_im in forbidden_activity_ims:
+                    if forbidden_im in instructional_methods_str:
+                        st.warning(f"Day {day_idx+1}, Activity '{title}' uses forbidden IM: '{instructional_methods_str}'.")
+                        break
 
-            # Adjust final session if needed
-            if current_time < parse_time('1830') and day_schedule['Sessions']:
-                last_session = day_schedule['Sessions'][-1]
-                start_str = last_session['Time'].split(' - ')[0]
-                start_time = parse_time(start_str.replace('hrs', ''))
-                duration_mins = int((parse_time('1830') - start_time).total_seconds() / 60)
-                last_session['Time'] = f"{format_time(start_time)} - 1830hrs ({duration_mins} mins)"
+            if day_idx == 0 and session_idx == 0:
+                if "digital attendance and introduction to the course" not in title_lower:
+                    st.warning(f"Day 1, Session 1: Title should be 'Digital Attendance and Introduction to the Course', got '{title}'.")
+                if session_duration_minutes != 15:
+                    st.warning(f"Day 1, Session 1: Duration should be 15 mins, got {session_duration_minutes}m.")
+                if "qr attendance" not in resources_str or "attendance sheet" not in resources_str:
+                    st.warning(f"Day 1, Session 1: Missing 'QR Attendance' or 'Attendance Sheet' in resources ('{session.get('Resources')}').")
+                if not any("trainer introduction" in bp.lower() for bp in bullet_points) or \
+                   not any("learner introduction" in bp.lower() for bp in bullet_points) or \
+                   not any("overview of course structure" in bp.lower() for bp in bullet_points):
+                    st.warning(f"Day 1, Session 1: Missing one or more required bullet points (Trainer/Learner Intro, Overview).")
+            else:
+                is_am_attendance_topic = title_lower.startswith("digital attendance (am) & topic")
+                is_pm_attendance_topic = title_lower.startswith("digital attendance (pm) & topic")
+                if is_am_attendance_topic and ("qr attendance" not in resources_str or "attendance sheet" not in resources_str):
+                    st.warning(f"Day {day_idx+1}, Session '{title}': AM attendance topic missing 'QR Attendance' or 'Attendance Sheet' in resources.")
+                if is_pm_attendance_topic and "digital attendance (pm)" not in resources_str:
+                    st.warning(f"Day {day_idx+1}, Session '{title}': PM attendance topic missing 'Digital Attendance (PM)' in resources.")
 
-        days.append(day_schedule)
-        current_date += timedelta(days=1)
+            if is_content_session:
+                if "lecture" in instructional_methods_str and "refer to online references" not in reference_line_lower:
+                    st.warning(f"Day {day_idx+1}, Session '{title}': Lecture session has unusual reference line: '{reference_line_original}'.")
+                if "case study" in instructional_methods_str and "refer to some online case stud" not in reference_line_lower:
+                    st.warning(f"Day {day_idx+1}, Session '{title}': Case Study session has unusual reference line: '{reference_line_original}'.")
 
-    return {'lesson_plan': days}
+            if title_lower == 'lunch break':
+                lunch_occurred_today = True
+                if start_dt:
+                    if not (datetime.strptime("11:30", "%H:%M").time() <= start_dt.time() <= datetime.strptime("13:00", "%H:%M").time()):
+                        st.warning(f"Day {day_idx+1}, Lunch Break at {start_dt.strftime('%H%M')} is outside the 11:30-13:00 window.")
+
+            if is_tea_break and not lunch_occurred_today:
+                st.warning(f"Day {day_idx+1}, Tea Break ('{title}') scheduled before Lunch.")
+
+            if "recap all contents and close" in title_lower:
+                st.warning(f"Day {day_idx+1}, Session '{title}' is a Recap session, which should be removed as per requirements.")
+        
+    # --- End of All Days Robustness Checks (LU Duration and Feedback/TRAQOM) ---
+    if lu_target_durations: 
+        for lu_id, target_duration in lu_target_durations.items():
+            actual_duration = lu_actual_durations.get(lu_id, 0)
+            if actual_duration != target_duration:
+                st.warning(f"LU {lu_id}: Target duration {format_duration_string(target_duration)} ({target_duration}m), but actual summed duration for topics/activities is {format_duration_string(actual_duration)} ({actual_duration}m). Mismatch of {format_duration_string(target_duration - actual_duration)}.")
+        for lu_id, actual_duration in lu_actual_durations.items():
+            if lu_id not in lu_target_durations:
+                st.warning(f"Found sessions potentially for LU ID '{lu_id}' (total {format_duration_string(actual_duration)}m from topics/activities) but this LU ID was not found in the Learning_Units manifest for duration checking.")
+    
+    if processed_lesson_plan.get('lesson_plan') and len(processed_lesson_plan['lesson_plan']) > 0:
+        last_day_sessions = processed_lesson_plan['lesson_plan'][-1].get('Sessions', [])
+        if last_day_sessions:
+            assessment_session_indices = [i for i, s in enumerate(last_day_sessions) if "final assessment" in s.get('instruction_title','').lower()]
+            if assessment_session_indices:
+                first_assessment_idx = min(assessment_session_indices)
+                if first_assessment_idx > 0:
+                    session_before_assessment = last_day_sessions[first_assessment_idx - 1]
+                    sba_title_lower = session_before_assessment.get('instruction_title','').lower()
+                    sba_res_lower = session_before_assessment.get('Resources','').lower()
+                    is_activity = sba_title_lower.startswith("activity:")
+                    has_feedback_keywords = "course feedback" in sba_title_lower or "traqom survey" in sba_title_lower
+                    has_feedback_res = "feedback forms" in sba_res_lower or "survey links" in sba_res_lower
+                    if not (is_activity and has_feedback_keywords and has_feedback_res):
+                        st.warning(f"Last Day: Session before assessments ('{session_before_assessment.get('instruction_title')}') does not seem to be the correctly merged Feedback/TRAQOM activity. Title: '{sba_title_lower}', Resources: '{sba_res_lower}'.")
+            else:
+                     st.warning("Last Day: Final assessment is the first session. No preceding activity for Feedback/TRAQOM found.")
+        else: 
+                st.info("Last Day: No sessions titled 'Final Assessment' found to check TRAQOM merging against.")
+
+    final_plan_structure = copy.deepcopy(processed_lesson_plan)
+    if 'Learning_Units' not in final_plan_structure and 'Learning_Units' in context:
+        final_plan_structure['Learning_Units'] = context['Learning_Units']
+
+    final_plan_structure = renameactivity(final_plan_structure)
+    final_plan_structure = postprocess_resources(final_plan_structure)
+    # --- Check starttime + duration = endtime for all sessions ---
+    check_start_end_duration(final_plan_structure)
+    return final_plan_structure
 
 def parse_time_range(time_str):
     """
-    Parse a string like '0930hrs - 0935hrs (5 mins)' into:
+    Parse a string like '0930hrs - 0935hrs (5 mins)' or '0930 - 0935 (5min)' into:
     - start time (as '0930'),
     - end time (as '0935'),
     - duration (as 'Xh Ymin' formatted string).
+    Handles variations in 'hrs' and 'min' text.
     """
-    match = re.match(r'(\d{4})hrs\s*-\s*(\d{4})hrs\s*\((\d+)\s+mins\)', time_str)
+    # Regex to capture HHMM, HHMM, and duration (e.g., "5 mins", "1 hr", "2hr 30min")
+    # Making "hrs" and space around hyphen optional, and duration flexible
+    match = re.match(r'(\d{4})(?:hrs)?\s*-\s*(\d{4})(?:hrs)?\s*\((\d+)\s*(?:min|hr|mins|hrs)(?:\s+\d+\s*(?:min|mins))?\)', time_str, re.IGNORECASE)
+    
     if not match:
         return None, None, None
 
-    start_str, end_str, duration_str = match.groups()
+    start_str, end_str, duration_full_str = match.groups()
     starttime = start_str
     endtime = end_str
-    duration_mins = int(duration_str)
-    hours = duration_mins // 60
-    minutes = duration_mins % 60
+    
+    # Convert duration_full_str to minutes first
+    duration_total_minutes = 0
+    hours_match = re.search(r'(\d+)\s*(?:hr|hrs)', duration_full_str, re.IGNORECASE)
+    if hours_match:
+        duration_total_minutes += int(hours_match.group(1)) * 60
+    
+    mins_match = re.search(r'(\d+)\s*(?:min|mins)', duration_full_str, re.IGNORECASE)
+    if mins_match:
+        # If "hr" was also present, this regex might pick up the minutes part of "Xhr Ymin"
+        # We need to be careful not to double count if the pattern is like "1hr 30min"
+        # A simple way:
+        temp_str_for_min = duration_full_str
+        if hours_match: # if hours were found, remove them from string before searching for mins
+            temp_str_for_min = re.sub(r'(\d+)\s*(?:hr|hrs)', '', temp_str_for_min, flags=re.IGNORECASE).strip()
+        
+        # Re-run minute match on the potentially modified string
+        mins_match_refined = re.search(r'(\d+)\s*(?:min|mins)', temp_str_for_min, re.IGNORECASE)
+        if mins_match_refined:
+            duration_total_minutes += int(mins_match_refined.group(1))
+        elif not hours_match and mins_match: # Only mins were in the original string
+             duration_total_minutes += int(mins_match.group(1))
 
-    if hours and minutes:
-        duration_formatted = f"{hours}h {minutes}min"
-    elif hours:
-        duration_formatted = f"{hours}h"
-    else:
-        duration_formatted = f"{minutes}min"
+
+    # Format duration_total_minutes into "Xh Ymin"
+    duration_formatted = format_duration_string(duration_total_minutes)
 
     return starttime, endtime, duration_formatted
 
 def addstartendduration(data):
+    """
+    Processes lesson plan data to add 'starttime', 'endtime', and 'duration' (formatted string)
+    to each session, derived from the 'Time' field.
+    The 'Time' field is then removed.
+    This function is kept for now if the AI *still* outputs the old "Time" field format,
+    but the new fix_lesson_plan tries to handle direct starttime/endtime/duration from AI.
+    """
+    if 'lesson_plan' not in data or not data['lesson_plan']:
+        st.warning("addstartendduration: 'lesson_plan' is missing or empty. Skipping.")
+        return data
+
     for day in data['lesson_plan']:
+        if 'Sessions' not in day or not day['Sessions']:
+            continue
         for session in day['Sessions']:
-            start, end, duration = parse_time_range(session['Time'])
-            session['starttime'] = start
-            session['endtime'] = end
-            session['duration'] = duration
-            del session['Time']  # Remove original Time field
+            if 'Time' in session and session['Time']:
+                start, end, duration_str = parse_time_range(session['Time'])
+                if start and end and duration_str:
+                    session['starttime'] = start
+                    session['endtime'] = end
+                    session['duration'] = duration_str
+                    del session['Time']
+                else:
+                    st.warning(f"Could not parse Time string: {session['Time']}. Session title: {session.get('instruction_title')}")
+                    session['starttime'] = session.get('starttime', '')
+                    session['endtime'] = session.get('endtime', '')
+                    session['duration'] = session.get('duration', '')
+            elif not all(k in session for k in ['starttime', 'endtime', 'duration']):
+                st.warning(f"Session missing starttime/endtime/duration and no 'Time' field to parse. Session: {session.get('instruction_title')}")
     return data
 
 def renameactivity(lesson_plan_data):
+    # Create a mapping of Learning Unit numbers to their instructional methods
+    lu_instructional_methods = {}
+    
+    # Extract instructional methods from Learning Units
+    for lu in lesson_plan_data.get('Learning_Units', []):
+        lu_title = lu.get('LU_Title', '')
+        # Extract LU number (e.g., "LU1" from "LU1: Identify Conflicts")
+        lu_match = re.match(r'LU(\d+):', lu_title)
+        if lu_match:
+            lu_number = lu_match.group(1)
+            # Get instructional methods and join them with ", "
+            methods = lu.get('Instructional_Methods', [])
+            if isinstance(methods, list):
+                lu_instructional_methods[lu_number] = ", ".join(methods)
+            else:
+                lu_instructional_methods[lu_number] = methods
+    
+    # Process each day and session
     for day in lesson_plan_data['lesson_plan']:
         for session in day['Sessions']:
             title = session.get('instruction_title', '')
+            
             # Check if the title starts with 'Activity: LUx:'
-            match = re.match(r'(Activity: )LU\d+:(.*)', title)
+            match = re.match(r'(Activity: )LU(\d+):(.*)', title)
             if match:
-                prefix, rest = match.groups()
-                instr_methods = session.get('Instructional_Methods', '').strip()
-                # If Instructional_Methods is 'N/A' or empty, just remove LUx: part
+                prefix, lu_number, rest = match.groups()
+                
+                # Get instructional methods from the corresponding Learning Unit
+                instr_methods = lu_instructional_methods.get(lu_number, '')
+                
+                # If we have valid instructional methods, use them
                 if instr_methods and instr_methods.upper() != 'N/A':
                     # Replace LUx with Instructional Methods + " on"
                     new_title = f"{prefix}{instr_methods} on{rest}"
                 else:
                     # If no valid Instructional Methods, just remove LUx: and keep the rest
                     new_title = f"{prefix}{rest}"
+                
                 session['instruction_title'] = new_title.strip()
+    
     return lesson_plan_data
 
 def postprocess_resources(lesson_plan_data):

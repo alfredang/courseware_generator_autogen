@@ -38,6 +38,86 @@ def get_section_key(text):
         return section, key, close[0]
     return None, None, None
 
+def _is_likely_learning_unit_table(header_row):
+    """Checks if the header row suggests it's a learning unit table."""
+    if not header_row:
+        return False
+    actual_headers = {str(h).strip().lower() for h in header_row}
+    
+    # Check for essential headers (case-insensitive)
+    # Based on example: "LU#", "Learning Unit Title", "LO#", "Topic (T#: Topic title)", "K&A"
+    has_lu = "lu#" in actual_headers
+    has_ka = "k&a" in actual_headers
+    has_topic_col = any("topic" in h for h in actual_headers) # "topic (t#: topic title)"
+    
+    return has_lu and has_ka and has_topic_col
+
+def _process_multiline_ka_in_table(raw_rows):
+    """
+    Processes a table assumed to be a learning unit table.
+    If a K&A cell contains multiple K&A items (e.g., separated by newlines, commas, semicolons),
+    it splits them into separate rows, keeping other cell data consistent.
+    """
+    if not raw_rows or len(raw_rows) < 1: # Should have at least a header
+        return raw_rows
+
+    header = raw_rows[0]
+    
+    try:
+        ka_col_idx = -1
+        # Find K&A column index (case-insensitive for robustness)
+        for i, h_text in enumerate(header):
+            if str(h_text).strip().lower() == "k&a":
+                ka_col_idx = i
+                break
+        if ka_col_idx == -1: 
+            return raw_rows 
+    except IndexError: 
+        return raw_rows
+
+    processed_rows = [header]
+
+    for data_row_idx in range(1, len(raw_rows)):
+        data_row = raw_rows[data_row_idx]
+
+        if len(data_row) <= ka_col_idx:
+            processed_rows.append(data_row)
+            continue
+
+        ka_cell_content = str(data_row[ka_col_idx]).strip()
+        
+        individual_kas = re.split(r'[\\s]*[\\n,;][\\s]*', ka_cell_content)
+        individual_kas = [ka.strip() for ka in individual_kas if ka.strip()]
+
+        if not individual_kas:
+            new_row = list(data_row)
+            new_row[ka_col_idx] = "" 
+            processed_rows.append(new_row)
+        elif len(individual_kas) == 1 and individual_kas[0] == ka_cell_content:
+            # Content was already a single, clean K&A item or no delimiters were present
+            processed_rows.append(data_row)
+        else:
+            # Multiple K&A items found, or content needed cleaning/splitting.
+            # For each K&A item, create a new row using a fresh copy of the original data_row
+            # to ensure all other cell values are preserved correctly.
+            for ka_item in individual_kas:
+                new_row = list(data_row) # Fresh copy of the original row
+                new_row[ka_col_idx] = ka_item # Update only the K&A cell
+                processed_rows.append(new_row)
+    return processed_rows
+
+# Modify the existing parse_table function
+def parse_table(table): # 'table' is a docx.table.Table object
+    rows = []
+    for row in table.rows:
+        cells = [cell.text.strip() for cell in row.cells]
+        rows.append(cells)
+
+    if rows and _is_likely_learning_unit_table(rows[0]):
+        return _process_multiline_ka_in_table(rows)
+    
+    return rows
+
 def parse_document(input_docx, output_json):
     # Load the document
     doc = Document(input_docx)
@@ -83,6 +163,7 @@ def parse_document(input_docx, output_json):
     for header_key_init, (section_init, sub_key_init) in SECTION_HEADERS.items():
         if section_init == "Course Information" and sub_key_init:
             if sub_key_init not in data.get("Course Information", {}):
+                 if "Course Information" not in data: data["Course Information"] = {}
                  data["Course Information"][sub_key_init] = ""
 
     # Function to parse tables
@@ -111,8 +192,8 @@ def parse_document(input_docx, output_json):
                  data[section_name]["content"].append(content)
             elif isinstance(content, str) and content not in data[section_name]["content"]:
                 data[section_name]["content"].append(content)
-            elif not isinstance(content, str): # For non-string, non-table content, append directly (could be other dicts)
-                data[section_name]["content"].append(content)
+            elif not isinstance(content, str) and not (isinstance(content, dict) and "table" in content): 
+                data[section_name]["content"].append(content) # For other dicts or non-string, non-table
 
     # Function to detect bullet points using regex
     def is_bullet_point(text):
@@ -151,7 +232,7 @@ def parse_document(input_docx, output_json):
                 
             # Extract method name and hours
             # Pattern matches both parentheses format and other formats
-            hours_match = re.search(r'(.*?)(?:\s*\((\d+(?:\.\d+)?)\s*hr?s?\)|\s+(\d+(?:\.\d+)?)\s*hr?s?$)', method, re.IGNORECASE)
+            hours_match = re.search(r'(.*?)(?:\s*\((\d+(?:\.\d+)?)\s*(?:hr|hrs|hour|hours)\)|\s+(\d+(?:\.\d+)?)\s*(?:hr|hrs|hour|hours)$)', method, re.IGNORECASE)
             
             if hours_match:
                 method_name = hours_match.group(1).strip()
@@ -310,12 +391,12 @@ def parse_document(input_docx, output_json):
                     if is_bullet_point(text):
                         method_text_cleaned = re.sub(r"^[•−–●◦*]\s*", "", text).strip()
                         # Update to check for hours in any method, not just exam details
-                        has_hours = re.search(r"\(\d+(\.\d+)?\s*hr?s?\)", method_text_cleaned, re.IGNORECASE)
+                        has_hours = re.search(r"\(\d+(\.\d+)?\s*(?:hr|hrs|hour|hours)\)", method_text_cleaned, re.IGNORECASE)
                         
                         # Only add the method name (without hours) to the list
                         if method_text_cleaned:
                             # Extract just the method name by removing the hours part
-                            method_name_only = re.sub(r"\s*\(\d+(\.\d+)?\s*hr?s?\)", "", method_text_cleaned)
+                            method_name_only = re.sub(r"\s*\(\d+(\.\d+)?\s*(?:hr|hrs|hour|hours)\)", "", method_text_cleaned)
                             if method_name_only and method_name_only not in data[current_section]["Assessment Methods"]:
                                 data[current_section]["Assessment Methods"].append(method_name_only)
                         
@@ -339,11 +420,13 @@ def parse_document(input_docx, output_json):
 
         elif isinstance(element, CT_Tbl):  # It's a table
             tbl = Table(element, doc)
-            table_content = parse_table(tbl)
+            # `parse_table` now includes the K&A splitting logic if applicable
+            table_content_processed = parse_table(tbl) 
+            
             if current_section: 
                 if current_section not in data: data[current_section] = {"content": [], "bullet_points": []}
                 if "content" not in data[current_section]: data[current_section]["content"] = [] # Ensure content list exists
-                data[current_section]["content"].append({"table": table_content})
+                data[current_section]["content"].append({"table": table_content_processed})
     
     # Convert to JSON
     json_output = json.dumps(data, indent=4, ensure_ascii=False)
