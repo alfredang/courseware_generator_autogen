@@ -32,7 +32,7 @@ pip install -r requirements.txt
 **Option B: If downloading from Git repository:**
 ```bash
 # 1. Clone the repository
-git clone <repository-url>
+git clone https://github.com/alfredang/courseware_autogen.git
 cd courseware_autogen
 
 # 2. Create virtual environment
@@ -142,7 +142,7 @@ streamlit run app.py
 
 1. **Clone the repository:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/alfredang/courseware_autogen.git
    cd courseware_autogen
    ```
 
@@ -169,7 +169,7 @@ streamlit run app.py
 
 2. **Clone and set up project:**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/alfredang/courseware_autogen.git
    cd courseware_autogen
    uv venv                    # Create virtual environment
    source .venv/bin/activate  # Activate environment
@@ -217,25 +217,33 @@ streamlit run app.py
 ```
 courseware_autogen/
 ├── app.py                      # Main Streamlit application
-├── config/                     # Centralized configuration
-│   └── model_configs.py        # AI model configurations
-├── utils/                      # Shared utilities
-│   └── common.py              # Common helper functions
-├── CourseProposal/            # Course Proposal generation
-│   ├── main.py                # Main workflow orchestrator
+├── settings/                   # Configuration and API management
+│   ├── settings.py            # Settings UI and configuration
+│   ├── api_manager.py         # API key management
+│   └── model_configs.py       # AI model configurations
+├── common/                     # Shared utilities
+│   ├── common.py              # Common helper functions
+│   ├── company_manager.py     # Company/organization management
+│   ├── logo/                  # Company logos storage
+│   └── prompts/               # AI prompt templates
+├── generate_cp/               # Course Proposal generation
 │   ├── app.py                 # Streamlit interface
-│   └── agents/                # Multi-agent implementations
-├── Assessment/                # Assessment generation
+│   ├── agents/                # Multi-agent implementations
+│   └── utils/                 # CP-specific utilities
+├── generate_assessment/       # Assessment generation (SAQ, CS, PP)
 │   ├── assessment_generation.py
-│   └── utils/                 # Assessment-specific utilities
-├── Courseware/               # Courseware document generation
-│   ├── courseware_generation.py
-│   └── utils/                # Document generators
-├── Brochure/                 # Marketing brochure generation
-├── Slides/                   # Presentation slide generation
-├── AnnexAssessment/          # Assessment integration
-├── SupDocs/                  # Supporting document tools
-└── requirements.txt          # Python dependencies
+│   └── utils/                 # Assessment utilities & templates
+├── generate_ap_fg_lg_lp/      # Courseware document generation
+│   ├── courseware_generation.py  # AP, FG, LG, LP generation
+│   └── utils/                 # Document generators & templates
+├── generate_brochure_v2/      # Marketing brochure generation
+│   ├── brochure_generation_v2.py
+│   └── brochure_template/     # HTML brochure templates
+├── add_assessment_to_ap/      # Assessment integration into AP
+│   └── annex_assessment.py    # Annex assessment tools
+├── check_documents/           # Supporting document tools
+│   └── sup_doc.py            # Document verification & extraction
+└── requirements.txt           # Python dependencies
 ```
 
 ## 💡 Usage Guide
@@ -271,9 +279,10 @@ courseware_autogen/
 
 ### Document Templates
 All document templates are located in respective module directories:
-- CourseProposal: `templates/`
-- Courseware: `input/Template/`
-- Assessment: `Templates/`
+- Course Proposal: `generate_cp/templates/`
+- Courseware: `generate_ap_fg_lg_lp/input/Template/`
+- Assessment: `generate_assessment/utils/Templates/`
+- Brochure: `generate_brochure_v2/brochure_template/`
 
 ## 🔍 TSC Document Requirements
 
