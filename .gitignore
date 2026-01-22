@@ -1,0 +1,63 @@
+# Environment
+.env
+CourseProposal/venv
+.venv/
+venv/
+ENV/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Streamlit secrets (DO NOT COMMIT - Add these to Streamlit Cloud UI)
+.streamlit/secrets.toml
+settings/config/api_keys.json
+
+# Data and cache (generated at runtime)
+data/
+*.tmp
+*.log
+
+# Generated outputs (created at runtime)
+generate_cp/output_docs/*.docx
+generate_cp/output_docs/*.xlsx
+generate_assessment/output/*
+common/generated_brochures/*.html
+
+# Generated JSON outputs (but keep template files)
+generate_cp/json_output/*_state.json
+generate_cp/json_output/*_output.json
+generate_cp/json_output/*_data.json
+generate_cp/json_output/temp_*.json
+generate_cp/json_output/justification_debug.json
+generate_cp/json_output/context_output.json
+generate_cp/json_output/generated_mapping.json
+generate_cp/json_output/old_excel_data.json
+generate_cp/json_output/excel_data.json
+
+# Keep these template files (don't ignore them)
+!generate_cp/json_output/output_CP.json
+!generate_cp/json_output/mapping_source.json
+!generate_cp/json_output/validation_mapping_source.json
+!generate_cp/json_output/instructional_methods.json
+
+# OS files
+.DS_Store
+Thumbs.db
+**/.DS_Store
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary files
+temp/
+tmp/
+remove_soon/
+.streamlit/secrets.toml

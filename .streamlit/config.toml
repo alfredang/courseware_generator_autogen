@@ -1,0 +1,6 @@
+[server]
+maxUploadSize = 200
+enableXsrfProtection = false
+
+[runner]
+packageInstaller = "pip"

@@ -1,0 +1,50 @@
+{
+  "Course_Proposal_Form": {
+    "null": [
+      "Course Title: Generative AI Model Development and Fine Tuning",
+      "Organization: Innhoat Training Pte. Ltd",
+      "Learning Outcomes",
+      "LO1: Implement generative models using deep learning algorithms and analyse their suitability for different problem requirements.",
+      "LO2: Preprocess and transform generative datasets using embeddings and tokenisation for model readiness.",
+      "LO3: Train generative AI models with neural optimisation techniques using benchmark datasets and performance metrics.",
+      "LO4: Identify model weaknesses through evaluation and propose targeted fine-tuning strategies for improvement.",
+      "Course Duration: 3 days (24 hrs)",
+      "Instructional Methods: Interactive Presentation (14 hrs), Demonstration, Practical",
+      "Assessment Methods: Written Assessment (1 hr), Practical Performance (1 hr)",
+      "Course Mapping",
+      "TSC: ICT-BAS-0048-1.1 Generative AI Model Development and Fine Tuning",
+      "Knowledge:",
+      "K1: Probability theory and statistics (e.g., latent variables, probabilistic modelling)",
+      "K2: Common dataset formats and evaluation methodologies for generative tasks",
+      "K3: Fine-tuning techniques (e.g., supervised fine-tuning, parameter-efficient fine-tuning, perform inference)",
+      "K4: Optimisation techniques for training neural networks",
+      "K5: Parallel cluster training and inference",
+      "K6: Loss functions and evaluation metrics for generative tasks",
+      "K7: Data pre-processing, de-duplication and cleaning techniques (including understanding of training data requirements for AI models, common data quality issues)",
+      "K8: Embeddings and tokenisation",
+      "K9: Deep learning theory and algorithms (e.g., GANs, VAEs, Transformers)",
+      "K10: Machine learning libraries (e.g., TensorFlow, PyTorch, Keras)",
+      "A1: Implement generative models based on existing architectures",
+      "A2: Analyse problem statements and requirements to select and implement appropriate generative models",
+      "A3: Train generative models on benchmark datasets",
+      "A4: Identify limitations and propose initial improvements to models",
+      "A5: Preprocess and prepare data for generative training (e.g., clean and format datasets, use libraries (e.g., Pandas, NumPy) for data manipulation, split data into training, validation and test sets)"
+    ],
+    "LU 1: Generative AI Theory (K1, K9, K10, A1, A2)": [
+      "Topic 1: Fundamentals of Probability and Deep Learning (K1, K9, A1)",
+      "Topic 2: Machine Learning Implementation (K10, A2)"
+    ],
+    "LU 2: Generative AI Data Preparation (K2, K7, K8, A5)": [
+      "Topic 1: Data Processing and Evaluation (K2, K7, A5)",
+      "Topic 2: Data Transformation (K8, A5)"
+    ],
+    "LU 3: Generative AI Model Training (K4, K5, K6, A3)": [
+      "Topic 1: Neural Network Training (K4, K5, A3)",
+      "Topic 2: Model Evaluation (K6, A3)"
+    ],
+    "LU 4: Generative AI Model Fine Tuning (K3, A4)": [
+      "Topic 1: Fine-tuning Strategies (K3, A4)",
+      "Topic 2: Model Improvement (K3, A4)"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "GPT-4 Turbo",
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+      "model": "openai/gpt-4-turbo",
+      "api_key": "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",
+      "temperature": 0.2,
+      "base_url": "https://openrouter.ai/api/v1"
+    }
+  },
+  {
+    "name": "GPT-4o",
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+      "model": "openai/gpt-4o",
+      "api_key": "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",
+      "temperature": 0.2,
+      "base_url": "https://openrouter.ai/api/v1"
+    }
+  },
+  {
+    "name": "xinping model try ",
+    "provider": "OpenAIChatCompletionClient",
+    "config": {
+      "model": "meta-llama/llama-3.1-405b-instruct",
+      "api_key": "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",
+      "temperature": 0.2,
+      "base_url": "https://openrouter.ai/api/v1"
+    }
+  }
+]
