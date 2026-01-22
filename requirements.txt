@@ -46,6 +46,7 @@ streamlit-modal
 xhtml2pdf
 reportlab
 supabase
+psycopg2-binary
 #testsave17nov2025
 #testsave22dec2025
 #testsave14jan2026
