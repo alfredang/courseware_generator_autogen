@@ -76,10 +76,17 @@ with st.sidebar:
     if organizations:
         company_names = [org["name"] for org in organizations]
 
+        # Find Tertiary Infotech as default company
+        default_company_idx = 0
+        for i, name in enumerate(company_names):
+            if "tertiary infotech" in name.lower():
+                default_company_idx = i
+                break
+
         # Validate stored index to prevent out-of-range errors
-        stored_idx = st.session_state.get('selected_company_idx', 0)
+        stored_idx = st.session_state.get('selected_company_idx', default_company_idx)
         if stored_idx >= len(organizations):
-            stored_idx = 0
+            stored_idx = default_company_idx
 
         selected_company_idx = st.selectbox(
             "🏢 Select Company:",

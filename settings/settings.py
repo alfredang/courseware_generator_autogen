@@ -396,11 +396,17 @@ def manage_company_settings():
 
         if organizations:
             company_names = [org["name"] for org in organizations]
+            # Find Tertiary Infotech as default (or first company if not found)
+            default_idx = 0
+            for i, name in enumerate(company_names):
+                if "tertiary infotech" in name.lower():
+                    default_idx = i
+                    break
             selected_company_idx = st.selectbox(
                 "Choose a company:",
                 range(len(company_names)),
                 format_func=lambda x: company_names[x],
-                index=0  # Always default to first company
+                index=default_idx
             )
 
             if selected_company_idx is not None and selected_company_idx < len(organizations):
