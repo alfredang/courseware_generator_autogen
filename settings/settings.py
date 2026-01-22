@@ -71,28 +71,88 @@ def manage_llm_settings():
 
 def manage_api_keys():
     """Manage API Keys section"""
-    st.subheader("OpenRouter API Key")
 
     # Load current API keys
     current_keys = load_api_keys()
 
-    # OpenRouter API Key (main focus)
-    openrouter_key = st.text_input(
-        "OpenRouter API Key (Required)",
-        value=current_keys.get("OPENROUTER_API_KEY", ""),
-        type="password",
-        help="Get your API key from openrouter.ai/keys",
-        key="openrouter_api_key_main"
-    )
+    # Display existing API keys
+    st.subheader("Existing API Keys")
 
-    # Save button for OpenRouter key
-    if st.button("💾 Save OpenRouter API Key", type="primary"):
-        current_keys["OPENROUTER_API_KEY"] = openrouter_key
+    if current_keys:
+        # Create a list of keys with their masked values
+        keys_to_display = []
+        for key_name, key_value in current_keys.items():
+            if key_value:  # Only show keys that have values
+                masked_value = key_value[:8] + "..." + key_value[-4:] if len(key_value) > 12 else "****"
+                keys_to_display.append((key_name, masked_value, key_value))
+
+        if keys_to_display:
+            for key_name, masked_value, full_value in keys_to_display:
+                col1, col2, col3 = st.columns([3, 4, 2])
+                with col1:
+                    st.text(key_name)
+                with col2:
+                    # Allow editing the value
+                    new_value = st.text_input(
+                        "Value",
+                        value=full_value,
+                        type="password",
+                        key=f"edit_{key_name}",
+                        label_visibility="collapsed"
+                    )
+                    if new_value != full_value:
+                        current_keys[key_name] = new_value
+                with col3:
+                    if st.button("🗑️", key=f"delete_{key_name}", help=f"Delete {key_name}"):
+                        if delete_api_key(key_name):
+                            st.success(f"✅ Deleted {key_name}")
+                            st.rerun()
+        else:
+            st.info("No API keys configured yet. Add one below.")
+
+    # Save changes button
+    if st.button("💾 Save All Changes", type="primary"):
         if save_api_keys(current_keys):
-            st.success("✅ OpenRouter API Key saved successfully!")
+            st.success("✅ API Keys saved successfully!")
             st.rerun()
         else:
-            st.error("❌ Error saving API Key. Please try again.")
+            st.error("❌ Error saving API Keys. Please try again.")
+
+    st.markdown("---")
+
+    # Add new API key section
+    st.subheader("Add New API Key")
+
+    col1, col2 = st.columns(2)
+    with col1:
+        new_key_name = st.text_input(
+            "API Key Name",
+            placeholder="e.g., OPENAI_API_KEY, ANTHROPIC_API_KEY",
+            help="Enter a name for the API key (e.g., OPENAI_API_KEY)"
+        )
+    with col2:
+        new_key_value = st.text_input(
+            "API Key Value",
+            type="password",
+            placeholder="Enter the API key value",
+            help="Enter the actual API key"
+        )
+
+    if st.button("➕ Add API Key"):
+        if new_key_name and new_key_value:
+            # Normalize the key name (uppercase, replace spaces with underscores)
+            normalized_name = new_key_name.upper().replace(" ", "_").replace("-", "_")
+            if not normalized_name.endswith("_API_KEY") and not normalized_name.endswith("_KEY"):
+                normalized_name = normalized_name + "_API_KEY"
+
+            current_keys[normalized_name] = new_key_value
+            if save_api_keys(current_keys):
+                st.success(f"✅ Added {normalized_name} successfully!")
+                st.rerun()
+            else:
+                st.error("❌ Error adding API Key. Please try again.")
+        else:
+            st.warning("⚠️ Please enter both key name and value.")
 
 def quick_add_openrouter_model(name: str, model_id: str, temperature: float = 0.2):
     """Quick add an OpenRouter model with sensible defaults"""
