@@ -4,10 +4,12 @@ import google.generativeai as genai
 from typing import Dict, Any, Union
 from PIL import Image
 import io
+import streamlit as st
 
-# Configure API
-GEMINI_API_KEY = "AIzaSyBmOW-thoavyrEGO5wlcd9PF3om_IZHvMw"
-genai.configure(api_key=GEMINI_API_KEY)
+# Configure API - get key from secrets or environment
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
+if GEMINI_API_KEY:
+    genai.configure(api_key=GEMINI_API_KEY)
 
 # Use gemini-pro model with specific configuration
 model = genai.GenerativeModel(
