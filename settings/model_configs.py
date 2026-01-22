@@ -15,8 +15,13 @@ from typing import Dict, Any
 # Get API keys from the new API management system
 from settings.api_manager import load_api_keys
 
-api_keys = load_api_keys()
-OPENROUTER_API_KEY = api_keys.get("OPENROUTER_API_KEY", "")
+def get_openrouter_key():
+    """Get OpenRouter API key dynamically"""
+    keys = load_api_keys()
+    return keys.get("OPENROUTER_API_KEY", "")
+
+# Get initial API key
+OPENROUTER_API_KEY = get_openrouter_key()
 
 # OpenRouter DeepSeek (Default for all modules)
 deepseek_config = {
