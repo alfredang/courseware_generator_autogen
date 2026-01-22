@@ -5,7 +5,6 @@ import tempfile
 from generate_cp.main import main
 import asyncio
 from generate_cp.utils.document_parser import parse_document
-from settings.api_manager import get_all_available_models
 from common.company_manager import get_selected_company, show_company_info, get_company_template, apply_company_branding
 
 # Initialize session state variables
@@ -28,15 +27,8 @@ def app():
     selected_company = get_selected_company()
     cp_template_path = get_company_template("course_proposal")
 
-    st.subheader("Model Selection")
-    # Get all available models (including custom ones)
-    all_models = get_all_available_models()
-    model_choice = st.selectbox(
-        "Select LLM Model:",
-        options=list(all_models.keys()),
-        index=list(all_models.keys()).index("Claude-Sonnet-3.5") if "Claude-Sonnet-3.5" in all_models else 0
-    )
-    st.session_state['selected_model'] = model_choice
+    # Get model from sidebar selection (already set in session state)
+    model_choice = st.session_state.get('selected_model', 'GPT-4o-Mini')
 
     st.subheader("Course Proposal Type")
     cp_type_display = st.selectbox(
