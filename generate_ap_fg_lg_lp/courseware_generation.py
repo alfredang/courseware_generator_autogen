@@ -96,7 +96,6 @@ from generate_ap_fg_lg_lp.utils.timetable_generator import generate_timetable
 from generate_ap_fg_lg_lp.utils.agentic_LP import generate_lesson_plan
 from generate_ap_fg_lg_lp.utils.agentic_FG import generate_facilitators_guide
 from settings.model_configs import get_model_config
-from settings.api_manager import get_all_available_models
 import os
 import io
 import zipfile
@@ -464,17 +463,8 @@ def app():
 
     st.title("📄 Generate AP/FG/LG/LP")
     
-    # ================================================================
-    # MODEL SELECTION FEATURE
-    # ================================================================
-    st.subheader("Model Selection")
-    # Get all available models (including custom ones)
-    all_models = get_all_available_models()
-    model_choice = st.selectbox(
-        "Select LLM Model:",
-        options=list(all_models.keys()),
-        index=list(all_models.keys()).index("DeepSeek-Chat") if "DeepSeek-Chat" in all_models else 0
-    )
+    # Get model from sidebar selection (already set in session state)
+    model_choice = st.session_state.get('selected_model', 'DeepSeek-Chat')
     st.session_state['selected_model'] = model_choice
 
     # ================================================================
